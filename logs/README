@@ -1,0 +1,1 @@
+logs/ is used for logging Dashboard output and PID. Node WILL crash if this directory is unavailable.
