@@ -1,0 +1,62 @@
+<% name = 'signup' %>
+<% headline = 'Get an OpenMRS ID' %>
+<form action="/signup" method="post" autocomplete="off">
+	<p>Already have an ID? <a href="/login">Log in now</a> to access your account settings.</p>
+
+	<div class="field<% if (fail.username) { %> fail<% } %>">
+		<label>Username</label>
+		<input type="text" name="username" placeholder="Username"<% if (failed) { %>value="<%= values.username %>"<% } %>>
+		<span class="description">
+			<span class="failtext"><% if (failReason.username) { %><%= failReason.username %><% } else { %>Please enter a valid username.<% } %> </span>
+			Your username can only contain alphanumerics (0-9, A-Z, a-z).</span>
+	</div>
+	
+	<div class="field two-up<% if (fail.firstname || fail.lastname ) { %> fail<% } %>">
+		<label>Name</label>
+		<input type="text" name="firstname" placeholder="Given Name"<% if (failed) { %>value="<%= values.firstname %>"<% } %>>
+		<input type="text" name="lastname" placeholder="Surname"<% if (failed) { %>value="<%= values.lastname %>"<% } %>>
+		<span class="description">
+			<span class="failtext">Both a first and last name are required.</span>
+			Your name identifies you across the OpenMRS Community.
+		</span>
+	</div>
+	
+	<div class="field<% if (fail.email) { %> fail<% } %>">
+		<label>Email</label>
+		<input type="text" name="email" placeholder="Email Address"<% if (failed) { %>value="<%= values.email %>"<% } %>>
+		<span class="description">
+			<span class="failtext"><% if (failReason.email) { %><%= failReason.email %><% } else { %>Please enter a valid email address.<% } %> </span>
+			We'll send any notifications to this address. You'll always be able to control what mail you receive.
+		</span>
+	</div>
+	
+	<div class="field<% if (fail.password) { %> fail<% } %>">
+		<label><% if (failed && values.password && !fail.password) { %>Re-enter <% } %>Password</label>
+		<input type="password" name="password" placeholder="<% if (failed && values.password && !fail.password) { %>Re-enter <% } %>Password">
+		<span class="description">
+			<span class="failtext"><% if (failReason.password) { %><%= failReason.password %><% } else { %>Please enter a valid password.<% } %> </span>
+			Passwords must be at least 8 characters long.
+		</span>
+	</div>
+	
+	<div class="field<% if (fail.recaptcha_response_field) { %> fail<% } %>" id="recaptcha_widget">
+		<label><% if (failed && values.recaptcha_response_field && !fail.recaptcha_response_field) { %>Re-enter <% } %>Captcha</label>
+		<input type="text" id="recaptcha_response_field" name="recaptcha_response_field" placeholder="<% if (failed && values.recaptcha_response_field) { %>Re-enter CAPTCHA<% } else { %>Are you human?<% } %>">
+		<span class="description">
+			<span class="failtext"><% if (failReason.email) { %><%= failReason.email %><% } else { %>Incorrect, please try again.<% } %> </span>
+			<span class="recaptcha_only_if_image">Enter the words below:</span>
+			<span class="recaptcha_only_if_audio">Enter the numbers you hear:</span>
+			<div id="captcha-options">(
+				<a href="javascript:Recaptcha.reload()">new captcha</a>
+				<a href="javascript:Recaptcha.switch_type('audio')" class="recaptcha_only_if_image">switch to audio captcha</a>
+				<a href="javascript:Recaptcha.switch_type('image')" class="recaptcha_only_if_audio">switch to image captcha</a>
+				<a href="javascript:Recaptcha.showhelp()">help</a>
+			)</div>
+			<div id="recaptcha_image"></div>
+			<span id="captcha-credit">Thanks, <a href="http://recaptcha.net/" target="_blank">reCAPTCHA!</a></span>
+		</span>
+	</div>
+	
+	<input type="submit" value="Join the Community &#187;" id="test">
+
+</form>

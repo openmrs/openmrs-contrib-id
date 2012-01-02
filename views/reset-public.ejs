@@ -1,0 +1,12 @@
+<% name = 'reset-public' %>
+<% title = 'OpenMRS ID - Reset Password' %>
+<% headline = 'Reset Your Password' %>
+<form action="/reset" method="post" id="reset-form">
+	<p><em>Forgot your password? Enter your OpenMRS ID or your account's primary email address and we'll send you an email with password reset instructions.</em></p>
+		
+	<div class="field<% if (fail.resetCredential) { %>fail<% } %>">
+		<label>ID / Primary Email</label>
+		<input type="text" name="resetCredential" placeholder="OpenMRS ID or Primary Email" autofocus>
+		<input type="submit" value="Send Reset Email &#187;">
+	</div>
+</form>

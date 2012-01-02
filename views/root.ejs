@@ -1,0 +1,62 @@
+<% name = 'root' %>
+<% headline = 'Welcome to the Dashboard, '+user[conf.user.displayname]+'.' %>
+<% pageInfo = {
+	title: user[conf.user.displayname],
+	headline: 'Welcome to the Dashboard, '+user[conf.user.displayname]+'.',
+	showHeadlineAvatar: true
+} %>
+
+<p><h2>New to the OpenMRS Community?</h2>
+Welcome! We'd love it if you completed the following steps to let us know who you are:
+<ol>
+<li>
+	<a href="https://wiki.openmrs.org/users/editmyprofile.action">Edit your Wiki Profile so we can learn more about you</a>
+</li>
+<li><a href="http://wiki.openmrs.org/spaces/createpersonalspace.action">Create your own Personal Space on the Wiki</a></li>
+</ol>
+</p>
+
+<p class="clear"><h2>Services</h2>
+With your OpenMRS ID, you'll be able to log in to and use the services below:</p>
+<div class="box">
+	<div class="logo"><img src="/resource/images/service_logos/confluence.png"></div>
+	<a href="https://wiki.openmrs.org"><h2>OpenMRS Wiki</h2></a>
+	<a class="sub" href="https://wiki.openmrs.org/users/viewmyprofile.action">View Profile</a>
+</div>
+
+<div class="box">
+	<div class="logo"><img src="/resource/images/service_logos/jira.png"></div>
+	<a href="https://tickets.openmrs.org"><h2>JIRA Ticketing System</h2></a>
+	<a class="sub" href="https://tickets.openmrs.org/secure/ViewProfile.jspa">View Profile</a>
+</div>
+
+<div class="box">
+	<div class="logo"><img src="/resource/images/service_logos/fisheye.png"></div>
+	<a href="https://source.openmrs.org"><h2>FishEye + Crucible Source</h2></a>
+	<a class="sub" href="https://source.openmrs.org/profile/">View Profile</a>
+</div>
+
+<div class="box">
+	<div class="logo"><img src="/resource/images/service_logos/osqa.png"></div>
+	<a href="https://answers.openmrs.org"><h2>OpenMRS Answers</h2></a>
+	<% if (osqaUser) { %>
+	<a class="sub" href="https://answers.openmrs.org/users/<%= user[conf.user.username] %>">View Profile</a>
+	<% } else { %>
+	<a class="sub" href="https://answers.openmrs.org/account/signin/">Start using OpenMRS Answers</a>
+	<% } %>
+</div>
+
+<div class="box">
+	<div class="logo"><img src="/resource/images/service_logos/bamboo.png"></div>
+	<a href="https://ci.openmrs.org"><h2>Continuous Integration</h2></a>
+	<a class="sub" href="https://ci.openmrs.org/profile/userProfile.action">View Profile</a>
+</div>
+
+<div class="box">
+	<div class="logo"><img src="/resource/images/service_logos/other.png"></div>
+	<h2>Other…</h2>
+	<a class="sub" href="https://svn.openmrs.org">Subversion</a><br>
+	<a class="sub" href="https://modules.openmrs.org">Module Repository</a>
+</div>
+
+<!--<p>Don't regard the ID Dashboard as passé just yet! As the OpenMRS Community moves forward, you'll be able to control more and more of your Community Profile from here. Until then, why not <a href="#" class="highlight-banners">head over to another Community Application?</a></p>-->

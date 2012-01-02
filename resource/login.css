@@ -1,0 +1,124 @@
+body {
+	font-family: 'HelveticaNeue', 'Helvetica Neue', 'Helvetica', sans-serif;
+	font-size: 11.5px;
+	background: url('/resource/images/patterns/white_carbon.png');
+	margin: 0;
+	color: #444;
+}
+a:link, a:visited {
+	color: #444;
+}
+
+#login, #reset {
+	
+	width: 400px;
+	margin: 120px auto 20px;
+}
+
+#login-head, #reset-head {
+	position: relative;
+}
+#login-head img, #reset-head img {
+	position: relative;
+	left: -40px;
+	top: 10px;
+	z-index: 0;
+	border: 0;
+}
+
+#login-form, #reset-form, #reset-form-private {
+	padding: 0 4px 6px;
+	position: relative;
+	height: 60px;
+}
+
+#redirect-to {
+	display: none;
+}
+
+input {
+	display: inline;
+	padding: 6px;
+	border-radius: 4px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border: 1px solid #CCC;
+	background: #F7F7F7;
+	width: 178px;
+	clear: both;
+	-webkit-transition: background 200ms;
+	-webkit-transition-property: background, box-shadow;
+	position: relative;
+	z-index: 20;
+}
+#reset-form input, #reset-form-private input {
+	width: 250px;
+}
+input[type="text"]:focus, input[type="password"]:focus {
+	border: 1px solid #444;
+	outline: none;
+	box-shadow: 0 0 8px #bbb;
+	-webkit-box-shadow: 0 0 8px #bbb;
+	-moz-box-shadow: 0 0 8px #bbb;
+}
+
+input[type="submit"] {
+	position: absolute;
+	right: 7px;
+	bottom: 0;
+	width: auto;
+}
+
+#reset-form input[type="submit"], #reset-form-private input[type="submit"] {
+	position: static;
+	right: 0;
+	bottom: 0;
+	width: auto;
+}
+
+input[type="submit"]:active {
+	background: #fff;
+	border: 1px solid #444;
+	outline: none;
+	box-shadow: inset 0 1px 4px #bbb;
+	-webkit-box-shadow: inset 0 1px 4px #bbb;
+	-moz-box-shadow: inset 0 1px 4px #bbb;
+}
+input.invalid, #main .captcha-failed input {
+	background: #fcc;
+}
+input.invalid:focus, #main .captcha-failed input:focus {
+	box-shadow: 0 0 8px #f99;
+	-webkit-box-shadow: 0 0 8px #f99;
+	-moz-box-shadow: 0 0 8px #f99;
+}
+
+h1 {
+	display: inline;
+	font-size: 26px;
+	text-shadow: 0px 2px 0px #E5E5EE, 0 0 3px #666;
+	color: #444;
+	font-weight: normal;
+	letter-spacing: 1px;
+	margin-bottom: 12px;
+}
+h2 {
+	display: inline;
+	font-family: Georgia, serif;
+	font-style: italic;
+	font-weight: normal;
+	font-size: 18px;
+	color: #444;
+	text-shadow: 0 2px 0 #E5E5EE;
+	padding: 0;
+	margin: 0;
+}
+h1, h2 {
+	position: absolute;
+	right: 10px;
+	bottom: 2px;
+}
+
+p {
+	margin: 0;
+}

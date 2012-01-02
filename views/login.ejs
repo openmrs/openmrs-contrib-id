@@ -1,0 +1,27 @@
+<% name = 'login' %>
+<% title = 'OpenMRS ID - Login' %>
+<% headline = 'Login to the Dashboard' %>
+<form action="/login" method="post">
+	<p><em></em></p>
+	<input type="hidden" name="destination" id="redirect-to">
+	
+	<div class="field<% if (fail.loginusername) {%> fail<% } %>">
+		<label>OpenMRS ID</label>
+		<input type="text" name="loginusername" placeholder="OpenMRS ID" <% if (failed) { %>value="<%= values.loginusername %>"<% } %> autofocus>
+		<span class="description failtext">
+			<% if (values.loginusername == '') { %>A username must be supplied to log in.<% }
+			else { %>Make sure you are entering your OpenMRS ID, not your email address.<% } %>
+		</span>
+	</div>
+	
+	<div class="field<% if (fail.loginpassword) {%> fail<% } %>">
+		<label>Password</label>
+		<input type="password" name="loginpassword" placeholder="Password">
+		<span class="description failtext">
+			<% if (values.loginpassword == '') { %>A password must be supplied to log in.<% }
+			else { %>If you have forgotten your password, you can <a href="/reset">reset it here</a>.<% } %>
+		</span>
+	</div>
+	
+	<input type="submit" value="Login to the Dashboard &#187;">
+</form>

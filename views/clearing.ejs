@@ -1,0 +1,12 @@
+<!-- should be rendered along with each page to fill in undefined variables to keep EJS happy -->
+
+<% typeof title != 'undefined' ? title : (title = 'OpenMRS ID'); %>
+<% typeof defaultSidebar != 'undefined' ? defaultSidebar : (defaultSidebar = []); %>
+<% typeof sidebar != 'undefined' ? sidebar : (sidebar = []); %>
+<% typeof flash != 'undefined' ? flash : (flash = {}); %>
+<% typeof bodyAppend != 'undefined' ? bodyAppend : (bodyAppend = ''); %>
+<% typeof headAppend != 'undefined' ? headAppend : (headAppend = ''); %>
+<% typeof failed != 'undefined' ? failed : (failed = false); %>
+<% typeof fail != 'undefined' ? fail : (fail = {}); %>
+<% typeof values != 'undefined' ? values : (values = {}); %>
+<% typeof failReason != 'undefined' ? failReason : (failReason = {}); %>

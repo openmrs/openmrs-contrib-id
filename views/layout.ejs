@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title><%= title %></title>
+	<link rel="stylesheet" href="/resource/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script src="/resource/omrsid.js"></script>
+	<script src="/resource/placeholder.js"></script>
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-16695719-5']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	
+	</script>
+	
+	<%- headAppend %>
+</head>
+
+
+
+<body>
+<div id="header">	
+	<div class="container">
+		<a href="/"><img id="logo" src="/resource/images/logo.png" alt="OpenMRS Community"></a>
+		
+		
+		
+		<ul id="services">
+		<a href="http://wiki.openmrs.org"><li class="teal"><span>Wiki</span></li></a>
+		<a href="http://tickets.openmrs.org"><li class="yellow"><span>Tickets</span></li></a>
+		<a href="http://source.openmrs.org"><li class="blue"><span>Source</span></li></a>
+		<li class="red" id="moreContainer">
+			<span>More...</span>
+			<ul id="more">
+				<a href="http://answers.openmrs.org"><li>Answers</li></a>
+				<a href="http://ci.openmrs.org"><li>CI Testing</li></a>
+				<a href="http://modules.openmrs.org"><li>Modules</li></a>
+				<a href="http://go.openmrs.org/mailinglists"><li>Groups</li></a>
+				<a href="http://svn.openmrs.org"><li>SVN</li></a>
+			</ul>
+		</li>
+		</ul>
+		
+		
+		
+		<div id="login-menu">
+		<% if (!connected) { %>
+			<a href="/login">Log in</a>
+			<form action="/login" method="post" class="popover">
+				<input class="use-placeholder" type="text" placeholder="OpenMRS ID" name="loginusername">
+				<input class="use-placeholder" type="password" placeholder="Password" name="loginpassword">
+				<input type="submit" value="Log In &#187;">
+					<span class="failtext">Authentication failed.</span>
+					<span><a href="/reset">Password Recovery &#187;</a></span>
+			</form>
+			<div class="popover-direction"></div>
+		<% } %>
+		
+		<% if (connected) { %>
+			<noscript><a href="/disconnect">Log out</a></noscript>
+			<a href="#"><%= user[conf.user.displayname] %></a>
+			<ul class="popover">
+				<a href="/disconnect"><li>Log Out</li></a>
+			</ul>
+			<div class="popover-direction"></div>
+		<% } %>
+		</div>
+		
+		
+		
+		<div class="clear"></div>
+	</div>
+</div>
+
+
+
+<ul id="user-nav">
+	<% var list = navLinks; for (link in list) { %>	
+		<% var same = (name == list[link].viewName) ? true : false %>
+		<a<% if (same) { %> class="active"<% } %> href="<%= (same) ? "#" : list[link].url %>">
+			<li><%= link %></li>
+		</a>
+	<% } %>
+</ul>
+
+
+
+<div id="headline" <% if (showHeadlineAvatar) { %>class="with-avatar"<% } %>>
+	
+	<h1><%= headline %>
+	<% if (connected && showHeadlineAvatar) { %>
+	<img src="https://wiki.openmrs.org/rest/cas/1.0/avatar/server/<%= mailHash %>?s=51" alt="<%= user[conf.user.displayname] %>">
+	<% } %>
+	</h1>
+</div>
+
+
+
+<% if (flash) { for (type in flash) { %>
+<% flash[type].forEach(function(msg){ %>
+	<div class="flash <%= type %>">
+		<span><%= msg %></span>
+	</div>
+<% }); } } %>
+
+
+
+<div class="container">
+	<div id="main">
+	
+	<%- body %>
+	</div>
+	
+	<div id="sidebar">
+		<%- partial('sidebar', sidebar.concat(defaultSidebar)) %>
+		<div id="about"><%- aboutHTML %></div>
+	</div>
+	
+</div>
+
+
+<div class="clear"></div>
+<%- bodyAppend %>
+
+
+</body>
+</html>
+<% clearErrors() %>

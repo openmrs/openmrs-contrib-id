@@ -1,0 +1,15 @@
+# Logfiles #
+############
+logs/*
+nohup.out
+
+# Compiled module #
+###################
+node-LDAP/build
+
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db

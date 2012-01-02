@@ -1,0 +1,50 @@
+<% name = 'edit-profile' %>
+<% title = 'OpenMRS ID - Edit Profile' %>
+<% headline = user[conf.user.displayname]+"'s Profile" %>
+
+<form action="/edit/profile" method="post" class="forcelabel">
+	
+	<div class="field noedit">
+		<label>Username</label>
+		<p><%= user[conf.user.username] %></p>
+		<span class="description">
+			Usernames are not modifiable, but here's yours for reference.
+		</span>
+	</div>
+	
+	<div class="field two-up<% if (fail.firstname || fail.lastname ) { %> fail<% } %>">
+		<label>Name</label>
+		<input type="text" name="firstname" placeholder="Given Name" value="<%= (failed) ? values.firstname : user[conf.user.firstname] %>">
+		<input type="text" name="lastname" placeholder="Surname" value="<%= (failed) ? values.lastname : user[conf.user.lastname] %>">
+		<span class="description">
+			<span class="failtext">Both a first and last name are required.</span>
+			Your name identifies you across the OpenMRS Community.
+		</span>
+	</div>
+		
+	<div class="field<% if (fail.email) { %> fail<% } %>">
+		<label>Primary Email</label>
+		<input type="text" name="email" placeholder="Email Address" value="<%= (failed) ? values.email : user[conf.user.email] %>">
+		<span class="description">
+			<span class="failtext"><% if (failReason.email) { %><%= failReason.email %><% } else { %>Please enter a valid email address.<% } %> </span>
+			Most community applications contact you via this address.
+		</span>
+	</div>
+	
+	<div class="multi-field">
+		<% if (user[conf.user.secondaryemail]) secMailLength= (values.secondaryemail) ? values.secondaryemail.length : user[conf.user.secondaryemail].length; else secMailLength = 0;
+		for (var i = 0; i <= secMailLength; i++) { %>
+		<div class="field<% if (fail.secondaryemail && fail.secondaryemail[i]) { %> fail<% } %><% if (i!=0 && i==secMailLength) { %> next<% } %>">
+			<% if (i==0) { %><label>Secondary Email</label> <% } %>
+			<% if (i!=0 && i==secMailLength) { %><input type="text" value="Next...">
+			<% } else { %><input type="text" name="secondaryemail" placeholder="Secondary Email" value="<% if (failed && values.secondaryemail) { %><%= values.secondaryemail[i] %><% } else if (user[conf.user.secondaryemail] && user[conf.user.secondaryemail][i]) { %><%= user[conf.user.secondaryemail][i]%><% } %>"><% } %>
+			<span class="description">
+				<span class="failtext"><% if (failReason.secondaryemail) { %><%= failReason.secondaryemail %><% } else { %>Invalid email address.<% } %> </span>
+				Secondary email addresses can be sent password recovery prompts<!-- and can be subscribed to specific mailing lists-->.
+			</span>
+		</div><% } %>
+	</div>
+	
+	
+	<input type="submit" value="Update Profile &#187;">
+</form>

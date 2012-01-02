@@ -1,0 +1,25 @@
+<% name = 'reset-private' %>
+<% title = 'OpenMRS ID - Reset Password' %>
+<% headline = 'Reset Your Password' %>
+<form action="#" method="post">
+	<p><em>Enter a new password for <strong><%= username %></strong> in the field below.</em></p>
+	
+	<div class="field<% if (fail.newpassword) { %> fail <% } %>">
+		<input type="password" name="newpassword" placeholder="New Password" autofocus>
+		<label>New Password</label>
+		<span class="description">
+			<span class="failtext">Please enter a valid password.</span>
+			Passwords must be at least 8 characters in length.
+		</span>
+	</div>
+	
+	<div class="field<% if (fail.confirmpassword) { %> fail <% } %>">
+		<input type="password" name="confirmpassword" placeholder="Confirm Password">
+		<label>Confirm Password</label>
+		<span class="description">
+			<span class="failtext">Passwords did not match.</span>
+			Check for typos!
+		</span>
+	</div>
+	<input type="submit" value="Reset Password &#187;">				
+</form>
