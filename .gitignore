@@ -1,6 +1,7 @@
 # Logfiles #
 ############
 logs/*.log
+logs/*.pid
 nohup.out
 
 # Compiled module #

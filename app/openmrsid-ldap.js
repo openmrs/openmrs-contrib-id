@@ -43,7 +43,7 @@ function connect(cb){
 				return(e);		
 			}	
 			else if (e) { // not connected
-				log.info('no server connection, will reconnect')
+				log.debug('no server connection, will reconnect')
 				
 				
 				var server = system.open(conf.ldap.server.uri);

@@ -111,7 +111,7 @@ app.post('/login', validate(), function(req, res, next){
 			if (e) return next(e);
 			req.session.user = userobj;
 			log.debug('user '+username+' stored in session');
-			app.helpers()._locals.clearErrors();
+			app.helpers()._locals.clearErrors(); // keeps "undefined" from showing up in error values
 			finish();
 		});
 		
@@ -262,11 +262,12 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 			}
 		}
 		
-		username = obj.uid;
-		email = obj.mail;
-		secondaryMail = (obj.otherMailbox) ? obj.otherMailbox : [];
+		username = obj[conf.ldap.user.username];
+		email = obj[conf.ldap.user.email];
+		secondaryMail = (obj[conf.ldap.user.secondaryemail]) ? obj[conf.ldap.user.secondaryemail] : [];
 		
-		var resetId = connect.utils.uid(16);
+		var resetId = connect.utils.uid(16),
+			expireDate = new Date(Date.now() + 7200000)
 		activeResets[resetId] = new Object;
 		activeResets[resetId].user = obj;
 		activeResets[resetId].username = username;
@@ -284,7 +285,10 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 				email: email,
 				secondaryMail: secondaryMail,
 				resetId: resetId,
-				displayName: obj.displayName
+				displayName: obj[conf.ldap.user.displayname],
+				siteURL: conf.site.url,
+				expireDate: expireDate.toLocaleString(),
+				url: url
 			}});
 					
 			mail.send_mail(
@@ -320,8 +324,10 @@ app.post('/reset/:id', validate(), function(req, res, next){
 	ldap.resetPassword(activeResets[req.params.id].username, req.body.newpassword, function(e){
 		if (e) return next(e);
 		clearTimeout(activeResets[req.params.id].timeout);
+		log.info('password reset for "'+activeResets[req.params.id].username+'"');
 		delete activeResets[req.params.id];
 		req.flash('success', 'Password has been reset successfully. You may now log in across the OpenMRS Community.');
+		app.helpers()._locals.clearErrors(); // keeps "undefined" from showing up in error values
 		res.redirect('/');
 	});
 	
