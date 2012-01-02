@@ -15,7 +15,7 @@ User signup and self-service application for managing OpenMRS ID. Connects with 
 
         cd node-LDAP/
         node-waf configure
-	node-waf build
+        node-waf build
 
 3. Configure Dashboard in app/conf.js
 
@@ -28,11 +28,11 @@ User signup and self-service application for managing OpenMRS ID. Connects with 
 - anti-spam footer in dashboard emails
 - for mailing lists:
 
->- build table of Google Groups data and 
->- group invitation policy: invite can only come from dashboard, must be invited to post
+    - build table of Google Groups data and 
+    - group invitation policy: invite can only come from dashboard, must be invited to post
 
 - Google Apps
 
->- have LDAP password changes propagate to google apps
+    - have LDAP password changes propagate to google apps
 
 - include OpenMRS Code of Conduct (ITSM-1852)

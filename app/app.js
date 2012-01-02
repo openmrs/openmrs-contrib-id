@@ -16,6 +16,17 @@ var express = require('express'),
 	
 exports.app = app;
 
+// fail if no configuration file found
+try {
+	fs.readFileSync(__dirname+'/conf.js');
+}
+catch (e) {
+	console.log('ERROR: Configuration file not found at ('+__dirname+'/conf.js)! Exiting…');
+	return;
+}
+
+
+
 var conf = require('./conf'),
 	ldap = require('./openmrsid-ldap'),
 	mid = require('./express-middleware'),

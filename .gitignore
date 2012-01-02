@@ -7,6 +7,10 @@ nohup.out
 ###################
 node-LDAP/build
 
+# Conf Files #
+##############
+app/conf.js
+
 # OS generated files #
 ######################
 .DS_Store*
