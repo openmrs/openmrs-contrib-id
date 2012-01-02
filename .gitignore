@@ -1,6 +1,6 @@
 # Logfiles #
 ############
-logs/*
+logs/*.log
 nohup.out
 
 # Compiled module #

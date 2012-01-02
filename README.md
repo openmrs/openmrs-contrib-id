@@ -1,7 +1,7 @@
-OpenMRS ID
+OpenMRS ID 
 =========
 
-User signup and self-service application for managing OpenMRS ID. Connects with an LDAP server to store user data. Build on [Node](https://github.com/joyent/node).
+User signup and self-service application for managing OpenMRS ID. Connects with an LDAP server to store user data. Built on [Node](https://github.com/joyent/node).
 
 ##Installing:
 
@@ -9,16 +9,17 @@ User signup and self-service application for managing OpenMRS ID. Connects with 
 
 1. Install Dependencies:
 
-        npm install express connect log4js ejs nodemailer recaptcha connect-mysql-session`
+        npm install express connect log4js ejs nodemailer recaptcha connect-mysql-session
 
 2. Build node-LDAP (modern version at [jeremycx/node-LDAP](https://github.com/jeremycx/node-LDAP))
 
         cd node-LDAP/
         node-waf configure
-        cd src
-        make
+	node-waf build
 
 3. Configure Dashboard in app/conf.js
+
+4. Run `start.sh` (alternatively, `node app/app.js`)
 
 ##To do:
 - update to node 0.6.x

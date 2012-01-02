@@ -21,7 +21,6 @@ def configure(conf):
 
 def build(bld):
   #added based on http://permalink.gmane.org/gmane.comp.lang.javascript.nodejs/29563
-  bld.all_envs['default'] = bld.all_envs['Release']
 
   obj = bld.new_task_gen('cxx', 'shlib', 'node_addon')
   obj.cxxflags = ['-DLDAP_DEPRECATED']
