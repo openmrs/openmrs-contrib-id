@@ -112,7 +112,7 @@ exports.restrictTo = function(role) {
 			else {
 				req.flash('error', 'You are not authorized to access this resource.');
 				if (req.url=='/') res.redirect(url.resolve(conf.site.url, '/disconnect'));
-				else res.redirect('home');
+				else res.redirect('/');
 			}
 		}
 		else next();
@@ -132,7 +132,7 @@ exports.forceLogout = function(req, res, next) {
 	if (req.session.user) {
 		log.info(req.session.user+': denied access to anonymous-only '+req.url);
 		req.flash('error', 'You must be logged out to access '+req.url);
-		res.redirect('home');
+		res.redirect('/');
 	}
 	else next();
 };
