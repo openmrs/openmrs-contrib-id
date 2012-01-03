@@ -1,7 +1,7 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,700,600|Crimson+Text:400,700);
 
 body {
-	font-family: 'Crimson Sans', serif;
+	font-family: 'Crimson Text', serif;
 	font-size: 16px;
 	background: #FFFBF2;
 	margin: 0;
@@ -129,6 +129,9 @@ h2 {
 }
 i, em {
 	font-style: normal;
+}
+b, strong {
+	line-height: 16px;
 }
 
 /* LOGIN MENU */
@@ -308,6 +311,7 @@ i, em {
 	float: left;
 	margin-right: 8px;
 	padding-top: 6px;
+	line-height: 16px;
 }
 
 /* HEADER */

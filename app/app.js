@@ -39,7 +39,6 @@ mail.SMTP = conf.email.smtp;
 /* Routes */
 
 app.get('/', function(req, res, next){
-	res.cookie('foo', 'bar'); //test
 	if (req.session.user)
 		https.get({host: 'answers.openmrs.org', path: '/users/'+req.session.user.uid }, function(response) {
 			if (response.statusCode == 200) app.helpers({osqaUser: true});
