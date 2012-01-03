@@ -22,25 +22,14 @@ $().ready(function(){
 	/* initiate Placeholder.js */
 	Placeholder.init({wait: true});
 	
+	/* focus on a failed input field */
+	if ($('.field.fail')) $('.field.fail:first').children('input').focus();
 	
+	/* "MORE" BANNER */	
 	var moreExpanded = $('#header ul#more').outerHeight(true),
 		moreOriginal = $('#header li#moreContainer').outerHeight(true),
 		moreOpened = false, 
-		searchTimeout = {},
-		origUserText = $('.field input[name=username]').siblings('span').html();
 	
-	if ($('.field.fail')) $('.field.fail:first').children('input').focus()
-	
-	$('html').click(function(){
-		if (moreOpened==true) {
-			$('#header li#moreContainer').attr('style', '').removeClass('on');
-			moreOpened = false;
-		}
-		if ($('body').hasClass('inline-login')) $('body').removeClass('inline-login');
-		if ($('body').hasClass('highlight-banners')) $('body').removeClass('highlight-banners');
-	});	
-	
-	/* "MORE" BANNER */	
 	$('#header li#moreContainer').click(function(event){
 		event.stopPropagation();
 		if (moreOpened==false) {
@@ -58,6 +47,7 @@ $().ready(function(){
 	});
 	
 	
+	
 	/* LOGIN POPOVER */
 	var button = $('#login-menu'),
 		popover = $('#login-menu .popover'),
@@ -69,7 +59,6 @@ $().ready(function(){
 		event.preventDefault();
 		event.stopPropagation();
 		$(this).siblings('.popover').toggleClass('visible').children('input')[0].focus();
-			/* $('#inline-login input[name="loginusername"]').focus(); */
 	});
 		
 	popoverLink.click(function(event){
@@ -109,6 +98,7 @@ $().ready(function(){
 	window.onresize = setLoginPopoverMargins;
 	
 	
+	
 	/* FIELD DESCRIPTIONS */
 	$('.field input').focusin(function(){
 		$('.description').css('visibility', 'hidden');
@@ -126,7 +116,7 @@ $().ready(function(){
 		$('.field input:focus').siblings('.description').css('visibility', 'visible');
 	
 	$('.field input[name=username]').keyup(function(){
-		var userInput = this, userVal = $(this).val();
+		var userInput = this, userVal = $(this).val(), searchTimeout = {}, origUserText = $('.field input[name=username]').siblings('span').html();
 		clearTimeout(searchTimeout);
 		if (userVal) {
 			searchTimeout = setTimeout(function(){
@@ -186,4 +176,16 @@ $().ready(function(){
 			toClone.insertAfter(this);
 		}
 	});	
+	
+	
+	
+	/* close any opened item when clicked outside (such as banner, popover, etc) */
+	$('html').click(function(){
+		if (moreOpened==true) {
+			$('#header li#moreContainer').attr('style', '').removeClass('on');
+			moreOpened = false;
+		}
+		if ($('body').hasClass('inline-login')) $('body').removeClass('inline-login');
+		if ($('body').hasClass('highlight-banners')) $('body').removeClass('highlight-banners');
+	});
 });
