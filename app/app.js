@@ -45,17 +45,7 @@ app.get('/', function(req, res, next){
 			else app.helpers({osqaUser: false});
 			
 			app.dynamicHelpers({
-				crowdSidebar: function(req, res) {
-					if (req.session.user && req.session.user.memberof.indexOf('crowd-administrators') > -1)
-						app.locals({sidebar: ['sidebar/crowd']});
-					else {
-						var sidebarList = app.helpers()._locals.sidebar;
-						if (sidebarList) {
-							crowdIdx = sidebarList.indexOf('sidebar/crowd');
-							if (crowdIdx > -1) sidebarList.splice(crowdIdx, 1);
-						}
-					}
-				}
+				
 			});
 			
 			res.render('root');
@@ -137,6 +127,7 @@ app.post('/signup', mid.forceLogout, validate(), function(req, res, next){
 	ldap.addUser(id, first, last, email, pass, function(e, userobj){
 		if (e) return next(e);
 		log.info('created account "'+id+'"');
+		req.flash('success', 'Your account was successfully created. Welcome!');
 		req.session.user = userobj;
 		res.redirect('/');
 	});
@@ -144,7 +135,9 @@ app.post('/signup', mid.forceLogout, validate(), function(req, res, next){
 	fs.readFile(path.join(__dirname, '../views/email/welcome.ejs'), function(err, data) {
 	if (err) return next(err);
 	var template = data.toString();
-	var rendered = ejs.render(template, {locals: {displayName: first+' '+last}});
+	var rendered = ejs.render(template, {locals: 
+		{displayName: first+' '+last, username: id, siteURL: conf.site.url, url: url}}
+	);
 		mail.send_mail(
 		    {   sender: "'OpenMRS ID Dashboard' <id-noreply@openmrs.org>",
 		        to: email,
@@ -177,18 +170,14 @@ app.get('/disconnect', function(req, res, next) {
 	res.redirect('/');
 });
 
-/*
-app.get(/^\/edit\/?$|^\/edit\/\w+$/, mid.forceLogin, mid.useTabber, function(req, res, next){
-	var user = req.session.user;
-	res.render('edit', {sidebar: ['sidebar/editprofile-avatar']});
-});
-*/
-
-app.get(/^\/edit\/?$|^\/edit\/profile\/?$/, mid.forceLogin, mid.useTabber, function(req, res, next){
-	res.render('edit-profile', {sidebar: ['sidebar/editprofile-avatar']});
+app.get(/^\/edit\/?$|^\/edit\/profile\/?$/, mid.forceLogin, function(req, res, next){
+	var sidebar = app.helpers()._locals.sidebar;
+	var sidebar = (typeof sidebar == 'object') ? sidebar : []; // if no sidebars yet, set as empty array
+	
+	res.render('edit-profile', {sidebar: sidebar.concat(['sidebar/editprofile-avatar'])});
 });
 
-app.get(/^\/edit\/?$|^\/edit\/password\/?$/, mid.forceLogin, mid.useTabber, function(req, res, next){
+app.get(/^\/edit\/?$|^\/edit\/password\/?$/, mid.forceLogin, function(req, res, next){
 	res.render('edit-password');
 });
 
@@ -247,7 +236,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 	
 	function gotUser(e, obj) {
 		function finish() {
-			req.flash('info', 'If the specified account exists, a password reset request has been sent to its primary and secondary email addresses.');
+			req.flash('info', 'If the specified account exists, an email has been sent to your address(es) with further instructions to reset your password.');
 	        return res.redirect('/');
 		}
 		

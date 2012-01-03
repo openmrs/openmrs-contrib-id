@@ -22,9 +22,9 @@ a:hover {
 	position: relative;
 }
 #main {
-	width: 625px;
+	width: 615px;
 	float: left;
-	margin: 0 10px 0 30px;
+	margin: 0 20px 0 30px;
 	position: relative;
 	padding-top: 10px;
 }
@@ -110,6 +110,9 @@ h2 {
 	text-shadow: 0 2px 0 #ebe6dd;
 	padding: 0;
 	margin: 0 0 5px;
+}
+h2 a:link, h2 a:visited {
+	color: #4d4129;
 }
 #main>h2 {
 	margin: 18px 0 6px;
@@ -309,7 +312,7 @@ b, strong {
 	width: 300px;
 	height: 61px;
 	float: left;
-	margin-right: 8px;
+	margin: 0 5px 5px 0;
 	padding-top: 6px;
 	line-height: 16px;
 }

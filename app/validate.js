@@ -57,10 +57,17 @@ module.exports = function(redirect) {
 				if (!user || !user[conf.user[field]] || (user[conf.user[field]] && b[field] != user[conf.user[field]])) {
 				
 					if (field == 'username')
-						if (empty(field) && !conf.user.usernameRegex.exec(b[field])) fail(field);
+						if (empty(field) && !conf.user.usernameRegex.exec(b[field])) fail(field); // not a legal username
+						else { // check against current usernames
+							calls++;
+							ldap.getUser.call(this, b[field], function(e, obj){
+								if (obj) fail('username', 'This username is already taken. Better luck next time.');
+								finish();
+							});
+						}
 					if (field == 'email')
-						if (empty(field) && !conf.email.validation.emailRegex.test(b[field])) fail(field);
-						else if (conf.email.validation.forceUniquePrimaryEmail) {
+						if (empty(field) && !conf.email.validation.emailRegex.test(b[field])) fail(field); // not an email string
+						else if (conf.email.validation.forceUniquePrimaryEmail) { // force unique email address
 							calls++;
 							var thisField = field;
 							ldap.getUserByEmail(b[field], function(e, obj){

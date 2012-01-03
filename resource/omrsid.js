@@ -111,18 +111,17 @@ $().ready(function(){
 	
 	/* FIELD DESCRIPTIONS */
 	$('.field input').focusin(function(){
+		$('.description').css('visibility', 'hidden');
 		$(this).siblings('.description').css('visibility', 'visible');
 	});
-	$('.field input').focusout(function(){
-		$(this).siblings('.description').css('visibility', 'hidden');
-	});
+	
 	$('.field.noedit p').click(function(){
 		$(this).siblings('.description').css('visibility', 'visible');
 	}).mouseout(function(){
 		$(this).siblings('.description').css('visibility', 'hidden');
 	});
 	
-	// Show description for autofocused field
+	// Show description of page draws with an input focused (autofocused)
 	if ($('.field input:focus').siblings('.description').css('visibility') != 'visible')
 		$('.field input:focus').siblings('.description').css('visibility', 'visible');
 	

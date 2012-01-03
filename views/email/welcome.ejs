@@ -4,11 +4,13 @@
 </head>
 <body>
 	<div id="main">
-	<a href="http://id.openmrs.org"><img src="http://id.openmrs.org/resource/images/logo.png" alt="OpenMRS ID"></a>
-	<h2>Hello <%= displayName %>, welcome to the OpenMRS Community!</h2>
+	<a href="<%= siteURL %>"><img src="<%= url.resolve(siteURL, 'resource/images/logo.png')%>" alt="OpenMRS ID"></a>
+	<h2>Your OpenMRS ID (<%= username %>) is ready to use!</h2>
 	
 
-<p>Thanks for signing up for an OpenMRS ID, your key to access to our online tools and services.</p>
+<p><%= displayName %>,</p>	
+
+<p>Thanks for signing up for an OpenMRS ID, your key to accessing our online tools and services.</p>
 
 <p>Your OpenMRS ID is fully configured, but you may want to continue by creating a personal space on the OpenMRS Wiki, so we can learn more about you and your interests. Go to <a href="http://wiki.openmrs.org/spaces/createpersonalspace.action">http://wiki.openmrs.org/spaces/createpersonalspace.action</a> to create a personal space.</p>
 
@@ -20,7 +22,9 @@
 <li>Answers (Q&A): <a href="http://answers.openmrs.org">http://answers.openmrs.org</a></li>
 </ul>
 
-<p>In case of problems logging in or signing up, please open a help desk ticket at <a href="http://go.openmrs.org/helpdesk">http://go.openmrs.org/helpdesk</a> - remember to include your contact information so we can assist you.</p>
+<p>To make changes to your OpenMRS ID, log in at the <a href="<%= siteURL %>">ID Dashboard</a>.</p>
+
+<p>In case of problems logging in or signing up, please open a help desk ticket at <a href="http://go.openmrs.org/helpdesk">http://go.openmrs.org/helpdesk</a> &mdash; remember to include your contact information so we can assist you.</p>
 
 <p>Thanks and welcome!</p>
 <p>OpenMRS Community Infrastructure Team</p>

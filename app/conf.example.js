@@ -90,7 +90,7 @@ email: {
 
 
 // EJS Plugs
-defaultSidebar: ["sidebar/id-whatis", "sidebar/forgotpassword", "sidebar/needhelp"],
+defaultSidebar: ["sidebar/needhelp"],
 aboutHTML: "<a href=\"/\">OpenMRS ID Dashboard</a>, v1.2",
 
 

@@ -1,15 +1,13 @@
 <% name = 'edit-profile' %>
 <% title = 'OpenMRS ID - Edit Profile' %>
 <% headline = user[conf.user.displayname]+"'s Profile" %>
+<% sidebar = ['sidebar/editprofile-avatar'] %>
 
 <form action="/edit/profile" method="post" class="forcelabel">
 	
 	<div class="field noedit">
 		<label>Username</label>
 		<p><%= user[conf.user.username] %></p>
-		<span class="description">
-			Usernames are not modifiable, but here's yours for reference.
-		</span>
 	</div>
 	
 	<div class="field two-up<% if (fail.firstname || fail.lastname ) { %> fail<% } %>">

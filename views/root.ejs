@@ -1,10 +1,7 @@
+<% title = 'OpenMRS ID - '+user[conf.user.displayname] %>
 <% name = 'root' %>
 <% headline = 'Welcome to the Dashboard, '+user[conf.user.displayname]+'.' %>
-<% pageInfo = {
-	title: user[conf.user.displayname],
-	headline: 'Welcome to the Dashboard, '+user[conf.user.displayname]+'.',
-	showHeadlineAvatar: true
-} %>
+<% if (user.memberof.indexOf('dashboard-administrators') > -1) { sidebar = ['sidebar/crowd'] } %>
 
 <p><h2>New to the OpenMRS Community?</h2>
 Welcome! We'd love it if you completed the following steps to let us know who you are:
@@ -26,7 +23,7 @@ With your OpenMRS ID, you'll be able to log in to and use the services below:</p
 
 <div class="box">
 	<div class="logo"><img src="/resource/images/service_logos/jira.png"></div>
-	<a href="https://tickets.openmrs.org"><h2>JIRA Ticketing System</h2></a>
+	<a href="https://tickets.openmrs.org"><h2>JIRA Issue Tracking</h2></a>
 	<a class="sub" href="https://tickets.openmrs.org/secure/ViewProfile.jspa">View Profile</a>
 </div>
 

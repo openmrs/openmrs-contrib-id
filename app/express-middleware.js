@@ -70,7 +70,26 @@ app.dynamicHelpers({
 		
 		// Hand the result back to EJS
 		app.helpers({navLinks: toRender});
-	}
+	},
+	
+	// determine which non-default sidebars to render
+	// this code should read from the conf.js "pages" structure (see to-dos)
+	/*groupPermissionSidebar: function(req) {
+		var permissionSidebar = {'sidebar/crowd': 'crowd-administrators'},
+			loggedOutSidebar = ['sidebar/id-whatis', 'sidebar/forgotpassword'],
+		
+		if (!req.session.user) // not logged in, show sidebar
+			app.helpers({sidebar: loggedOutSidebar});
+		else {
+			sidebarsToRender = [] // sidebar elements to be rendered
+			for (theSidebar in permissionSidebar) {
+				if (req.session.user.memberof.indexOf(permissionSidebar[theSidebar]) > -1) // if user is in required group
+					sidebarsToRender.push(theSidebar);
+			}
+			app.helpers({sidebar: sidebarsToRender});
+		}	
+	}*/
+	
 });
 
 exports.openmrsHelper = function(){
