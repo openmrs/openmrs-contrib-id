@@ -55,7 +55,10 @@ app.dynamicHelpers({
 		var list = conf.userNavLinks,
 			toRender = {};
 			
+		var startDate = Date.now();
+		log.trace('userNavLinks: entering for loop');
 		for (link in list) {
+			
 			if (list[link].visibleLoggedOut) {
 				if (!req.session.user) toRender[link] = list[link];
 			}
@@ -67,6 +70,8 @@ app.dynamicHelpers({
 				else if (req.session.user) toRender[link] = list[link];
 			}
 		}
+		var timeTaken = Date.now() - startDate;
+		log.trace('userNavLinks: outside for loop, took '+timeTaken);
 		
 		// Hand the result back to EJS
 		app.helpers({navLinks: toRender});
@@ -76,24 +81,6 @@ app.dynamicHelpers({
 		for (page in toRender) names += page+', ';
 		log.debug('will render nav-links: '+names);
 	},
-	
-	// determine which non-default sidebars to render
-	// this code should read from the conf.js "pages" structure (see to-dos)
-	/*groupPermissionSidebar: function(req) {
-		var permissionSidebar = {'sidebar/crowd': 'crowd-administrators'},
-			loggedOutSidebar = ['sidebar/id-whatis', 'sidebar/forgotpassword'],
-		
-		if (!req.session.user) // not logged in, show sidebar
-			app.helpers({sidebar: loggedOutSidebar});
-		else {
-			sidebarsToRender = [] // sidebar elements to be rendered
-			for (theSidebar in permissionSidebar) {
-				if (req.session.user.memberof.indexOf(permissionSidebar[theSidebar]) > -1) // if user is in required group
-					sidebarsToRender.push(theSidebar);
-			}
-			app.helpers({sidebar: sidebarsToRender});
-		}	
-	}*/
 	
 });
 

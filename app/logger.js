@@ -15,6 +15,7 @@ exports.add = function(logname) {
 	// use environment specified for Express
 	if (process.env.NODE_ENV == 'development') thisLog.setLevel('debug');
 	if (process.env.NODE_ENV == 'production') thisLog.setLevel('info');
+	if (process.env.NODE_ENV == 'trace') thisLog.setLevel('trace');
 	else thisLog.setLevel('debug');
 	
 	return thisLog;
