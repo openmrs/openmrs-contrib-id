@@ -127,27 +127,28 @@ app.post('/signup', mid.forceLogout, validate(), function(req, res, next){
 	ldap.addUser(id, first, last, email, pass, function(e, userobj){
 		if (e) return next(e);
 		log.info('created account "'+id+'"');
+		
+		fs.readFile(path.join(__dirname, '../views/email/welcome.ejs'), function(err, data) {
+		if (err) return next(err);
+		var template = data.toString();
+		var rendered = ejs.render(template, {locals: 
+			{displayName: first+' '+last, username: id, siteURL: conf.site.url, url: url}}
+		);
+			mail.send_mail(
+			    {   sender: "'OpenMRS ID Dashboard' <id-noreply@openmrs.org>",
+			        to: email,
+			        subject:'[OpenMRS] Welcome to the OpenMRS Community',
+			        html: rendered
+			    }, function(e, success){
+			    	if (e) return log.error(e.stack);
+			        log.info('sent welcome mail to '+email);
+			    }
+			);
+		});
+		
 		req.flash('success', 'Your account was successfully created. Welcome!');
 		req.session.user = userobj;
 		res.redirect('/');
-	});
-	
-	fs.readFile(path.join(__dirname, '../views/email/welcome.ejs'), function(err, data) {
-	if (err) return next(err);
-	var template = data.toString();
-	var rendered = ejs.render(template, {locals: 
-		{displayName: first+' '+last, username: id, siteURL: conf.site.url, url: url}}
-	);
-		mail.send_mail(
-		    {   sender: "'OpenMRS ID Dashboard' <id-noreply@openmrs.org>",
-		        to: email,
-		        subject:'[OpenMRS] Welcome to the OpenMRS Community',
-		        html: rendered
-		    }, function(e, success){
-		    	if (e) return log.error(e.stack);
-		        log.info('sent welcome mail to '+email);
-		    }
-		);
 	});
 });
 

@@ -32,8 +32,8 @@
 	</div>
 	
 	<div class="field<% if (fail.password) { %> fail<% } %>">
-		<label><% if (failed && values.password && !fail.password) { %>Re-enter <% } %>Password</label>
-		<input type="password" name="password" placeholder="<% if (failed && values.password && !fail.password) { %>Re-enter <% } %>Password">
+		<label>Password</label>
+		<input type="password" name="password" placeholder="Password">
 		<span class="description">
 			<span class="failtext"><% if (failReason.password) { %><%= failReason.password %><% } else { %>Please enter a valid password.<% } %> </span>
 			Passwords must be at least 8 characters long.
@@ -41,8 +41,8 @@
 	</div>
 	
 	<div class="field<% if (fail.recaptcha_response_field) { %> fail<% } %>" id="recaptcha_widget">
-		<label><% if (failed && values.recaptcha_response_field && !fail.recaptcha_response_field) { %>Re-enter <% } %>Captcha</label>
-		<input type="text" id="recaptcha_response_field" name="recaptcha_response_field" placeholder="<% if (failed && values.recaptcha_response_field) { %>Re-enter CAPTCHA<% } else { %>Are you human?<% } %>">
+		<label>Captcha</label>
+		<input type="text" id="recaptcha_response_field" name="recaptcha_response_field" placeholder="Are you human?">
 		<span class="description">
 			<span class="failtext"><% if (failReason.email) { %><%= failReason.email %><% } else { %>Incorrect, please try again.<% } %> </span>
 			<span class="recaptcha_only_if_image">Enter the words below:</span>

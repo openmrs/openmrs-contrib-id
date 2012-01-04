@@ -70,6 +70,11 @@ app.dynamicHelpers({
 		
 		// Hand the result back to EJS
 		app.helpers({navLinks: toRender});
+		
+		// debug
+		var names = '';
+		for (page in toRender) names += page+', ';
+		log.debug('will render nav-links: '+names);
 	},
 	
 	// determine which non-default sidebars to render

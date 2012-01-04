@@ -172,7 +172,7 @@ b, strong {
 	background: url('/resource/images/nav-indicator.png') no-repeat;
 	height: 8px;
 	width: 14px;
-	z-index: 4;
+	z-index: 55;
 }
 .popover.visible ~ .popover-direction {
 	display: block;
@@ -184,7 +184,7 @@ b, strong {
 	right: 0;
 	top: 41px;
 	padding: 10px 12px;
-	z-index: 1;
+	z-index: 50;
 	
 	/* From WordPress */
 	background: #fff;
@@ -345,6 +345,7 @@ ul#services {
 	float: left;
 	padding: 0;
 	position: relative;
+	z-index: 30;
 }
 
 #services>a>li, #services>li {
