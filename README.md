@@ -38,3 +38,7 @@ User signup and self-service application for managing OpenMRS ID. Connects with 
 - Google Apps
     - have LDAP password changes propagate to google apps
 - include OpenMRS Code of Conduct (ITSM-1852)
+
+
+##License:
+Licensed under the [OpenMRS Public License](http://license.openmrs.org) version 1.1
