@@ -114,7 +114,7 @@ module.exports = function(redirect) {
 						});
 					}
 					if (field == 'recaptcha_response_field') {
-						calls++; // need to wait on a callback
+						calls++; // need to wait for the verification callback
 						var captchaData = {
 							remoteip:  req.connection.remoteAddress,
 							challenge: req.body.recaptcha_challenge_field,
@@ -122,8 +122,8 @@ module.exports = function(redirect) {
 						}, recaptcha = new Recaptcha(conf.validation.recaptchaPublic, conf.validation.recaptchaPrivate, captchaData);
 						
 					    recaptcha.verify(function(success, error_code) {
-					    	finish();
 					        if (!success) fail(field);
+					        finish();
 					    });
 					}
 					if (field == 'firstname' || field == 'lastname' || field == 'loginusername' || field == 'loginpassword')
