@@ -66,11 +66,12 @@ app.dynamicHelpers({
 				if (!req.session.user) toRender[link] = list[link];
 			}
 			else if (list[link].visibleLoggedIn) {
+				/* DISABLED due to bugs - ITSM-
 				if (list[link].requiredGroup) {
 					if (req.session.user && req.session.user.memberof.indexOf(list[link].requiredGroup) > -1)
 						toRender[link] = list[link];
 				}
-				else if (req.session.user) toRender[link] = list[link];
+				else */if (req.session.user) toRender[link] = list[link];
 			}
 			else toRender[link] = list[link];
 		}
