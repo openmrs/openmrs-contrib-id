@@ -264,12 +264,12 @@ exports.updateUser = function(user, cb) { // updates user using modified "user" 
 					/*if ((allIndex > -1 && userIndex > -1) || (allIndex < 0 && userIndex < 0)) // stays a member/nonmember
 						log.debug('no action for '+group);*/
 					if (allIndex > -1 && userIndex < 0) { // is a member, no longer a member
-						//log.debug('remove from '+group);
+						log.trace('group processor: remove '+user[conf.ldap.user.username]+' from '+group);
 						allMembers.splice(allIndex, 1);
 						updateMembers();
 					}
 					else if (allIndex < 0 && userIndex > -1) { // is not a member, will become a member
-						//log.debug('add to '+group);
+						log.trace('group processor: add '+user[conf.ldap.user.username]+' to '+group);
 						allMembers.push(user.dn);
 						updateMembers();
 					}

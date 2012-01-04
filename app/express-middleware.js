@@ -57,8 +57,11 @@ app.dynamicHelpers({
 			
 		var startDate = Date.now();
 		log.trace('userNavLinks: entering for loop');
-		for (link in list) {
+		if (req.session.user) log.trace('userNavLinks: current groups: '+req.session.user.memberof.toString());
+		
+		for (var link in list) {
 			
+			// determine if session has access to page
 			if (list[link].visibleLoggedOut) {
 				if (!req.session.user) toRender[link] = list[link];
 			}
@@ -69,6 +72,7 @@ app.dynamicHelpers({
 				}
 				else if (req.session.user) toRender[link] = list[link];
 			}
+			else toRender[link] = list[link];
 		}
 		var timeTaken = Date.now() - startDate;
 		log.trace('userNavLinks: outside for loop, took '+timeTaken);
