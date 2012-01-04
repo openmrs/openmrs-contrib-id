@@ -9,7 +9,7 @@
 		<input type="text" name="username" placeholder="Username"<% if (failed) { %>value="<%= values.username %>"<% } %>>
 		<span class="description">
 			<span class="failtext"><% if (failReason.username) { %><%= failReason.username %><% } else { %>Please enter a valid username.<% } %> </span>
-			Your username can only contain alphanumerics (0-9, A-Z, a-z).</span>
+			Your username can only contain letters and numbers (0-9, A-Z, a-z).</span>
 	</div>
 	
 	<div class="field two-up<% if (fail.firstname || fail.lastname ) { %> fail<% } %>">
@@ -17,7 +17,7 @@
 		<input type="text" name="firstname" placeholder="Given Name"<% if (failed) { %>value="<%= values.firstname %>"<% } %>>
 		<input type="text" name="lastname" placeholder="Surname"<% if (failed) { %>value="<%= values.lastname %>"<% } %>>
 		<span class="description">
-			<span class="failtext">Both a first and last name are required.</span>
+			<span class="failtext">Both a given name and surname are required.</span>
 			Your name identifies you across the OpenMRS Community.
 		</span>
 	</div>

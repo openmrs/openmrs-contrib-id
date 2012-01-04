@@ -1,7 +1,7 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,700,600|Crimson+Text:400,700);
 
 body {
-	font-family: 'Crimson Text', serif;
+	font-family: 'Crimson Text', 'Baskerville', 'Palatino', 'Georgia', serif;
 	font-size: 16px;
 	background: #FFFBF2;
 	margin: 0;
@@ -38,7 +38,7 @@ a:hover {
 	background: #C6D6E0;	
 	border-color: #83A6BD;
 	
-	font: 600 14px 'Open Sans', serif;
+	font: 600 14px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 }
 .flash span {
 	width: 874px;
@@ -93,7 +93,7 @@ a:hover {
 }
 
 h1 {
-	font: bold 24px 'Open Sans', sans-serif;
+	font: bold 24px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 	color: #4d4129;
 	margin-bottom: 12px;
 }
@@ -105,7 +105,7 @@ h1 {
 }
 
 h2 {
-	font: 600 18px 'Open Sans', sans-serif;
+	font: 600 18px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 	color: #4d4129;
 	text-shadow: 0 2px 0 #ebe6dd;
 	padding: 0;
@@ -143,7 +143,7 @@ b, strong {
 	position: absolute;
 	right: 0;
 	z-index: 5;
-	font: 14px 'Open Sans', 'Helvetica', sans-serif;
+	font: 14px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 
 	/* From WordPress */
 	border: 1px solid #ddd;
@@ -207,7 +207,7 @@ b, strong {
 	width: auto;
 }
 #login-menu .popover span {
-	font: 10px 'Lucida Grande', sans-serif;
+	font: 10px 'Lucida Grande', 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
 }
 #login-menu .fail .failtext {
 	display: block !important;
@@ -243,19 +243,21 @@ b, strong {
 	height: 20px;
 	width: 100%;
 	margin: 0;
-	font: 11px 'Open Sans', sans-serif;
+	font: 11px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 	padding-top: 4px;
 	text-align: center;
 	padding-left: 0;
 }
 
-#user-nav a {
+#user-nav a:link {
 	padding: 12px 0;
+	text-decoration: none !important;
 }
 #user-nav li {
 	display: inline;
 	list-style: none;
 	margin: 1px 10px;
+	text-decoration: underline;
 }
 #user-nav a:hover li, #user-nav a.active li {
 	background: #F0ECE4;
@@ -263,8 +265,11 @@ b, strong {
 	margin: 0 4px;
 	border-radius: 9px;
 }
-#user-nav a.active li {background: #fffbf2;}
-#user-nav a:active li {
+#user-nav a.active li {
+	background: #fffbf2;
+	text-decoration: none;
+}
+#user-nav a:active li, #user-nav a.active li {
 	-webkit-box-shadow: inset 0 1px 1px #b38936;
 	-moz-box-shadow: inset 0 1px 1px #b38936;
 	box-shadow: inset 0 1px 1px #b38936;
@@ -272,9 +277,8 @@ b, strong {
 
 #user-nav a.active:hover li {
 	background: #fffbf2;
+	text-decoration: underline;
 }
-
-#user-nav a:last-of-type:after {content: none;}
 
 
 #user-nav a.active:link li, #user-nav a.active:visited {
@@ -541,7 +545,7 @@ body.no-placeholders label {
 }
 .field.noedit p {
 	line-height: 27px;
-	font: 11px 'Lucida Grande', 'Helvetica', serif;
+	font: 11px 'Lucida Grande', 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
 	color: #000;
 	width: 178px;
 	margin: 6px 0 0 8px;
@@ -712,7 +716,7 @@ body.no-placeholders label {
 }
 #sidebar #about {
 	text-align: center;
-	font: 400 11px 'Open Sans', sans-serif;
+	font: 400 11px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 	color: #bbb;
 	margin-bottom: 14px;
 }
@@ -726,7 +730,7 @@ body.no-placeholders label {
 	/* box-shadow: inset 0 0 4px #555555; */
 	background: #F0ECE4;
 	border-image: initial;
-	font: 11px 'Lucida Grande', sans-serif;
+	font: 11px 'Lucida Grande', 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
 	margin: 0;
 	/* overflow: hidden; */
 	padding-left: 0;

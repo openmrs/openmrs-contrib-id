@@ -118,6 +118,13 @@ userNavLinks: {
 		"visibleLoggedOut": true,
 		"visibleLoggedIn": false
 	},
+
+	"Password Reset": {
+		"url": "/reset",
+		"viewName": "reset-public",
+		"visibleLoggedOut": true,
+		"visibleLoggedIn": false
+	},
 	
 	"Edit Profile": {
 		"url": "/edit/profile",
