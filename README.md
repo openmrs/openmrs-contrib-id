@@ -1,7 +1,7 @@
 OpenMRS ID 
 =========
 
-User signup and self-service application for managing OpenMRS ID. Connects with an LDAP server to store user data. Built on [Node](https://github.com/joyent/node).
+User signup and self-service application for managing OpenMRS ID. Connects with an LDAP server to store user data. Built on [Node](https://github.com/joyent/node) and [Express](https://github.com/visionmedia/express).
 
 ##Installing:
 

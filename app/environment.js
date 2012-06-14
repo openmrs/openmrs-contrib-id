@@ -31,8 +31,8 @@ app.configure(function(){ // executed under all environments
 	app.use(express.bodyParser());
 	app.use(express.cookieParser());
 	app.use(express.session({
-		store: new MySQLSessionStore(conf.session.dbname, conf.session.username, conf.session.password, {
-			defaultExpiration: 1000*60*60*24, // session timeout if browser does not terminate session (1 day)
+		store: new MySQLSessionStore(conf.db.dbname, conf.db.username, conf.db.password, {
+			defaultExpiration: conf.session.duration, // session timeout if browser does not terminate session (1 day)
 			logging: false
 		}),
 		secret: conf.session.secret
@@ -59,4 +59,5 @@ app.configure('development', function(){
 
 app.configure('production', function(){
 	app.use(express.errorHandler());
+	
 });

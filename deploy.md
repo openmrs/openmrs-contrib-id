@@ -19,4 +19,6 @@ Start, optionally as a different user:
 	cd ../ (now in ./OpenMRS-ID)
 	sudo -u node ./start.sh
 	
+Check logs to ensure it all works	
+
 ID Dashboard logs at ./logs/openmrsid.log and runs its webserver at port 3000

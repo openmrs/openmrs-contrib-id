@@ -93,7 +93,7 @@ app.dynamicHelpers({
 		// debug
 		var names = '';
 		for (page in toRender) names += page+', ';
-		log.debug('will render nav-links: '+names);
+		log.trace('will render nav-links: '+names);
 	},
 	
 });
@@ -161,6 +161,28 @@ exports.forceLogout = function(req, res, next) {
 	}
 	else next();
 };
+
+// stops a manually-submitted POST from omitting the captcha
+// validation itself is handled by validate.js
+exports.forceCaptcha = function(req, res, next) {
+	if (req.body && req.body.recaptcha_challenge_field && req.body.recaptcha_response_field) 
+		next();
+	else {
+		res.send('Forbidden', { 'Content-Type': 'text/plain' }, 403);
+		res.end();
+	}
+};
+
+exports.stripNewlines = function(req, res, next) {
+	log.debug('before: '+req.body.loginusername);
+	if (req.body) {
+		for (field in req.body) {
+			req.body[field] = req.body[field].replace(/(\r\n|\n|\r)/gm,"");
+		}
+
+	log.debug('after: '+req.body.loginusername);	}
+	next();
+}
 
 // not used anywhere anymore, may be removed soon
 exports.useTabber = function(req, res, next) {

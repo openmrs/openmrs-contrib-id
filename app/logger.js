@@ -12,8 +12,13 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 var log4js = require('log4js'),
-	file = log4js.fileAppender(__dirname + '/../logs/openmrsid.log');
+	conf = require('./conf');
+	
+log4js.loadAppender('console');
+log4js.loadAppender('file');	
+var	file = log4js.appenders.file(__dirname + conf.logger.relativePath);
 
+log4js.replaceConsole();
 log4js.addAppender(file, 'console'); // added by default
 
 // call this to get a log for any module
@@ -23,8 +28,8 @@ exports.add = function(logname) {
 	
 	// use environment specified for Express
 	if (process.env.NODE_ENV == 'development') thisLog.setLevel('debug');
-	if (process.env.NODE_ENV == 'production') thisLog.setLevel('info');
-	if (process.env.NODE_ENV == 'trace') thisLog.setLevel('trace');
+	else if (process.env.NODE_ENV == 'production') thisLog.setLevel('info');
+	else if (process.env.NODE_ENV == 'trace') thisLog.setLevel('trace');
 	else thisLog.setLevel('debug');
 	
 	return thisLog;

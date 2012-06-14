@@ -35,7 +35,6 @@ catch (e) {
 }
 
 
-
 var conf = require('./conf'),
 	ldap = require('./openmrsid-ldap'),
 	mid = require('./express-middleware'),
@@ -44,6 +43,9 @@ var conf = require('./conf'),
 	environment = require('./environment');
 
 mail.SMTP = conf.email.smtp;
+
+/* Load Modules */
+// require('./modules/groups'); // still in development
 
 /* Routes */
 
@@ -71,7 +73,7 @@ app.get(/^\/login\/?$/, mid.forceLogout, function(req, res, next){
 	res.render('login');
 });
 
-app.post('/login', validate(), function(req, res, next){
+app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 	var completed = 0, needToComplete = 1, userobj = {},
 		username = req.body.loginusername, password = req.body.loginpassword;
 		
@@ -84,6 +86,7 @@ app.post('/login', validate(), function(req, res, next){
 		
 		if (e) { // authentication error
 			if (e.message == '49' || e.message == '34' || e.message == '53') { // login failed
+				log.debug('known login failure');
 				log.info('authentication failed for "'+username+'" ('+e.message+')');
 				req.flash('error', 'Login failed.');
 				app.helpers({fail: {loginusername: false, loginpassword: true},
@@ -91,13 +94,13 @@ app.post('/login', validate(), function(req, res, next){
 					loginpassword: password}});
 				return res.redirect(url.resolve(conf.site.url, '/login'));
 			}
-			else return next(e);
+			else {log.debug('login error');return next(e);}
 		}		
 		
 		log.info(username+': authenticated'); // no error!
 					
 		// get a crowd SSO token and set the cookie for it
-		// sorry kids, not implemented yet!
+		// not implemented yet :-(
 		/*crowd.getToken(username, password, function(error, token) {
 			if (error && error.name != 403) next(e);
 			else res.cookie('crowd.token_key', token);
@@ -105,7 +108,9 @@ app.post('/login', validate(), function(req, res, next){
 		})*/
 					
 		// get user's profile and put it in memory
+		log.trace('getting user data');
 		ldap.getUser(username, function(e, userobj) {
+			log.trace(' returned');
 			if (e) return next(e);
 			req.session.user = userobj;
 			log.debug('user '+username+' stored in session');
@@ -113,7 +118,7 @@ app.post('/login', validate(), function(req, res, next){
 			finish();
 		});
 		
-		function finish() {
+		var finish = function() {
 			completed++;
 			if (completed == needToComplete) {
 				res.redirect(url.resolve(conf.site.url, decodeURIComponent(redirect)));
@@ -129,9 +134,16 @@ app.get('/signup', mid.forceLogout, function(req, res, next){
 	});
 });
 
-app.post('/signup', mid.forceLogout, validate(), function(req, res, next){
-	var id = req.body.username.toLowerCase(), first = req.body.firstname,
-		last = req.body.lastname, email = req.body.email, pass = req.body.password;
+app.post('/signup', mid.forceLogout, mid.forceCaptcha, validate(), function(req, res, next){
+	var id = req.body.username, first = req.body.firstname, last = req.body.lastname,
+		email = req.body.email, pass = req.body.password, captcha = req.body.recaptcha_response_field;
+		
+	if (!id || !first || !last || !email || !pass || !captcha) {
+		res.send('Unauthorized POST error', { 'Content-Type': 'text/plain' }, 403);
+		res.end();
+	}
+		
+	var id = id.toLowerCase();
 	
 	ldap.addUser(id, first, last, email, pass, function(e, userobj){
 		if (e) return next(e);
@@ -180,18 +192,18 @@ app.get('/disconnect', function(req, res, next) {
 	res.redirect('/');
 });
 
-app.get(/^\/edit\/?$|^\/edit\/profile\/?$/, mid.forceLogin, function(req, res, next){
+app.get('/profile', mid.forceLogin, function(req, res, next){
 	var sidebar = app.helpers()._locals.sidebar;
 	var sidebar = (typeof sidebar == 'object') ? sidebar : []; // if no sidebars yet, set as empty array
 	
 	res.render('edit-profile', {sidebar: sidebar.concat(['sidebar/editprofile-avatar'])});
 });
 
-app.get(/^\/edit\/?$|^\/edit\/password\/?$/, mid.forceLogin, function(req, res, next){
+app.get('/password', mid.forceLogin, function(req, res, next){
 	res.render('edit-password');
 });
 
-app.post('/edit/profile', mid.forceLogin, validate(), function(req, res, next){
+app.post('/profile', mid.forceLogin, validate(), function(req, res, next){
 	var updUser = req.session.user, body = req.body;
 	if ((updUser.cn != body.firstname) || (updUser.sn != body.lastname)) updUser.displayName = body.firstname+' '+body.lastname;
 	
@@ -217,10 +229,11 @@ app.post('/edit/profile', mid.forceLogin, validate(), function(req, res, next){
 	});
 });
 
-app.post('/edit/password', mid.forceLogin, validate(), function(req, res, next){
+app.post('/password', mid.forceLogin, validate(), function(req, res, next){
 	var updUser = req.session.user;
 	ldap.changePassword(updUser, req.body.currentpassword, req.body.newpassword, function(e){
 		log.trace('password change return');
+		if (e) console.log(e.msgid);
 		if (e) return next(e);
 		log.trace('password change no errors');
 		log.info(updUser.uid+': password updated');
@@ -265,7 +278,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 		secondaryMail = (obj[conf.ldap.user.secondaryemail]) ? obj[conf.ldap.user.secondaryemail] : [];
 		
 		var resetId = connect.utils.uid(16),
-			expireDate = new Date(Date.now() + 7200000)
+			expireDate = new Date(Date.now() + 15000/* 7200000 */)
 		activeResets[resetId] = new Object;
 		activeResets[resetId].user = obj;
 		activeResets[resetId].username = username;
@@ -273,10 +286,11 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 		activeResets[resetId].timeout = setTimeout(function(){
 			log.info('password reset for '+req.body.resetCredential+' expired');
 			delete activeResets[resetId];
-		}, 7200000);
+		}, conf.ldap.user.passwordResetTimeout);
 		log.debug('activeResets set');
 		
-		fs.readFile('views/email/password-reset.ejs', function(err, data) {
+		fs.readFile(path.join(__dirname, '../views/email/password-reset.ejs'), 'utf-8', function(err, data) {
+			if (err) return next(err);
 			var template = data.toString();
 			var rendered = ejs.render(template, {locals: {
 				username: username,
@@ -335,6 +349,10 @@ app.get('/resource/*', function(req, res, next){
 	var resourcePath = path.join(__dirname, '/../resource/', req.params[0]);
 	res.sendfile(resourcePath);
 });
+
+// Legacy Redirects
+app.get('/edit/profile?', function(req, res){res.redirect('/profile')});
+app.get('/edit/password', function(req, res){res.redirect('/password')});
 
 
 /* App startup: */

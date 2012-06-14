@@ -114,14 +114,17 @@ module.exports = function(redirect) {
 					if (field == 'confirmpassword')
 						if (b['newpassword'] != b[field]) fail(field);
 					if (field == 'currentpassword') {
-						var currentField = field;
-						calls++;
-						ldap.authenticate(user[conf.user.username], b[field], function(e){
-							ldap.close(user[conf.user.username]);
-							if (e) if (e.message == '49' || e.message == '34' || e.message == '53') // login failed
-								fail(currentField, 'Authentication failed.');
-							finish();
-						});
+						if (!b[field]) fail(currentField, 'Authentication required to change password.');
+						else {
+							var currentField = field;
+							calls++;
+							ldap.authenticate(user[conf.user.username], b[field], function(e){
+								ldap.close(user[conf.user.username]);
+								if (e) if (e.message == 'Invalid credentials' || e.message == 'Bind requires options: binddn and password') // login failed
+									fail(currentField, 'Authentication failed.');
+								finish();
+							});
+						}
 					}
 					if (field == 'recaptcha_response_field') {
 						calls++; // need to wait for the verification callback

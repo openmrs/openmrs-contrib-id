@@ -20,7 +20,7 @@ function getParameterByName(name)
 $().ready(function(){
 
 	/* initiate Placeholder.js */
-	Placeholder.init({wait: true});
+	//Placeholder.init({wait: true});
 	
 	/* focus on a failed input field */
 	if ($('.field.fail')) $('.field.fail:first').children('input').focus();
@@ -28,7 +28,7 @@ $().ready(function(){
 	/* "MORE" BANNER */	
 	var moreExpanded = $('#header ul#more').outerHeight(true),
 		moreOriginal = $('#header li#moreContainer').outerHeight(true),
-		moreOpened = false, 
+		moreOpened = false;
 	
 	$('#header li#moreContainer').click(function(event){
 		event.stopPropagation();
@@ -49,7 +49,8 @@ $().ready(function(){
 	
 	
 	/* LOGIN POPOVER */
-	var button = $('#login-menu'),
+	/*
+var button = $('#login-menu'),
 		popover = $('#login-menu .popover'),
 		arrow = $('#login-menu .popover-direction'),
 		buttonLink = $('#login-menu > a'),
@@ -58,12 +59,9 @@ $().ready(function(){
 	buttonLink.click(function(event){
 		event.preventDefault();
 		event.stopPropagation();
-		$(this).siblings('.popover').toggleClass('visible').children('input')[0].focus();
+		$(this).siblings('.popover').toggleClass('visible')/*.children('input')[0].focus();
 	});
 		
-	popoverLink.click(function(event){
-		
-	});
 	popover.click(function(event){
 		event.stopPropagation();
 	})
@@ -71,31 +69,89 @@ $().ready(function(){
 		if (popover.hasClass('visible'))
 			popover.removeClass('visible');
 	});
+*/
+
+	// show popover when trigger clicked, hide when clicked outside
+	$('[data-popid].popover-trigger').click(function(event) {
+		event.preventDefault();
+		event.stopPropagation();
 		
-	var setLoginPopoverMargins = function() {
+		var trigger = $(event.target);
 		
-		var buttonWidth = button.outerWidth(),
-			buttonXOffset = button.position().left,
-			popoverWidth = popover.outerWidth(),
-			popoverXOffset = button.position().left,
-			arrowWidth = arrow.outerWidth(),
-			bodyWidth = $('body').innerWidth();
+		// get popover ID from trigger, used to identify other elements of _this_ popover
+		var popId = trigger.attr('data-popid');
 		
-		// Center the popover over the button
-		popover.css('right', (buttonWidth - popoverWidth) / 2);
-		arrow.css('right', (buttonWidth - arrowWidth) / 2);
+		var popover = $('[data-popid='+popId+'].popover');
 		
-		// Correct if the popover goes outside the window
-		if ((popoverXOffset + popoverWidth) > bodyWidth) {
-			var overshot = (popoverXOffset + popoverWidth) - bodyWidth,
-				currentMargin = parseInt(popover.css('right')),
-				toMove = currentMargin + overshot;
-			if (toMove >= 0) toMove = 0;
-			popover.css('right', toMove);
+		// display popover and focus its first input if present
+		if (!$(popover).hasClass('visible')) {
+			popover.addClass('visible');
+			var fields = popover.children('input');
+			if (fields) {
+				if (fields.length > 1) fields[0].focus();
+				else fields.focus();
+			}
 		}
+	});
+	
+	$('html').click(function(event) {
+		// if click comes from inside or is a visible popover, DO NOT close (!)
+		if ($('.popover.visible').find(event.target).length > 0
+			|| $('.popover.visible').is(event.target)) {
+			console.log('found');
+			return;
+		}
+			
+	
+		// remove visible popovers
+		$('.popover').each(function(i, elem){
+			if ($(elem).hasClass('visible'))
+				$(elem).removeClass('visible');		
+		});
+	});
+
+	
+	$.fn.centerPopover = function() {
+		this.each(function(i, element){
+			element = $(element);
+			
+			// get popover ID from trigger, used to identify other elements of _this_ popover
+			var popId = element.attr('data-popid');
+			
+			var trigger = $('[data-popid='+popId+'].popover-trigger');
+			var popover = $('[data-popid='+popId+'].popover');
+			var arrow = $('[data-popid='+popId+'].popover-direction');
+			
+			/*var*/ triggerWidth = trigger.outerWidth(),
+				triggerXOffset = trigger.offset().left,
+				triggerIntPosition = trigger.position().left;
+				popoverWidth = popover.outerWidth(),
+				popoverXOffset = trigger.offset().left,
+				arrowWidth = arrow.outerWidth(),
+				bodyWidth = $('body').innerWidth();
+			
+				
+			// Center the popover over the button
+			popover.css('right', ((triggerWidth + triggerIntPosition) - popoverWidth) / 2);
+			arrow.css('right', ((triggerWidth + triggerIntPosition) - (arrowWidth/2)) / 2);
+			
+			// Correct if the popover goes outside the window
+			if ((popoverXOffset + popoverWidth) > bodyWidth) {
+				var overshot = (popoverXOffset + popoverWidth) - bodyWidth,
+					currentMargin = parseInt(popover.css('right')),
+					toMove = currentMargin + overshot;
+				if (toMove >= 0) toMove = 0;
+				popover.css('right', toMove);
+			}
+		});
+		
+		return this; // jquery chaining
 	}
-	setLoginPopoverMargins();
-	window.onresize = setLoginPopoverMargins;
+	// re-center as window resizes
+	window.onresize = function(){
+		$('.popover').centerPopover();
+	};
+	$('.popover').centerPopover(); // center once at DOM startup
 	
 	
 	

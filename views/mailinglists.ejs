@@ -1,0 +1,30 @@
+<% name = 'mailinglists' %>
+<% title = 'OpenMRS ID - Mailing Lists' %>
+<% headline = 'Mailing Lists' %>
+<% headAppend = '<link rel="stylesheet" href="/resource/mailinglists.css">' %>
+
+<p>
+The OpenMRS community maintains several mailing lists for announcements and communication. We use Google Groups to manage our mailing lists, but you can subscribe from any e-mail address&mdash;you don't need a Google Account to subscribe.
+</p>
+
+<ul class="group-list">
+	<li>
+		<h3><a href="http://example.com" target="_blank">Group Name</a></h3>
+		<p class="description">
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam turpis libero, pharetra eu porttitor non, lacinia cursus lectus. Curabitur dui felis, pellentesque ac pretium ut, sagittis ac tortor. Aliquam massa turpis, molestie ac rhoncus nec, aliquet posuere neque.
+		</p>
+		<form action="/ajax/mailinglist/subscribe" method="post">
+			<div class="actions">
+				<input type="submit" value="Subscribe" class="popover-trigger" data-popid="grpsub">
+				<ul class="popover" data-popid="grpsub">
+					<li class="heading">Subscribe As</li>
+					<li><input type="checkbox"><label>primary@example.com</label></li>
+					<li><input type="checkbox"><label>secondary@example.com</label></li>
+					<li><input type="checkbox"><label>tertiary@example.com</label></li>
+					<li><input type="submit" class="mini" value="Save"></li>
+				</ul>
+				<div class="popover-direction" data-popid="grpsub"></div>
+			</div>
+		</form>
+	</li>
+</ul>

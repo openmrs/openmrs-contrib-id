@@ -1,0 +1,24 @@
+.placeholder {
+  background: white;
+  float: left;
+  clear: both;
+}
+.placeholder span {
+  position: absolute;
+  padding: 5px;
+  margin-left: 3px;
+  color: #999;
+}
+.placeholder input, .placeholder textarea {
+  position: relative;
+  margin: 0;
+  border-width: 1px;
+  padding: 6px;
+  background: transparent;
+  font: inherit;
+}
+
+/* Hack to remove Safari's extra padding. Remove if you don't care about pixel-perfection. */
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+    .placeholder input, .placeholder textarea { padding: 4px; }
+}

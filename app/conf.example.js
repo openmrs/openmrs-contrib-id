@@ -1,3 +1,5 @@
+/* NEEDS MODIFICATION / PLEASE UPDATE ME */
+
 /**
  * The contents of this file are subject to the OpenMRS Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -53,7 +55,8 @@ ldap: {
 			 "jira-users",
 			 "modrepo-users",
 			 "osqa-users"],
-		passwordResetPolicy: "cn=reset,ou=policy,dc=example,dc=com" // password policy when password is being reset (as opposed to default)
+		passwordResetPolicy: "cn=reset,ou=policy,dc=example,dc=com", // password policy when password is being reset (as opposed to default)
+		passwordResetTimeout: 7200000,
 	},
 	group: {
 		baseDn: "ou=groups,dc=example,dc=com",
@@ -62,16 +65,29 @@ ldap: {
 	},
 },
 
-
-// session storage & session DB
-session: {
+db: {
 	dbname: "id_dashboard_session",
 	username: "db_user",
 	password: "secret",
+}
+// session storage & session DB
+session: {
 	// session secret, used to secure session data
 	secret: "secret"
+	duration: 1000*60*60*24, // time before session terminates
 },
 
+
+//Google Groups Settings
+groups: {
+	syncInterval: 1000*60*60, // hourly
+},
+
+
+// Log settings
+logger: {
+	relativePath: '/../logs/openmrsid.log'
+},
 
 
 // Validation settings
@@ -126,7 +142,7 @@ userNavLinks: {
 		"visibleLoggedIn": false
 	},
 	
-	"Edit Profile": {
+	"Your Profile": {
 		"url": "/edit/profile",
 		"viewName": "edit-profile",
 		"visibleLoggedOut": false,
@@ -134,7 +150,7 @@ userNavLinks: {
 		"requiredGroup": "dashboard-users"
 	},
 	
-	"Change Password": {
+	"Your Password": {
 		"url": "/edit/password",
 		"viewName": "edit-password",
 		"visibleLoggedOut": false,
