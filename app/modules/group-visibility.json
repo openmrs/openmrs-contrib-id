@@ -1,0 +1,12 @@
+{
+	"_comment": "GOOGLE GROUPS VISIBILITY IN DASHBOARD: Key = group email-address; Value = true or false; Default is false",
+	
+	"announce@openmrs.org": true,
+	"dev@openmrs.org": true,
+	"implementers@openmrs.org": true,
+	"users@openmrs.org": true,
+	"svn@openmrs.org": true,
+	"status@openmrs.org": true,
+	"interns@openmrs.org": true,
+	"mentors@openmrs.org": true
+}
