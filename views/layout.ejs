@@ -89,7 +89,7 @@
 	<% var list = navLinks; for (link in list) { %>	
 		<% var same = (name == list[link].viewName) ? true : false %>
 		<a<% if (same) { %> class="active"<% } %> href="<%= (same) ? "#" : list[link].url %>">
-			<li><%= link %></li>
+			<li><% if (list[link].icon) { %><i class="<%= list[link].icon %>"></i><% } %><%= link %></li>
 		</a>
 	<% } %>
 </ul>

@@ -18,9 +18,6 @@ function getParameterByName(name)
 }
 
 $().ready(function(){
-
-	/* initiate Placeholder.js */
-	//Placeholder.init({wait: true});
 	
 	/* focus on a failed input field */
 	if ($('.field.fail')) $('.field.fail:first').children('input').focus();
@@ -45,33 +42,19 @@ $().ready(function(){
 		event.stopPropagation();
 		document.location = $(this).attr('href');
 	});
-	
-	
-	
-	/* LOGIN POPOVER */
-	/*
-var button = $('#login-menu'),
-		popover = $('#login-menu .popover'),
-		arrow = $('#login-menu .popover-direction'),
-		buttonLink = $('#login-menu > a'),
-		popoverLink = $('#login-menu .popover a');
-		
-	buttonLink.click(function(event){
-		event.preventDefault();
-		event.stopPropagation();
-		$(this).siblings('.popover').toggleClass('visible')/*.children('input')[0].focus();
+	/* close when clicked outside */
+	$('html').click(function(){
+		if (moreOpened==true) {
+			$('#header li#moreContainer').attr('style', '').removeClass('on');
+			moreOpened = false;
+		}
 	});
-		
-	popover.click(function(event){
-		event.stopPropagation();
-	})
-	$('body').click(function(event) {
-		if (popover.hasClass('visible'))
-			popover.removeClass('visible');
-	});
-*/
+	
+	
+	
+	/* POPOVERS */
 
-	// show popover when trigger clicked, hide when clicked outside
+	// show popover when trigger clicked
 	$('[data-popid].popover-trigger').click(function(event) {
 		event.preventDefault();
 		event.stopPropagation();
@@ -86,6 +69,7 @@ var button = $('#login-menu'),
 		// display popover and focus its first input if present
 		if (!$(popover).hasClass('visible')) {
 			popover.addClass('visible');
+			trigger.addClass('active');
 			var fields = popover.children('input');
 			if (fields) {
 				if (fields.length > 1) fields[0].focus();
@@ -94,23 +78,26 @@ var button = $('#login-menu'),
 		}
 	});
 	
+	// hide popover when clicked outside
 	$('html').click(function(event) {
 		// if click comes from inside or is a visible popover, DO NOT close (!)
 		if ($('.popover.visible').find(event.target).length > 0
 			|| $('.popover.visible').is(event.target)) {
-			console.log('found');
 			return;
 		}
 			
 	
 		// remove visible popovers
 		$('.popover').each(function(i, elem){
-			if ($(elem).hasClass('visible'))
-				$(elem).removeClass('visible');		
+			if ($(elem).hasClass('visible') && !$(elem).parents('form').hasClass('working')) { // if popover is visible and any parent form is not busy
+				var popId = $(elem).attr('data-popid');
+				$('[data-popid='+popId+'].popover-trigger').removeClass('active');
+				$(elem).removeClass('visible');
+			}
 		});
 	});
 
-	
+	// center popover
 	$.fn.centerPopover = function() {
 		this.each(function(i, element){
 			element = $(element);
@@ -203,7 +190,7 @@ var button = $('#login-menu'),
 	/* LOGIN FORM REDIRECT-TO */
 	$('#redirect-to').attr('value', getParameterByName('destination'));
 	
-	/* NEXT... FIELD */
+	/* NEXT... FIELD (secondary email addresses) */
 	var duplicate = function(){
 		var toClone = $(this).prev().clone(true);
 		if (toClone.children('label')) toClone.children('label').detach();
@@ -234,14 +221,89 @@ var button = $('#login-menu'),
 	});	
 	
 	
-	
-	/* close any opened item when clicked outside (such as banner, popover, etc) */
-	$('html').click(function(){
-		if (moreOpened==true) {
-			$('#header li#moreContainer').attr('style', '').removeClass('on');
-			moreOpened = false;
+	/* MAILING LISTS */
+	// label un/checks checkboxes in subscribe popover
+	$('.group-list .popover li label').click(function(){
+		var checkbox = $(this).siblings('input[type=checkbox]');
+		if (checkbox) {
+			if (checkbox.filter(':checked').length > 0)	checkbox.removeAttr('checked');	
+			else checkbox.attr('checked', 'checked');	
 		}
-		if ($('body').hasClass('inline-login')) $('body').removeClass('inline-login');
-		if ($('body').hasClass('highlight-banners')) $('body').removeClass('highlight-banners');
 	});
+	// AJAX for subscribtion-update forms
+	$('.group-list li [type=submit]').click(function(event){
+		event.preventDefault();
+		var button = $(this),
+			icon = button.find('i[class*="icon-"]'),
+			form = $(this).parents('form'),
+			submitUrl = form.attr('action');
+		
+		// show status in popover or beside button	
+		var showStatus = function(message, failed){
+			var status = button.siblings('span.status');
+			status.html('');
+			setTimeout(function(){
+				status.html(message);
+				if (failed) status.addClass('failtext');
+			}, 50);
+		};
+		
+		// make the ajax call
+		$.ajax({
+			url: submitUrl,
+			type: 'POST',
+			data: form.serialize(),
+			dataType: 'json',
+			beforeSend: function(){
+				button.addClass('active');
+				form.addClass('working');
+				showStatus('Working...');
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				button.removeClass('active');
+				form.removeClass('working');
+				showStatus('Error! ('+textStatus+' / '+errorThrown+')', true);
+			},
+			success: function(subs) {
+				button.removeClass('active');
+				form.removeClass('working');
+				showStatus('Updated.');
+				
+				// change UI text/icons to reflect change
+				var input = form.find('input[name="address"]');
+				if (input.length == 1) {
+					icon.removeClass();
+					if (subs.indexOf(input.attr('value')) > -1) {
+						button.find('i').addClass('icon-envelope');
+						button.find('span').html('Unsubscribe');
+					}
+					else {
+						button.find('i').addClass('icon-envelope-alt');
+						button.find('span').html('Subscribe');
+					}
+				}
+				
+				// check / enable email addresses that are now subscribed (sanity)
+				form.find('input[name="address"]').each(function(i, elem){
+					elem = $(elem);
+					var address = elem.attr('value');
+					if (subs.indexOf(address) > -1) { // now subscribed
+						if (elem.attr('type') == 'checkbox') {elem.attr('checked', 'checked');}
+						if (elem.attr('type') == 'hidden') {elem.attr('disabled', 'disabled');}
+					}
+					else { // now unsubscribed
+						if (elem.attr('type') == 'checkbox') {elem.removeAttr('checked');}
+						if (elem.attr('type') == 'hidden') {elem.removeAttr('disabled');}
+					}
+				});
+				
+				setTimeout(function(){
+					if (button.parents('.popover')) button.parents('.popover').removeClass('visible');
+					showStatus('');
+				}, 2000);
+			}
+		});
+		
+	});
+
 });

@@ -3,7 +3,6 @@
 var https = require('https'),
 	util = require('util'),
 	xml2js = require('xml2js'),
-	parser = new xml2js.Parser({mergeAttrs: true}), // xml to json parser, mergeAttrs cleans up data	
 	emitter = require('events').EventEmitter,
 	log = require('../logger').add('provisioning');
 
@@ -40,11 +39,19 @@ var parseError = function(status, data, callback) {
 	
 	// parse GData error
 	if (data && data.indexOf('<AppsForYourDomainErrors>') > -1) { // if Error msg exists in response
+		var parser = new xml2js.Parser({mergeAttrs: true});
 		parser.parseString(data, function(err, result){
+			log.trace('GData error detected');
 			if (err) return callback(err);
 			var code = result.error.errorCode;
 			var reason = result.error.reason;
-			return callback(new GAError(message+' (GData error '+code+': '+reason+')', status)); // send both errors
+			
+			if (code == 1303) { // "entity not valid" - returns for addresses that have no subscriptions
+				log.trace('GData error was an "entity not valid" e.g. not important');
+				return callback(null); // this wasn't a meaningful error
+			}	
+			else
+				return callback(new GAError(message+' (GData error '+code+': '+reason+')', status)); // send both errors
 		});
 		
 	}
@@ -188,7 +195,10 @@ var parseGroupFormat = function(input, callback) {
 	input.entry.forEach(function(element, i, array){
 		var grp = {};
 		element['apps:property'].forEach(function(prop){
-			if (prop.name == 'groupId') grp.address = prop.value;
+			if (prop.name == 'groupId') {
+				grp.address = prop.value;
+				grp.urlName = grp.address.replace(/@.+$/, '').toLowerCase(); 
+			}
 			else if (prop.name == 'groupName') grp.name = prop.value;
 			else if (prop.name == 'emailPermission') grp.emailPermission = prop.value;
 			else if (prop.name == 'description') grp.description = prop.value;
@@ -205,7 +215,7 @@ var parseGroupFormat = function(input, callback) {
 	Returns object containing groups for GA domain:
 	[
 		{
-			id: group@domain.com
+			address: group@domain.com
 			name: Group Name
 			emailPermission: Member
 			permissionPreset: Custom
@@ -233,6 +243,7 @@ exports.getAllGroups = function(callback) {
 				
 				parseError(res.statusCode, data, function(err){
 					if (err) return callback(err);
+					var parser = new xml2js.Parser({mergeAttrs: true});
 					parser.parseString(data, function(err, result) {
 						if (err) return callback(err);
 						
@@ -255,8 +266,8 @@ exports.getAllGroups = function(callback) {
 
 /*
 	Returns object for an email address's (user's) groups:
-	[ {name: 'GROUP_ONE', emailPermission: 'Member', permissionPreset: 'Custom', Description: 'Text'},
-	  {name: 'GROUP_TWO', emailPermission: 'Member', permissionPreset: 'Custom', Description: 'Text'}]
+	[ {address: group1@domain.com, name: 'GROUP_ONE', emailPermission: 'Member', permissionPreset: 'Custom', Description: 'Text'},
+	  {address: group2@domain.com, name: 'GROUP_TWO', emailPermission: 'Member', permissionPreset: 'Custom', Description: 'Text'}]
 */
 exports.getGroupsByEmail = function(email, callback) {
 	if (!callback instanceof Function) callback = new Function;
@@ -265,9 +276,9 @@ exports.getGroupsByEmail = function(email, callback) {
 		
 		var options = setOptions('GET', 'https://apps-apis.google.com/a/feeds/group/2.0/'+encodeURIComponent(gaDomain)+'/?member='+email);
 		var req = https.get(options, function(res) {		
-			data = '';
+			var data = '';
 			res.on('data', function(chunk) {
-				//log.trace('chunk: '+chunk); // this was slowing down the logger :(
+				log.trace('chunk: '+chunk); // this was slowing down the logger :(
 				data += chunk;
 			});
 			
@@ -277,6 +288,7 @@ exports.getGroupsByEmail = function(email, callback) {
 				parseError(res.statusCode, data, function(err){ // respond to GData API error
 					if (err) return callback(err);
 				
+					var parser = new xml2js.Parser({mergeAttrs: true});
 					parser.parseString(data, function(err, result) { // convert xml response to traversable json
 						if (err) return callback(err);
 						
@@ -312,10 +324,10 @@ exports.addUser = function(email, group, callback) {
 	verify(function(err) {
 		if (err) return callback(err);
 		
-		log.info('adding '+email+' to '+group);	
+		log.debug('adding '+email+' to '+group);	
 		var options = setOptions('POST', 'https://apps-apis.google.com/a/feeds/group/2.0/'+encodeURIComponent(gaDomain)+'/'+group+'/member');
 		var req = https.request(options, function(res) {
-			data = '';
+			var data = '';
 			res.on('data', function(chunk) {
 				//log.trace('chunk: '+chunk);
 				data += chunk;
@@ -326,6 +338,8 @@ exports.addUser = function(email, group, callback) {
 				log.trace('addUser api call closed');
 				parseError(res.statusCode, data, function(err){ // respond to GData API error
 					if (err) return callback(err);
+					
+					var parser = new xml2js.Parser({mergeAttrs: true});
 					parser.parseString(data, function(err, result) {
 						if (err) return callback(err);
 						
@@ -354,10 +368,10 @@ exports.removeUser = function(email, group, callback) {
 	verify(function(err) {
 		if (err) return callback(err);
 		
-		log.info('removing '+email+' from '+group);
+		log.debug('removing '+email+' from '+group);
 		var options = setOptions('DELETE', 'https://apps-apis.google.com/a/feeds/group/2.0/'+encodeURIComponent(gaDomain)+'/'+group+'/member/'+email);
 		var req = https.request(options, function(res) {
-			data = ''; // should not return any data, this is only to catch errors
+			var data = ''; // should not return any data, this is only to catch errors
 			res.on('data', function(chunk) {
 				//log.trace('chunk: '+chunk);
 				data += chunk;

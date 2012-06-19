@@ -66,7 +66,7 @@ module.exports = function(redirect) {
 				// only validate if field has been changed OR if field is not part of user (such as recaptcha validation)
 				if (!user || !user[conf.user[field]] || (user[conf.user[field]] && b[field] != user[conf.user[field]])) {
 				
-					if (field == 'username')
+					if (field == 'username') {
 						if (empty(field) && !conf.user.usernameRegex.exec(b[field])) fail(field); // not a legal username
 						else { // check against current usernames
 							calls++;
@@ -75,8 +75,10 @@ module.exports = function(redirect) {
 								finish();
 							});
 						}
-					if (field == 'email')
+					}
+					if (field == 'email') {
 						if (empty(field) && !conf.email.validation.emailRegex.test(b[field])) fail(field); // not an email string
+						else if (b[field].indexOf('+') > -1) fail(field, 'Due to incompatibilities with the Google Apps APIs, email addresses cannot contain "+".'); // ensure address doesn't break Google
 						else if (conf.email.validation.forceUniquePrimaryEmail) { // force unique email address
 							calls++;
 							var thisField = field;
@@ -85,6 +87,7 @@ module.exports = function(redirect) {
 								finish();
 							});
 						}
+					}
 					if (field == 'secondaryemail') {
 						// treat a single secondary-email list as multiple to keep validation DRY
 						if (typeof b[field] == 'string') {
@@ -97,6 +100,8 @@ module.exports = function(redirect) {
 							if (!b[field][i]) b[field].splice(i, 1); // delete any empty cells
 							else {
 								if ((!conf.email.validation.emailRegex.test(b[field][i]))) fail(field, undefined, i); // ensure the text entered is an email address
+								
+								if (b[field][i].indexOf('+') > -1) fail(field, 'Due to incompatibilities with the Google Apps APIs, email addresses cannot contain "+".', i); // ensure address doesn't break Google
 							
 								if (conf.email.validation.forceUniqueSecondaryEmail) { // ensure address is unique
 									calls++;

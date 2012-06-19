@@ -162,6 +162,15 @@ exports.forceLogout = function(req, res, next) {
 	else next();
 };
 
+// set a secondaryemail field to an array, prevents a lot of validation bugs
+exports.secToArray = function(req, res, next) {
+	if (req.body && req.body.secondaryemail) {
+		var secmail = req.body.secondaryemail;
+		req.body.secondaryemail = (typeof secmail == 'string') ? [secmail] : secmail;
+	}
+	next();
+}
+
 // stops a manually-submitted POST from omitting the captcha
 // validation itself is handled by validate.js
 exports.forceCaptcha = function(req, res, next) {
@@ -174,13 +183,13 @@ exports.forceCaptcha = function(req, res, next) {
 };
 
 exports.stripNewlines = function(req, res, next) {
-	log.debug('before: '+req.body.loginusername);
+	log.trace('before: '+req.body.loginusername);
 	if (req.body) {
 		for (field in req.body) {
 			req.body[field] = req.body[field].replace(/(\r\n|\n|\r)/gm,"");
 		}
 
-	log.debug('after: '+req.body.loginusername);	}
+	log.trace('after: '+req.body.loginusername);	}
 	next();
 }
 

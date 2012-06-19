@@ -310,6 +310,7 @@ exports.updateUser = function(user, cb) { // updates user using modified "user" 
 			filter: '('+conf.ldap.group.rdn+'=*)',
 			attrs: conf.ldap.group.rdn
 		}, function(e,d) {
+			log.trace('group search returned');
 			d.forEach(function(obj){
 				everyGroup.push(obj[conf.ldap.group.rdn].toString());
 			});
@@ -361,6 +362,7 @@ exports.updateUser = function(user, cb) { // updates user using modified "user" 
 	
 		
 		function finish() {
+			log.trace('updateuser finish called');
 			finished++;
 			if (finished == 2) {
 				exports.getUser(user[conf.ldap.user.rdn], function(e, changedUser){

@@ -45,7 +45,7 @@ var conf = require('./conf'),
 mail.SMTP = conf.email.smtp;
 
 /* Load Modules */
-// require('./modules/groups'); // still in development
+require('./modules/groups');
 
 /* Routes */
 
@@ -85,7 +85,7 @@ app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 		ldap.close(username);
 		
 		if (e) { // authentication error
-			if (e.message == '49' || e.message == '34' || e.message == '53') { // login failed
+			if (e.message == 'Invalid credentials') { // login failed
 				log.debug('known login failure');
 				log.info('authentication failed for "'+username+'" ('+e.message+')');
 				req.flash('error', 'Login failed.');
@@ -203,7 +203,7 @@ app.get('/password', mid.forceLogin, function(req, res, next){
 	res.render('edit-password');
 });
 
-app.post('/profile', mid.forceLogin, validate(), function(req, res, next){
+app.post('/profile', mid.forceLogin, mid.secToArray, validate(), function(req, res, next){
 	var updUser = req.session.user, body = req.body;
 	if ((updUser.cn != body.firstname) || (updUser.sn != body.lastname)) updUser.displayName = body.firstname+' '+body.lastname;
 	
