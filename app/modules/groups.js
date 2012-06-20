@@ -273,7 +273,7 @@ var syncLoop = function(){
 
 // Startup
 syncLoop(); setInterval(syncLoop, conf.groups.syncInterval);
-fs.readFile('./modules/group-visibility.json', function(err, data) { // Load group-visibilities	
+fs.readFile(__dirname+'/modules/group-visibility.json', function(err, data) { // Load group-visibilities	
 	if (err) throw err;
 	groupVisibilities = JSON.parse(data);
 });
