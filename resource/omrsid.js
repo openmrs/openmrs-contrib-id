@@ -158,6 +158,7 @@ $().ready(function(){
 	if ($('.field input:focus').siblings('.description').css('visibility') != 'visible')
 		$('.field input:focus').siblings('.description').css('visibility', 'visible');
 	
+	// Check for valid usernames on signup
 	$('.field input[name=username]').keyup(function(){
 		var userInput = this, userVal = $(this).val(), searchTimeout = {}, origUserText = $('.field input[name=username]').siblings('span').html();
 		clearTimeout(searchTimeout);
@@ -182,7 +183,7 @@ $().ready(function(){
 						}
 					}
 				});
-			}, 500);
+			}, 1000);
 		}
 		else $(this).siblings('span').html(origUserText);
 	});

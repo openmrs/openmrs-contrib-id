@@ -35,11 +35,7 @@ The OpenMRS community maintains several mailing lists for announcements and comm
 				<% } else { %>
 					<button class="popover-trigger" data-popid="<%= groups[i].urlName %>-subscriber">
 						<i class="icon-reorder"></i>
-						<% if (subs[groups[i].address].length == 0) { %>
-							<span>Subscribe to Group</span>
-						<% } else { %>
-							<span>View Subscriptions</span>
-						<% } %>
+						<span>View Subscriptions</span>
 					</button>
 					<ul class="popover" data-popid="<%= groups[i].urlName %>-subscriber">
 						<li class="heading">Subscribe<%= (subs[groups[i].address].length > 0) ? "d" : "" %> As</li>

@@ -45,56 +45,6 @@ function systemTimeout() {
 	systemTimeoutNode = setTimeout(function(){log.debug('system connection closing');system.close()}, 60000);
 }
 
-/*
-function connect(cb){
-	log.trace('LDAP system connect check');
-	if (systemTimeoutNode && systemTimeoutNode._idlePrev) clearTimeout(systemTimeoutNode);
-	if (typeof(cb)!='function') cb = new Function;
-	
-	try {
-		system.search({
-			base: conf.ldap.server.baseDn,
-			scope: system.SUBTREE,
-			filter: '('+conf.ldap.server.rdn+'='+conf.ldap.server.loginUser+')',
-			attrs: conf.ldap.server.rdn
-		}, function(e,d) {
-			if (e && e.message == 'Request timed out') {
-				return cb(e);		
-			}	
-			else if (e) { // not connected
-				log.trace('response received: '+e.message);
-				log.debug('no server connection, will reconnect')
-				
-				
-				system.open(function(err){
-					if (err) return cb(err);
-					log.trace('system connection openened');
-					
-					system.simplebind({
-						binddn: conf.ldap.server.rdn+'='+conf.ldap.server.loginUser+','+conf.ldap.server.baseDn, password: conf.ldap.server.password
-					}, function(e){
-						if (e) return cb(e);
-						log.debug('system bind successful, retrying connection');
-						cb();
-						systemTimeout();
-					});
-				});
-			}
-			else { // connected
-				if (d[0][conf.ldap.server.rdn]==conf.ldap.server.loginUser) {
-					cb();
-					systemTimeout();
-				}
-				else cb(new Error('Unable to verify LDAP connection'));	
-			}
-		});
-	} catch (e) {
-		log.error('Unable to connect to LDAP server');
-		cb(e);
-	}
-}
-*/
-
 var connect = function(cb) { // a new connect function
 	log.trace('LDAP connection check');
 	
@@ -137,10 +87,13 @@ exports.authenticate = function(user, pass, cb) {
 	userbinds[user] = new LDAPServer({uri: conf.ldap.server.uri, version: 3});
 	userbinds[user].open(function(e){
 		if (e) return cb(e);
-		userbinds[user].simpleBind({binddn: userdn, password: pass}, function(e){
+		try {userbinds[user].simpleBind({binddn: userdn, password: pass}, function(e){
 			if (e) return cb(e);			
 			cb(e);
-		});
+		});}
+		catch (ex) {
+			return cb(ex);
+		}
 	});
 }
 

@@ -66,7 +66,7 @@ var parseError = function(status, data, callback) {
 // AUTHENTICATION & CONNECTION // - keeps an up-to-date token available from GA
 
 var connect = function(callback) {
-	if (!callback instanceof Function) callback = new Function;
+	if (typeof callback != 'function') callback = function(err){if (err) log.error(err);}
 	
 	var finish = function(error, newToken) { // called once done
 		
@@ -119,9 +119,7 @@ var connect = function(callback) {
 				connection.emit('connected');
 				connectionStatus = 2; // now ready to accept calls
 				
-				setTimeout(function(){ // get a new token in 20 hrs (token expires in 24)
-					connect();
-				}, 1000*60*60*20);
+				setTimeout(connect, 1000*60*60*20); // get a new token in 20 hrs (token expires in 24)
 				
 				callback();
 			});

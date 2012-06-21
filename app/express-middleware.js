@@ -46,11 +46,12 @@ app.dynamicHelpers({
 		replace.title = (current.title) ? current.title : conf.site.title;
 		replace.failed = (current.failed) ? current.failed : false;
 		replace.showHeadlineAvatar = (current.showHeadlineAvatar) ? current.showHeadlineAvatar : true;
+		replace.showSidebar = (current.showSidebar) ? current.showSidebar : true;
 		
 		['defaultSidebar', 'sidebar'].forEach(function(prop){
 			replace[prop] = (current[prop]) ? current[prop] : [];
 		});
-		['bodyAppend', 'headAppend', 'headline', 'aboutHTML', 'viewName'].forEach(function(prop){
+		['bodyAppend', 'headAppend', 'headline', 'aboutHTML', 'viewName', 'sentTo'].forEach(function(prop){
 			replace[prop] = (current[prop]) ? current[prop] : '';
 		});
 		['flash', 'fail', 'values', 'failReason', 'navLinks'].forEach(function(prop){
@@ -189,7 +190,8 @@ exports.stripNewlines = function(req, res, next) {
 			req.body[field] = req.body[field].replace(/(\r\n|\n|\r)/gm,"");
 		}
 
-	log.trace('after: '+req.body.loginusername);	}
+		log.trace('after: '+req.body.loginusername);
+	}
 	next();
 }
 

@@ -20,8 +20,7 @@ var express = require('express'),
 	mail = require('nodemailer'),
 	https = require('https'),
 	url = require('url'),
-	app = express.createServer(),
-	activeResets = new Object;
+	app = express.createServer();
 	
 exports.app = app;
 
@@ -40,7 +39,8 @@ var conf = require('./conf'),
 	mid = require('./express-middleware'),
 	log = require('./logger').add('express'),
 	validate = require('./validate'),
-	environment = require('./environment');
+	environment = require('./environment'),
+	verification = require('./email-verification');
 
 mail.SMTP = conf.email.smtp;
 
@@ -49,7 +49,10 @@ require('./modules/groups');
 
 /* Routes */
 
+
+// LOGIN-LOGOUT
 app.get('/', function(req, res, next){
+
 	if (req.session.user)
 		https.get({host: 'answers.openmrs.org', path: '/users/'+req.session.user.uid }, function(response) {
 			if (response.statusCode == 200) app.helpers({osqaUser: true});
@@ -76,6 +79,8 @@ app.get(/^\/login\/?$/, mid.forceLogout, function(req, res, next){
 app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 	var completed = 0, needToComplete = 1, userobj = {},
 		username = req.body.loginusername, password = req.body.loginpassword;
+		
+	
 		
 	var redirect = (req.body.destination) ? req.body.destination : '/';
 		
@@ -127,6 +132,18 @@ app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 	});
 });
 
+app.get('/disconnect', function(req, res, next) {
+	if (req.session.user) {
+		log.info(req.session.user.uid+': disconnecting');
+		req.session.destroy();
+	}
+	res.redirect('/');
+});
+
+
+
+// SIGNUP
+
 app.get('/signup', mid.forceLogout, function(req, res, next){
 	res.render('signup', {
 		title: 'OpenMRS ID - Sign Up',
@@ -145,31 +162,70 @@ app.post('/signup', mid.forceLogout, mid.forceCaptcha, validate(), function(req,
 		
 	var id = id.toLowerCase();
 	
-	ldap.addUser(id, first, last, email, pass, function(e, userobj){
-		if (e) return next(e);
-		log.info('created account "'+id+'"');
-		
-		fs.readFile(path.join(__dirname, '../views/email/welcome.ejs'), function(err, data) {
+	// validate email before completing signup
+	verification.begin({
+		urlBase: 'signup',
+		emails: email,
+		subject: '[OpenMRS] Welcome to the OpenMRS Community',
+		template: '../views/email/welcome-verify.ejs',
+		locals: {
+			displayName: first+' '+last,
+			username: id,
+			userCredentials: {
+				id: id, first: first, last: last, email: email, pass: pass
+			}
+		},
+		timeout: 0		
+	}, function(err){
 		if (err) return next(err);
-		var template = data.toString();
-		var rendered = ejs.render(template, {locals: 
-			{displayName: first+' '+last, username: id, siteURL: conf.site.url, url: url}}
-		);
-			mail.send_mail(
-			    {   sender: "'OpenMRS ID Dashboard' <id-noreply@openmrs.org>",
-			        to: email,
-			        subject:'[OpenMRS] Welcome to the OpenMRS Community',
-			        html: rendered
-			    }, function(e, success){
-			    	if (e) return log.error(e.stack);
-			        log.info('sent welcome mail to '+email);
-			    }
-			);
-		});
-		
-		req.flash('success', 'Your account was successfully created. Welcome!');
-		req.session.user = userobj;
-		res.redirect('/');
+		app.helpers({sentTo: email});
+		req.flash('success', "<p>Thanks and welcome to the OpenMRS Community!</p>"
+		+"<p>Before you can use your OpenMRS ID across our services, we need to verify your email address.</p>"
+		+"<p>We've sent an email to <strong>"+email+"</strong> with instructions to complete the signup process.</p>");
+		res.redirect('/signup/verify', 303);
+	});
+});
+
+app.get('/signup/verify', function(req, res, next) {
+	res.render('signedup');
+});
+
+// verification
+app.get('/signup/:id', function(req, res, next) {
+	verification.check(req.params.id, function(err, valid, locals){
+		if (err) return next(err);
+		if (valid) {
+			var user = locals.userCredentials;
+			
+			// check if user already exists, if so, fail verification
+			ldap.getUserByEmail(user.email, function(e, obj){
+				if (obj) {
+					log.debug('Signup verification requested for account that already exists.');
+					verification.clear(req.params.id);
+					
+					req.flash('error', 'The requested account already exists.');
+					res.redirect('/');	
+				}
+				else { // this is a new user
+				
+					// add the user to ldap
+					ldap.addUser(user.id, user.first, user.last, user.email, user.pass, function(e, userobj){
+						if (e) return next(e);
+						log.info('created account "'+user.id+'"');
+						
+						verification.clear(req.params.id); // delete verification
+						
+						req.flash('success', 'Your account was successfully created. Welcome!');
+						req.session.user = userobj;
+						res.redirect('/');
+					});
+				}
+			});
+		}
+		else {
+			req.flash('error', 'The requested signup verification does not exist.');
+			res.redirect('/');
+		}
 	});
 });
 
@@ -184,13 +240,9 @@ app.get('/checkuser/*', function(req, res, next){
 	});
 });
 
-app.get('/disconnect', function(req, res, next) {
-	if (req.session.user) {
-		log.info(req.session.user.uid+': disconnecting');
-		req.session.destroy();
-	}
-	res.redirect('/');
-});
+
+
+// USER PROFILE
 
 app.get('/profile', mid.forceLogin, function(req, res, next){
 	var sidebar = app.helpers()._locals.sidebar;
@@ -219,8 +271,9 @@ app.post('/profile', mid.forceLogin, mid.secToArray, validate(), function(req, r
 	
 	ldap.updateUser(updUser, function(e, returnedUser){
 		log.trace('user update returned');
+		log.trace(e);
 		if (e) return next(e);
-		log.trace('user update no errors');
+		else log.trace('user update no errors');
 		log.info(returnedUser.uid+': profile updated');
 		req.session.user = returnedUser;
 		
@@ -243,6 +296,9 @@ app.post('/password', mid.forceLogin, validate(), function(req, res, next){
 	});
 });
 
+
+// PASSWORD RESETS
+
 app.get('/reset', mid.forceLogout, function(req, res, next) {
 	res.render('reset-public');
 });
@@ -257,11 +313,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 		ldap.getUserByEmail(resetCredential, function(e, obj){gotUser(e, obj);});
 	}
 	
-	function gotUser(e, obj) {
-		function finish() {
-			req.flash('info', 'If the specified account exists, an email has been sent to your address(es) with further instructions to reset your password.');
-	        return res.redirect('/');
-		}
+	var gotUser = function(e, obj) {
 		
 		if (e) {
 			if (e.message=='User data not found') {
@@ -273,77 +325,70 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 			}
 		}
 		
-		username = obj[conf.ldap.user.username];
-		email = obj[conf.ldap.user.email];
-		secondaryMail = (obj[conf.ldap.user.secondaryemail]) ? obj[conf.ldap.user.secondaryemail] : [];
+		var username = obj[conf.ldap.user.username], email = obj[conf.ldap.user.email],
+			secondaryMail = obj[conf.ldap.user.secondaryemail] || [];
 		
-		var resetId = connect.utils.uid(16),
-			expireDate = new Date(Date.now() + 15000/* 7200000 */)
-		activeResets[resetId] = new Object;
-		activeResets[resetId].user = obj;
-		activeResets[resetId].username = username;
-		activeResets[resetId].email = email;
-		activeResets[resetId].timeout = setTimeout(function(){
-			log.info('password reset for '+req.body.resetCredential+' expired');
-			delete activeResets[resetId];
-		}, conf.ldap.user.passwordResetTimeout);
-		log.debug('activeResets set');
-		
-		fs.readFile(path.join(__dirname, '../views/email/password-reset.ejs'), 'utf-8', function(err, data) {
-			if (err) return next(err);
-			var template = data.toString();
-			var rendered = ejs.render(template, {locals: {
+		verification.begin({
+			urlBase: 'reset',
+			emails: secondaryMail.concat(email),
+			subject: '[OpenMRS] Password Reset for '+username,
+			template: '../views/email/password-reset.ejs',
+			locals: {
 				username: username,
-				email: email,
-				secondaryMail: secondaryMail,
-				resetId: resetId,
-				displayName: obj[conf.ldap.user.displayname],
-				siteURL: conf.site.url,
-				expireDate: expireDate.toLocaleString(),
-				url: url
-			}});
-					
-			mail.send_mail(
-			    {   sender: "'OpenMRS ID Dashboard' <id-noreply@openmrs.org>",
-			        to: secondaryMail.concat(email).toString(),
-			        subject:'[OpenMRS] Password Reset for '+username,
-			        html: rendered
-			    }, function(e, success){
-			    	if (e) return next(e);
-			    	else {
-				        log.info('sent reset mail to '+secondaryMail.concat(email).toString());
-				        finish();
-					}
-			    }
-			);
-			
+				displayName: obj[conf.ldap.user.displayname]
+			},
+			timeout: conf.ldap.user.passwordResetTimeout,
+		}, function(err){
+			if (err) return next(err);
+			finish();
 		});
-	}
+	};
+	
+	var finish = function() {
+		req.flash('info', 'If the specified account exists, an email has been sent to your address(es) with further instructions to reset your password.');
+        return res.redirect('/');
+	}	
 
-	});
+});
 
 app.get('/reset/:id', function(req, res, next){
 	var resetId = req.params.id;
-	if (activeResets[req.params.id])
-		res.render('reset-private', {username: activeResets[req.params.id].username});
-	else {
-		req.flash('error', 'The requested password reset has expired or does not exist.');
-		res.redirect('/');
-	}
+	verification.check(resetId, function(err, valid, locals){
+		if (err) return next(err);
+		if (valid) {
+			res.render('reset-private', {username: locals.username});
+		}
+		else {
+			req.flash('error', 'The requested password reset has expired or does not exist.');
+			res.redirect('/');
+		}
+	});
 });
 
 app.post('/reset/:id', validate(), function(req, res, next){
-	ldap.resetPassword(activeResets[req.params.id].username, req.body.newpassword, function(e){
-		if (e) return next(e);
-		clearTimeout(activeResets[req.params.id].timeout);
-		log.info('password reset for "'+activeResets[req.params.id].username+'"');
-		delete activeResets[req.params.id];
-		req.flash('success', 'Password has been reset successfully. You may now log in across the OpenMRS Community.');
-		app.helpers()._locals.clearErrors(); // keeps "undefined" from showing up in error values
-		res.redirect('/');
-	});
-	
+	log.warn('post received!');
+	verification.check(req.params.id, function(err, valid, locals){
+		if (err) return next(err);
+		if (valid) {
+			ldap.resetPassword(locals.username, req.body.newpassword, function(e){
+				if (e) return next(e);
+				log.info('password reset for "'+locals.username+'"');
+				verification.clear(req.params.id); // remove validation from DB
+				req.flash('success', 'Password has been reset successfully. You may now log in across the OpenMRS Community.');
+				app.helpers()._locals.clearErrors(); // keeps "undefined" from showing up in error values
+				res.redirect('/');
+			});
+		}
+		else {
+			req.flash('error', 'The requested password reset has expired or does not exist.');
+			res.redirect('/');
+		}
+	});	
 });
+
+
+
+// RESOURCES
 
 app.get('/resource/*', function(req, res, next){
 	var resourcePath = path.join(__dirname, '/../resource/', req.params[0]);
@@ -353,6 +398,12 @@ app.get('/resource/*', function(req, res, next){
 // Legacy Redirects
 app.get('/edit/profile?', function(req, res){res.redirect('/profile')});
 app.get('/edit/password', function(req, res){res.redirect('/password')});
+
+// 404's
+app.get('*', function(req, res){
+	req.flash('error', 'The requested resource was not found.');
+	res.redirect('/');
+});
 
 
 /* App startup: */

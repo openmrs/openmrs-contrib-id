@@ -29,10 +29,10 @@ exports.create = function(model) {
 
 // send an updated instance back to the DB, optionally only updating certain attributes
 exports.update = function(instance, attrs, callback) {
-	log.trace('updating instance '+instance)
+	log.trace('updating instance of '+instance.__factory.name)
 	// detect whether attrs & callback are present
 	if (arguments[1] && arguments[1].constructor == Array) attrs = arguments[1]; // if array, those are the attrs
-		else if (arguments[1].constructor == Function) {attrs = null; callback = arguments[1]; }
+		else if (arguments[1].constructor == Function) {callback = arguments[1]; attrs = null;}
 	if (arguments[2] && arguments[2].constructor == Function) callback = arguments[2];
 	if (!callback) callback = new Function;
 	
@@ -129,6 +129,17 @@ exports.chainSave = function(array, callback) {
 	})
 }
 
+// drop instance from DB
+exports.drop = function(instance, callback) {
+	log.trace('destroying instance of '+instance.__factory.name);
+	instance.destroy().success(function(u){
+		log.trace('dropped instance from DB');
+		return callback();
+	}).error(function(err){
+		return callback(err);
+	});
+}
+
 
 
 
@@ -170,6 +181,24 @@ models.Subscriptions = sql.define('Subscriptions', {
 		}
 	}
 });
+
+models.EmailVerification = sql.define('EmailVerification', {
+	verifyId: {type: Sequelize.STRING, unique: true, primaryKey: true},
+	urlBase: {type: Sequelize.STRING},
+	emails: {type: Sequelize.TEXT},
+	locals: {type: Sequelize.TEXT, defaultValue: null},
+	timeoutDate: {type: Sequelize.DATE, defaultValue: null},
+}, {instanceMethods: {
+	onSave: function(instance) {
+		// email arrays to strings, etc
+		if (instance.emails.constructor == Array) instance.emails = instance.emails.toString();
+		if (typeof instance.locals == 'object') instance.locals = JSON.stringify(instance.locals);
+	},
+	onGet: function(instance) {
+		if (instance.emails.indexOf(',') > -1) instance.emails = instance.emails.split(',');
+		if (typeof instance.locals == 'string') instance.locals = JSON.parse(instance.locals);
+	}
+}});
 
 models.Conf = sql.define('Conf', {
 	key: {type: Sequelize.STRING, allowNull: false, unique: true, primaryKey: true},

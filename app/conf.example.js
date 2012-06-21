@@ -88,7 +88,8 @@ module.exports = {
     "validation": {
         "__comment": "Validation settings",
         "recaptchaPublic": "public_key",
-        "recaptchaPrivate": "private_key"
+        "recaptchaPrivate": "private_key",
+        "allowPlusInEmail": false,
     },
     "email": {
         "__comment": "Email settings",

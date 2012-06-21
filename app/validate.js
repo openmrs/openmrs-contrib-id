@@ -78,7 +78,7 @@ module.exports = function(redirect) {
 					}
 					if (field == 'email') {
 						if (empty(field) && !conf.email.validation.emailRegex.test(b[field])) fail(field); // not an email string
-						else if (b[field].indexOf('+') > -1) fail(field, 'Due to incompatibilities with the Google Apps APIs, email addresses cannot contain "+".'); // ensure address doesn't break Google
+						else if (b[field].indexOf('+') > -1 && !conf.validation.allowPlusInEmail) fail(field, 'Due to incompatibilities with the Google Apps APIs, email addresses cannot contain "+".'); // ensure address doesn't break Google
 						else if (conf.email.validation.forceUniquePrimaryEmail) { // force unique email address
 							calls++;
 							var thisField = field;
@@ -101,7 +101,7 @@ module.exports = function(redirect) {
 							else {
 								if ((!conf.email.validation.emailRegex.test(b[field][i]))) fail(field, undefined, i); // ensure the text entered is an email address
 								
-								if (b[field][i].indexOf('+') > -1) fail(field, 'Due to incompatibilities with the Google Apps APIs, email addresses cannot contain "+".', i); // ensure address doesn't break Google
+								if (b[field][i].indexOf('+') > -1 && !conf.validation.allowPlusInEmail) fail(field, 'Due to incompatibilities with the Google Apps APIs, email addresses cannot contain "+".', i); // ensure address doesn't break Google
 							
 								if (conf.email.validation.forceUniqueSecondaryEmail) { // ensure address is unique
 									calls++;

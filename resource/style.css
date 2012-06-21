@@ -767,6 +767,10 @@ ul#more a:link, ul#more a:link visited {
 #sidebar #about a:link, #sidebar #about a:hover, #sidebar #about a:visited {
 	color: #bbb;
 }
+#main.no-sidebar {
+	float: none;
+	margin: 0 auto;
+}
 
 
 /* SIDEBAR USER MENU - doesn't exist */
