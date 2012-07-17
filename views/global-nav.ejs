@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="/globalnav/style.css">
+	</head>
+	<body id="navbar-body">
+		<div id="navigator-bar">
+			<% for (i in links) { %>
+			<a target="_parent"<% if (links[i] == activeLink) { %> href="" class="yourhere"<% } else { %> href="<%= links[i].url %>"<% } %>><%= links[i].name %></a>
+			<% } %>
+		</div>
+	</body>
+</html>

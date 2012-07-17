@@ -1,0 +1,71 @@
+#globalnav-container {
+	width: 100%;
+	height: 27px;
+	display: block;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	overflow: hidden;
+}
+
+#navigator-bar {
+    background: #4a4a4a; /* fallback */
+    background: #4a4a4a url('http://openmrs.org/wp-content/uploads/2012/07/omrs-navbar.png') 10px 3px no-repeat;
+    
+    -moz-box-shadow: inset 0 -2px 3px #333;
+    -webkit-box-shadow: inset 0 -2px 3px #333;
+    box-shadow: inset 0 -2px 3px #333;
+    
+    height: 23px;
+    width: 100%;
+    margin: 0 0 1px;
+    padding: 3px 0 0 34px;
+    text-align: left;
+    border: none !important;
+    outline: 1px solid #000;    
+    font-family: sans-serif !important;
+    text-decoration: none !important;
+}
+
+
+
+#navigator-bar a:link {
+    font-size: 11px !important;
+    text-decoration: none !important;
+}
+
+#navigator-bar a {
+    display: inline;
+    margin: 1px 10px;
+	color: #fff !important;
+    text-decoration: none !important;	
+}
+
+#navigator-bar a:hover, #navigator-bar a.yourhere, #navigator-bar a:active, #navigator-bar a:focus {
+    background: #efecea;
+    padding: 1px 6px 1px 6px;
+    margin: 0 4px;
+    border-radius: 9px;
+    color: #4d4129 !important;
+    text-decoration: none !important;
+}
+
+#navigator-bar a:focus {
+	outline: none;
+}
+
+#navigator-bar a.yourhere, #navigator-bar a:active {
+    background: #efecea;
+    text-decoration: none !important;
+    -webkit-box-shadow: inset 0 1px 1px #999;
+    -moz-box-shadow: inset 0 1px 1px #999;
+    box-shadow: inset 0 1px 1px #999;
+    border-radius: 9px;
+    
+}
+
+#navigator-bar a.yourhere:hover, #user-nav a.yourhere:link, #user-nav a.yourhere:visited {
+    background: #fffbf2;
+    color: #4d4129 !important;
+    
+}
