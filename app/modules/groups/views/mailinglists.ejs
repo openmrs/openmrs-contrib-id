@@ -1,0 +1,55 @@
+<% name = 'mailinglists' %>
+<% title = 'OpenMRS ID - Mailing Lists' %>
+<% headline = 'Mailing Lists' %>
+<% headAppend = '<link rel="stylesheet" href="/mailinglists/resource/mailinglists.css">' %>
+<% sidebar = ['./../views/sidebar/groups-secondaryemail'] %>
+
+<p>
+The OpenMRS community maintains several mailing lists for announcements and communication. We use Google Groups to manage our mailing lists, but you can subscribe from any e-mail address&mdash;you don't need a Google Account to subscribe.
+</p>
+
+<ul class="group-list">
+	<% for (i in groups) { if (groups[i].visible == true) { %>
+	<li id="<%= groups[i].urlName %>">
+		<h3><a href="https://groups.google.com/a/openmrs.org/group/<%= groups[i].urlName %>" target="_blank"><%= groups[i].name %></a></h3>
+		<p class="description">
+		<%= groups[i].description %>
+		</p>
+		<form action="/mailinglists/<%= groups[i].urlName %>"
+		method="post">
+			<div class="actions">
+				<% if (emails.length == 1) { %>
+					<span class="status"></span>
+					<button type="submit">
+						<% if (subs[groups[i].address].indexOf(emails[0]) == -1) { %>
+							<i class="icon-envelope-alt"></i>
+							<span>Subscribe</span>
+							<input type="hidden" name="address" value="<%= emails[0] %>">
+						<% } else { %>
+							<input type="hidden" name="address" value="<%= emails[0] %>" disabled>
+							<i class="icon-envelope"></i>
+							<span>Unsubscribe</span>
+						<% } %>
+					</button>
+				
+				<% } else { %>
+					<button class="popover-trigger" data-popid="<%= groups[i].urlName %>-subscriber">
+						<i class="icon-reorder"></i>
+						<span>View Subscriptions</span>
+					</button>
+					<ul class="popover" data-popid="<%= groups[i].urlName %>-subscriber">
+						<li class="heading">Subscribe<%= (subs[groups[i].address].length > 0) ? "d" : "" %> As</li>
+						<% for (var j = 0; j < emails.length; j++) { %>
+						<li><input type="checkbox" name="address" value="<%= emails[j] %>"
+							<% if (subs[groups[i].address].indexOf(emails[j]) > -1) { %>checked<% } %>
+							><label><%= emails[j] %></label></li>
+						<% } %>
+						<li><span class="status"></span><input type="submit" class="mini" value="Save"></li>
+					</ul>
+					<div class="popover-direction" data-popid="<%= groups[i].urlName %>-subscriber"></div>
+				<% } %>
+			</div>
+		</form>
+	</li>
+	<% } } %>
+</ul>
