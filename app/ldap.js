@@ -14,12 +14,13 @@
 
 //var LDAPServer = require('../node-LDAP/LDAP').Connection,
 var LDAPServer = require('LDAP'),
-	conf = require('./conf'),
-//	system = new LDAPServer(), // system-bind operations (usual operations)
-	system = new LDAPServer({uri: conf.ldap.server.uri, version: 3}), // system-bind operations (usual operations)
-	userbinds = new Object, // object of user-bind connections (auths and password changes)
-	log = require('./logger').add('ldap'),
 	url = require('url'),
+	Common = require('./openmrsid-common'),
+	conf = Common.conf,
+	log = Common.logger.add('ldap');
+	
+var	system = new LDAPServer({uri: conf.ldap.server.uri, version: 3}), // system-bind operations (usual operations)
+	userbinds = new Object, // object of user-bind connections (auths and password changes)
 	systemTimeoutNode;
 
 // // // // // // // // // // INTERNAL FUNCTIONS // // // // // // // // // //
@@ -188,6 +189,8 @@ exports.getUser = function(user, cb) {
 						else
 							userobj[attr] = d[0][attr];
 					}
+					
+					if (!userobj[conf.ldap.user.secondaryemail]) userobj[conf.ldap.user.secondaryemail] = [];
 					
 					finish()
 				}
@@ -439,11 +442,48 @@ exports.resetPassword = function(input, newPassword, cb){
 	});
 };
 
+exports.lockoutUser = function(username, cb){
+connect(function(e){if (e) return cb(e);
+	
+	// get user to modify
+	exports.getUser(username, function(err, obj) {
+		if (err) return cb(err);
+		if (!obj) return cb(new Error('Unable to retreive user'));
+		obj.pwdAccountLockedTime = '000001010000Z'; // set account as locked out
+		
+		exports.updateUser(obj, function(err) {
+			if (err) return cb(err);
+			else return cb();
+		});
+	});
+
+});
+}
+
+// callback returns error and userobj
+exports.enableUser = function(username, cb){
+connect(function(e){if (e) return cb(e);
+
+	// get user to modify 
+	exports.getUser(username, function(err, obj) {
+		if (err) return cb(err);
+		if (!obj) return cb(new Error('Unable to retreive user'));
+		
+		// remove account lock
+		system.modify(obj.dn, [
+			{op: 'delete', attr: 'pwdAccountLockedTime', vals: ''}
+		], function(err){
+			if (err) return cb(err);
+			else return cb(null, obj); // finished
+		});
+	});
+});	
+}
+
 // tests
 
 /*
-exports.getUser('elliott', function(e, obj){
+exports.enableUser('elliott', function(e){
 	console.log(e);
-	console.log(obj);
-})
+});
 */

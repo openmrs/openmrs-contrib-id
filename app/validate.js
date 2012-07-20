@@ -12,11 +12,12 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
  
-var conf = require('./conf'),
-	Recaptcha = require('recaptcha').Recaptcha,
-	app = require('./app').app,
-	ldap = require('./openmrsid-ldap'),
-	log = require('./logger').add('validation');
+var Recaptcha = require('recaptcha').Recaptcha,
+	Common = require('./openmrsid-common'),
+	conf = Common.conf,
+	app = Common.app,
+	ldap = Common.ldap,
+	log = Common.logger.add('validation');
 
 module.exports = function(redirect) {
 	return function(req, res, next) {

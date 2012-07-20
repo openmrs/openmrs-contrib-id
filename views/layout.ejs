@@ -24,6 +24,8 @@
 	
 	<%- headAppend %>
 	
+	<script src="/globalnav/inject.js"></script>
+	
 	<!--[if lte IE 7]>
 	<link rel="stylesheet" href="/resource/font/font-awesome-ie7.css">
 	<![endif]-->
@@ -32,6 +34,7 @@
 
 
 <body>
+<noscript><h3>JavaScript is required to properly use OpenMRS ID.</h3></noscript>
 <div id="header">	
 	<div class="container">
 		<a href="/"><img id="logo" src="/resource/images/logo.png" alt="OpenMRS Community"></a>
@@ -67,7 +70,6 @@
 		<% } %>
 		
 		<% if (connected) { %>
-			<noscript><a href="/disconnect">Log out</a></noscript>
 			<a href="#" class="popover-trigger" data-popid="login"><%= user[conf.user.displayname] %></a>
 			<ul class="popover" data-popid="login">
 				<a href="/disconnect"><li>Log Out</li></a>
@@ -85,10 +87,10 @@
 
 
 <ul id="user-nav">
-	<% var list = navLinks; for (link in list) { %>	
-		<% var same = (name == list[link].viewName) ? true : false %>
-		<a<% if (same) { %> class="active"<% } %> href="<%= (same) ? "#" : list[link].url %>">
-			<li><% if (list[link].icon) { %><i class="<%= list[link].icon %>"></i><% } %><%= link %></li>
+	<% var list = navLinks; for (var i = 0; i < list.length; i++) { %>	
+		<% var same = (name == list[i].viewName) ? true : false %>
+		<a<% if (same) { %> class="active"<% } %> href="<%= (same) ? "#" : list[i].url %>">
+			<li><% if (list[i].icon) { %><i class="<%= list[i].icon %>"></i><% } %><%= list[i].name %></li>
 		</a>
 	<% } %>
 </ul>

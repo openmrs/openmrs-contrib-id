@@ -15,10 +15,11 @@
 var express = require('express'),
 	MySQLSessionStore = require('connect-mysql-session')(express),
 	url = require('url'),
-	app = require('./app').app,
-	conf = require('./conf'),
-	mid = require('./express-middleware'),
-	log = require('./logger').add('environment');
+	Common = require('./openmrsid-common'),
+	app = Common.app,
+	conf = Common.conf
+	mid = Common.mid
+	log = Common.logger.add('environment');
 
 /* http://expressjs.com/guide.html:
  * To alter the environment we can set the NODE_ENV environment variable, for example:
@@ -48,13 +49,8 @@ app.configure(function(){ // executed under all environments
 });
 
 app.configure('development', function(){
-
-	app.use(express.errorHandler({ showStack: true, html: true, dumpExceptions: true }));	
-			
-	app.error(function(err, req, res, next){
-		log.error(err.stack);
-		res.render('error', {e: err});
-	});
+	app.use(express.errorHandler({ showStack: true, dumpExceptions: true }));	
+	
 });
 
 app.configure('production', function(){

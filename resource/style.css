@@ -53,6 +53,9 @@ a.no-ext-icon:after, .no-ext-icon a:after {
 	
 	font: 600 14px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 }
+.flash:last-of-type {
+	border-bottom-width: 1px;
+}
 .flash span {
 	width: 874px;
 	margin: 0 auto;
@@ -169,7 +172,7 @@ a:link i[class^="icon-"]  {
 	height: 45px;
 	position: relative;
 }
-input, button {
+input, button, textarea {
 	display: inline;
 	padding: 6px;
 	border-radius: 4px;
@@ -186,16 +189,25 @@ input, button {
 	position: relative;
 	z-index: 20;
 }
+.large input, .large textarea {
+	width: 374px;
+}
 input[type="text"], input[type="password"] {
 	float: left;
 	margin: 0 0 18px;
 	
+}
+input[type="checkbox"] {
+	padding: 0;
 }
 .two-up input{
 	width: 80px !important;
 	margin-right: 4px;
 	float: left !important;
 	clear: none;
+}
+.two-up.large input {
+	width: 178px !important;
 }
 input:focus {
 	background: #fff;
@@ -242,14 +254,16 @@ button > span {
 	pointer-events: none;
 }
 
+label, .labeltext {
+	line-height: 27px;
+	padding-top: 7px;
+	font: 11px sans-serif;
+}
 label {
 	width: 200px;
-	line-height: 27px;
 	position: absolute;
 	left: -206px;
 	text-align: right;
-	padding-top: 7px;
-	font: 11px sans-serif;
 }
 .field.noedit {
 	height: 37px;
@@ -302,41 +316,7 @@ label {
 }
 
 
-/* FORM VALIDATION */
-.valid input, input.valid{
-	background: #ccffcc;
-}
-.valid input:focus, input.valid:focus {
-	box-shadow: 0 0 8px #9f9;
-	-webkit-box-shadow: 0 0 8px #9f9;
-	-moz-box-shadow: 0 0 8px #9f9;
-}
-.validtext {
-	/*color: green;*/
-	display: none;
-}
-.valid .validtext {
-	display: inline;
-}
 
-.fail input, input.fail {
-	background: #fcc;
-}
-.fail input:focus, input.fail:focus {
-	box-shadow: 0 0 8px #f99;
-	-webkit-box-shadow: 0 0 8px #f99;
-	-moz-box-shadow: 0 0 8px #f99;
-}
-.failtext {
-	color: red !important;
-	display: none !important;
-}
-.fail .failtext {
-	display: inline !important;
-}
-.fail>.description {
-	visibility: visible;
-}
 
 
 
@@ -347,6 +327,7 @@ label {
 	font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 	position: absolute;
 	z-index: 50;
+	max-width: 300px;
 	
 	/* From WordPress */
 	background: #fff;
@@ -367,6 +348,9 @@ label {
 .popover span, .popover p {
 	font: 10px 'Lucida Grande', 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
 }
+.popover p {
+	padding: 6px 12px;
+}
 .popover-direction {
 	display: none;
 	
@@ -378,7 +362,8 @@ label {
 	width: 14px;
 	z-index: 55;
 }
-.popover.visible, .popover.visible ~ .popover-direction {
+.popover.visible, .popover.force-visible,
+.popover.visible ~ .popover-direction, .popover.force-visible ~ .popover-direction {
 	display: block;
 }
 ul.popover {
@@ -475,15 +460,19 @@ ul.popover a:active {
 	padding-left: 0;
 }
 
-#user-nav a:link {
+#user-nav a:link, #user-nav a:visited {
 	padding: 12px 0;
 	text-decoration: none !important;
+	color: #EBE6DD;
+}
+#user-nav a:hover {
+	color: #4D4129;
 }
 #user-nav li {
 	display: inline;
 	list-style: none;
 	margin: 1px 10px;
-	text-decoration: underline;
+	cursor: pointer;
 }
 #user-nav a:hover li, #user-nav a.active li, #user-nav a:focus li {
 	background: #F0ECE4;
@@ -503,7 +492,6 @@ ul.popover a:active {
 
 #user-nav a.active:hover li {
 	background: #fffbf2;
-	text-decoration: underline;
 }
 
 
@@ -668,9 +656,6 @@ ul#more a:link, ul#more a:link visited {
 
 
 
-
-
-
 /* FIELD LAYOUT */
 #main form {
 	padding-left: 25px;
@@ -687,6 +672,7 @@ ul#more a:link, ul#more a:link visited {
 	width: 300px;
 	height: 15px;
 	position: relative;
+	z-index: 25;
 	top: 4px;
 	margin: 1px 0 0 28px;
 	color: #444;
@@ -694,6 +680,10 @@ ul#more a:link, ul#more a:link visited {
 }
 .field.two-up .description {
 	left: -4px;
+}
+.field.large .description {
+	width: 195px;
+	float: right;
 }
 
 #recaptcha_image {
@@ -721,6 +711,57 @@ ul#more a:link, ul#more a:link visited {
 	font-style: italic;
 }
 
+/* FORM VALIDATION */
+.valid input, input.valid, .validtext {
+	background: #ccffcc;
+}
+.valid input:focus, input.valid:focus {
+	box-shadow: 0 0 8px #9f9;
+	-webkit-box-shadow: 0 0 8px #9f9;
+	-moz-box-shadow: 0 0 8px #9f9;
+}
+.validtext {
+	display: none;
+}
+.valid .validtext {
+	display: inline;
+}
+
+.inprogress input, input.inprogress, .inprogresstext {
+	background: #C6D6E0;
+}
+.inprogress input:focus, info.inprogress:focus {
+	box-shadow: 0 0 8px #83A6BD;
+	-webkit-box-shadow: 0 0 8px #83A6BD;
+	-moz-box-shadow: 0 0 8px #83A6BD;
+}
+.inprogresstext {
+	display: none;
+}
+.inprogress .inprogresstext {
+	display: inline;
+}
+.inprogress .description {
+	visibility: visible;
+}
+
+.fail input, input.fail, .failtext {
+	background: #fcc;
+}
+.fail input:focus, input.fail:focus {
+	box-shadow: 0 0 8px #f99;
+	-webkit-box-shadow: 0 0 8px #f99;
+	-moz-box-shadow: 0 0 8px #f99;
+}
+.failtext {
+	display: none !important;
+}
+.fail .failtext {
+	display: inline !important;
+}
+.fail>.description {
+	visibility: visible;
+}
 
 
 /* SIDEBAR */

@@ -19,7 +19,8 @@ module.exports = {
         "title": "OpenMRS ID"
     },
     "ldap": {
-        "__comment": "LDAP Settings",
+        // LDAP Settings
+        
         "server": {
             "uri": "ldap://localhost",
             "baseDn": "ou=systemacct,dc=example",
@@ -30,7 +31,8 @@ module.exports = {
         "user": {
             "baseDn": "ou=users,dc=example",
             "rdn": "uid",
-            "__comment": "corresponds with form input names",
+            
+            // corresponds with form input names
             "username": "uid",
             "firstname": "cn",
             "lastname": "sn",
@@ -71,6 +73,7 @@ module.exports = {
     },
     "session": {
         "__comment3": "session storage DB",
+        
         "__comment1": "session secret, used to secure session data",
         "secret": "secret",
         "__comment2": "how long until session terminates (24hr)",
@@ -78,11 +81,13 @@ module.exports = {
     },
     "groups": {
         "__comment2": "Google Groups settings",
-        "__comment": "hourly",
+        
+        // hourly
         "syncInterval": 3600000
     },
     "logger": {
-        "__comment": "Log settings",
+        // Log settings
+        
         "relativePath": "/../logs/openmrsid.log"
     },
     "validation": {
@@ -92,7 +97,8 @@ module.exports = {
         "allowPlusInEmail": false,
     },
     "email": {
-        "__comment": "Email settings",
+        // Email settings
+        
         "validation": {
             "emailRegex": /^[A-Za-z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
             "forceUniquePrimaryEmail": true,
@@ -106,62 +112,20 @@ module.exports = {
             "pass": "secret"
         }
     },
-    "__comment": "EJS Plugs",
+    
+    // EJS Plugs
     "defaultSidebar": [
         "sidebar/needhelp"
     ],
+    
+    // displays at bottom of sidebar
     "aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v1.3.1",
-    "userNavLinks": {
-        "Welcome": {
-			"url": "/",
-			"viewName": "root",
-			"visibleLoggedOut": false,
-			"visibleLoggedIn": true,
-			"icon": "icon-home" // corresponds with font awesome
-		},
-		"Sign Up": {
-			"url": "/signup",
-			"viewName": "signup",
-			"visibleLoggedOut": true,
-			"visibleLoggedIn": false,
-			"icon": "icon-asterisk"
-		},
-		
-		"Password Reset": {
-			"url": "/reset",
-			"viewName": "reset-public",
-			"visibleLoggedOut": true,
-			"visibleLoggedIn": false,
-			"icon": "icon-unlock"
-		},
-		
-		"Your Profile": {
-			"url": "/edit/profile",
-			"viewName": "edit-profile",
-			"visibleLoggedOut": false,
-			"visibleLoggedIn": true,
-			"requiredGroup": "dashboard-users",
-			"icon" : "icon-user",
-		},
-		
-		"Mailing Lists": {
-			"url": "/mailinglists",
-			"viewName": "mailinglists",
-			"visibleLoggedOut": false,
-			"visibleLoggedIn": true,
-			"requiredGroup": "dashboard-users",
-			"icon": "icon-envelope-alt"
-		},
-		
-		"Your Password": {
-			"url": "/edit/password",
-			"viewName": "edit-password",
-			"visibleLoggedOut": false,
-			"visibleLoggedIn": true,
-			"requiredGroup": "dashboard-users",
-			"icon": "icon-lock"
-		}
-    }
+    
+    // enabled modules
+    "modules": [
+    	"groups",
+    	"openmrs-navbar"
+    ]
 };
 
 // expose shorthand method used by view renderers

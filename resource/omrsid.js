@@ -143,7 +143,7 @@ $().ready(function(){
 	
 	
 	/* FIELD DESCRIPTIONS */
-	$('.field input').focusin(function(){
+	$('.field input, .field textarea').focusin(function(){
 		$('.description').css('visibility', 'hidden');
 		$(this).siblings('.description').css('visibility', 'visible');
 	});
@@ -272,7 +272,7 @@ $().ready(function(){
 				
 				// change UI text/icons to reflect change
 				var input = form.find('input[name="address"]');
-				if (input.length == 1) {
+				if (input.length == 1) { // no secondary emails
 					icon.removeClass();
 					if (subs.indexOf(input.attr('value')) > -1) {
 						button.find('i').addClass('icon-envelope');

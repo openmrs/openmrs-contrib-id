@@ -15,89 +15,10 @@ var crypto = require('crypto'),
 	Recaptcha = require('recaptcha').Recaptcha,
 	connect = require('connect'),
 	url = require('url'),
-	app = require('./app').app,
-	log = require('./logger').add('middleware'),
-	conf = require('./conf');
-	
-// insert our own helpers to be used in rendering
-app.helpers({
-	// reset error validation variables
-	clearErrors: function() {
-		app.helpers({failed: false, values: {}, fail: {}, failReason: {}});
-	},
-	defaultSidebar: conf.defaultSidebar,
-	failed: false, fail: {}, values: {},
-	aboutHTML: conf.aboutHTML,
-	siteURL: conf.siteURL,
-	conf: conf
-	
-});
-
-app.dynamicHelpers({
-	flash: function(req){
-		// Makes it easier to display flash messages, which are created via req.flash() and erased each page render
-		return req.flash();
-	},
-
-	clear: function(){
-		// Change undefined variables to default values; keep us from getting "undefined" errors from EJS
-		var current = app.helpers()._locals, replace = new Object;
-		
-		replace.title = (current.title) ? current.title : conf.site.title;
-		replace.failed = (current.failed) ? current.failed : false;
-		replace.showHeadlineAvatar = (current.showHeadlineAvatar) ? current.showHeadlineAvatar : true;
-		replace.showSidebar = (current.showSidebar) ? current.showSidebar : true;
-		
-		['defaultSidebar', 'sidebar'].forEach(function(prop){
-			replace[prop] = (current[prop]) ? current[prop] : [];
-		});
-		['bodyAppend', 'headAppend', 'headline', 'aboutHTML', 'viewName', 'sentTo'].forEach(function(prop){
-			replace[prop] = (current[prop]) ? current[prop] : '';
-		});
-		['flash', 'fail', 'values', 'failReason', 'navLinks'].forEach(function(prop){
-			replace[prop] = (current[prop]) ? current[prop] : {};
-		});
-		app.helpers(replace);
-	},
-	
-	userNavLinks: function(req){
-		// Uses login state and privileges to generate the links to include in the user navigation bar
-		var list = conf.userNavLinks,
-			toRender = {};
-			
-		var startDate = Date.now();
-		log.trace('userNavLinks: entering for loop');
-		if (req.session.user) log.trace('userNavLinks: current groups: '+req.session.user.memberof.toString());
-		
-		for (var link in list) {
-			
-			// determine if session has access to page
-			if (list[link].visibleLoggedOut) {
-				if (!req.session.user) toRender[link] = list[link];
-			}
-			else if (list[link].visibleLoggedIn) {
-				/* DISABLED due to bugs - ITSM-
-				if (list[link].requiredGroup) {
-					if (req.session.user && req.session.user.memberof.indexOf(list[link].requiredGroup) > -1)
-						toRender[link] = list[link];
-				}
-				else */if (req.session.user) toRender[link] = list[link];
-			}
-			else toRender[link] = list[link];
-		}
-		var timeTaken = Date.now() - startDate;
-		log.trace('userNavLinks: outside for loop, took '+timeTaken);
-		
-		// Hand the result back to EJS
-		app.helpers({navLinks: toRender});
-		
-		// debug
-		var names = '';
-		for (page in toRender) names += page+', ';
-		log.trace('will render nav-links: '+names);
-	},
-	
-});
+	Common = require('./openmrsid-common'),
+	app = Common.app,
+	log = Common.logger.add('middleware'),
+	conf = Common.conf;
 
 exports.openmrsHelper = function(){
 	return function(req, res, next){
@@ -192,16 +113,5 @@ exports.stripNewlines = function(req, res, next) {
 
 		log.trace('after: '+req.body.loginusername);
 	}
-	next();
-}
-
-// not used anywhere anymore, may be removed soon
-exports.useTabber = function(req, res, next) {
-	var append = app.helpers()._locals.headAppend,
-		toAppend = '<script type="text/javascript" src="/resource/omrsid-tab.js"></script>';
-		
-	(typeof append == 'string') ? append += toAppend : append = toAppend;
-	res.local('headAppend', append);
-	append = undefined;
 	next();
 }

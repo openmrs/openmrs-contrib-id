@@ -12,7 +12,8 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 var log4js = require('log4js'),
-	conf = require('./conf');
+	Common = require('./openmrsid-common'),
+	conf = Common.conf;
 	
 log4js.loadAppender('console');
 log4js.loadAppender('file');	

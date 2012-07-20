@@ -20,9 +20,12 @@ var express = require('express'),
 	mail = require('nodemailer'),
 	https = require('https'),
 	url = require('url'),
+	crypto = require('crypto'),
 	app = express.createServer();
-	
-exports.app = app;
+
+// establish module & global variables	
+module.exports = app;
+global.__apppath = __dirname;
 
 // fail if no configuration file found
 try {
@@ -34,20 +37,29 @@ catch (e) {
 }
 
 
-var conf = require('./conf'),
-	ldap = require('./openmrsid-ldap'),
-	mid = require('./express-middleware'),
-	log = require('./logger').add('express'),
-	validate = require('./validate'),
-	environment = require('./environment'),
-	verification = require('./email-verification');
+var Common = require('./openmrsid-common'),
+	conf = Common.conf,
+	ldap = Common.ldap,
+	db = Common.db,
+	mid = Common.mid,
+	renderHelpers = Common.renderHelpers,
+	log = Common.logger.add('express'),
+	validate = Common.validate,
+	environment = Common.environment,
+	verification = Common.verification;
 
 mail.SMTP = conf.email.smtp;
 
 /* Load Modules */
-require('./modules/groups');
+conf.modules.forEach(function(module){
+	require('./modules/'+module);
+});
 
-/* Routes */
+
+/* 
+ROUTES
+======
+*/
 
 
 // LOGIN-LOGOUT
@@ -162,27 +174,56 @@ app.post('/signup', mid.forceLogout, mid.forceCaptcha, validate(), function(req,
 		
 	var id = id.toLowerCase();
 	
+	var finishCalls = 0, errored = false;
+	var finish = function(err){ // after account is created and validation process started
+		if (err && errored == false) { // handle error
+			return next(err);
+			errored = true;
+		}
+		else {
+			finishCalls++;
+			if (finishCalls == 2) { // display verify notification
+				req.flash('success', "<p>Thanks and welcome to the OpenMRS Community!</p>" 
+				+"<p>Before you can use your OpenMRS ID across our services, we need to verify your email address.</p>"
+				+"<p>We've sent an email to <strong>"+email+"</strong> with instructions to complete the signup process.</p>");
+				res.redirect('/signup/verify', 303);
+			}
+		}
+	}
+	
+	// add the user to ldap
+	ldap.addUser(id, first, last, email, pass, function(e, userobj){
+		if (e) finish(e);
+		log.info('created account "'+id+'"');
+	
+		// lock out the account until it has been verified
+		ldap.lockoutUser(id, function(err){
+			if (err) finish(err);
+			finish();
+		});
+	});
+	
 	// validate email before completing signup
 	verification.begin({
 		urlBase: 'signup',
-		emails: email,
+		email: email,
 		subject: '[OpenMRS] Welcome to the OpenMRS Community',
 		template: '../views/email/welcome-verify.ejs',
 		locals: {
 			displayName: first+' '+last,
 			username: id,
 			userCredentials: {
-				id: id, first: first, last: last, email: email, pass: pass
+				id: id,  email: email
 			}
 		},
 		timeout: 0		
 	}, function(err){
-		if (err) return next(err);
+		if (err) finish(err);
+				
+		// prepare confirmation notification
 		app.helpers({sentTo: email});
-		req.flash('success', "<p>Thanks and welcome to the OpenMRS Community!</p>"
-		+"<p>Before you can use your OpenMRS ID across our services, we need to verify your email address.</p>"
-		+"<p>We've sent an email to <strong>"+email+"</strong> with instructions to complete the signup process.</p>");
-		res.redirect('/signup/verify', 303);
+		
+		finish();
 	});
 });
 
@@ -197,29 +238,17 @@ app.get('/signup/:id', function(req, res, next) {
 		if (valid) {
 			var user = locals.userCredentials;
 			
-			// check if user already exists, if so, fail verification
-			ldap.getUserByEmail(user.email, function(e, obj){
-				if (obj) {
-					log.debug('Signup verification requested for account that already exists.');
-					verification.clear(req.params.id);
-					
-					req.flash('error', 'The requested account already exists.');
-					res.redirect('/');	
-				}
-				else { // this is a new user
+			// enable the account, allowing logins
+			ldap.enableUser(user.id, function(err, userobj){
+				if (err) return next(err);
+				log.debug(user.id+': account enabled');
+				verification.clear(req.params.id);
+				req.flash('success', 'Your account was successfully created. Welcome!');
 				
-					// add the user to ldap
-					ldap.addUser(user.id, user.first, user.last, user.email, user.pass, function(e, userobj){
-						if (e) return next(e);
-						log.info('created account "'+user.id+'"');
-						
-						verification.clear(req.params.id); // delete verification
-						
-						req.flash('success', 'Your account was successfully created. Welcome!');
-						req.session.user = userobj;
-						res.redirect('/');
-					});
-				}
+				req.session.user = userobj;
+				app.helpers()._locals.clearErrors(); // keeps "undefined" from showing up in error values
+				res.redirect('/');
+				
 			});
 		}
 		else {
@@ -245,30 +274,114 @@ app.get('/checkuser/*', function(req, res, next){
 // USER PROFILE
 
 app.get('/profile', mid.forceLogin, function(req, res, next){
+
 	var sidebar = app.helpers()._locals.sidebar;
 	var sidebar = (typeof sidebar == 'object') ? sidebar : []; // if no sidebars yet, set as empty array
 	
-	res.render('edit-profile', {sidebar: sidebar.concat(['sidebar/editprofile-avatar'])});
-});
-
-app.get('/password', mid.forceLogin, function(req, res, next){
-	res.render('edit-password');
+	// check if any emails being verified
+	
+	var user = req.session.user, username = user[conf.user.username], secondary = user[conf.user.secondaryemail] || [],
+		emails = secondary.concat(user[conf.user.email]);
+		
+	verification.search(username, 'profile-email', function(err, instances) {
+		if (err) return next(err);
+		
+		// loop through instances to set up each address under verification
+		var fieldsInProgress = {};
+		instances.forEach(function(inst){
+			var thisProgress = {} // contains data for this address
+			
+			// get email address pending change and the current address
+			var newEmail = inst.email,
+				oldEmail = inst.locals.newToOld[newEmail];
+				
+			thisProgress.address = oldEmail;
+			thisProgress.pendingAddress = newEmail;
+			
+			// set up links to cancel and resend verification
+			thisProgress.id = inst.actionId;
+			
+			// push this verification data to the render variable
+			fieldsInProgress[thisProgress.address] = thisProgress;
+		});
+		
+		var inProgress = (fieldsInProgress.length > 0);
+		
+		
+		// render the page
+		res.render('edit-profile', {progress: fieldsInProgress, inProgress: inProgress});
+	});
 });
 
 app.post('/profile', mid.forceLogin, mid.secToArray, validate(), function(req, res, next){
 	var updUser = req.session.user, body = req.body;
-	if ((updUser.cn != body.firstname) || (updUser.sn != body.lastname)) updUser.displayName = body.firstname+' '+body.lastname;
 	
-	updUser.cn = body.firstname, updUser.sn = body.lastname, updUser.mail = body.email;
+	// corresponds a new email address to the original value
+	var newToOld = {};
+		
+	newToOld[body.email] = updUser[conf.user.email]
+	for (var i = 0; i < body.secondaryemail.length; i++) { // add each new secondary address to the object
+		newToOld[body.secondaryemail[i]] = (updUser[conf.user.secondaryemail][i])
+			? updUser[conf.user.secondaryemail][i]
+			: '';
+	}
 	
-	if (body.secondaryemail) updUser.otherMailbox = (typeof body.secondaryemail=='object') ? body.secondaryemail : [body.secondaryemail];
-	else updUser.otherMailbox = [];
+	// combine all email addresses & get the addresses that have changed
+	var newSecondary = body.secondaryemail || [], oldSecondary = updUser[conf.user.secondaryemail] || [],
+		newEmails = newSecondary.concat(body.email), oldEmails = oldSecondary.concat(updUser[conf.user.email]),
+		emailsChanged = newEmails.filter(function(i){
+			return !(oldEmails.indexOf(i) > -1);
+		});
 	
-	if (updUser.objectClass.indexOf('extensibleObject') < 0) { // for secondaryMail support; someday this should be admin-configurable
+	if (emailsChanged.length > 0) {
+		emailsChanged.forEach(function(mail){  // begin verificaiton for each changed address
+			// verify these adresses
+			log.debug(updUser[conf.user.username]+': email address '+mail+' will be verified');
+			// create verification instance
+			verification.begin({
+				urlBase: 'profile-email',
+				email: mail,
+				associatedId: updUser[conf.user.username],
+				subject: '[OpenMRS] Email address verification',
+				template: '../views/email/email-verify.ejs',
+				locals: {
+					displayName: updUser[conf.user.displayname],
+					username: updUser[conf.user.username],
+					mail: mail,
+					newToOld: newToOld
+				}
+			}, function(err){
+				if (err) log.error(err);
+			});
+			
+		});
+		// set flash messages
+		if (emailsChanged.length == 1) req.flash('info', 'The email address "'+emailsChanged.join(', ')+'" needs to be verified. Verification instructons have been sent to the address.');
+		else if (emailsChanged.length > 1) req.flash('info', 'The email addresses "'+emailsChanged.join(', ')+'" need to be verified. Verification instructons have been sent to these addresses.');
+		// don't push new email addresses into session
+		updUser[conf.user.email] = updUser[conf.user.email];
+		updUser[conf.user.secondaryemail] = updUser[conf.user.secondaryemail];
+	}
+	else { // copy email addresses into session
+		updUser[conf.user.email] = body.email;
+		
+		// force secondary email to be stored an array
+		if (body.secondaryemail) updUser[conf.user.secondaryemail] = (typeof body.secondaryemail=='object') ? body.secondaryemail : [body.secondaryemail];
+		else updUser[conf.user.secondaryemail] = [];
+	}
+	
+	// copy other changes into user session
+	if ((updUser[conf.user.firstname] != body.firstname) || (updUser[conf.user.lastname] != body.lastname))
+		updUser[conf.user.displayname] = body.firstname+' '+body.lastname;
+	updUser[conf.user.firstname] = body.firstname, updUser[conf.user.lastname] = body.lastname;
+	
+	// add any extra objectclasses
+	if (updUser.objectClass.indexOf('extensibleObject') < 0) { // for secondaryMail support
 		if (typeof updUser.objectClass == 'string') updUser.objectClass = [updUser.objectClass];
 		updUser.objectClass.push('extensibleObject');
 	}
 	
+	// push updates to LDAP
 	ldap.updateUser(updUser, function(e, returnedUser){
 		log.trace('user update returned');
 		log.trace(e);
@@ -277,9 +390,82 @@ app.post('/profile', mid.forceLogin, mid.secToArray, validate(), function(req, r
 		log.info(returnedUser.uid+': profile updated');
 		req.session.user = returnedUser;
 		
-		req.flash('success', 'Profile updated.')
-			res.redirect('/');
+		if (emailsChanged.length == 0) req.flash('success', 'Profile updated.'); // only show message if verification is NOT happening
+		res.redirect('/');
 	});
+
+});
+
+app.get('/profile-email/:id', function(req, res, next) {
+	// check for valid profile-email verification ID
+	verification.check(req.params.id, function(err, valid, locals) {
+		if (valid) req.flash('success', 'Email address verified. Thanks!');
+		else req.flash('error', 'Profile email address verification not found.');
+		
+		// push updates to LDAP
+		ldap.getUser(locals.username, function(err, userobj){
+			if (err) return next(err);
+			
+			// get new address and the address it's replacing
+			var newMail = locals.mail,
+				corrMail = locals.newToOld[newMail];
+				
+			// determine what kind of address (primary or sec.) it is & set it
+			if (userobj[conf.user.email] == corrMail) {
+				userobj[conf.user.email] = newMail; // prim. address
+			}
+			else { // address is secondary
+				if (userobj[conf.user.secondaryemail].length > 0) { // user has some sec. addresses
+					userobj[conf.user.secondaryemail].forEach(function(addr, i){
+						if (addr == corrMail) userobj[conf.user.secondaryemail][i] = newMail;
+					});
+				}
+				else userobj[conf.user.secondaryemail] = [newMail]; // no current sec. mails, create the first one
+			}
+			
+			ldap.updateUser(userobj, function(e, returnedUser){
+				if (e) return next(e);
+				
+				verification.clear(req.params.id);
+
+				log.info(returnedUser.uid+': profile-email validated & updated');
+				req.session.user = returnedUser;
+				
+				// pass the updated email to renderer
+				res.local('emailUpdated', locals.email);
+
+				// redirect to profile page or homepage
+				if (req.session.user) res.redirect('/profile');
+				else res.redirect('/');
+			});
+		});
+	});
+});
+
+app.get('/profile-email/resend/:actionId', mid.forceLogin, function(req, res, next){
+	// check for valid id
+	verification.resend(req.params.actionId, function(err, email){
+		if (err) return next(err);
+		req.flash('success', 'Email verification has been re-sent to "'+email+'".');
+		res.redirect('/profile');
+	});
+});
+
+app.get('/profile-email/cancel/:actionId', function(req, res, next){
+	verification.getByActionId(req.params.actionId, function(err, inst){
+		if (err) return next(err);
+		
+		var verifyId = inst.verifyId; // get verification ID
+		verification.clear(verifyId, function(err) {
+			if (err) return next(err);
+			req.flash('success', 'Email verification for "'+inst.email+'" cancelled.');
+			res.redirect('/profile');
+		});
+	})
+});
+
+app.get('/password', mid.forceLogin, function(req, res, next){
+	res.render('edit-password');
 });
 
 app.post('/password', mid.forceLogin, validate(), function(req, res, next){
@@ -330,7 +516,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 		
 		verification.begin({
 			urlBase: 'reset',
-			emails: secondaryMail.concat(email),
+			email: secondaryMail.concat(email),
 			subject: '[OpenMRS] Password Reset for '+username,
 			template: '../views/email/password-reset.ejs',
 			locals: {
@@ -366,7 +552,6 @@ app.get('/reset/:id', function(req, res, next){
 });
 
 app.post('/reset/:id', validate(), function(req, res, next){
-	log.warn('post received!');
 	verification.check(req.params.id, function(err, valid, locals){
 		if (err) return next(err);
 		if (valid) {
@@ -400,9 +585,41 @@ app.get('/edit/profile?', function(req, res){res.redirect('/profile')});
 app.get('/edit/password', function(req, res){res.redirect('/password')});
 
 // 404's
-app.get('*', function(req, res){
-	req.flash('error', 'The requested resource was not found.');
-	res.redirect('/');
+app.get('*', function(req, res, next){
+	if (req.header('Accept').indexOf('text/html') > -1) { // send an HTML error page
+		res.statusCode = 404;
+		var err = new Error('The requested resource "'+req.url+'" was not found. (404)');
+		res.render('error', {e: err});
+	}
+	else {
+		res.statusCode = 404;
+		res.end('The requested resource was not found.');
+	}
+});
+
+
+// Errors
+app.error(function(err, req, res, next){
+	log.error(err.stack);
+	res.statusCode = 500;
+	if (req.accepts('text/html')) {
+		res.render('error', {e: err});
+	}
+	else if (req.accepts('application/json')){
+		res.json({
+			statusCode: res.statusCode,
+			error: err
+		}, {'Content-Type': 'application/json'});
+	}
+	else {
+		res.send("Error: "+err.message+"\n\n"+err.stack,
+		{'Content-Type': 'text/plain'});
+	}
+	
+});
+
+process.on('uncaughtException', function(err) {
+  console.log(err);
 });
 
 

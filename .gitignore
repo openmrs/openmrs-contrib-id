@@ -18,3 +18,7 @@ app/conf.js
 ehthumbs.db
 Icon?
 Thumbs.db
+
+# Testing files #
+#################
+santa-tunnel.sh

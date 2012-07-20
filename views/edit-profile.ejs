@@ -10,7 +10,8 @@
 		<p><%= user[conf.user.username] %></p>
 	</div>
 	
-	<div class="field two-up<% if (fail.firstname || fail.lastname ) { %> fail<% } %>">
+	<div class="field two-up<% if (fail.firstname || fail.lastname ) {
+		%> fail<% } %>">
 		<label>Name</label>
 		<input type="text" name="firstname" placeholder="Given Name" value="<%= (failed) ? values.firstname : user[conf.user.firstname] %>">
 		<input type="text" name="lastname" placeholder="Surname" value="<%= (failed) ? values.lastname : user[conf.user.lastname] %>">
@@ -20,25 +21,56 @@
 		</span>
 	</div>
 		
-	<div class="field<% if (fail.email) { %> fail<% } %>">
+	<div class="field<% if (fail.email) { %> fail<% } 
+		if (emailUpdated && emailUpdated == user[conf.user.email]) { %> valid<% }
+		if (progress[user[conf.user.email]]) { %> inprogress<% } %>">
+		
 		<label>Primary Email</label>
-		<input type="text" name="email" placeholder="Email Address" value="<%= (failed) ? values.email : user[conf.user.email] %>">
+		<input type="text" name="email" placeholder="Email Address" value="<% if (failed) { %><%= values.email %><%
+			} else if (progress[user[conf.user.email]]) { %><%= progress[user[conf.user.email]].pendingAddress %><%
+			} else { %><%=user[conf.user.email] %><% } %>">
 		<span class="description">
-			<span class="failtext"><% if (failReason.email) { %><%= failReason.email %><% } else { %>Please enter a valid email address.<% } %> </span>
+			<span class="failtext"><% if (failReason.email) { %><%= failReason.email %><% } else { %>Please enter a valid email address.<% } %></span>
+			<% if (progress[user[conf.user.email]]) { %>
+			<span class="inprogresstext">This email address must be verified before it can be used. Verification has been sent.
+				(<a href="/profile-email/resend/<%= progress[user[conf.user.email]].id %>">Resend</a> or
+				<a href="/profile-email/cancel/<%= progress[user[conf.user.email]].id %>">Cancel</a>)
+			</span><% } %>
 			Most community applications contact you via this address.
 		</span>
 	</div>
 	
 	<div class="multi-field">
-		<% if (user[conf.user.secondaryemail]) secMailLength= (values.secondaryemail) ? values.secondaryemail.length : user[conf.user.secondaryemail].length; else secMailLength = 0;
-		for (var i = 0; i <= secMailLength; i++) { %>
-		<div class="field<% if (fail.secondaryemail && fail.secondaryemail[i]) { %> fail<% } %><% if (i!=0 && i==secMailLength) { %> next<% } %>">
-			<% if (i==0) { %><label>Secondary Email</label> <% } %>
-			<% if (i!=0 && i==secMailLength) { %><input type="text" value="Add another...">
-			<% } else { %><input type="text" name="secondaryemail" placeholder="Secondary Email" value="<% if (failed && values.secondaryemail) { %><%= values.secondaryemail[i] %><% } else if (user[conf.user.secondaryemail] && user[conf.user.secondaryemail][i]) { %><%= user[conf.user.secondaryemail][i]%><% } %>"><% } %>
+		<% if (user[conf.user.secondaryemail])
+			secMailLength= (values.secondaryemail) ? values.secondaryemail.length : user[conf.user.secondaryemail].length;
+			else secMailLength = 0;
+			for (var i = 0; i <= secMailLength; i++) {
+			%>
+		<div class="field<%
+			if (fail.secondaryemail && fail.secondaryemail[i]) { %> fail<% }
+			%><% if (i!=0 && i==secMailLength) { %> next<% }
+			if (emailUpdated && emailUpdated == user[conf.user.secondaryemail][i]) { %> valid<% } 
+			if (inProgress && progress[user[conf.user.secondaryemail][i]]) { %> inprogress<% } %>">
+			
+			<% if (i==0) { %><label>Secondary Email</label> <% }
+				%>
+			<% if (i!=0 && i==secMailLength) {
+				%><input type="text" value="Add another...">
+			<% } else {
+				%><input type="text" name="secondaryemail" placeholder="Secondary Email" value="<% if (failed && values.secondaryemail) {
+					%><%= values.secondaryemail[i] %><%
+					} else if (inProgress && progress[user[conf.user.secondaryemail][i]]) { %><%= progress[user[conf.user.secondaryemail][i]].pendingAddress %><%
+					} else if (user[conf.user.secondaryemail] && user[conf.user.secondaryemail][i]) {
+					%><%= user[conf.user.secondaryemail][i]%><% } %>"><% } %>
+			
 			<span class="description">
 				<span class="failtext"><% if (failReason.secondaryemail) { %><%= failReason.secondaryemail %><% } else { %>Invalid email address.<% } %> </span>
-				Secondary email addresses can be sent password recovery prompts<!-- and can be subscribed to specific mailing lists-->.
+				<% if (inProgress && progress[user[conf.user.secondaryemail][i]]) { %>
+				<span class="inprogresstext">This email address must be verified before it can be used. Verification has been sent.
+					(<a href="/profile-email/resend/<%= progress[user[conf.user.secondaryemail][i]].id %>">Resend</a> or
+					<a href="/profile-email/cancel/<%= progress[user[conf.user.secondaryemail][i]].id %>">Cancel</a>)
+				</span><% } %>
+				Secondary email addresses can be subscribed to mailing lists and sent password recovery prompts.
 			</span>
 		</div><% } %>
 	</div>
