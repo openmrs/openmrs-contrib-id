@@ -1,0 +1,10 @@
+form {
+	margin-left: 0;
+	padding-left: 0;
+}
+
+input[type="submit"] {
+	display: block;
+	float: none;
+	clear: both;
+}

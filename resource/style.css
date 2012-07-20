@@ -6,11 +6,17 @@
 	padding: 0;
 	border: 0;
 	overflow: hidden;
+	position: relative;
+	z-index: 10;
+	
+	-moz-transition: 200ms height;
+	-webkit-transition: 200ms height;
+	transition: 200ms height;
 }
 
-#navigator-bar {
+#globalnav {
     background: #4a4a4a; /* fallback */
-    background: #4a4a4a url('http://openmrs.org/wp-content/uploads/2012/07/omrs-navbar.png') 10px 3px no-repeat;
+    background: #4a4a4a url('/globalnav/omrs-navbar.png') 7px 0 no-repeat;
     
     -moz-box-shadow: inset 0 -2px 3px #333;
     -webkit-box-shadow: inset 0 -2px 3px #333;
@@ -20,28 +26,34 @@
     width: 100%;
     margin: 0 0 1px;
     padding: 3px 0 0 34px;
+    overflow: hidden;
     text-align: left;
     border: none !important;
     outline: 1px solid #000;    
     font-family: sans-serif !important;
     text-decoration: none !important;
+    
+    -moz-transition: 200ms height, 200ms padding-top;
+    -webkit-transition: 200ms height, 200ms padding-top;
+    transition: 200ms height, 200ms padding-top;
 }
 
 
 
-#navigator-bar a:link {
-    font-size: 11px !important;
+#globalnav a:link {
     text-decoration: none !important;
 }
 
-#navigator-bar a {
+#globalnav a {
     display: inline;
     margin: 1px 10px;
+    position: relative;
 	color: #fff !important;
+    font-size: 11px !important;
     text-decoration: none !important;	
 }
 
-#navigator-bar a:hover, #navigator-bar a.yourhere, #navigator-bar a:active, #navigator-bar a:focus {
+#globalnav a:hover, #globalnav a.yourhere, #globalnav a:active, #globalnav a:focus {
     background: #efecea;
     padding: 1px 6px 1px 6px;
     margin: 0 4px;
@@ -50,11 +62,11 @@
     text-decoration: none !important;
 }
 
-#navigator-bar a:focus {
+#globalnav a:focus {
 	outline: none;
 }
 
-#navigator-bar a.yourhere, #navigator-bar a:active {
+#globalnav a.yourhere, #globalnav a:active {
     background: #efecea;
     text-decoration: none !important;
     -webkit-box-shadow: inset 0 1px 1px #999;
@@ -62,10 +74,57 @@
     box-shadow: inset 0 1px 1px #999;
     border-radius: 9px;
     
+    /*
+-moz-transition: 100ms padding, 100ms border-radius;
+    -webkit-transition: 100ms padding, 100ms border-radius;
+    transition: 100ms padding, 100ms border-radius;
+*/
 }
 
-#navigator-bar a.yourhere:hover, #user-nav a.yourhere:link, #user-nav a.yourhere:visited {
+#globalnav a.yourhere:hover, #user-nav a.yourhere:link, #user-nav a.yourhere:visited {
     background: #fffbf2;
     color: #4d4129 !important;
     
 }
+
+#globalnav a#globalnav-hide {
+	visibility: hidden;
+	color: #ccc !important;
+	float: right;
+	left: -35px;
+	top: 3px;
+	background: none !important;
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+}
+#globalnav:hover a#globalnav-hide {
+	visibility: visible;
+}
+#globalnav a#globalnav-hide:hover {
+	background: none;
+	text-decoration: underline !important;
+	color: #fff !important;
+}
+
+/* Hidden styles */
+#globalnav-container.hidden {
+	height: 13px;
+	margin-bottom: -10px;
+}
+
+#globalnav-container.hidden #globalnav {
+	height: 3px;
+	padding-top: 0;
+}
+
+#globalnav-container.hidden #globalnav a {
+	visibility: hidden;
+}
+#globalnav-container.hidden #globalnav a.yourhere {
+	visibility: visible;
+	color: #efecea;
+	border-radius: 0;
+	padding: 10px 6px;
+}
+
