@@ -36,7 +36,7 @@ DOMReady.add(function(){
 	// load the globalnav stylesheet
 	var link = document.createElement('link');
 	link.setAttribute('rel', 'stylesheet');
-	link.href = 'http://localhost:3000/globalnav/style.css';
+	link.href = '/globalnav/style.css';
 	document.body.appendChild(link);
 	
 	// will be called once navbar request has returned
@@ -59,7 +59,7 @@ DOMReady.add(function(){
 	
 	// load navbar HTML via AJAX (server-side)
 	var req = new XMLHttpRequest()
-	req.open("GET", "http://localhost:3000/globalnav", true);
+	req.open("GET", "/globalnav", true);
 	req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	req.addEventListener("load", ajaxLoaded, false);
 	req.send();
