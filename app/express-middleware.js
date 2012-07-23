@@ -142,3 +142,19 @@ exports.parseParamTable = function(req, res, next) {
 	res.local('params', generatedList);
 	next();
 };
+
+// ADDED in hope of bot detection
+exports.logSignup = function(req, res, next) {
+var id = req.body.username, first = req.body.firstname, last = req.body.lastname, email = req.body.email,
+    captchaChallenge = req.body.recaptcha_challenge_field, captchaResponse = req.body.recaptcha_response_field;
+
+require("./logger").signup.info("-----\n"
++"SIGNUP FORM POSTED. Details follow:\n"
++"Username: "+id
++"\nFirst/Last: "+first+" "+last
++"\nEmail: "+email
++"\nCaptcha Challenge: "+captchaChallenge
++"\nCaptcha Response: "+captchaResponse+"\n");
+
+next();
+}

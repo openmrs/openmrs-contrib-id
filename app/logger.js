@@ -35,3 +35,11 @@ exports.add = function(logname) {
 	
 	return thisLog;
 };
+
+// ADDED for hopes of bot detection
+
+var signupFile = log4js.appenders.file(__dirname + '/../logs/signuplog.log');
+var signupLog = log4js.getLogger('signup-log');
+log4js.addAppender(signupFile, 'signup-log');
+
+exports.signup = signupLog;
