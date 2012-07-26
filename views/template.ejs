@@ -1,0 +1,38 @@
+<!-- Required Parameters: -->
+<% name = 'template' /* Name of the view, allows user navigation to know what page it's on */ %> 
+<% headline = 'Template Page' /* Page title, displayed in the header */ %>
+
+<!-- Optional Paramaters: -->
+<% title = 'OpenMRS ID - Template' /* <title> in the user's browser, defaults to the site name */ %>
+<% sidebar = ['sidebar/id-whatis] /* Array of extra sidebar pages. Relative to the global /views directory. (pass __dirname to easily use paths relative to a module) */ %>
+<% sidebarParams['sidebar/id-whatis'] = /* Extended sidebar options, named with same pathname as the sidebar page */ {
+		className: 'box', /* Extra classes to give this sidebar page */
+		locals: {} /* Extra variabled to pass to this sidebar page */
+} %>
+<% showHeadlineAvatar = false /* Show avatar in heading, defaults to true */ %>
+
+<h2>Highest heading level you should use.</h2>
+(h1 is used in the page headline)
+
+<p>Place body text around <code>&lt;p&gt;</code>'s for formatting and beauty.</p>
+
+<!-- To render a styled form: -->
+<form action="#">
+	<div class="field">
+		<label>Cool Field #1</label>
+		<input type="text" placeholder="Hello!">
+		<span class="description">
+			<span class="failtext">Shows when form validation fails.</span>
+			Shows when you select a field.
+		</span>
+	</div>
+	<div class="field">
+		<label>Cool Field #2</label>
+		<input type="password" placeholder="password">
+		<span class="description">
+			<span class="failtext">Shows when form validation fails.</span>
+			Shows when you select a field.
+		</span>		
+	</div>
+	<input type="submit">
+</form> 

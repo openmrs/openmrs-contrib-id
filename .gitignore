@@ -8,6 +8,10 @@ nohup.out
 ###################
 node-LDAP/build
 
+# User-install modules #
+########################
+app/user-modules
+
 # Conf Files #
 ##############
 app/conf.js
@@ -22,3 +26,4 @@ Thumbs.db
 # Testing files #
 #################
 santa-tunnel.sh
+conf-controller.js

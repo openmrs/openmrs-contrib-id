@@ -1,12 +1,14 @@
 <% name = 'signup' %>
+<% title = 'OpenMRS ID - Sign Up' %>
 <% headline = 'Get an OpenMRS ID' %>
 <% sidebar = ['sidebar/id-whatis', 'sidebar/forgotpassword'] %>
+
 <form action="/signup" method="post" autocomplete="off">
 	<p>Already have an ID? <a href="/login">Log in now</a> to access your account settings.</p>
 
 	<div class="field<% if (fail.username) { %> fail<% } %>">
 		<label>Username</label>
-		<input type="text" name="username" placeholder="Username"<% if (failed) { %>value="<%= values.username %>"<% } %>>
+		<input type="text" name="username" placeholder="Username" <% if (values.username) { %>value="<%= values.username %>"<% } else { %>autofocus<% } %>>
 		<span class="description">
 			<span class="failtext"><% if (failReason.username) { %><%= failReason.username %><% } else { %>Please enter a valid username.<% } %> </span>
 			Your username can only contain letters and numbers (0-9, A-Z, a-z).</span>
@@ -14,8 +16,8 @@
 	
 	<div class="field two-up<% if (fail.firstname || fail.lastname ) { %> fail<% } %>">
 		<label>Name</label>
-		<input type="text" name="firstname" placeholder="Given Name"<% if (failed) { %>value="<%= values.firstname %>"<% } %>>
-		<input type="text" name="lastname" placeholder="Surname"<% if (failed) { %>value="<%= values.lastname %>"<% } %>>
+		<input type="text" name="firstname" placeholder="Given Name"<% if (values.firstname) { %>value="<%= values.firstname %>"<% } else { %>autofocus<% } %>>
+		<input type="text" name="lastname" placeholder="Surname"<% if (values.lastname) { %>value="<%= values.lastname %>"<% } else { %>autofocus<% } %>>
 		<span class="description">
 			<span class="failtext">Both a given name and surname are required.</span>
 			Your name identifies you across the OpenMRS Community.
@@ -24,7 +26,7 @@
 	
 	<div class="field<% if (fail.email) { %> fail<% } %>">
 		<label>Email</label>
-		<input type="text" name="email" placeholder="Email Address"<% if (failed) { %>value="<%= values.email %>"<% } %>>
+		<input type="text" name="email" placeholder="Email Address"<% if (values.email) { %>value="<%= values.email %>"<% } else { %>autofocus<% } %>>
 		<span class="description">
 			<span class="failtext"><% if (failReason.email) { %><%= failReason.email %><% } else { %>Please enter a valid email address.<% } %> </span>
 			We'll send any notifications to this address. You'll always be able to control what mail you receive.
@@ -33,7 +35,7 @@
 	
 	<div class="field<% if (fail.password) { %> fail<% } %>">
 		<label>Password</label>
-		<input type="password" name="password" placeholder="Password">
+		<input type="password" name="password" placeholder="Password" <% if (values.length == 0) { %>autofocus<% } %>>
 		<span class="description">
 			<span class="failtext"><% if (failReason.password) { %><%= failReason.password %><% } else { %>Please enter a valid password.<% } %> </span>
 			Passwords must be at least 8 characters long.
@@ -58,6 +60,6 @@
 		</span>
 	</div>
 	
-	<input type="submit" class="icon-ok" value="Join the Community &#187;" id="test">
+	<input type="submit" class="icon-ok" value="Join the Community &#187;"<% if (renderLayout == false) { %> formtarget="_blank"<% } %>>
 
 </form>

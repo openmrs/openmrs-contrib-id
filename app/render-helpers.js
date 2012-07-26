@@ -2,7 +2,8 @@ var Common = require('./openmrsid-common'),
 	app = Common.app,
 	log = Common.logger.add('render-helpers'),
 	conf = Common.conf,
-	userNav = Common.userNav;
+	userNav = Common.userNav,
+	url = require('url');
 
 // insert our own helpers to be used in rendering
 app.helpers({
@@ -11,10 +12,12 @@ app.helpers({
 		app.helpers({failed: false, values: {}, fail: {}, failReason: {}});
 	},
 	defaultSidebar: conf.defaultSidebar,
+	
 	failed: false, fail: {}, values: {},
 	aboutHTML: conf.aboutHTML,
 	siteURL: conf.siteURL,
-	conf: conf
+	conf: conf,
+	url: url
 	
 });
 
@@ -39,7 +42,7 @@ app.dynamicHelpers({
 		['bodyAppend', 'headAppend', 'headline', 'aboutHTML', 'viewName', 'sentTo', 'emailUpdated'].forEach(function(prop){
 			replace[prop] = (current[prop]) ? current[prop] : '';
 		});
-		['flash', 'fail', 'values', 'failReason', 'navLinks', 'progress'].forEach(function(prop){
+		['flash', 'fail', 'values', 'failReason', 'navLinks', 'progress', 'sidebarParams'].forEach(function(prop){
 			replace[prop] = (current[prop]) ? current[prop] : {};
 		});
 		app.helpers(replace);
@@ -57,17 +60,19 @@ app.dynamicHelpers({
 		list.forEach(function(link){
 			
 			// determine if session has access to page
+			if (link.requiredGroup) {
+					if (req.session.user && req.session.user.memberof.indexOf(link.requiredGroup) > -1)
+						toRender.push(link);
+					else if (link.visibleLoggedIn) {
+						if (req.session.user) toRender.push(link);
+					}
+			}
+			if (link.visibleLoggedIn && !link.requiredGroup) {
+				if (req.session.user) toRender.push(link);
+			}
 			if (link.visibleLoggedOut) {
 				if (!req.session.user) toRender.push(link);
 			}
-			else if (link.visibleLoggedIn) {
-				if (link.requiredGroup) {
-					if (req.session.user && req.session.user.memberof.indexOf(link.requiredGroup) > -1)
-						toRender.push(link);
-				}
-				else if (req.session.user) toRender.push(link);
-			}
-			else toRender.push(link);
 		});
 		
 		// Sort list by order specified
@@ -82,6 +87,6 @@ app.dynamicHelpers({
 		var names = '';
 		for (page in toRender) names += page+', ';
 		log.trace('will render nav-links: '+names);
-	},
+	}
 	
 });

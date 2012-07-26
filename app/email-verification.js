@@ -79,6 +79,7 @@ exports.begin = function(settings, callback) {
 					siteURL: conf.site.url,
 					expiring: expiring,
 					expireDate: expireDate.toLocaleString(),
+					locals: locals,
 					url: url,
 				})
 			});

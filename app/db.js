@@ -210,20 +210,18 @@ models.EmailVerification = sql.define('EmailVerification', {
 	verifyId: {type: Sequelize.STRING, unique: true, primaryKey: true},
 	actionId: {type: Sequelize.STRING, unique: true},
 	urlBase: {type: Sequelize.STRING},
-	email: {type: Sequelize.TEXT},
+	email: {type: Sequelize.STRING},
 	associatedId: {type: Sequelize.STRING},
 	locals: {type: Sequelize.TEXT, defaultValue: null},
 	settings: {type: Sequelize.TEXT, defaultValue: null},
 	timeoutDate: {type: Sequelize.DATE, defaultValue: null}
 }, {instanceMethods: {
 	onSave: function(instance) {
-		// email arrays to strings, etc
-		//if (instance.emails.constructor == Array) instance.emails = instance.emails.toString();
+		// objects to strings, etc
 		if (typeof instance.locals == 'object') instance.locals = JSON.stringify(instance.locals);
 		if (typeof instance.settings == 'object') instance.settings = JSON.stringify(instance.settings);
 	},
 	onGet: function(instance) {
-		//if (instance.emails.indexOf(',') > -1) instance.emails = instance.emails.split(',');
 		if (typeof instance.locals == 'string') instance.locals = JSON.parse(instance.locals);
 		if (typeof instance.settings == 'string') instance.settings = JSON.parse(instance.settings);
 	}
@@ -231,7 +229,9 @@ models.EmailVerification = sql.define('EmailVerification', {
 }});
 
 models.Conf = sql.define('Conf', {
-	key: {type: Sequelize.STRING, allowNull: false, unique: true, primaryKey: true},
+	id: {type: Sequelize.STRING, unique: false, primaryKey: true, autoIncrement: true},
+	parent: {type: Sequelize.STRING, allowNull: false},
+	key: {type: Sequelize.STRING, allowNull: false},
 	value: {type: Sequelize.STRING, allowNull: false}
 });
 

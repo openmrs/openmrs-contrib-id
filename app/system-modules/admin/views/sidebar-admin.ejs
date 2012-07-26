@@ -1,0 +1,8 @@
+<h2>Administration</h2>
+
+<ul>
+<% var pages = sidebarLocals.pages;
+for (i in pages) { %>
+	<a <% if (sidebarLocals.reqUrl == pages[i].url) { %>class="active" <% } %>href="<%=pages[i].url%>"><li><%=pages[i].name%></li></a>
+<% } %>
+</ul>

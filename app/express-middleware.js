@@ -52,17 +52,22 @@ exports.clear = function(){
 	app.helpers(replace);
 }
 
-exports.restrictTo = function(role) {
+exports.restrictTo = function(role) {	
 	return function(req, res, next) {
-		if (req.session.user) {
-			if (req.session.user.memberof.indexOf(role) > -1) next()
-			else {
-				req.flash('error', 'You are not authorized to access this resource.');
+		var fail = function() {
+			req.flash('error', 'You are not authorized to access this resource.');
+			if (req.session.user) {
 				if (req.url=='/') res.redirect(url.resolve(conf.site.url, '/disconnect'));
 				else res.redirect('/');
 			}
+			else res.redirect(url.resolve(conf.site.url, '/login?destination='+encodeURIComponent(req.url)));
+		};
+	
+		if (req.session.user) {
+			if (req.session.user.memberof.indexOf(role) > -1) next()
+			else fail();
 		}
-		else next();
+		else fail();
 	}
 };
 
@@ -77,7 +82,7 @@ exports.forceLogin = function(req, res, next) {
 
 exports.forceLogout = function(req, res, next) {
 	if (req.session.user) {
-		log.info(req.session.user+': denied access to anonymous-only '+req.url);
+		log.info(req.session.user[conf.user.username]+': denied access to anonymous-only '+req.url);
 		req.flash('error', 'You must be logged out to access '+req.url);
 		res.redirect('/');
 	}
@@ -98,9 +103,10 @@ exports.secToArray = function(req, res, next) {
 exports.forceCaptcha = function(req, res, next) {
 	if (req.body && req.body.recaptcha_challenge_field && req.body.recaptcha_response_field) 
 		next();
-	else {
-		res.send('Forbidden', { 'Content-Type': 'text/plain' }, 403);
-		res.end();
+	else { // make captchas empty strings, so they will be validated (and fail)
+		req.body.recaptcha_challenge_field = "";
+		req.body.recaptcha_response_field = "";
+		next();
 	}
 };
 

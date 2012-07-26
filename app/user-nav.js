@@ -13,15 +13,6 @@ var userNavLinks = [ // built-in links
 		"icon": "icon-home", // corresponds with font awesome
 		"order": 10
 	},
-	{
-		"name": "Sign Up",
-		"url": "/signup",
-		"viewName": "signup",
-		"visibleLoggedOut": true,
-		"visibleLoggedIn": false,
-		"icon": "icon-asterisk",
-		"order": 20
-	},
 	
 	{
 		"name": "Password Reset",
@@ -53,7 +44,7 @@ var userNavLinks = [ // built-in links
 		"requiredGroup": "dashboard-users",
 		"icon": "icon-lock",
 		"order": 60
-	}
+	},
 ];
 	
 exports.list = userNavLinks;

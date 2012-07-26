@@ -51,8 +51,11 @@ var Common = require('./openmrsid-common'),
 mail.SMTP = conf.email.smtp;
 
 /* Load Modules */
-conf.modules.forEach(function(module){
-	require('./modules/'+module);
+conf.systemModules.forEach(function(module){
+	require('./system-modules/'+module);
+});
+conf.userModules.forEach(function(module){
+	require('./user-modules/'+module);
 });
 
 
@@ -65,23 +68,18 @@ ROUTES
 // LOGIN-LOGOUT
 app.get('/', function(req, res, next){
 
-	if (req.session.user)
-		https.get({host: 'answers.openmrs.org', path: '/users/'+req.session.user.uid }, function(response) {
-			if (response.statusCode == 200) app.helpers({osqaUser: true});
-			else app.helpers({osqaUser: false});
-			
-			app.dynamicHelpers({
-				
-			});
-			
-			res.render('root');
-		});
+if (!req.session.user) return next();
+
+https.get({host: 'answers.openmrs.org', path: '/users/'+req.session.user.uid }, function(response) {
+	if (response.statusCode == 200) app.helpers({osqaUser: true});
+	else app.helpers({osqaUser: false});
+	
+	app.dynamicHelpers({
 		
-	else
-		res.render('signup', {
-			bodyAppend: '<script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?	k='+conf.validation.recaptchaPublic+'"></script>',
-			title: 'OpenMRS ID - Manage Your Community Account'
-		});
+	});
+	
+	res.render('root');
+});
 });
 
 app.get(/^\/login\/?$/, mid.forceLogout, function(req, res, next){
@@ -151,124 +149,6 @@ app.get('/disconnect', function(req, res, next) {
 	}
 	res.redirect('/');
 });
-
-
-
-// SIGNUP
-
-app.get('/signup', mid.forceLogout, function(req, res, next){
-	res.render('signup', {
-		title: 'OpenMRS ID - Sign Up',
-		bodyAppend: '<script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?	k='+conf.validation.recaptchaPublic+'"></script>'
-	});
-});
-
-app.post('/signup', mid.forceLogout, mid.forceCaptcha, validate(), function(req, res, next){
-	var id = req.body.username, first = req.body.firstname, last = req.body.lastname,
-		email = req.body.email, pass = req.body.password, captcha = req.body.recaptcha_response_field;
-		
-	if (!id || !first || !last || !email || !pass || !captcha) {
-		res.send('Unauthorized POST error', { 'Content-Type': 'text/plain' }, 403);
-		res.end();
-	}
-		
-	var id = id.toLowerCase();
-	
-	var finishCalls = 0, errored = false;
-	var finish = function(err){ // after account is created and validation process started
-		if (err && errored == false) { // handle error
-			return next(err);
-			errored = true;
-		}
-		else {
-			finishCalls++;
-			if (finishCalls == 2) { // display verify notification
-				req.flash('success', "<p>Thanks and welcome to the OpenMRS Community!</p>" 
-				+"<p>Before you can use your OpenMRS ID across our services, we need to verify your email address.</p>"
-				+"<p>We've sent an email to <strong>"+email+"</strong> with instructions to complete the signup process.</p>");
-				res.redirect('/signup/verify', 303);
-			}
-		}
-	}
-	
-	// add the user to ldap
-	ldap.addUser(id, first, last, email, pass, function(e, userobj){
-		if (e) finish(e);
-		log.info('created account "'+id+'"');
-	
-		// lock out the account until it has been verified
-		ldap.lockoutUser(id, function(err){
-			if (err) finish(err);
-			finish();
-		});
-	});
-	
-	// validate email before completing signup
-	verification.begin({
-		urlBase: 'signup',
-		email: email,
-		subject: '[OpenMRS] Welcome to the OpenMRS Community',
-		template: '../views/email/welcome-verify.ejs',
-		locals: {
-			displayName: first+' '+last,
-			username: id,
-			userCredentials: {
-				id: id,  email: email
-			}
-		},
-		timeout: 0		
-	}, function(err){
-		if (err) finish(err);
-				
-		// prepare confirmation notification
-		app.helpers({sentTo: email});
-		
-		finish();
-	});
-});
-
-app.get('/signup/verify', function(req, res, next) {
-	res.render('signedup');
-});
-
-// verification
-app.get('/signup/:id', function(req, res, next) {
-	verification.check(req.params.id, function(err, valid, locals){
-		if (err) return next(err);
-		if (valid) {
-			var user = locals.userCredentials;
-			
-			// enable the account, allowing logins
-			ldap.enableUser(user.id, function(err, userobj){
-				if (err) return next(err);
-				log.debug(user.id+': account enabled');
-				verification.clear(req.params.id);
-				req.flash('success', 'Your account was successfully created. Welcome!');
-				
-				req.session.user = userobj;
-				app.helpers()._locals.clearErrors(); // keeps "undefined" from showing up in error values
-				res.redirect('/');
-				
-			});
-		}
-		else {
-			req.flash('error', 'The requested signup verification does not exist.');
-			res.redirect('/');
-		}
-	});
-});
-
-app.get('/checkuser/*', function(req, res, next){
-	ldap.getUser(req.params[0], function(e, data){
-		if (e) {
-			if (e.message=='User data not found') res.end(JSON.stringify({exists: false}));
-			else if (e.message=='Illegal username specified') res.end(JSON.stringify({illegal: true}));
-		}
-		else if (data) res.end(JSON.stringify({exists: true}));
-		else next(e);
-	});
-});
-
 
 
 // USER PROFILE
@@ -513,20 +393,26 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 		
 		var username = obj[conf.ldap.user.username], email = obj[conf.ldap.user.email],
 			secondaryMail = obj[conf.ldap.user.secondaryemail] || [];
+			
+		var allEmails = secondaryMail.concat(email); // array of both pri. and sec. addresses to send to
 		
-		verification.begin({
-			urlBase: 'reset',
-			email: secondaryMail.concat(email),
-			subject: '[OpenMRS] Password Reset for '+username,
-			template: '../views/email/password-reset.ejs',
-			locals: {
-				username: username,
-				displayName: obj[conf.ldap.user.displayname]
-			},
-			timeout: conf.ldap.user.passwordResetTimeout,
-		}, function(err){
-			if (err) return next(err);
-			finish();
+		// send the verifications
+		allEmails.forEach(function(mail){
+			verification.begin({
+				urlBase: 'reset',
+				email: mail,
+				subject: '[OpenMRS] Password Reset for '+username,
+				template: '../views/email/password-reset.ejs',
+				locals: {
+					username: username,
+					displayName: obj[conf.ldap.user.displayname],
+					allEmails: allEmails
+				},
+				timeout: conf.ldap.user.passwordResetTimeout,
+			}, function(err){
+				if (err) return next(err);
+				finish();
+			});
 		});
 	};
 	
