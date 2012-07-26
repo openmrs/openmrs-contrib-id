@@ -1,0 +1,25 @@
+<% title = 'OpenMRS ID - Global Nav Admin' %>
+<% headline = 'Global Navigation Admin' %>
+
+<p>From here, you can customize the global navigation bar. <strong>These changes will instantly propagate wherever the navigation bar is embedded.</strong></p>
+
+<p>To embed the navigation bar, include this code anywhere in the <code>&lt;head&gt;</code> or <code>&lt;body&gt;</code>:</p>
+
+<p><code>&lt;script type="text/javascript" src="<%= url.resolve(conf.site.url, '/globalnav/inject.js') %>"&gt;&lt;/script&gt;</code></p>
+
+<form action="" method="post">
+	<h2>Links</h2>
+	<%- partial('../views/param-table', {
+		columns: [
+			{type: 'name', value: 'Name', name: 'name'},
+			{type: 'value', value: 'URL', name: 'url'}
+			],
+		data: links
+	}) %>
+	
+	<h2>Custom CSS</h2>
+	<!-- <div class="field"> -->
+	<textarea name="customcss"></textarea><!-- </div> -->
+	
+	<input type="submit" value="Save">
+</form>

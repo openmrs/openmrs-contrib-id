@@ -8,3 +8,63 @@ input[type="submit"] {
 	float: none;
 	clear: both;
 }
+
+/* Paramaters Table */
+
+div#params-container {
+		position: relative;
+		display: inline-block;
+		padding: 0;
+		margin: 0;
+		font-family: sans-serif;
+	}
+
+	table#params {
+		font-size: 12px;
+		border-collapse: collapse;
+	}
+	
+	table#params th, table#params td {
+		padding: 5px 8px;
+		/* border: 1px solid #48B3FA; */
+	}
+
+	table#params th.small {
+		width: 148px;
+	}
+
+	table#params th.medium {
+		width: 271px;
+	}
+
+	table#params input.name {
+		width: 142px;
+		/*
+border: none;
+		background-color: transparent;
+*/
+	}
+
+	table#params input.value {
+		width: 265px;
+		/*
+border: none;
+		background-color: transparent;
+*/
+	}
+
+	ul#param-control {
+		position: absolute;
+		margin: 0;
+		padding: 0;
+		z-index: 20;
+		right: -48px;
+	}
+
+	ul#param-control li {
+		cursor: pointer;
+		float: left;
+		list-style: none outside none;
+		margin: 1px;
+		padding: 2px;
+	}

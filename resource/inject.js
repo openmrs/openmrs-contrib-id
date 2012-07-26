@@ -32,11 +32,20 @@ function eraseCookie(name) {
 // once DOM can be manipulated
 DOMReady.add(function(){
 	var hideEnabled = false;
+	
+	// get script tag of this file (used to get relative path)
+	var scripts = document.getElementsByTagName('script'), s = undefined;
+	for (var i = 0; i < scripts.length; i++) {
+		if (/inject.js$/.test(scripts[i].src)) s = scripts[i];
+	}
+	var a = document.createElement('a');
+	a.href = s.src;
+	var relPath = a.protocol+'//'+a.host;	
 
 	// load the globalnav stylesheet
 	var link = document.createElement('link');
 	link.setAttribute('rel', 'stylesheet');
-	link.href = '/globalnav/style.css';
+	link.href = relPath+'/globalnav/style.css';
 	document.body.appendChild(link);
 	
 	// will be called once navbar request has returned
@@ -59,7 +68,7 @@ DOMReady.add(function(){
 	
 	// load navbar HTML via AJAX (server-side)
 	var req = new XMLHttpRequest()
-	req.open("GET", "/globalnav", true);
+	req.open("GET", relPath+"/globalnav", true);
 	req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	req.addEventListener("load", ajaxLoaded, false);
 	req.send();

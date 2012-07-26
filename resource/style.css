@@ -91,7 +91,6 @@
 	visibility: hidden;
 	color: #ccc !important;
 	float: right;
-	left: -35px;
 	top: 3px;
 	background: none !important;
 	-moz-box-shadow: none !important;
@@ -126,5 +125,46 @@
 	color: #efecea;
 	border-radius: 0;
 	padding: 10px 6px;
+}
+
+/* Search field */
+#search {
+	display: inline;
+	float: right;
+}
+
+#search input[type="text"] {
+    background: url('search-white.png') no-repeat 10px 3px #444;
+    border: 0 none;
+    /* font: bold 12px Arial,Helvetica,Sans-serif; */
+    font-size: 10px;
+    color: #fff;
+    width: 150px;
+    height: 8px;
+    
+    padding: 6px 15px 6px 29px;
+    /* padding: 6px; */
+    margin-right: 40px;
+    
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    
+    text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+    -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
+    
+    -webkit-transition: all 100ms ease 0s;
+    -moz-transition: all 100ms ease 0s;
+    -o-transition: all 100ms ease 0s;
+    transition: all 100ms ease 0s;
+}
+
+#search input[type="text"]:focus {	
+	background: url(search-dark.png) no-repeat 10px 3px #fcfcfc;
+	color: #6a6f75;
+	box-shadow: 0 0 10px rgb(81, 203, 238), 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2) inset;    
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
 }
 

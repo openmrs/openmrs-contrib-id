@@ -8,7 +8,12 @@
 			<% for (i in links) { %>
 			<a target="_parent"<% if (links[i] == activeLink) { %> href="" class="yourhere"<% } else { %> href="<%= links[i].url %>"<% } %>><%= links[i].name %></a>
 			<% } %>
-			<a id="globalnav-hide" href="#">hide</a></div>
+			<form method="get" id="search" action="http://www.google.com/cse">
+		        <input type="hidden" name="cx" value="000838034246045916975:hwklnwilweo">
+		        <input type="hidden" name="ie" value="UTF-8">
+		        <input type="text" class="field" name="q" id="s" placeholder="Search OpenMRS Sites">
+		    </form>
+		    <a id="globalnav-hide" href="#">hide</a>
 		</div>
 	</body>
 </html>

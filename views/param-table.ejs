@@ -1,67 +1,6 @@
 <link rel="stylesheet" type="text/css" media="all"
 		href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/ui-darkness/jquery-ui.css"/>
 
-<style type="text/css">
-
-	div#params-container {
-		position: relative;
-		display: inline-block;
-		padding: 0;
-		margin: 0;
-		font-family: sans-serif;
-	}
-
-	table#params {
-		font-size: 12px;
-		border-collapse: collapse;
-	}
-	
-	table#params th, table#params td {
-		padding: 5px 8px;
-		/* border: 1px solid #48B3FA; */
-	}
-
-	table#params th.small {
-		width: 148px;
-	}
-
-	table#params th.medium {
-		width: 271px;
-	}
-
-	table#params input.name {
-		width: 142px;
-		/*
-border: none;
-		background-color: transparent;
-*/
-	}
-
-	table#params input.value {
-		width: 265px;
-		/*
-border: none;
-		background-color: transparent;
-*/
-	}
-
-	ul#param-control {
-		position: absolute;
-		margin: 0;
-		padding: 0;
-		z-index: 20;
-		right: -48px;
-	}
-
-	ul#param-control li {
-		cursor: pointer;
-		float: left;
-		list-style: none outside none;
-		margin: 1px;
-		padding: 2px;
-	}
-</style>
-
 <script type="text/javascript" 
 		src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js">
 	</script>
@@ -84,7 +23,7 @@ border: none;
 
 		var paramRow = function(){
 			return '<tr><% for (var j = 0; j < columns.length; j++) { %><td>'
-				+'<input type="text" class="<%=columns[j].type%>" name="'+($('tbody tr').length-1)+'-<%=columns[j].name%>"></td><% } %></tr>';
+				+'<input type="text" class="<%=columns[j].type%>" placeholder="<%=columns[j].value%>" name="'+($('tbody tr').length-1)+'-<%=columns[j].name%>"></td><% } %></tr>';
 			};
 
 		// initialize table
@@ -143,7 +82,7 @@ border: none;
 		<tr>
 			<% for (var j = 0; j < columns.length; j++) { %>
 			<td>
-				<input type="text" class="<%=columns[j].type%>" name="<%=i%>-<%=columns[j].name%>" value="<%=data[i][columns[j].name]%>">
+				<input type="text" class="<%=columns[j].type%>" placeholder="<%=columns[j].value%>" name="<%=i%>-<%=columns[j].name%>" value="<%=data[i][columns[j].name]%>">
 			</td><% } %>
 		</tr>
 		<% } %>
