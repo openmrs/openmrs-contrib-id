@@ -69,7 +69,7 @@ DOMReady.add(function(){
 	// load navbar HTML via AJAX (server-side)
 	var req = new XMLHttpRequest()
 	req.open("GET", relPath+"/globalnav", true);
-	req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	//req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 	req.addEventListener("load", ajaxLoaded, false);
 	req.send();
 	

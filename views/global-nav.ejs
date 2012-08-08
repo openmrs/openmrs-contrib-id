@@ -6,9 +6,6 @@
 	} %>
 	</head>
 	<body id="globalnav-body">
-		<!--
-		<%- JSON.stringify(prefs, null, '  ') %>
-		-->
 		<div id="globalnav">
 			<% for (i in links) { %>
 			<a target="_parent"<% if (links[i] == activeLink) { %> href="" class="yourhere"<% } else { %> href="<%= links[i].url %>"<% } %>><%= links[i].name %></a>
@@ -20,5 +17,6 @@
 		    </form><% } %>
 		    <a id="globalnav-hide" href="#">[hide]</a>
 		</div>
+		<div id="globalnav-block"></div>
 	</body>
 </html>

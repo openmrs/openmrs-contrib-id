@@ -1,3 +1,51 @@
+/* CSS RESET */
+#globalnav html, #globalnav body, #globalnav div, #globalnav span, #globalnav applet, #globalnav object, #globalnav iframe,
+#globalnav h1, #globalnav h2, #globalnav h3, #globalnav h4, #globalnav h5, #globalnav h6, #globalnav p, #globalnav blockquote, #globalnav pre,
+#globalnav a, #globalnav abbr, #globalnav acronym, #globalnav address, #globalnav big, #globalnav cite, #globalnav code,
+#globalnav del, #globalnav dfn, #globalnav em, #globalnav img, #globalnav ins, #globalnav kbd, #globalnav q, #globalnav s, #globalnav samp,
+#globalnav small, #globalnav strike, #globalnav strong, #globalnav sub, #globalnav sup, #globalnav tt, #globalnav var,
+#globalnav b, #globalnav u, #globalnav i, #globalnav center,
+#globalnav dl, #globalnav dt, #globalnav dd, #globalnav ol, #globalnav ul, #globalnav li,
+#globalnav fieldset, #globalnav form, #globalnav label, #globalnav legend,
+#globalnav table, #globalnav caption, #globalnav tbody, #globalnav tfoot, #globalnav thead, #globalnav tr, #globalnav th, #globalnav td,
+#globalnav article, #globalnav aside, #globalnav canvas, #globalnav details, #globalnav embed, 
+#globalnav figure, #globalnav figcaption, #globalnav footer, #globalnav header, #globalnav hgroup, 
+#globalnav menu, #globalnav nav, #globalnav output, #globalnav ruby, #globalnav section, #globalnav summary,
+#globalnav time, #globalnav mark, #globalnav audio, #globalnav video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+#globalnav article, #globalnav aside, #globalnav details, #globalnav figcaption, #globalnav figure, 
+#globalnav footer, #globalnav header, #globalnav hgroup, #globalnav menu, #globalnav nav, section {
+	display: block;
+}
+#globalnav body {
+	line-height: 1;
+}
+#globalnav ol, #globalnav ul {
+	list-style: none;
+}
+#globalnav blockquote, #globalnav q {
+	quotes: none;
+}
+#globalnav blockquote:before, #globalnav blockquote:after,
+#globalnav q:before, #globalnav q:after {
+	content: '';
+	content: none;
+}
+#globalnav table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}*/
+
+
+/* NAVBAR */
+
 #globalnav-container {
 	width: 100%;
 	height: 27px;
@@ -7,6 +55,8 @@
 	border: 0;
 	overflow: hidden;
 	position: relative;
+	top: 0;
+	left: 0;
 	z-index: 10;
 	
 	-moz-transition: 200ms height;

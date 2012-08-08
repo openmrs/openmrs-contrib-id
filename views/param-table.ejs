@@ -31,7 +31,15 @@ $(function() {
 
 	// handle adding new rows
 	$('#params').delegate('input, textarea', 'keyup', checkEmptyRows);
-	checkEmptyRows.call($('table#params input:first')); // run at page load
+	
+	// add a blank row
+	if ($('table#params input:first').length > 0) {
+		checkEmptyRows.call($('table#params input:first')); // if some links already exist
+	}
+	else {
+		$(paramRow()).appendTo('table#params'); // if no links exist yet
+	}
+
 });
 </script>
 
