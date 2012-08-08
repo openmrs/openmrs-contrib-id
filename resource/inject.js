@@ -79,21 +79,21 @@ DOMReady.add(function(){
 		var hide = document.getElementById('globalnav-hide'),
 			cont = document.getElementById('globalnav-container');
 			
-		if (hideEnabled) hide.innerHTML = 'show';
+		if (hideEnabled) hide.innerHTML = '[show]';
 
 		// set hidden class and cookie on click
 		hide.onclick = function(){
 			if (!hideEnabled) { // will be hidden
 				cont.className += 'hidden';
 				createCookie('globalnav-hidden', 'true');
-				hide.innerHTML = 'show';
+				hide.innerHTML = '[show]';
 				
 				setTimeout(function(){hideEnabled = true;}, 500);
 			}
 			else { // will be shown
 				cont.className = cont.className.replace('hidden', '');
 				hideEnabled = false;
-				hide.innerHTML = 'hide';
+				hide.innerHTML = '[hide]';
 				eraseCookie('globalnav-hidden');
 			}
 		}

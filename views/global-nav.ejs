@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<link rel="stylesheet" href="/globalnav/style.css">
+	<% if (prefs.customCSS) {
+		%><style><%-prefs.customCSS%></style><%
+	} %>
 	</head>
 	<body id="globalnav-body">
+		<!--
+		<%- JSON.stringify(prefs, null, '  ') %>
+		-->
 		<div id="globalnav">
 			<% for (i in links) { %>
 			<a target="_parent"<% if (links[i] == activeLink) { %> href="" class="yourhere"<% } else { %> href="<%= links[i].url %>"<% } %>><%= links[i].name %></a>
 			<% } %>
-			<form method="get" id="search" action="http://www.google.com/cse">
-		        <input type="hidden" name="cx" value="000838034246045916975:hwklnwilweo">
+			<% if (prefs.cseId) { %><form method="get" id="search" action="http://www.google.com/cse">
+		        <input type="hidden" name="cx" value="<%= prefs.cseId %>">
 		        <input type="hidden" name="ie" value="UTF-8">
-		        <input type="text" class="field" name="q" id="s" placeholder="Search OpenMRS Sites">
-		    </form>
-		    <a id="globalnav-hide" href="#">hide</a>
+		        <input type="text" class="field" name="q" id="s" placeholder="<%= prefs.csePlaceholder %>">
+		    </form><% } %>
+		    <a id="globalnav-hide" href="#">[hide]</a>
 		</div>
 	</body>
 </html>

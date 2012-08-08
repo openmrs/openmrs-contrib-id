@@ -7,19 +7,41 @@
 
 <p><code>&lt;script type="text/javascript" src="<%= url.resolve(conf.site.url, '/globalnav/inject.js') %>"&gt;&lt;/script&gt;</code></p>
 
-<form action="" method="post">
+<form action="/admin/globalnav/links" method="post">
 	<h2>Links</h2>
-	<%- partial('../views/param-table', {
+	<%- partial('param-table', {
+		tableName: 'links',
 		columns: [
 			{type: 'name', value: 'Name', name: 'name'},
 			{type: 'value', value: 'URL', name: 'url'}
 			],
 		data: links
 	}) %>
-	
-	<h2>Custom CSS</h2>
-	<!-- <div class="field"> -->
-	<textarea name="customcss"></textarea><!-- </div> -->
-	
+	<input type="submit" value="Save">
+</form>
+
+<form action="/admin/globalnav/prefs" method="post">
+	<h2>Preferences</h2>
+	<!--<%- partial('param-table', {
+		tableName: 'preferences',
+		columns: [
+			{type: 'name', value: 'Name', name: 'name', editable: false},
+			{type: 'value', value: 'Value', name: 'value'}
+		],
+		data: prefs,
+		canAddRows: false
+	}) %>-->
+	<% for (i in prefs) { %>
+		<div class="field">
+		<label><%=prefs[i].name%></label>
+		<% if (prefs[i].type == 'textarea') { %>
+		<textarea name="<%=prefs[i].key%>" placeholder="<%=prefs[i].placeholder%>"><%=(prefs[i].value != undefined) ? prefs[i].value : '' %></textarea>
+		<% } else { %>
+		<input type="<%=prefs[i].type%>" name="<%=prefs[i].key%>" placeholder="<%=prefs[i].placeholder%>" value="<%=prefs[i].value%>">
+		<% } %>
+		<span class="description"><%=prefs[i].description%></span>
+		</div>
+		
+	<% } %>
 	<input type="submit" value="Save">
 </form>
