@@ -34,12 +34,12 @@ app.get(/^\/signup\/?$|^\/$/i, function(req, res, next){
 	if (req.session.user) return next(); // pass onward if a user is signed in
 	
 	// parse querystrings for pre-populated data
-	var values = {}, renderLayout = true;
+	var values = app.helpers()._locals.values || {}, renderLayout = true;
 	var query = url.parse(req.url, true).query
-	values.username = (query.username) ? query.username : null;
-	values.firstname = (query.firstname) ? query.firstname : null;
-	values.lastname = (query.lastname) ? query.lastname : null;
-	values.email = (query.email) ? query.email : null;
+	values.username = (query.username) ? query.username : values.username;
+	values.firstname = (query.firstname) ? query.firstname : values.firstname;
+	values.lastname = (query.lastname) ? query.lastname : values.lastname;
+	values.email = (query.email) ? query.email : values.email;
 	
 	// handle layout query string
 	renderLayout = (query.layout == 'false') ? false : true;
@@ -101,7 +101,7 @@ app.post('/signup', mid.forceLogout, mid.forceCaptcha, validate(), function(req,
 		urlBase: 'signup',
 		email: email,
 		subject: '[OpenMRS] Welcome to the OpenMRS Community',
-		template: __dirname+'/../views/email/welcome-verify-email.ejs',
+		template: path.relative(global.__apppath, __dirname+'/../views/welcome-verify-email.ejs'),
 		locals: {
 			displayName: first+' '+last,
 			username: id,
