@@ -85,7 +85,7 @@ a.no-ext-icon:after, .no-ext-icon a:after {
 .flash.success span {
 	background: url('/resource/images/flash_message/success.png') no-repeat;
 }
-.placeholder {
+.placeholder, .hint {
 	color: #ccc;
 }
 
@@ -189,10 +189,13 @@ input, button, textarea {
 	position: relative;
 	z-index: 20;
 }
+textarea {
+	height: 9em;
+}
 .large input, .large textarea {
 	width: 374px;
 }
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], textarea {
 	float: left;
 	margin: 0 0 18px;
 	
@@ -209,7 +212,7 @@ input[type="checkbox"] {
 .two-up.large input {
 	width: 178px !important;
 }
-input:focus {
+input:focus, textarea:focus {
 	background: #fff;
 	border: 1px solid #444;
 	outline: none;

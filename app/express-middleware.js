@@ -121,3 +121,23 @@ exports.stripNewlines = function(req, res, next) {
 	}
 	next();
 }
+
+// parse paramater tables submitted with "param-table" view. passes an object
+exports.parseParamTable = function(req, res, next) {
+	var generatedList = [];
+	for (a in req.body) {
+		var split = /([0-9])-(\D+)/.exec(a), // splits to name and number of input
+			ind = split[1], type = split[2];
+			
+		if (!req.body[a]) break; // skip if this link is blank
+			
+		if (!generatedList[ind]) {
+			generatedList[ind] = {}; // create if it doesn't exist (first item of this link)
+			generatedList[ind].id = ind;
+		}
+		
+		generatedList[ind][type] = req.body[a];
+	}
+	res.local('params', generatedList);
+	next();
+}

@@ -16,8 +16,8 @@
 	
 	<div class="field two-up<% if (fail.firstname || fail.lastname ) { %> fail<% } %>">
 		<label>Name</label>
-		<input type="text" name="firstname" placeholder="Given Name"<% if (values.firstname) { %>value="<%= values.firstname %>"<% } else { %>autofocus<% } %>>
-		<input type="text" name="lastname" placeholder="Surname"<% if (values.lastname) { %>value="<%= values.lastname %>"<% } else { %>autofocus<% } %>>
+		<input type="text" name="firstname" placeholder="Given Name"<% if (values.firstname) { %>value="<%= values.firstname %>"<% } else if (values.username) { %>autofocus<% } %>>
+		<input type="text" name="lastname" placeholder="Surname"<% if (values.lastname) { %>value="<%= values.lastname %>"<% } else if (values.username && values.firstname) { %>autofocus<% } %>>
 		<span class="description">
 			<span class="failtext">Both a given name and surname are required.</span>
 			Your name identifies you across the OpenMRS Community.
@@ -26,7 +26,7 @@
 	
 	<div class="field<% if (fail.email) { %> fail<% } %>">
 		<label>Email</label>
-		<input type="text" name="email" placeholder="Email Address"<% if (values.email) { %>value="<%= values.email %>"<% } else { %>autofocus<% } %>>
+		<input type="text" name="email" placeholder="Email Address"<% if (values.email) { %>value="<%= values.email %>"<% } else if (values.username && values.firstname && values.lastname) { %>autofocus<% } %>>
 		<span class="description">
 			<span class="failtext"><% if (failReason.email) { %><%= failReason.email %><% } else { %>Please enter a valid email address.<% } %> </span>
 			We'll send any notifications to this address. You'll always be able to control what mail you receive.
@@ -35,7 +35,7 @@
 	
 	<div class="field<% if (fail.password) { %> fail<% } %>">
 		<label>Password</label>
-		<input type="password" name="password" placeholder="Password" <% if (values.length == 0) { %>autofocus<% } %>>
+		<input type="password" name="password" placeholder="Password" <% if (values.username && values.firstname && values.lastname && values.email) { %>autofocus<% } %>>
 		<span class="description">
 			<span class="failtext"><% if (failReason.password) { %><%= failReason.password %><% } else { %>Please enter a valid password.<% } %> </span>
 			Passwords must be at least 8 characters long.

@@ -18,7 +18,6 @@ app.helpers({
 	siteURL: conf.siteURL,
 	conf: conf,
 	url: url
-	
 });
 
 app.dynamicHelpers({
@@ -48,8 +47,9 @@ app.dynamicHelpers({
 		app.helpers(replace);
 	},
 	
-	userNavLinks: function(req){
-		// Uses login state and privileges to generate the links to include in the user navigation bar
+	userNavLinks: function(req, res){
+		// Uses login state and privileges to generate the links to include in the user navigation bar		
+
 		var list = userNav.list;
 			toRender = [];
 			

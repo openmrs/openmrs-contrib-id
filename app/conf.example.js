@@ -119,12 +119,18 @@ module.exports = {
     ],
     
     // displays at bottom of sidebar
-    "aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v1.3.1",
+    "aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v1.4.0 beta",
     
-    // enabled modules
-    "modules": [
-    	"groups",
-    	"openmrs-navbar"
+    // system modules
+    "systemModules": [
+    	"admin",
+    	"signup"
+    ],
+    
+    // user-configured modules
+    "userModules": [
+    	"openmrs-contrib-dashboard-groups",
+    	"openmrs-contrib-globalnavbar",
     ]
 };
 

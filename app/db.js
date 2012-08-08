@@ -22,6 +22,37 @@ EXPOSED DATA METHODS
 ====================
 */
 
+// allows models to be defined externally (used for modules)
+exports.define = function(name, properties, methods, callback) {
+	// Check for model name collision
+	if (models[name]) return callback(new Error('A model "'+name+'" already exists.'));
+	
+	// Check arguments
+	var a = arguments;
+	if (typeof a[2] == 'object') { // If methods are passed
+		var callback = (typeof a[3] == 'function') ? a[3] : new Function // If callback is defined
+	}
+	else if (typeof a[2] == 'function') { // If methods are not passed
+		var callback = a[2];
+		var methods = {};
+	}
+	else {
+		var methods = {};
+		var callback = function(err){if(err) log.error(err)};
+	}
+	
+	// define the model in Sequelize (synchronous)
+	models[name] = sql.define(name, properties, methods);
+		
+	// Sync new model to database and callback
+	models[name].sync().success(function() {
+		log.debug('Model "'+name+'" defined and synced.');
+		return callback();
+	}).error(function(err){
+		return callback(err);
+	});
+};
+
 // get a new instance of a model, ready to accept attributes
 exports.create = function(model) {
 	if (!models[model]) {
@@ -36,6 +67,41 @@ exports.create = function(model) {
 	if (instance.onCreate) instance.onCreate(instance);
 	
 	return instance;
+}
+
+// take an array of instance values, and push to db ONLY IF model's table is empty
+exports.initiate = function(model, defaults, callback) {
+	log.trace('initiate called');
+	if (!models[model]) {
+		log.warn("Requested model "+model+" doesn't exist.");
+		return;
+	}
+	if (!callback) callback = function(err){if(err) log.error(err)};
+	
+	// get all instances of model and do not initiate if any already exist
+	exports.getAll(model, function(err, instances) {
+		if (err) return callback(err);
+		if (instances.length == 0) {
+			log.debug('initiating '+model);
+		
+			// prepare each entry to initiate
+			var chain = []; // chain to save to
+			defaults.forEach(function(entry){
+				var inst = models[model].build(); // define instance to build on to
+				for (key in entry) {
+					inst[key] = entry[key]; // set instance value to passed value
+				}
+				chain.push(inst);
+			});
+			
+			exports.chainSave(chain, function(err){
+				if (err) return callback(err);
+				callback(); // all done!
+			});
+		}
+		else callback(); // finish doing nothing if model doesn't need initiation
+	});
+	
 }
 
 // send an updated instance back to the DB, optionally only updating certain attributes
@@ -142,7 +208,7 @@ exports.chainSave = function(array, callback) {
 
 // drop instance from DB
 exports.drop = function(instance, callback) {
-	if (!callback) callback = function(err){if(err) throw err}
+	if (!callback) callback = function(err){if(err) log.error(err)}
 	log.trace('destroying instance of '+instance.__factory.name);
 	instance.destroy().success(function(u){
 		log.trace('dropped instance from DB');
@@ -170,37 +236,6 @@ exports.sync = function(model, options, callback) {
 STORAGE MODEL
 ============
 */
-
-// Allow models to be defined externally (use this for modules)
-exports.define = function(name, properties, methods, callback) {
-	// Check for model name collision
-	if (models[name]) return callback(new Error('A model "'+name+'" already exists.'));
-	
-	// Check arguments
-	var a = arguments;
-	if (typeof a[2] == 'object') { // If methods are passed
-		var callback = (typeof a[3] == 'Function') ? a[3] : new Function // If callback is defined
-	}
-	else if (typeof a[2] == 'function') { // If methods are not passed
-		var properties = {};
-		var callback = (typeof a[2] == 'Function') ? a[2] : new Function // If callback is defined
-	}
-	else {
-		var methods = {};
-		var callback = new Function;
-	}
-	
-	// define the model in Sequelize (synchronous)
-	models[name] = sql.define(name, properties, methods);
-		
-	// Sync new model to database and callback
-	models[name].sync().success(function() {
-		log.debug('Model "'+name+'" initiated and synced');
-		return callback();
-	}).error(function(err){
-		return callback(err);
-	});
-};
 
 /* additional instance methods:
 	- onGet, onSave, onCreate: synchronous, each passed a copy of its own instance
