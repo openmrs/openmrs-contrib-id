@@ -10,7 +10,7 @@
 			<% for (i in links) { %>
 			<a target="_parent"<% if (links[i] == activeLink) { %> href="" class="yourhere"<% } else { %> href="<%= links[i].url %>"<% } %>><%= links[i].name %></a>
 			<% } %>
-			<% if (prefs.cseId) { %><form method="get" id="search" action="http://www.google.com/cse">
+			<% if (prefs.cseId) { %><form method="get" action="http://www.google.com/cse">
 		        <input type="hidden" name="cx" value="<%= prefs.cseId %>">
 		        <input type="hidden" name="ie" value="UTF-8">
 		        <input type="text" class="field" name="q" id="s" placeholder="<%= prefs.csePlaceholder %>">

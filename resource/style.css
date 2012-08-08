@@ -176,17 +176,17 @@
 }
 
 /* Search field */
-#search {
+#globalnav form {
 	display: inline;
 	float: right;
 	margin: 0;
 }
 
-#search input[type="text"] {
+
+#globalnav input[type="text"] {
     background: url('search-white.png') no-repeat 10px 3px #444;
     border: 0 none;
-    /* font: bold 12px Arial,Helvetica,Sans-serif; */
-    font-size: 10px;
+    font: 10px sans-serif !important;
     color: #fff;
     width: 150px;
     height: 8px;
@@ -210,7 +210,7 @@
     transition: all 100ms ease 0s;
 }
 
-#search input[type="text"]:focus {	
+#globalnav input[type="text"]:focus {	
 	background: url(search-dark.png) no-repeat 10px 3px #fcfcfc;
 	color: #6a6f75;
 	box-shadow: 0 0 10px rgb(81, 203, 238), 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2) inset;    
