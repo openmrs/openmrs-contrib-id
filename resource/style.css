@@ -24,9 +24,6 @@
 #globalnav footer, #globalnav header, #globalnav hgroup, #globalnav menu, #globalnav nav, section {
 	display: block;
 }
-#globalnav body {
-	line-height: 1;
-}
 #globalnav ol, #globalnav ul {
 	list-style: none;
 }
@@ -41,7 +38,7 @@
 #globalnav table {
 	border-collapse: collapse;
 	border-spacing: 0;
-}*/
+}
 
 
 /* NAVBAR */
@@ -57,7 +54,7 @@
 	position: relative;
 	top: 0;
 	left: 0;
-	z-index: 10;
+	z-index: 1337;
 	
 	-moz-transition: 200ms height;
 	-webkit-transition: 200ms height;
@@ -155,20 +152,24 @@
 }
 
 /* Hidden styles */
-#globalnav-container.hidden {
+#globalnav-container.navbar-hidden {
 	height: 13px;
 	margin-bottom: -10px;
+	
+    -webkit-transition: 200ms height;
 }
 
-#globalnav-container.hidden #globalnav {
+#globalnav-container.navbar-hidden #globalnav {
 	height: 3px;
-	padding-top: 0;
+	padding-top: 0px;
+	
+    -webkit-transition: 200ms height, 200ms padding-top;
 }
 
-#globalnav-container.hidden #globalnav a {
+#globalnav-container.navbar-hidden #globalnav a {
 	visibility: hidden;
 }
-#globalnav-container.hidden #globalnav a.yourhere {
+#globalnav-container.navbar-hidden #globalnav a.yourhere {
 	visibility: visible;
 	color: #efecea;
 	border-radius: 0;

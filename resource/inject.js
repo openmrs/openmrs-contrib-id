@@ -11,7 +11,7 @@ function createCookie(name,value,days) {
 		var expires = "; expires="+date.toGMTString();
 	}
 	else var expires = "";
-	document.cookie = name+"="+value+expires+"; path=/";
+	document.cookie = name+"="+value+expires+"; path=/; domain=openmrs.org";
 }
 
 function readCookie(name) {
@@ -40,7 +40,7 @@ DOMReady.add(function(){
 	}
 	var a = document.createElement('a');
 	a.href = s.src;
-	var relPath = a.protocol+'//'+a.host;	
+	var relPath = a.protocol+'//'+a.host;
 
 	// load the globalnav stylesheet
 	var link = document.createElement('link');
@@ -59,8 +59,12 @@ DOMReady.add(function(){
 		var hidden = readCookie('globalnav-hidden');
 		if (hidden == 'true') {
 			hideEnabled = true;
-			container.className = 'hidden';
+			container.className = 'navbar-hidden';
+			
+			// re-set cookie
+			createCookie('globalnav-hidden', 'true', 90);
 		}
+		else createCookie('globalnav-hidden', 'false', 90);
 		
 		document.body.insertBefore(container, document.body.firstChild);
 		setHidden();
@@ -74,7 +78,6 @@ DOMReady.add(function(){
 	req.send();
 	
 	
-	
 	var setHidden = function(){
 		var hide = document.getElementById('globalnav-hide'),
 			cont = document.getElementById('globalnav-container');
@@ -84,29 +87,34 @@ DOMReady.add(function(){
 		// set hidden class and cookie on click
 		hide.onclick = function(){
 			if (!hideEnabled) { // will be hidden
-				cont.className += 'hidden';
-				createCookie('globalnav-hidden', 'true');
+				cont.className += 'navbar-hidden';
+				
+				// set cookie to true	
+				createCookie('globalnav-hidden', 'true', 90);
+					
 				hide.innerHTML = '[show]';
 				
 				setTimeout(function(){hideEnabled = true;}, 500);
 			}
 			else { // will be shown
-				cont.className = cont.className.replace('hidden', '');
+				cont.className = cont.className.replace('navbar-hidden', '');
 				hideEnabled = false;
 				hide.innerHTML = '[hide]';
-				eraseCookie('globalnav-hidden');
+				
+				// set cookie to false	
+				createCookie('globalnav-hidden', 'false', 90);
 			}
 		}
 		
 		setTimeout(function(){ // prevents WebKit from executing on page load
 			// expand on hover
 			cont.onmouseover = function(event){
-				if (hideEnabled) cont.className = cont.className.replace('hidden', '');
+				if (hideEnabled) cont.className = cont.className.replace('navbar-hidden', '');
 			}
 			
 			// hide on mouseout
 			cont.onmouseout = function(){
-				if (hideEnabled && cont.className.indexOf('hidden') < 0) cont.className += 'hidden'; 
+				if (hideEnabled && cont.className.indexOf('navbar-hidden') < 0) cont.className += 'navbar-hidden'; 
 			}
 		}, 100);
 	}
