@@ -48,13 +48,13 @@
 			%>
 		<div class="field<%
 			if (fail.secondaryemail && fail.secondaryemail[i]) { %> fail<% }
-			%><% if (i!=0 && i==secMailLength) { %> next<% }
+			%><% if (i!=0 && i==secMailLength && (!inProgress || (inProgress && progress[user[conf.user.secondaryemail][i]] && i > 1))) { %> next<% }
 			if (emailUpdated && emailUpdated == user[conf.user.secondaryemail][i]) { %> valid<% } 
 			if (inProgress && progress[user[conf.user.secondaryemail][i]]) { %> inprogress<% } %>">
 			
 			<% if (i==0) { %><label>Secondary Email</label> <% }
 				%>
-			<% if (i!=0 && i==secMailLength) {
+			<% if (i!=0 && i==secMailLength && (!inProgress || (inProgress && progress[user[conf.user.secondaryemail][i]] && i > 1))) {
 				%><input type="text" value="Add another...">
 			<% } else {
 				%><input type="text" name="secondaryemail" placeholder="Secondary Email" value="<% if (failed && values.secondaryemail) {

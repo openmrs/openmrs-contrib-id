@@ -175,6 +175,8 @@ app.get('/profile', mid.forceLogin, function(req, res, next){
 			var newEmail = inst.email,
 				oldEmail = inst.locals.newToOld[newEmail];
 				
+			if (oldEmail == '') oldEmail = undefined;
+				
 			thisProgress.address = oldEmail;
 			thisProgress.pendingAddress = newEmail;
 			
@@ -185,7 +187,7 @@ app.get('/profile', mid.forceLogin, function(req, res, next){
 			fieldsInProgress[thisProgress.address] = thisProgress;
 		});
 		
-		var inProgress = (fieldsInProgress.length > 0);
+		var inProgress = (Object.keys(fieldsInProgress).length > 0);
 		
 		
 		// render the page
@@ -297,8 +299,9 @@ app.get('/profile-email/:id', function(req, res, next) {
 			else { // address is secondary
 				if (userobj[conf.user.secondaryemail].length > 0) { // user has some sec. addresses
 					userobj[conf.user.secondaryemail].forEach(function(addr, i){
-						if (addr == corrMail) userobj[conf.user.secondaryemail][i] = newMail;
+						if (addr == corrMail) userobj[conf.user.secondaryemail][i] = newMail; // replace an existing sec. email
 					});
+					if (corrMail == '') userobj[conf.user.secondaryemail].push(newMail); // add a new sec. email
 				}
 				else userobj[conf.user.secondaryemail] = [newMail]; // no current sec. mails, create the first one
 			}

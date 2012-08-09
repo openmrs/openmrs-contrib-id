@@ -15,7 +15,7 @@
 // valid JSON, except for RegExp's
 module.exports = {
     "site": {
-        "url": "http://id.openmrs.org/",
+        "url": "https://id.openmrs.org/",
         "title": "OpenMRS ID"
     },
     "ldap": {
@@ -119,7 +119,7 @@ module.exports = {
     ],
     
     // displays at bottom of sidebar
-    "aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v1.4.0 beta",
+    "aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v1.4.1",
     
     // system modules
     "systemModules": [

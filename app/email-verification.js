@@ -144,6 +144,9 @@ exports.getByActionId = function(id, callback){
 	db.find('EmailVerification', {actionId: id}, function(err, instance){
 		if (err) return callback(err);
 		
+		// error if ID doesn't exist (anymore)
+		if (instance.length == 0) return callback(new Error('Email verification could not be cancelled. The verification ID was not found.'));
+
 		callback(null, instance[0]);
 	});
 };
