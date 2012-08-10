@@ -29,6 +29,16 @@ function eraseCookie(name) {
 	createCookie(name,"",-1);
 }
 
+// build indexOf code for IE
+if (!Array.prototype.indexOf) {
+	Array.prototype.indexOf = function(obj, start) {
+	     for (var i = (start || 0), j = this.length; i < j; i++) {
+	         if (this[i] === obj) { return i; }
+	     }
+	     return -1;
+	}
+}
+
 // once DOM can be manipulated
 DOMReady.add(function(){
 	var hideEnabled = false;
@@ -36,7 +46,7 @@ DOMReady.add(function(){
 	// get script tag of this file (used to get relative path)
 	var scripts = document.getElementsByTagName('script'), s = undefined;
 	for (var i = 0; i < scripts.length; i++) {
-		if (/inject.js$/.test(scripts[i].src)) s = scripts[i];
+		if (/\/globalnav\/inject.js(?:\?.+)?$/.test(scripts[i].src)) s = scripts[i];
 	}
 	var a = document.createElement('a');
 	a.href = s.src;
@@ -49,8 +59,10 @@ DOMReady.add(function(){
 	document.body.appendChild(link);
 	
 	// will be called once navbar request has returned
-	var ajaxLoaded = function(){
+	var ajaxLoaded = function(req){
 		var data = req.responseText;
+		console.log(data);
+		
 		var container = document.createElement('div');
 		container.id = 'globalnav-container';
 		container.innerHTML = data; // causing MobileWebKit problems?
@@ -67,18 +79,10 @@ DOMReady.add(function(){
 		else createCookie('globalnav-hidden', 'false', 90);
 		
 		document.body.insertBefore(container, document.body.firstChild);
-		setHidden();
-	}
+		
+		
+		// configure hiddenness
 	
-	// load navbar HTML via AJAX (server-side)
-	var req = new XMLHttpRequest()
-	req.open("GET", relPath+"/globalnav", true);
-	//req.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-	req.addEventListener("load", ajaxLoaded, false);
-	req.send();
-	
-	
-	var setHidden = function(){
 		var hide = document.getElementById('globalnav-hide'),
 			cont = document.getElementById('globalnav-container');
 			
@@ -119,4 +123,24 @@ DOMReady.add(function(){
 		}, 100);
 	}
 	
+	// load navbar HTML via AJAX (server-side)
+	var usedXHR = false, usedXDR = false,
+		urlString = relPath+"/globalnav/?time="+new Date().getTime(); // time string prefents IE from caching
+	if (XMLHttpRequest) {
+		if ("withCredentials" in new XMLHttpRequest()) { // modern browsers
+			usedXHR = true;
+			var req = new XMLHttpRequest()
+			req.open("GET", urlString, true);
+			req.addEventListener("load", function(){ajaxLoaded(req);});
+			req.send();
+		}
+		else if (XDomainRequest) { // internet explorer
+			usedXDR = true;
+			var xdr = new XDomainRequest();
+			xdr.open("get", urlString, true);
+			xdr.onload = function(){ajaxLoaded(xdr);}
+			xdr.send();
+		}
+		
+	}
 });
