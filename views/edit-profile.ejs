@@ -41,34 +41,36 @@
 	</div>
 	
 	<div class="multi-field">
-		<% if (user[conf.user.secondaryemail])
-			secMailLength= (values.secondaryemail) ? values.secondaryemail.length : user[conf.user.secondaryemail].length;
+		<% if (user[conf.user.secondaryemail] || (inProgress && newSecondary)) {
+				var secmail = (inProgress && newSecondary) ? newSecondary : user[conf.user.secondaryemail],
+					secMailLength = (values.secondaryemail) ? values.secondaryemail.length : secmail.length;
+			}
+			
 			else secMailLength = 0;
 			for (var i = 0; i <= secMailLength; i++) {
 			%>
 		<div class="field<%
 			if (fail.secondaryemail && fail.secondaryemail[i]) { %> fail<% }
-			%><% if (i!=0 && i==secMailLength && (!inProgress || (inProgress && progress[user[conf.user.secondaryemail][i]] && i > 1))) { %> next<% }
-			if (emailUpdated && emailUpdated == user[conf.user.secondaryemail][i]) { %> valid<% } 
-			if (inProgress && progress[user[conf.user.secondaryemail][i]]) { %> inprogress<% } %>">
+			%><% if (i!=0 && i==secMailLength) { %> next<% }
+			if (emailUpdated && emailUpdated == secmail[i]) { %> valid<% } 
+			if (inProgress && progress[secmail[i]]) { %> inprogress<% } %>">
 			
 			<% if (i==0) { %><label>Secondary Email</label> <% }
 				%>
-			<% if (i!=0 && i==secMailLength && (!inProgress || (inProgress && progress[user[conf.user.secondaryemail][i]] && i > 1))) {
+			<% if (i!=0 && i==secMailLength) {
 				%><input type="text" value="Add another...">
 			<% } else {
 				%><input type="text" name="secondaryemail" placeholder="Secondary Email" value="<% if (failed && values.secondaryemail) {
 					%><%= values.secondaryemail[i] %><%
-					} else if (inProgress && progress[user[conf.user.secondaryemail][i]]) { %><%= progress[user[conf.user.secondaryemail][i]].pendingAddress %><%
-					} else if (user[conf.user.secondaryemail] && user[conf.user.secondaryemail][i]) {
-					%><%= user[conf.user.secondaryemail][i]%><% } %>"><% } %>
+					} else {
+					%><%= secmail[i]%><% } %>"><% } %>
 			
 			<span class="description">
 				<span class="failtext"><% if (failReason.secondaryemail) { %><%= failReason.secondaryemail %><% } else { %>Invalid email address.<% } %> </span>
-				<% if (inProgress && progress[user[conf.user.secondaryemail][i]]) { %>
+				<% if (inProgress && progress[secmail[i]]) { %>
 				<span class="inprogresstext">This email address must be verified before it can be used. Verification has been sent.
-					(<a href="/profile-email/resend/<%= progress[user[conf.user.secondaryemail][i]].id %>">Resend</a> or
-					<a href="/profile-email/cancel/<%= progress[user[conf.user.secondaryemail][i]].id %>">Cancel</a>)
+					(<a href="/profile-email/resend/<%= progress[secmail[i]].id %>">Resend</a> or
+					<a href="/profile-email/cancel/<%= progress[secmail[i]].id %>">Cancel</a>)
 				</span><% } %>
 				Secondary email addresses can be subscribed to mailing lists and sent password recovery prompts.
 			</span>

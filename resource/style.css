@@ -641,9 +641,9 @@ ul#more a:link, ul#more a:link visited {
 }
 .field>.description {
 	display: inline-block;
+	background: #FFFBF2;
 	visibility: hidden;
 	width: 300px;
-	height: 15px;
 	position: relative;
 	z-index: 25;
 	top: 4px;

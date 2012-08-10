@@ -13,6 +13,7 @@
  */
  
 var Recaptcha = require('recaptcha').Recaptcha,
+	url = require('url'),
 	Common = require('./openmrsid-common'),
 	conf = Common.conf,
 	app = Common.app,
@@ -54,8 +55,11 @@ module.exports = function(redirect) {
 				if (called == calls && reachedEnd) {
 					app.helpers({failed: true, values: values, fail: failures, failReason: failReason});
 					if (failed == true) {
-						if (redirect) return res.redirect(redirect);
-						else return res.redirect(req.url);
+						if (redirect) return res.redirect(redirect); // redirect to predefined destination
+						else if (req.body.destination) { // redirect to the destination login page
+							return res.redirect(url.resolve(req.url, '?destination='+encodeURIComponent(req.body.destination)));
+						}
+						else return res.redirect(req.url); // redirect to generic login page
 					}
 					else return next();
 				}

@@ -197,6 +197,7 @@ $().ready(function(){
 		var toClone = $(this).prev().clone(true);
 		if (toClone.children('label')) toClone.children('label').detach();
 		if (toClone.hasClass('fail')) toClone.removeClass('fail');
+		if (toClone.hasClass('inprogress')) toClone.removeClass('inprogress');
 		toClone.children('input').attr('value', '');
 		toClone.insertBefore(this).children('input').focus();
 	}

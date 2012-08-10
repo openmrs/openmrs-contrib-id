@@ -107,7 +107,10 @@ app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 				app.helpers({fail: {loginusername: false, loginpassword: true},
 					values: {loginusername: username,
 					loginpassword: password}});
-				return res.redirect(url.resolve(conf.site.url, '/login'));
+				if (req.body.destination) { // redirect to the destination login page
+					return res.redirect(url.resolve(conf.site.url, '/login?destination='+encodeURIComponent(req.body.destination)));
+				}
+				else return res.redirect(url.resolve(conf.site.url, '/login')); // redirect to generic login page
 			}
 			else {log.debug('login error');return next(e);}
 		}		
@@ -167,31 +170,34 @@ app.get('/profile', mid.forceLogin, function(req, res, next){
 		if (err) return next(err);
 		
 		// loop through instances to set up each address under verification
-		var fieldsInProgress = {};
+		var fieldsInProgress = {}, newSecondary = {};
 		instances.forEach(function(inst){
 			var thisProgress = {} // contains data for this address
 			
 			// get email address pending change and the current address
 			var newEmail = inst.email,
 				oldEmail = inst.locals.newToOld[newEmail];
+			
+			newSecondary = inst.locals.secondary;
+			
 				
-			if (oldEmail == '') oldEmail = undefined;
+			if (oldEmail == '') oldEmail = '';
 				
-			thisProgress.address = oldEmail;
-			thisProgress.pendingAddress = newEmail;
+			thisProgress.oldAddress = oldEmail;
+			thisProgress.newAddress = newEmail;
 			
 			// set up links to cancel and resend verification
 			thisProgress.id = inst.actionId;
 			
 			// push this verification data to the render variable
-			fieldsInProgress[thisProgress.address] = thisProgress;
+			fieldsInProgress[thisProgress.newAddress] = thisProgress;
 		});
 		
 		var inProgress = (Object.keys(fieldsInProgress).length > 0);
 		
 		
 		// render the page
-		res.render('edit-profile', {progress: fieldsInProgress, inProgress: inProgress});
+		res.render('edit-profile', {progress: fieldsInProgress, inProgress: inProgress, newSecondary: newSecondary});
 	});
 });
 
@@ -230,7 +236,8 @@ app.post('/profile', mid.forceLogin, mid.secToArray, validate(), function(req, r
 					displayName: updUser[conf.user.displayname],
 					username: updUser[conf.user.username],
 					mail: mail,
-					newToOld: newToOld
+					newToOld: newToOld,
+					secondary: body.secondaryemail
 				}
 			}, function(err){
 				if (err) log.error(err);
