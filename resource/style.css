@@ -120,12 +120,6 @@
     -moz-box-shadow: inset 0 1px 1px #999;
     box-shadow: inset 0 1px 1px #999;
     border-radius: 9px;
-    
-    /*
--moz-transition: 100ms padding, 100ms border-radius;
-    -webkit-transition: 100ms padding, 100ms border-radius;
-    transition: 100ms padding, 100ms border-radius;
-*/
 }
 
 #globalnav a.yourhere:hover, #user-nav a.yourhere:link, #user-nav a.yourhere:visited {
@@ -156,14 +150,24 @@
 	height: 13px;
 	margin-bottom: -10px;
 	
+    -moz-transition: 200ms height;
     -webkit-transition: 200ms height;
+    transition: 200ms height;
 }
 
 #globalnav-container.navbar-hidden #globalnav {
 	height: 3px;
 	padding-top: 0px;
 	
-    -webkit-transition: 200ms height, 200ms padding-top;
+    -moz-transition: 200ms height, 200ms padding-top, 400ms box-shadow ease-out;
+    -webkit-transition: 200ms height, 200ms padding-top, 400ms box-shadow ease-out;
+    transition: 200ms height, 200ms padding-top, 400ms box-shadow ease-out;
+}
+
+#globalnav-container.navbar-hidden:hover #globalnav {
+	box-shadow: 0 0 8px #444;
+	
+	-webkit-transition: 200ms height, 200ms padding-top, 400ms box-shadow ease-out;
 }
 
 #globalnav-container.navbar-hidden #globalnav a {

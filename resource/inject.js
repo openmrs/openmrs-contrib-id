@@ -61,7 +61,6 @@ DOMReady.add(function(){
 	// will be called once navbar request has returned
 	var ajaxLoaded = function(req){
 		var data = req.responseText;
-		console.log(data);
 		
 		var container = document.createElement('div');
 		container.id = 'globalnav-container';
@@ -78,13 +77,14 @@ DOMReady.add(function(){
 		}
 		else createCookie('globalnav-hidden', 'false', 90);
 		
+		// inject the navbar (!)
 		document.body.insertBefore(container, document.body.firstChild);
 		
 		
-		// configure hiddenness
-	
+		// BEGIN hiddenness config
 		var hide = document.getElementById('globalnav-hide'),
-			cont = document.getElementById('globalnav-container');
+			cont = document.getElementById('globalnav-container'),
+			navbar = document.getElementById('globalnav');
 			
 		if (hideEnabled) hide.innerHTML = '[show]';
 
@@ -112,15 +112,47 @@ DOMReady.add(function(){
 		
 		setTimeout(function(){ // prevents WebKit from executing on page load
 			// expand on hover
+			var timer = null, waitToOpen = false;
 			cont.onmouseover = function(event){
-				if (hideEnabled) cont.className = cont.className.replace('navbar-hidden', '');
+				if (hideEnabled && !waitToOpen) {
+					timer = setTimeout(function(){ // require user to hover for a moment, ITSM-2712
+						timer = null;
+						cont.className = cont.className.replace('navbar-hidden', '');
+						
+					}, 400);					
+				}
+				
 			}
 			
 			// hide on mouseout
-			cont.onmouseout = function(){
-				if (hideEnabled && cont.className.indexOf('navbar-hidden') < 0) cont.className += 'navbar-hidden'; 
+			cont.onmouseout = function(e){
+			
+				// cancel if user has moused into a child element
+				if (!e) var e = window.event;
+				var relTarg = e.relatedTarget || e.toElement;
+			    if (isDescendant(cont, relTarg)) {
+			        return;
+			    }
+			    
+			    // reset hoverIn timeout
+				if (timer != null) {
+					clearTimeout(timer); // stop hover timeout if necessary
+					timer = null;
+				}
+				
+				// hide the navbar (if necessary)
+				if (hideEnabled && cont.className.indexOf('navbar-hidden') < 0) {
+					cont.className += 'navbar-hidden';
+					
+					// prevent navbar from reopening immediately due to an extra mouseover event
+					if (timer) clearTimeout(timer);
+					timer = null; 
+					waitToOpen = true;
+					setTimeout(function(){waitToOpen = false}, 500);
+				}
 			}
 		}, 100);
+		// END hiddenness config
 	}
 	
 	// load navbar HTML via AJAX (server-side)
@@ -143,4 +175,17 @@ DOMReady.add(function(){
 		}
 		
 	}
+	
+	function isDescendant(parent, child) {
+		if (child == null) return true;
+		var node = child.parentNode;
+		while (node != null) {
+			if (node == parent) {
+				return true;
+			}
+			node = node.parentNode;
+		}
+		return false;
+	}
+	
 });
