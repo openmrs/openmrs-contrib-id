@@ -118,8 +118,7 @@ DOMReady.add(function(){
 					timer = setTimeout(function(){ // require user to hover for a moment, ITSM-2712
 						timer = null;
 						cont.className = cont.className.replace('navbar-hidden', '');
-
-					}, 400);
+					}, 1000);
 				}
 
 			};
@@ -187,5 +186,4 @@ DOMReady.add(function(){
 		}
 		return false;
 	}
-
 });
