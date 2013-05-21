@@ -116,6 +116,14 @@ DOMReady.add(function(){
                 waitToOpen = false,
                 openingDisabled = false;
 
+            // helper functions
+            var resetExpandTimer = function() {
+                if (expandTimer) {
+                    clearTimeout(expandTimer);
+                    expandTimer = null;
+                }
+            }
+
             // expand on hover
             addEvent(cont, "mouseover", function(e){
                 if (hideEnabled && !waitToOpen) {
@@ -142,10 +150,7 @@ DOMReady.add(function(){
                 }
 
                 // reset hoverIn timeout
-                if (expandTimer !== null) {
-                    clearTimeout(expandTimer); // stop hover timeout if necessary
-                    expandTimer = null;
-                }
+                resetExpandTimer();
 
                 // if necessary, hide the navbar after a brief delay
                 if (hideEnabled && cont.className.indexOf('navbar-hidden') < 0) {
@@ -153,10 +158,12 @@ DOMReady.add(function(){
                         cont.className += 'navbar-hidden';
 
                         // prevent navbar from reopening immediately due to an extra mouseover event
-                        if (expandTimer) clearTimeout(expandTimer);
-                        expandTimer = null;
+                        resetExpandTimer();
                         waitToOpen = true;
-                        setTimeout(function(){waitToOpen = false;}, 500);
+                        setTimeout(function() {
+                            resetExpandTimer();
+                            waitToOpen = false;
+                        }, 500);
                     }, 500);
                 }
             });
@@ -166,12 +173,10 @@ DOMReady.add(function(){
                 e = e ? e : window.event;
                 var from = e.relatedTarget || e.toElement;
                 if (!from || from.nodeName == "HTML") {
-                    console.log("left window");
                     openingDisabled = true;
                 }
             });
             addEvent(document, "mouseover", function() {
-                console.log("entered window");
                 openingDisabled = false;
             });
         }, 100);
