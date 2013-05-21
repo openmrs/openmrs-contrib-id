@@ -111,15 +111,23 @@ DOMReady.add(function(){
         });
 
         setTimeout(function(){ // prevents WebKit from executing on page load
+            var expandTimer = null,
+                hideTimer = null,
+                waitToOpen = false,
+                openingDisabled = false;
+
             // expand on hover
-            var timer = null, waitToOpen = false, openingDisabled = false;
             addEvent(cont, "mouseover", function(e){
                 if (hideEnabled && !waitToOpen) {
-                    timer = setTimeout(function(){ // require user to hover for a moment, ITSM-2712
-                        timer = null;
+                    expandTimer = setTimeout(function(){ // require user to hover for a moment, ITSM-2712
+                        expandTimer = null;
                         if (!openingDisabled)
                             cont.className = cont.className.replace('navbar-hidden', '');
                     }, 1000);
+                }
+                if (hideEnabled && hideTimer) { // stop a timer waiting to close the navbar (if it was briefly hovered off)
+                    clearTimeout(hideTimer);
+                    hideTimer = null;
                 }
             });
 
@@ -134,20 +142,22 @@ DOMReady.add(function(){
                 }
 
                 // reset hoverIn timeout
-                if (timer !== null) {
-                    clearTimeout(timer); // stop hover timeout if necessary
-                    timer = null;
+                if (expandTimer !== null) {
+                    clearTimeout(expandTimer); // stop hover timeout if necessary
+                    expandTimer = null;
                 }
 
-                // hide the navbar (if necessary)
+                // if necessary, hide the navbar after a brief delay
                 if (hideEnabled && cont.className.indexOf('navbar-hidden') < 0) {
-                    cont.className += 'navbar-hidden';
+                    hideTimer = setTimeout(function() {
+                        cont.className += 'navbar-hidden';
 
-                    // prevent navbar from reopening immediately due to an extra mouseover event
-                    if (timer) clearTimeout(timer);
-                    timer = null;
-                    waitToOpen = true;
-                    setTimeout(function(){waitToOpen = false;}, 500);
+                        // prevent navbar from reopening immediately due to an extra mouseover event
+                        if (expandTimer) clearTimeout(expandTimer);
+                        expandTimer = null;
+                        waitToOpen = true;
+                        setTimeout(function(){waitToOpen = false;}, 500);
+                    }, 500);
                 }
             });
 
@@ -156,10 +166,12 @@ DOMReady.add(function(){
                 e = e ? e : window.event;
                 var from = e.relatedTarget || e.toElement;
                 if (!from || from.nodeName == "HTML") {
+                    console.log("left window");
                     openingDisabled = true;
                 }
             });
             addEvent(document, "mouseover", function() {
+                console.log("entered window");
                 openingDisabled = false;
             });
         }, 100);
@@ -188,6 +200,7 @@ DOMReady.add(function(){
     }
 
     // utility functions
+
     var addEvent = function(obj, evt, fn) {
         if (obj.addEventListener) {
             obj.addEventListener(evt, fn, false);
