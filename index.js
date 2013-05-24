@@ -1,1 +1,4 @@
-module.exports = require('./lib/global-nav');
+module.exports = {
+    version: require('./lib/version'),
+    module:  require('./lib/global-nav')
+};
