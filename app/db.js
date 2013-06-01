@@ -2,13 +2,13 @@ var Sequelize = require('sequelize'),
 	Common = require('./openmrsid-common'),
 	conf = Common.conf,
 	log = Common.logger.add('database');
-	
+
 var sql = new Sequelize(conf.db.dbname, conf.db.username, conf.db.password, {
 		logging: false
 	}),
 	models = [];
 
-// Expose Datatypes	
+// Expose Datatypes
 exports.STRING = Sequelize.STRING;
 exports.TEXT = Sequelize.TEXT;
 exports.INTEGER = Sequelize.INTEGER;
@@ -26,7 +26,7 @@ EXPOSED DATA METHODS
 exports.define = function(name, properties, methods, callback) {
 	// Check for model name collision
 	if (models[name]) return callback(new Error('A model "'+name+'" already exists.'));
-	
+
 	// Check arguments
 	var a = arguments;
 	if (typeof a[2] == 'object') { // If methods are passed
@@ -40,10 +40,10 @@ exports.define = function(name, properties, methods, callback) {
 		var methods = {};
 		var callback = function(err){if(err) log.error(err)};
 	}
-	
+
 	// define the model in Sequelize (synchronous)
 	models[name] = sql.define(name, properties, methods);
-		
+
 	// Sync new model to database and callback
 	models[name].sync().success(function() {
 		log.debug('Model "'+name+'" defined and synced.');
@@ -59,13 +59,13 @@ exports.create = function(model) {
 		log.warn("Requested model "+model+" doesn't exist.");
 		return;
 	}
-	
+
 	log.trace('building new instance of '+model);
 	var instance = models[model].build();
-	
+
 	// custom creation paramaters
 	if (instance.onCreate) instance.onCreate(instance);
-	
+
 	return instance;
 }
 
@@ -77,13 +77,13 @@ exports.initiate = function(model, defaults, callback) {
 		return;
 	}
 	if (!callback) callback = function(err){if(err) log.error(err)};
-	
+
 	// get all instances of model and do not initiate if any already exist
 	exports.getAll(model, function(err, instances) {
 		if (err) return callback(err);
 		if (instances.length == 0) {
 			log.debug('initiating '+model);
-		
+
 			// prepare each entry to initiate
 			var chain = []; // chain to save to
 			defaults.forEach(function(entry){
@@ -93,7 +93,7 @@ exports.initiate = function(model, defaults, callback) {
 				}
 				chain.push(inst);
 			});
-			
+
 			exports.chainSave(chain, function(err){
 				if (err) return callback(err);
 				callback(); // all done!
@@ -101,7 +101,7 @@ exports.initiate = function(model, defaults, callback) {
 		}
 		else callback(); // finish doing nothing if model doesn't need initiation
 	});
-	
+
 }
 
 // send an updated instance back to the DB, optionally only updating certain attributes
@@ -112,24 +112,24 @@ exports.update = function(instance, attrs, callback) {
 		else if (arguments[1].constructor == Function) {callback = arguments[1]; attrs = null;}
 	if (arguments[2] && arguments[2].constructor == Function) callback = arguments[2];
 	if (!callback) callback = new Function;
-	
+
 	// data housekeeping
 	if (instance.onSave) instance.onSave(instance);
-	
+
 	instance.save(attrs).success(function(){
 		log.trace('instance saved & updated');
 		callback(null, instance);
 	}).error(function(err){
 		callback(err);
 	});
-	
+
 }
 
 // find and retreive instance(s) from DB based on search criteria
 // criteria example: {name: 'A Project', id: [1,2,3]}
 exports.find = function(model, criteria, callback) {
 	if (!models[model]) return callback(new Error("Requested model doesn't exist."));
-	
+
 	// findAll will return an array of multiple results
 	models[model].findAll({where: criteria}).success(function(instances){
 		instances.forEach(function(item) {
@@ -144,19 +144,19 @@ exports.find = function(model, criteria, callback) {
 // get instance by id
 exports.get = function(model, id, callback) {
 	if (!models[model]) return callback(new Error("Requested model doesn't exist."));
-	
+
 	models[model].find(id).success(function(instance){
 		if (instance.onGet) instance.onGet(instance);
 		callback(null, instance);
 	}).error(function(err){
 		callback(err);
 	});
-}; 
+};
 
 // get all instances from a model, returned in array
 exports.getAll = function(model, callback) {
 	if (!models[model]) return callback(new Error("Requested model doesn't exist."));
-	
+
 	models[model].findAll().success(function(instances){
 		instances.forEach(function(item) {
 			if (item.onGet) item.onGet(item)
@@ -164,7 +164,7 @@ exports.getAll = function(model, callback) {
 		callback(null, instances);
 	}).error(function(err){
 		callback(err);
-	});	
+	});
 };
 
 // retrieve a single instance, or create a new model with supplied criteria
@@ -264,7 +264,7 @@ models.EmailVerification = sql.define('EmailVerification', {
 }});
 
 models.Conf = sql.define('Conf', {
-	id: {type: Sequelize.STRING, unique: false, primaryKey: true, autoIncrement: true},
+	id: {type: Sequelize.INTEGER, unique: false, primaryKey: true, autoIncrement: true},
 	parent: {type: Sequelize.STRING, allowNull: false},
 	key: {type: Sequelize.STRING, allowNull: false},
 	value: {type: Sequelize.STRING, allowNull: false}
@@ -290,7 +290,7 @@ sql.sync().success(function(){
 exports.find('Test', {name: 'hello world'}, function(err, data) {
 	if (err) console.log(err);
 	else console.log(data.__factory.name);
-	
+
 });
 */
 
@@ -307,13 +307,13 @@ models.Test.sync().success(function(){
 		name: 'another test'
 	});
 	var test = models.Test.build();
-	
+
 	test.name = 'Try something new.';
 	test.save().success(function(){
 		console.log('saved!');
 	});
-	
-	
+
+
 	models.Test.find(2).success(function(result){
 		result.name = 'another PRESSED';
 		result.save();
