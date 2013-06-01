@@ -16,6 +16,10 @@ app/user-modules
 ##############
 app/conf.js
 
+# Local Dev Resources #
+#######################
+*.sublime-*
+
 # OS generated files #
 ######################
 .DS_Store*
