@@ -1,21 +1,14 @@
-<!DOCTYPE html>
-<html>
-	<head>
-	<% if (prefs.customCSS) {
-		%><style><%-prefs.customCSS%></style><%
-	} %>
-	</head>
-	<body id="globalnav-body">
-		<div id="globalnav">
-			<% for (i in links) { %>
-			<a target="_parent"<% if (links[i] == activeLink) { %> href="" class="yourhere"<% } else { %> href="<%= links[i].url %>"<% } %>><%= links[i].name %></a>
-			<% } %>
-			<% if (prefs.cseId) { %><form method="get" action="http://www.google.com/cse">
-		        <input type="hidden" name="cx" value="<%= prefs.cseId %>">
-		        <input type="hidden" name="ie" value="UTF-8">
-		        <input type="text" class="field" name="q" id="s" placeholder="<%= prefs.csePlaceholder %>">
-		    </form><% } %>
-		    <a id="globalnav-hide" href="#">[hide]</a>
-		</div>
-	</body>
-</html>
+<% if (prefs.customCSS) {
+	%><style><%-prefs.customCSS%></style><%
+} %>
+<div id="globalnav">
+	<% for (i in links) { %>
+	<a target="_parent"<% if (links[i] == activeLink) { %> href="" class="yourhere"<% } else { %> href="<%= links[i].url %>"<% } %>><%= links[i].name %></a>
+	<% } %>
+    <a id="globalnav-state-button" href="#">[hide]</a>
+	<% if (prefs.cseId) { %><form method="get" action="http://www.google.com/cse">
+        <input type="hidden" name="cx" value="<%= prefs.cseId %>">
+        <input type="hidden" name="ie" value="UTF-8">
+        <input type="text" class="field" name="q" id="s" placeholder="<%= prefs.csePlaceholder %>">
+    </form><% } %>
+</div>
