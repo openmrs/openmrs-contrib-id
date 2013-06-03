@@ -7,4 +7,5 @@ Thumbs.db
 
 # Others #
 resource/omrs-navbar.psd
-
+*.sublime-*
+.sass-cache
