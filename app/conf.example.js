@@ -20,7 +20,7 @@ module.exports = {
     },
     "ldap": {
         // LDAP Settings
-        
+
         "server": {
             "uri": "ldap://localhost",
             "baseDn": "ou=systemacct,dc=example",
@@ -31,7 +31,7 @@ module.exports = {
         "user": {
             "baseDn": "ou=users,dc=example",
             "rdn": "uid",
-            
+
             // corresponds with form input names
             "username": "uid",
             "firstname": "cn",
@@ -73,7 +73,7 @@ module.exports = {
     },
     "session": {
         "__comment3": "session storage DB",
-        
+
         "__comment1": "session secret, used to secure session data",
         "secret": "secret",
         "__comment2": "how long until session terminates (24hr)",
@@ -81,13 +81,13 @@ module.exports = {
     },
     "groups": {
         "__comment2": "Google Groups settings",
-        
+
         // hourly
         "syncInterval": 3600000
     },
     "logger": {
         // Log settings
-        
+
         "relativePath": "/../logs/openmrsid.log"
     },
     "validation": {
@@ -98,7 +98,7 @@ module.exports = {
     },
     "email": {
         // Email settings
-        
+
         "validation": {
             "emailRegex": /^[A-Za-z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
             "forceUniquePrimaryEmail": true,
@@ -112,21 +112,21 @@ module.exports = {
             "pass": "secret"
         }
     },
-    
+
     // EJS Plugs
     "defaultSidebar": [
         "sidebar/needhelp"
     ],
-    
+
     // displays at bottom of sidebar
-    "aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v1.4.1",
-    
+    "aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v"+require("./version"),
+
     // system modules
     "systemModules": [
     	"admin",
     	"signup"
     ],
-    
+
     // user-configured modules
     "userModules": [
     	"openmrs-contrib-dashboard-groups",
