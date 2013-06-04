@@ -25,7 +25,7 @@ exports.openmrsHelper = function(){
 		if (req.url != '/favicon.ico') {
 			if (req.session.user) {
 				var mailHash = crypto.createHash('md5').update(req.session.user.mail).digest('hex');
-				app.helpers({connected: true, user: req.session.user, mailHash: mailHash});	
+				app.helpers({connected: true, user: req.session.user, mailHash: mailHash});
 			}
 			else app.helpers({connected: false});
 		}
@@ -34,12 +34,12 @@ exports.openmrsHelper = function(){
 };
 
 exports.clear = function(){
-	var current = app.helpers()._locals, replace = new Object;
-	
+	var current = app.helpers()._locals, replace = new Object();
+
 	// change undefined variables to default values
 	replace.title = (current.title) ? current.title : conf.site.titleg;
 	replace.failed = (current.failed) ? current.failed : false;
-	
+
 	['defaultSidebar', 'sidebar'].forEach(function(prop){
 		replace[prop] = (current[prop]) ? current[prop] : [];
 	});
@@ -50,9 +50,9 @@ exports.clear = function(){
 		replace[prop] = (current[prop]) ? current[prop] : {};
 	});
 	app.helpers(replace);
-}
+};
 
-exports.restrictTo = function(role) {	
+exports.restrictTo = function(role) {
 	return function(req, res, next) {
 		var fail = function() {
 			req.flash('error', 'You are not authorized to access this resource.');
@@ -62,13 +62,13 @@ exports.restrictTo = function(role) {
 			}
 			else res.redirect(url.resolve(conf.site.url, '/login?destination='+encodeURIComponent(req.url)));
 		};
-	
+
 		if (req.session.user) {
-			if (req.session.user.memberof.indexOf(role) > -1) next()
+			if (req.session.user.memberof.indexOf(role) > -1) next();
 			else fail();
 		}
 		else fail();
-	}
+	};
 };
 
 exports.forceLogin = function(req, res, next) {
@@ -96,12 +96,12 @@ exports.secToArray = function(req, res, next) {
 		req.body.secondaryemail = (typeof secmail == 'string') ? [secmail] : secmail;
 	}
 	next();
-}
+};
 
 // stops a manually-submitted POST from omitting the captcha
 // validation itself is handled by validate.js
 exports.forceCaptcha = function(req, res, next) {
-	if (req.body && req.body.recaptcha_challenge_field && req.body.recaptcha_response_field) 
+	if (req.body && req.body.recaptcha_challenge_field && req.body.recaptcha_response_field)
 		next();
 	else { // make captchas empty strings, so they will be validated (and fail)
 		req.body.recaptcha_challenge_field = "";
@@ -113,31 +113,32 @@ exports.forceCaptcha = function(req, res, next) {
 exports.stripNewlines = function(req, res, next) {
 	log.trace('before: '+req.body.loginusername);
 	if (req.body) {
-		for (field in req.body) {
+		for (var field in req.body) {
 			req.body[field] = req.body[field].replace(/(\r\n|\n|\r)/gm,"");
 		}
 
 		log.trace('after: '+req.body.loginusername);
 	}
 	next();
-}
+};
 
 // parse paramater tables submitted with "param-table" view. passes an object
 exports.parseParamTable = function(req, res, next) {
 	var generatedList = [];
-	for (a in req.body) {
-		var split = /([0-9])-(\D+)/.exec(a), // splits to name and number of input
-			ind = split[1], type = split[2];
-			
-		if (!req.body[a]) break; // skip if this link is blank
-			
+	for (var a in req.body) {
+		log.trace("parsing "+a+": "+req.body[a]);
+		var split = /([0-9]+)-(\D+)/.exec(a), // splits to name and number of input
+			ind = parseInt(split[1]), type = split[2];
+
+		if (!req.body[a]) continue; // skip if this link is blank
+
 		if (!generatedList[ind]) {
 			generatedList[ind] = {}; // create if it doesn't exist (first item of this link)
 			generatedList[ind].id = ind;
 		}
-		
+
 		generatedList[ind][type] = req.body[a];
 	}
 	res.local('params', generatedList);
 	next();
-}
+};
