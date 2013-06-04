@@ -13,8 +13,12 @@
 //     2.2 Search bar
 //   3. Hidden styles
 //   4. Hover styles and animations
+//
+// To build:
+//   # sass -t compressedstyle.scss:style.css
 
 // 0. Variables and mixins.
+$lipSize: 5px; // Amount below the navbar that still qualifies as hovering over it.
 $hoverDuration: 1000ms;
 $revealFunction: cubic-bezier(.69,.46,.38,1.53);
 $revealTime: 200ms;
@@ -146,8 +150,8 @@ $concealTime: 100ms;
 
 // 3. Hidden styles
 #globalnav-container.navbar-hidden {
-    height: 13px;
-    margin-bottom: -10px;
+    height: 3px + $lipSize;
+    margin-bottom: -$lipSize;
 
     #globalnav {
         height: 3px;
@@ -162,6 +166,9 @@ $concealTime: 100ms;
                 visibility: visible;
                 color: #efecea;
             }
+        }
+        form {
+            visibility: hidden;
         }
     }
 }
