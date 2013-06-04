@@ -1,0 +1,33 @@
+{
+  "name": "OpenMRS-ID",
+  "version": "1.4.2",
+  "description": "A self-service management system for the OpenMRS ID single sign on identity.",
+  "main": "./app/app.js",
+  "dependencies": {
+    "connect": "~2.3.3",
+    "connect-mysql-session": "~0.1.1",
+    "ejs": "~0.7.1",
+    "express": "~2.5.9",
+    "LDAP": "~1.0.4",
+    "log4js": "~0.5.0",
+    "mysql": "~2.0.0-alpha8",
+    "nodemailer": "~0.3.20",
+    "qs": "~0.4.2",
+    "querystring": "~0.1.0",
+    "recaptcha": "~1.1.0",
+    "sequelize": "~1.7.0-alpha2",
+    "xml2js": "~0.1.14"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/downeym/OpenMRS-ID.git"
+  },
+  "author": "elliottwilliams",
+  "license": "MPL 2.0",
+  "gitHead": "8f60746457151599c4780255d5be72b76dfd87b6",
+  "readmeFilename": "README.md"
+}
