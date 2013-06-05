@@ -4,9 +4,9 @@ logs/*.log
 logs/*.pid
 nohup.out
 
-# Compiled module #
+# Node modules #
 ###################
-node-LDAP/build
+node_modules
 
 # User-install modules #
 ########################

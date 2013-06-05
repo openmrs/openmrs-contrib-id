@@ -1,5 +1,5 @@
 {
-  "name": "OpenMRS-ID",
+  "name": "openmrsid",
   "version": "1.4.2",
   "description": "A self-service management system for the OpenMRS ID single sign on identity.",
   "main": "./app/app.js",
@@ -18,6 +18,7 @@
     "sequelize": "~1.7.0-alpha2",
     "xml2js": "~0.1.14"
   },
+  "engine": { "node": "~0.6.19" },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
