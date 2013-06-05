@@ -1,4 +1,6 @@
 {
+  "name": "OpenMRS-ID",
+  "version": "1.4.2",
   "dependencies": {
     "connect": {
       "version": "2.3.3",
@@ -77,7 +79,7 @@
       }
     },
     "nodemailer": {
-      "version": "0.3.20",
+      "version": "0.3.44",
       "dependencies": {
         "mailcomposer": {
           "version": "0.1.33",
@@ -104,13 +106,21 @@
           }
         },
         "simplesmtp": {
-          "version": "0.3.2",
+          "version": "0.2.7",
           "dependencies": {
             "rai": {
               "version": "0.1.7"
             },
             "xoauth2": {
               "version": "0.1.8"
+            }
+          }
+        },
+        "optimist": {
+          "version": "0.5.2",
+          "dependencies": {
+            "wordwrap": {
+              "version": "0.0.2"
             }
           }
         }

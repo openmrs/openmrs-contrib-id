@@ -23,7 +23,7 @@ var express = require('express'),
 	crypto = require('crypto'),
 	app = express.createServer();
 
-// establish module & global variables	
+// establish module & global variables
 module.exports = app;
 global.__apppath = __dirname;
 
@@ -59,7 +59,7 @@ conf.userModules.forEach(function(module){
 });
 
 
-/* 
+/*
 ROUTES
 ======
 */
@@ -73,11 +73,11 @@ if (!req.session.user) return next();
 https.get({host: 'answers.openmrs.org', path: '/users/'+req.session.user.uid }, function(response) {
 	if (response.statusCode == 200) app.helpers({osqaUser: true});
 	else app.helpers({osqaUser: false});
-	
+
 	app.dynamicHelpers({
-		
+
 	});
-	
+
 	res.render('root');
 });
 });
@@ -89,16 +89,16 @@ app.get(/^\/login\/?$/, mid.forceLogout, function(req, res, next){
 app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 	var completed = 0, needToComplete = 1, userobj = {},
 		username = req.body.loginusername, password = req.body.loginpassword;
-		
-	
-		
+
+
+
 	var redirect = (req.body.destination) ? req.body.destination : '/';
-		
+
 	// do the actual authentication by forming a unique bind to the server as the authenticated user;
 	// closes immediately (all operations work through system's LDAP bind)
 	ldap.authenticate(username, password, function(e){
 		ldap.close(username);
-		
+
 		if (e) { // authentication error
 			if (e.message == 'Invalid credentials') { // login failed
 				log.debug('known login failure');
@@ -113,10 +113,10 @@ app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 				else return res.redirect(url.resolve(conf.site.url, '/login')); // redirect to generic login page
 			}
 			else {log.debug('login error');return next(e);}
-		}		
-		
+		}
+
 		log.info(username+': authenticated'); // no error!
-					
+
 		// get a crowd SSO token and set the cookie for it
 		// not implemented yet :-(
 		/*crowd.getToken(username, password, function(error, token) {
@@ -124,7 +124,7 @@ app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 			else res.cookie('crowd.token_key', token);
 			finish();
 		})*/
-					
+
 		// get user's profile and put it in memory
 		log.trace('getting user data');
 		ldap.getUser(username, function(e, userobj) {
@@ -135,7 +135,7 @@ app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 			app.helpers()._locals.clearErrors(); // keeps "undefined" from showing up in error values
 			finish();
 		});
-		
+
 		var finish = function() {
 			completed++;
 			if (completed == needToComplete) {
@@ -160,42 +160,42 @@ app.get('/profile', mid.forceLogin, function(req, res, next){
 
 	var sidebar = app.helpers()._locals.sidebar;
 	var sidebar = (typeof sidebar == 'object') ? sidebar : []; // if no sidebars yet, set as empty array
-	
+
 	// check if any emails being verified
-	
+
 	var user = req.session.user, username = user[conf.user.username], secondary = user[conf.user.secondaryemail] || [],
 		emails = secondary.concat(user[conf.user.email]);
-		
+
 	verification.search(username, 'profile-email', function(err, instances) {
 		if (err) return next(err);
-		
+
 		// loop through instances to set up each address under verification
 		var fieldsInProgress = {}, newSecondary = {};
 		instances.forEach(function(inst){
 			var thisProgress = {} // contains data for this address
-			
+
 			// get email address pending change and the current address
 			var newEmail = inst.email,
 				oldEmail = inst.locals.newToOld[newEmail];
-			
+
 			newSecondary = inst.locals.secondary;
-			
-				
+
+
 			if (oldEmail == '') oldEmail = '';
-				
+
 			thisProgress.oldAddress = oldEmail;
 			thisProgress.newAddress = newEmail;
-			
+
 			// set up links to cancel and resend verification
 			thisProgress.id = inst.actionId;
-			
+
 			// push this verification data to the render variable
 			fieldsInProgress[thisProgress.newAddress] = thisProgress;
 		});
-		
+
 		var inProgress = (Object.keys(fieldsInProgress).length > 0);
-		
-		
+
+
 		// render the page
 		res.render('edit-profile', {progress: fieldsInProgress, inProgress: inProgress, newSecondary: newSecondary});
 	});
@@ -203,24 +203,24 @@ app.get('/profile', mid.forceLogin, function(req, res, next){
 
 app.post('/profile', mid.forceLogin, mid.secToArray, validate(), function(req, res, next){
 	var updUser = req.session.user, body = req.body;
-	
+
 	// corresponds a new email address to the original value
 	var newToOld = {};
-		
+
 	newToOld[body.email] = updUser[conf.user.email]
 	for (var i = 0; i < body.secondaryemail.length; i++) { // add each new secondary address to the object
 		newToOld[body.secondaryemail[i]] = (updUser[conf.user.secondaryemail][i])
 			? updUser[conf.user.secondaryemail][i]
 			: '';
 	}
-	
+
 	// combine all email addresses & get the addresses that have changed
 	var newSecondary = body.secondaryemail || [], oldSecondary = updUser[conf.user.secondaryemail] || [],
 		newEmails = newSecondary.concat(body.email), oldEmails = oldSecondary.concat(updUser[conf.user.email]),
 		emailsChanged = newEmails.filter(function(i){
 			return !(oldEmails.indexOf(i) > -1);
 		});
-	
+
 	if (emailsChanged.length > 0) {
 		emailsChanged.forEach(function(mail){  // begin verificaiton for each changed address
 			// verify these adresses
@@ -242,7 +242,7 @@ app.post('/profile', mid.forceLogin, mid.secToArray, validate(), function(req, r
 			}, function(err){
 				if (err) log.error(err);
 			});
-			
+
 		});
 		// set flash messages
 		if (emailsChanged.length == 1) req.flash('info', 'The email address "'+emailsChanged.join(', ')+'" needs to be verified. Verification instructons have been sent to the address.');
@@ -253,23 +253,23 @@ app.post('/profile', mid.forceLogin, mid.secToArray, validate(), function(req, r
 	}
 	else { // copy email addresses into session
 		updUser[conf.user.email] = body.email;
-		
+
 		// force secondary email to be stored an array
 		if (body.secondaryemail) updUser[conf.user.secondaryemail] = (typeof body.secondaryemail=='object') ? body.secondaryemail : [body.secondaryemail];
 		else updUser[conf.user.secondaryemail] = [];
 	}
-	
+
 	// copy other changes into user session
 	if ((updUser[conf.user.firstname] != body.firstname) || (updUser[conf.user.lastname] != body.lastname))
 		updUser[conf.user.displayname] = body.firstname+' '+body.lastname;
 	updUser[conf.user.firstname] = body.firstname, updUser[conf.user.lastname] = body.lastname;
-	
+
 	// add any extra objectclasses
 	if (updUser.objectClass.indexOf('extensibleObject') < 0) { // for secondaryMail support
 		if (typeof updUser.objectClass == 'string') updUser.objectClass = [updUser.objectClass];
 		updUser.objectClass.push('extensibleObject');
 	}
-	
+
 	// push updates to LDAP
 	ldap.updateUser(updUser, function(e, returnedUser){
 		log.trace('user update returned');
@@ -278,7 +278,7 @@ app.post('/profile', mid.forceLogin, mid.secToArray, validate(), function(req, r
 		else log.trace('user update no errors');
 		log.info(returnedUser.uid+': profile updated');
 		req.session.user = returnedUser;
-		
+
 		if (emailsChanged.length == 0) req.flash('success', 'Profile updated.'); // only show message if verification is NOT happening
 		res.redirect('/');
 	});
@@ -290,15 +290,15 @@ app.get('/profile-email/:id', function(req, res, next) {
 	verification.check(req.params.id, function(err, valid, locals) {
 		if (valid) req.flash('success', 'Email address verified. Thanks!');
 		else req.flash('error', 'Profile email address verification not found.');
-		
+
 		// push updates to LDAP
 		ldap.getUser(locals.username, function(err, userobj){
 			if (err) return next(err);
-			
+
 			// get new address and the address it's replacing
 			var newMail = locals.mail,
 				corrMail = locals.newToOld[newMail];
-				
+
 			// determine what kind of address (primary or sec.) it is & set it
 			if (userobj[conf.user.email] == corrMail) {
 				userobj[conf.user.email] = newMail; // prim. address
@@ -312,15 +312,15 @@ app.get('/profile-email/:id', function(req, res, next) {
 				}
 				else userobj[conf.user.secondaryemail] = [newMail]; // no current sec. mails, create the first one
 			}
-			
+
 			ldap.updateUser(userobj, function(e, returnedUser){
 				if (e) return next(e);
-				
+
 				verification.clear(req.params.id);
 
 				log.info(returnedUser.uid+': profile-email validated & updated');
 				req.session.user = returnedUser;
-				
+
 				// pass the updated email to renderer
 				res.local('emailUpdated', locals.email);
 
@@ -344,7 +344,7 @@ app.get('/profile-email/resend/:actionId', mid.forceLogin, function(req, res, ne
 app.get('/profile-email/cancel/:actionId', function(req, res, next){
 	verification.getByActionId(req.params.actionId, function(err, inst){
 		if (err) return next(err);
-		
+
 		var verifyId = inst.verifyId; // get verification ID
 		verification.clear(verifyId, function(err) {
 			if (err) return next(err);
@@ -366,7 +366,7 @@ app.post('/password', mid.forceLogin, validate(), function(req, res, next){
 		if (e) return next(e);
 		log.trace('password change no errors');
 		log.info(updUser.uid+': password updated');
-		
+
 		req.flash('success', 'Password changed.')
 		res.redirect('/');
 	});
@@ -381,16 +381,9 @@ app.get('/reset', mid.forceLogout, function(req, res, next) {
 
 app.post('/reset', mid.forceLogout, function(req, res, next) {
 	var resetCredential = req.body.resetCredential, username = '', email = '';
-	
-	if (resetCredential.indexOf('@') < 0) {
-		ldap.getUser(resetCredential, function(e, obj){gotUser(e, obj);});
-	}
-	else if (resetCredential.indexOf('@') > -1) {
-		ldap.getUserByEmail(resetCredential, function(e, obj){gotUser(e, obj);});
-	}
-	
+
 	var gotUser = function(e, obj) {
-		
+
 		if (e) {
 			if (e.message=='User data not found') {
 				log.info('reset requested for nonexistent user "'+resetCredential+'"');
@@ -400,36 +393,51 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 				return next(e);
 			}
 		}
-		
+
 		var username = obj[conf.ldap.user.username], email = obj[conf.ldap.user.email],
 			secondaryMail = obj[conf.ldap.user.secondaryemail] || [];
-			
-		var allEmails = secondaryMail.concat(email); // array of both pri. and sec. addresses to send to
-		
+
+		var emails = secondaryMail.concat(email); // array of both pri. and sec. addresses to send to
+
 		// send the verifications
-		allEmails.forEach(function(mail){
+		var errored = false, calls = 0;
+		var verificationCallback = function(err){
+			calls++;
+			if (err && !errored) {
+				errored = true;
+				return next(err);
+			}
+			if (calls === emails.length && !errored) finish();
+		};
+
+		emails.forEach(function(address){
 			verification.begin({
 				urlBase: 'reset',
-				email: mail,
+				email: address,
 				subject: '[OpenMRS] Password Reset for '+username,
 				template: '../views/email/password-reset.ejs',
 				locals: {
 					username: username,
 					displayName: obj[conf.ldap.user.displayname],
-					allEmails: allEmails
+					allEmails: emails
 				},
-				timeout: conf.ldap.user.passwordResetTimeout,
-			}, function(err){
-				if (err) return next(err);
-				finish();
-			});
+				timeout: conf.ldap.user.passwordResetTimeout
+			}, verificationCallback);
 		});
 	};
-	
+
 	var finish = function() {
 		req.flash('info', 'If the specified account exists, an email has been sent to your address(es) with further instructions to reset your password.');
         return res.redirect('/');
-	}	
+	}
+
+	// Begin here.
+	if (resetCredential.indexOf('@') < 0) {
+		ldap.getUser(resetCredential, function(e, obj){gotUser(e, obj);});
+	}
+	else if (resetCredential.indexOf('@') > -1) {
+		ldap.getUserByEmail(resetCredential, function(e, obj){gotUser(e, obj);});
+	}
 
 });
 
@@ -464,7 +472,7 @@ app.post('/reset/:id', validate(), function(req, res, next){
 			req.flash('error', 'The requested password reset has expired or does not exist.');
 			res.redirect('/');
 		}
-	});	
+	});
 });
 
 
@@ -511,7 +519,7 @@ app.error(function(err, req, res, next){
 		res.send("Error: "+err.message+"\n\n"+err.stack,
 		{'Content-Type': 'text/plain'});
 	}
-	
+
 });
 
 process.on('uncaughtException', function(err) {
