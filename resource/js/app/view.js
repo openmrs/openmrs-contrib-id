@@ -48,6 +48,7 @@ define(["app/jquery-loader", "backbone", "hoover"], function($, Backbone) {
         updateHiddenness: function() {
             if (this.model.isHidden()) {
                 this.$("#globalnav-state-button").html("[show]");
+                $("body").removeClass("navbar-visible").addClass("navbar-hidden");
 
                 // Apply hoover to the navbar container.
                 this.$el.hoover({"in": 1000, "out": 250})
@@ -56,6 +57,7 @@ define(["app/jquery-loader", "backbone", "hoover"], function($, Backbone) {
 
             } else {
                 this.$("#globalnav-state-button").html("[hide]");
+                $("body").removeClass("navbar-hidden").addClass("navbar-visible");
 
                 // Remove hoover's event bindings.
                 this.$el.unbind("hooverIn").unbind("hooverOut");
