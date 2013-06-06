@@ -37,6 +37,10 @@ define(["app/jquery-loader", "backbone", "hoover"], function($, Backbone) {
             var linksHTML = this.model.getLinksHTML();
             this.el.innerHTML = linksHTML;
 
+            // Hide the element. This prevents a flash of unstyled content until
+            // being overridden by CSS.
+            this.el.style.display = "none";
+
             this.updateHiddenness();
             this.updateReveal();
 
