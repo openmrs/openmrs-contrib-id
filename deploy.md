@@ -6,7 +6,7 @@ ID Dashboard Deployment
 
 Clone the git repo:
 
-    git clone git@github.com:downeym/OpenMRS-ID.git
+    git clone git@github.com:openmrs/OpenMRS-ID.git
     
 Duplicate conf.example.js and fill in unique settings & server auth data:
 
