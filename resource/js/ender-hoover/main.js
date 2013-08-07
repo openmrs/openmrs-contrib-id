@@ -1,7 +1,10 @@
-(function() {
+(function (name, context, definition) {
+  if (typeof module != 'undefined' && module.exports) module.exports = definition()
+  else if (typeof define == 'function' && define.amd) define(definition)
+  else context[name] = definition()
+})('hoover', this, function () {
 
-  define(["app/jquery-loader"], function($) {
-    return $.fn.hoover = function(options) {
+    function hoover (options) {
       var el, enter, hovering, leave, reset, settings, timeout,
         _this = this;
       el = this;
@@ -11,7 +14,9 @@
         "in": 250,
         out: 150
       };
-      if (options) $.extend(settings, options);
+      if (options) {
+        for (var k in options) { settings[k] = options[k]; }
+      }
       enter = function() {
         el.trigger("hooverIn");
         reset();
@@ -43,6 +48,7 @@
       });
       return this;
     };
-  });
 
-}).call(this);
+    return hoover
+
+});

@@ -1,5 +1,10 @@
-define(["app/jquery-loader", "backbone", "hoover"], function($, Backbone) {
-    return Backbone.View.extend({
+!(function ($) {
+    var Backbone = require('backbone')
+    , _ = require('underscore')
+
+    Backbone.$ = $;
+
+    module.exports.View = Backbone.View.extend({
         // Container properties are represented by this view and are defined here.
         tagName: "div",
         id: "globalnav-container",
@@ -10,7 +15,7 @@ define(["app/jquery-loader", "backbone", "hoover"], function($, Backbone) {
             // Sets the context ("this") of all methods to reference the module itself.
             // This allows callback functions, etc. to still be able to reference this
             // module and its properties.
-            _.bindAll(this);
+            _.bindAll(this, 'render', 'updateHiddenness', 'updateReveal');
 
             // Bind module events to the view's update functions.
             this.model.on({
@@ -55,7 +60,7 @@ define(["app/jquery-loader", "backbone", "hoover"], function($, Backbone) {
                 $("body").removeClass("navbar-visible").addClass("navbar-hidden");
 
                 // Apply hoover to the navbar container.
-                this.$el.hoover({"in": 1000, "out": 250})
+                $(this.el).hoover({"in": 1000, "out": 250})
                     .on("hooverIn", this.model.reveal)
                     .on("hooverOut", this.model.conceal);
 
@@ -95,4 +100,4 @@ define(["app/jquery-loader", "backbone", "hoover"], function($, Backbone) {
 
         /* END Interaction Events */
     });
-});
+})(ender);

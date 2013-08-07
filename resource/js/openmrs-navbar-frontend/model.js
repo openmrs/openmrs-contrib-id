@@ -1,5 +1,13 @@
-define(["app/jquery-loader", "backbone", "app/view", "app/resources", "app/cookie"], function($, Backbone, View, resources, cookie) {
-    return Backbone.Model.extend({
+!(function ($) {
+    var Backbone = require('backbone')
+    , _ = require('underscore')
+    , reqwest = require('reqwest')
+    , cookie = module.exports.Cookie
+    , View = module.exports.View
+
+    Backbone.$ = $;
+
+    module.exports.Model = Backbone.Model.extend({
         defaults: {
             linksHTML       : undefined,
             hidden          : undefined,
@@ -7,16 +15,14 @@ define(["app/jquery-loader", "backbone", "app/view", "app/resources", "app/cooki
         },
 
         initialize: function() {
-            _.bindAll(this);
+            _.bindAll(this, 'updateCookie', 'verifyRevealed', 'debug',
+                'attachView', 'syncComplete', 'hide', 'show', 'reveal', 'conceal');
 
             // Attempt to get previous "hidden" setting from cookies.
             this.set("hidden", cookie.read("globalnav-hidden") == "true");
 
-            // **When the DOM is ready**, Create our view and attack it to this model.
-            if ($.isReady)
-                this.attachView();
-            else
-                $().ready(this.attachView);
+            // When the DOM is ready, Create our view and attack it to this model.
+            $.domReady(this.attachView);
 
             // Bind property changes to actions.
             this.on({
@@ -104,7 +110,11 @@ define(["app/jquery-loader", "backbone", "app/view", "app/resources", "app/cooki
         // OpenMRS ID's navbar module.
         sync: function(method) {
             if (method === "read") {
-                $.get(resources.hostname("/globalnav"), this.syncComplete);
+                reqwest({
+                    url: OpenMRSNavbar.hostname("/globalnav"),
+                    type: 'html',
+                    success: this.syncComplete
+                });
             }
         },
         syncComplete: function(data) {
@@ -113,4 +123,5 @@ define(["app/jquery-loader", "backbone", "app/view", "app/resources", "app/cooki
 
         /* END Utilities */
     });
-});
+
+})(ender)

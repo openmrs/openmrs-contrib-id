@@ -1,0 +1,24 @@
+{
+  "name": "OpenMRSNavbar",
+  "description": "Frontend JS for openmrs-contrib-globalnavbar",
+  "version": "1.1.0",
+  "keywords": ["openmrs", "openmrs-contrib-globalnavbar", "openmrs-navbar"],
+  "authors": [
+    "Elliott Williams <elliott@openmrs.org> (https://github.com/elliottwilliams)",
+    "Burke Mamlin <burke@openmrs.org> (https://github.com/bmamlin)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elliottwilliams/openmrs-contrib-globalnavbar"
+  },
+  "dependencies": {
+    "jeesh": "*",
+    "backbone": "*",
+    "reqwest": "~0.8.3"
+  },
+  "bundledDependencies": [
+    "ender-hoover",
+    "lazyloader"
+  ],
+  "main": ["resources.js", "cookie.js", "view.js", "model.js"]
+}

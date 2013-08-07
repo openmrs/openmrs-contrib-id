@@ -1,7 +1,7 @@
 // adapted from cookie library at quirksmode.org
 
-define(["underscore"], function(_) {
-    return {
+!(function ($) {
+    module.exports.Cookie = {
         domain: "openmrs.org",
 
         create: function(name, value, days) {
@@ -31,4 +31,4 @@ define(["underscore"], function(_) {
             this.create(name,"",-1);
         }
     };
-});
+})(ender);
