@@ -9,4 +9,7 @@ build-no-sandbox:
 compile:
 	ender compile boot.js --level simple --output app-optimized.js
 
+concatenate:
+	cat ender.js boot.js > app-optimized.js
+
 .PHONY: build compile
