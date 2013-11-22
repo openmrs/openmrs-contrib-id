@@ -11,14 +11,14 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
- 
+
 var express = require('express'),
 	MySQLSessionStore = require('connect-mysql-session')(express),
 	url = require('url'),
 	Common = require('./openmrsid-common'),
 	app = Common.app,
-	conf = Common.conf
-	mid = Common.mid
+	conf = Common.conf,
+	mid = Common.mid,
 	log = Common.logger.add('environment');
 
 /* http://expressjs.com/guide.html:
@@ -27,7 +27,7 @@ var express = require('express'),
  * $ NODE_ENV=production node app.js
  * This is very important, as many caching mechanisms are only enabled when in production.
  */
- 
+
 app.configure(function(){ // executed under all environments
 	app.use(express.bodyParser());
 	app.use(express.cookieParser());
@@ -38,22 +38,22 @@ app.configure(function(){ // executed under all environments
 		}),
 		secret: conf.session.secret
 	}));
-		
+
 	app.use(mid.openmrsHelper());
-	
+
 	app.set('view engine', 'ejs');
 	app.set('views', __dirname + '/../views');
-	
+
 	var siteURLParsed = url.parse(conf.site.url, false, true);
 	app.set('basepath', siteURLParsed.pathname);
 });
 
 app.configure('development', function(){
-	app.use(express.errorHandler({ showStack: true, dumpExceptions: true }));	
-	
+	app.use(express.errorHandler({ showStack: true, dumpExceptions: true }));
+
 });
 
 app.configure('production', function(){
 	app.use(express.errorHandler());
-	
+
 });
