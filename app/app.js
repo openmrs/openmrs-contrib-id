@@ -490,7 +490,8 @@ app.get('/edit/password', function(req, res){res.redirect('/password')});
 
 // 404's
 app.get('*', function(req, res, next){
-	if (req.header('Accept').indexOf('text/html') > -1) { // send an HTML error page
+	if (req.header('Accept') && req.header('Accept').indexOf('text/html') > -1) {
+		// send an HTML error page
 		res.statusCode = 404;
 		var err = new Error('The requested resource "'+req.url+'" was not found. (404)');
 		res.render('error', {e: err});
