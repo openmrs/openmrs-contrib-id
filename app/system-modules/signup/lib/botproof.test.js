@@ -50,3 +50,65 @@ describe('checkTimestamp', function() {
 
   })
 })
+
+describe('checkHoneypot', function() {
+  function form(obj) {
+    obj = obj || {}
+    return _.extend({
+      username: 'goody',
+      firstname: 'A Good',
+      lastname: 'Person',
+      email: 'goody@example.com',
+      password: 'secret123',
+      recaptcha_response_field: 'egg freckles',
+      timestamp: '1389032606862'
+    }, obj);
+  }
+
+  it('should send a Bad Request when honeypot is filled', function(done) {
+    var app = express.createServer();
+
+    app.use(express.bodyParser())
+    app.use(botproof.checkHoneypot)
+
+    app.error(function(err, req, res, next) {
+      res.statusCode = err.statusCode || 500;
+      res.end();
+    })
+
+    request(app)
+    .post('/')
+    .send(form({country: 'Canada'}))
+    .expect(400, done)
+  })
+
+  it('should do nothing otherwise', function(done) {
+    var app = express.createServer();
+
+    app.use(express.bodyParser())
+    app.use(botproof.checkHoneypot)
+    app.use(function(req, res) {
+      res.end();
+    });
+
+    request(app)
+    .post('/')
+    .send(form())
+    .expect(200, done)
+  })
+})
+
+describe('generators', function() {
+  it('should be an array of all generator functions', function() {
+    botproof.generators.should.contain(botproof.generateTimestamp)
+                       .and.contain(botproof.generateSpinner)
+  })
+})
+
+describe('parsers', function() {
+  it('should be an array of all parser functions', function() {
+    botproof.parsers.should.contain(botproof.unscrambleFields)
+                    .and.contain(botproof.checkTimestamp)
+                    .and.contain(botproof.checkHoneypot)
+  })
+})

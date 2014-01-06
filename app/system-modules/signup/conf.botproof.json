@@ -9,5 +9,6 @@
         "timestamp"
     ],
     "requiredSubmitTimeSec": 5,
-    "signupFormMaxAgeHours": 12
+    "signupFormMaxAgeHours": 12,
+    "honeypotFieldName": "country"
 }

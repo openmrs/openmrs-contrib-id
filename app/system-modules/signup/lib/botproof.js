@@ -15,7 +15,6 @@ function ip(req) {
 }
 
 function badRequest(next, optionalMessage) {
-    log.warn('sending bad request error')
     var err = new Error(optionalMessage ||'Submitted form is missing required '+
         'parameters.');
     err.statusCode = 400;
@@ -83,7 +82,7 @@ module.exports = {
         ,   hash = crypto.createHash('md5')
         ;
 
-        log.debug('generating spinner with timestamp "'+timestamp+'" for '+
+        log.trace('generating spinner with timestamp "'+timestamp+'" for '+
             'ip address "'+ip(req)+'"');
 
         hash.update(timestamp.toString())
@@ -102,6 +101,7 @@ module.exports = {
         if (!req.body.spinner) return badRequest(next);
 
         var expected = botproofConf.signupFieldNames;
+        expected.push(botproofConf.honeypotFieldName); // also look for honeypot
 
         var spin = req.body.spinner
         ,   result = {}
@@ -116,9 +116,10 @@ module.exports = {
             if (req.body[hashed]) {
                 result[f] = req.body[hashed] || '';
                 log.trace('unscrambled field "'+f+'"='+req.body[hashed])
-            } else {
+            } else if (f !== botproofConf.honeypotFieldName) {
                 // We are expecting a field that we didn't get. The request is
-                // malformed and should be re-sent.
+                // malformed and should be re-sent. This excludes the honeypot
+                // field which of course SHOULD be blank.
                 log.warn('expected field "'+f+'" not found in submission (coul'+
                     'd have been left blank)');
                 return badRequest(next);
@@ -137,6 +138,15 @@ module.exports = {
         req.body = result;
 
         next();
+    },
+
+    // Invalidate the request if the honeypot has been filled (presumably by a
+    // bot). Honeypot field name is configured in conf.botproof.js
+    checkHoneypot: function checkHoneypot(req, res, next) {
+        if (req.body[botproofConf.honeypotFieldName])
+            return badRequest(next);
+
+        next();
     }
 }
 
@@ -148,5 +158,6 @@ module.exports.generators = [
 
 module.exports.parsers = [
     module.exports.unscrambleFields,
-    module.exports.checkTimestamp
+    module.exports.checkTimestamp,
+    module.exports.checkHoneypot
 ];

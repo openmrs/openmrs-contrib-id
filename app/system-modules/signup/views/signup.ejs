@@ -67,6 +67,18 @@
 			to control what mail you receive.
 		</span>
 	</div>
+
+	<div class="field">
+		<label>Country</label>
+		<input type="text" name="<%=disguise('country', spinner)%>"
+			placeholder="Country">
+
+		<span class="description">
+			<span class="failtext">Please enter a country.</span>
+			Help us learn where our community is from by providing your country.
+			</span>
+		</span>
+	</div>
 	
 	<div class="field<% if (fail.password) { %> fail<% } %>">
 		<label>Password</label>
