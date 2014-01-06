@@ -1,5 +1,6 @@
 var url = require('url'),
-	path = require('path');
+	path = require('path'),
+	botproof = require('./botproof');
 
 var Common = require(global.__commonModule),
 	conf = Common.conf,
@@ -30,20 +31,21 @@ ROUTES
 ======
 */
 // get signup from /signup or from / and handle accordingly
-app.get(/^\/signup\/?$|^\/$/i, function(req, res, next){
+app.get(/^\/signup\/?$|^\/$/i, botproof.generators, function(req, res, next){
 	if (req.session.user) return next(); // pass onward if a user is signed in
 
 	// parse querystrings for pre-populated data
 	var values = app.helpers()._locals.values || {}, renderLayout = true;
 	var query = url.parse(req.url, true).query
-	values.username = (query.username) ? query.username : values.username;
-	values.firstname = (query.firstname) ? query.firstname : values.firstname;
-	values.lastname = (query.lastname) ? query.lastname : values.lastname;
-	values.email = (query.email) ? query.email : values.email;
 
-	// handle layout query string
+	for (var prop in query) {
+		if (/^(firstname|lastname|username|email|)$/.test(prop))
+			values[prop] = query[prop];
+	}
+
+	// handle layout query string & determine which view to render
 	renderLayout = (query.layout == 'false') ? false : true;
-	var viewPath = (renderLayout) ? __dirname+'/../views/signup' : __dirname+'/../views/signup-standalone'; // which view to render
+	var viewPath = (renderLayout) ? __dirname+'/../views/signup' : __dirname+'/../views/signup-standalone';
 
 	// render the page
 	res.render(viewPath, {
@@ -55,7 +57,7 @@ app.get(/^\/signup\/?$|^\/$/i, function(req, res, next){
 });
 app.get('/signup', mid.forceLogout); // prevent from getting 404'd if a logged-in user hits /signup
 
-app.post('/signup', mid.logSignup, mid.forceLogout, mid.forceCaptcha, validate(), function(req, res, next){
+app.post('/signup', botproof.parsers, mid.logSignup, mid.forceLogout, mid.forceCaptcha, validate(), function(req, res, next){
 	var id = req.body.username, first = req.body.firstname, last = req.body.lastname,
 		email = req.body.email, pass = req.body.password, captcha = req.body.recaptcha_response_field;
 

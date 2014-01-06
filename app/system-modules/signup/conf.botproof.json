@@ -1,0 +1,13 @@
+{
+    "signupFieldNames": [
+        "username",
+        "firstname",
+        "lastname",
+        "email",
+        "password",
+        "recaptcha_response_field",
+        "timestamp"
+    ],
+    "requiredSubmitTimeSec": 5,
+    "signupFormMaxAgeHours": 12
+}

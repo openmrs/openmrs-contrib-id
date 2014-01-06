@@ -19,6 +19,7 @@ app/conf.js
 # Local Dev Resources #
 #######################
 *.sublime-*
+.ldaprc
 
 # OS generated files #
 ######################
