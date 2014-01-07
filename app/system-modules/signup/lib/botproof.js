@@ -8,7 +8,8 @@ var crypto = require('crypto')
 ,   dns = require('dns')
 ;
 
-var SECRET = "84d8f615a106e851a61720147d63cd07";
+var SECRET = crypto.createHash('sha1').update(Math.random().toString())
+             .digest('hex');
 
 function ip(req) {
     var xf = req.header('X-Forwarded-For') || '';
