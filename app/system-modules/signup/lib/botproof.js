@@ -2,7 +2,7 @@ var crypto = require('crypto')
 ,   Common = require(global.__commonModule)
 ,   app = Common.app
 ,   log = Common.logger.add('botproof')
-,   botproofConf = require('../conf.botproof.json')
+,   signupConf = require('../conf.signup.json')
 ,   async = require('async')
 ,   _ = require('underscore')
 ,   dns = require('dns')
@@ -66,11 +66,11 @@ module.exports = {
         if (isNaN(then.valueOf())) return badRequest(next);
 
         var diff = now - then
-        ,   minimumTime = botproofConf.requiredSubmitTimeSec * 1000;
+        ,   minimumTime = signupConf.requiredSubmitTimeSec * 1000;
         log.trace('submission time difference: '+diff);
 
         // Throw out a time in the future or too far in the past.
-        if (diff < 0 || diff > botproofConf.signupFormMaxAgeHours *60*60*1000) {
+        if (diff < 0 || diff > signupConf.signupFormMaxAgeHours *60*60*1000) {
             return badRequest(next);
         }
 
@@ -110,8 +110,8 @@ module.exports = {
         // Fail the request if no spinner was passed
         if (!req.body.spinner) return badRequest(next);
 
-        var expected = botproofConf.signupFieldNames;
-        expected.push(botproofConf.honeypotFieldName); // also look for honeypot
+        var expected = signupConf.signupFieldNames;
+        expected.push(signupConf.honeypotFieldName); // also look for honeypot
 
         var spin = req.body.spinner
         ,   result = {}
@@ -126,14 +126,14 @@ module.exports = {
             if (req.body[hashed]) {
                 result[f] = req.body[hashed] || '';
                 log.trace('unscrambled field "'+f+'"='+req.body[hashed])
-            } else if (f !== botproofConf.honeypotFieldName) {
+            } /*else if (f !== signupConf.honeypotFieldName) {
                 // We are expecting a field that we didn't get. The request is
                 // malformed and should be re-sent. This excludes the honeypot
                 // field which of course SHOULD be blank.
                 log.warn('expected field "'+f+'" not found in submission (coul'+
                     'd have been left blank)');
                 return badRequest(next);
-            }
+            }*/
         }
 
         // Patch the captcha challenge field over to our results. The field
@@ -151,9 +151,9 @@ module.exports = {
     },
 
     // Invalidate the request if the honeypot has been filled (presumably by a
-    // bot). Honeypot field name is configured in conf.botproof.js
+    // bot). Honeypot field name is configured in conf.signup.js
     checkHoneypot: function checkHoneypot(req, res, next) {
-        if (req.body[botproofConf.honeypotFieldName])
+        if (req.body[signupConf.honeypotFieldName])
             return badRequest(next);
 
         next();
@@ -163,7 +163,7 @@ module.exports = {
       var rev = reverseIp(req)
 
       // check the address with each list
-      async.map(botproofConf.dnsSpamLists, function iterate(list, cb) {
+      async.map(signupConf.dnsSpamLists, function iterate(list, cb) {
         dns.lookup(rev + '.' + list, function(err, result) {
           if (err) {
             if (err.code === 'ENOTFOUND') cb(null, false) // address not on list

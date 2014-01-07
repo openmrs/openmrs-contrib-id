@@ -1,12 +1,13 @@
 var url = require('url'),
 	path = require('path'),
-	botproof = require('./botproof');
+	botproof = require('./botproof'),
+	signupMiddleware = require('./middleware');
 
 var Common = require(global.__commonModule),
 	conf = Common.conf,
 	app = Common.app,
 	ldap = Common.ldap,
-	log = Common.logger.add('signup');
+	log = Common.logger.add('signup'),
 	mid = Common.mid,
 	validate = Common.validate,
 	verification = Common.verification,
@@ -57,69 +58,70 @@ app.get(/^\/signup\/?$|^\/$/i, botproof.generators, function(req, res, next){
 });
 app.get('/signup', mid.forceLogout); // prevent from getting 404'd if a logged-in user hits /signup
 
-app.post('/signup', botproof.parsers, mid.logSignup, mid.forceLogout, mid.forceCaptcha, validate(), function(req, res, next){
-	var id = req.body.username, first = req.body.firstname, last = req.body.lastname,
-		email = req.body.email, pass = req.body.password, captcha = req.body.recaptcha_response_field;
+app.post('/signup', mid.forceLogout, botproof.parsers,
+	signupMiddleware.includeEmpties, validate(), function(req, res, next){
+		var id = req.body.username, first = req.body.firstname, last = req.body.lastname,
+			email = req.body.email, pass = req.body.password, captcha = req.body.recaptcha_response_field;
 
-	if (!id || !first || !last || !email || !pass || !captcha) {
-		res.send('Unauthorized POST error', { 'Content-Type': 'text/plain' }, 403);
-		res.end();
-	}
-
-	var id = id.toLowerCase();
-
-	// will be called after account is created and validation process started
-	var finishCalls = 0, errored = false;
-	var finish = function(err){
-		if (err && errored == false) { // handle error
-			return next(err);
-			errored = true;
+		if (!id || !first || !last || !email || !pass || !captcha) {
+			res.send('Unauthorized POST error', { 'Content-Type': 'text/plain' }, 403);
+			res.end();
 		}
-		else {
-			finishCalls++;
-			if (finishCalls == 2) { // display welcome & verify notification
-				req.flash('success', "<p>Thanks and welcome to the OpenMRS Community!</p>"
-				+"<p>Before you can use your OpenMRS ID across our services, we need to verify your email address.</p>"
-				+"<p>We've sent an email to <strong>"+email+"</strong> with instructions to complete the signup process.</p>");
-				res.redirect('/signup/verify', 303);
+
+		var id = id.toLowerCase();
+
+		// will be called after account is created and validation process started
+		var finishCalls = 0, errored = false;
+		var finish = function(err){
+			if (err && errored == false) { // handle error
+				return next(err);
+				errored = true;
+			}
+			else {
+				finishCalls++;
+				if (finishCalls == 2) { // display welcome & verify notification
+					req.flash('success', "<p>Thanks and welcome to the OpenMRS Community!</p>"
+					+"<p>Before you can use your OpenMRS ID across our services, we need to verify your email address.</p>"
+					+"<p>We've sent an email to <strong>"+email+"</strong> with instructions to complete the signup process.</p>");
+					res.redirect('/signup/verify', 303);
+				}
 			}
 		}
-	}
 
-	// add the user to ldap
-	ldap.addUser(id, first, last, email, pass, function(e, userobj){
-		if (e) finish(e);
-		log.info('created account "'+id+'"');
+		// add the user to ldap
+		ldap.addUser(id, first, last, email, pass, function(e, userobj){
+			if (e) finish(e);
+			log.info('created account "'+id+'"');
 
-		// lock out the account until it has been verified
-		ldap.lockoutUser(id, function(err){
+			// lock out the account until it has been verified
+			ldap.lockoutUser(id, function(err){
+				if (err) finish(err);
+				finish();
+			});
+		});
+
+		// validate email before completing signup
+		verification.begin({
+			urlBase: 'signup',
+			email: email,
+			subject: '[OpenMRS] Welcome to the OpenMRS Community',
+			template: path.relative(global.__apppath, __dirname+'/../views/welcome-verify-email.ejs'),
+			locals: {
+				displayName: first+' '+last,
+				username: id,
+				userCredentials: {
+					id: id,  email: email
+				}
+			},
+			timeout: 0
+		}, function(err){
 			if (err) finish(err);
+
+			// prepare confirmation notification
+			app.helpers({sentTo: email});
+
 			finish();
 		});
-	});
-
-	// validate email before completing signup
-	verification.begin({
-		urlBase: 'signup',
-		email: email,
-		subject: '[OpenMRS] Welcome to the OpenMRS Community',
-		template: path.relative(global.__apppath, __dirname+'/../views/welcome-verify-email.ejs'),
-		locals: {
-			displayName: first+' '+last,
-			username: id,
-			userCredentials: {
-				id: id,  email: email
-			}
-		},
-		timeout: 0
-	}, function(err){
-		if (err) finish(err);
-
-		// prepare confirmation notification
-		app.helpers({sentTo: email});
-
-		finish();
-	});
 });
 
 app.get('/signup/verify', function(req, res, next) {

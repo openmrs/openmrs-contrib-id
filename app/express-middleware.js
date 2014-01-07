@@ -98,18 +98,6 @@ exports.secToArray = function(req, res, next) {
 	next();
 };
 
-// stops a manually-submitted POST from omitting the captcha
-// validation itself is handled by validate.js
-exports.forceCaptcha = function(req, res, next) {
-	if (req.body && req.body.recaptcha_challenge_field && req.body.recaptcha_response_field)
-		next();
-	else { // make captchas empty strings, so they will be validated (and fail)
-		req.body.recaptcha_challenge_field = "";
-		req.body.recaptcha_response_field = "";
-		next();
-	}
-};
-
 exports.stripNewlines = function(req, res, next) {
 	log.trace('before: '+req.body.loginusername);
 	if (req.body) {
@@ -142,19 +130,3 @@ exports.parseParamTable = function(req, res, next) {
 	res.local('params', generatedList);
 	next();
 };
-
-// ADDED in hope of bot detection
-exports.logSignup = function(req, res, next) {
-var id = req.body.username, first = req.body.firstname, last = req.body.lastname, email = req.body.email,
-    captchaChallenge = req.body.recaptcha_challenge_field, captchaResponse = req.body.recaptcha_response_field;
-
-require("./logger").signup.info("-----\n"
-+"SIGNUP FORM POSTED. Details follow:\n"
-+"Username: "+id
-+"\nFirst/Last: "+first+" "+last
-+"\nEmail: "+email
-+"\nCaptcha Challenge: "+captchaChallenge
-+"\nCaptcha Response: "+captchaResponse+"\n");
-
-next();
-}
