@@ -3,6 +3,9 @@ var crypto = require('crypto')
 ,   app = Common.app
 ,   log = Common.logger.add('botproof')
 ,   botproofConf = require('../conf.botproof.json')
+,   async = require('async')
+,   _ = require('underscore')
+,   dns = require('dns')
 ;
 
 var SECRET = "84d8f615a106e851a61720147d63cd07";
@@ -14,9 +17,15 @@ function ip(req) {
         : req.connection.remoteAddress;
 }
 
+function reverseIp(req) {
+  var a = ip(req).split('.')
+  a.reverse();
+  return a.join('.')
+}
+
 function badRequest(next, optionalMessage) {
-    var err = new Error(optionalMessage ||'Submitted form is missing required '+
-        'parameters.');
+    var err = new Error(optionalMessage ||'Submitted form failed '+
+        'anti-bot checking.');
     err.statusCode = 400;
     next(err);
 }
@@ -147,6 +156,33 @@ module.exports = {
             return badRequest(next);
 
         next();
+    },
+
+    spamListLookup: function spamListLookup(req, res, next) {
+      var rev = reverseIp(req)
+
+      // check the address with each list
+      async.map(botproofConf.dnsSpamLists, function iterate(list, cb) {
+        dns.lookup(rev + '.' + list, function(err, result) {
+          if (err) {
+            if (err.code === 'ENOTFOUND') cb(null, false) // address not on list
+            else cb(err)
+
+          } else { // address IS on list
+            cb(null, true)
+          }
+        })
+
+      }, function callback(err, results) {
+        if (err) return next(err);
+
+        if (_.contains(results, true)) { // if this address was indicated as spam
+          log.info('IP address ' + ip + ' flagged as spam')
+          return badRequest(next);
+        }
+
+        next(); // not spam!
+      })
     }
 }
 
@@ -159,5 +195,6 @@ module.exports.generators = [
 module.exports.parsers = [
     module.exports.unscrambleFields,
     module.exports.checkTimestamp,
-    module.exports.checkHoneypot
+    module.exports.checkHoneypot,
+    module.exports.spamListLookup
 ];

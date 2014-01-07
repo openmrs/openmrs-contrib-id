@@ -10,5 +10,10 @@
     ],
     "requiredSubmitTimeSec": 5,
     "signupFormMaxAgeHours": 12,
-    "honeypotFieldName": "country"
+    "honeypotFieldName": "country",
+
+    "dnsSpamLists": [
+        "b.barracudacentral.org",
+        "zen.spamhaus.org"
+    ]
 }

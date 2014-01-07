@@ -17,7 +17,8 @@
     "recaptcha": "~1.1.0",
     "sequelize": "~1.7.0-alpha2",
     "xml2js": "~0.1.14",
-    "underscore": "~1.5.2"
+    "underscore": "~1.5.2",
+    "async": "~0.2.9"
   },
   "engine": {
     "node": "~0.8.26"

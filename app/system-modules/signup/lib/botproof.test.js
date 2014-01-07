@@ -98,6 +98,45 @@ describe('checkHoneypot', function() {
   })
 })
 
+describe('spamListLookup', function() {
+  it('should block a known bad address', function(done) {
+    var app = express.createServer()
+    app.enable('trust proxy') // so we can fake ip addresses
+
+    app.use(botproof.spamListLookup);
+
+    app.error(function(error, req, res) {
+      try {
+        error.statusCode.should.equal(400)
+        done()
+      } catch (e) {
+        done(e)
+      }
+    })
+
+    request(app)
+    .get('/')
+    .set('X-Forwarded-For', '194.158.204.250') // known bad address
+    .end(function(){})
+
+  })
+
+  it('should allow a known good address', function(done) {
+    var app = express.createServer()
+    app.enable('trust proxy') // so we can fake ip addresses
+
+    app.use(botproof.spamListLookup);
+    app.use(function(req, res) {
+      res.end()
+    })
+
+    request(app)
+    .get('/')
+    .set('X-Forwarded-For', '74.125.225.1') // google.com's address
+    .expect(200, done)
+  })
+})
+
 describe('generators', function() {
   it('should be an array of all generator functions', function() {
     botproof.generators.should.contain(botproof.generateTimestamp)
@@ -110,5 +149,6 @@ describe('parsers', function() {
     botproof.parsers.should.contain(botproof.unscrambleFields)
                     .and.contain(botproof.checkTimestamp)
                     .and.contain(botproof.checkHoneypot)
+                    .and.contain(botproof.spamListLookup)
   })
 })
