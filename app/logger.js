@@ -12,11 +12,11 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 var log4js = require('log4js'),
-	Common = require('./openmrsid-common'),
+	Common = require(global.__commonModule),
 	conf = Common.conf;
-	
+
 log4js.loadAppender('console');
-log4js.loadAppender('file');	
+log4js.loadAppender('file');
 var	file = log4js.appenders.file(__dirname + conf.logger.relativePath);
 
 log4js.replaceConsole();
@@ -26,13 +26,13 @@ log4js.addAppender(file, 'console'); // added by default
 exports.add = function(logname) {
 	var thisLog = log4js.getLogger(logname);
 	log4js.addAppender(file, logname);
-	
+
 	// use environment specified for Express
 	if (process.env.NODE_ENV == 'development') thisLog.setLevel('debug');
 	else if (process.env.NODE_ENV == 'production') thisLog.setLevel('info');
 	else if (process.env.NODE_ENV == 'trace') thisLog.setLevel('trace');
 	else thisLog.setLevel('debug');
-	
+
 	return thisLog;
 };
 

@@ -11,10 +11,10 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
- 
+
 var Recaptcha = require('recaptcha').Recaptcha,
 	url = require('url'),
-	Common = require('./openmrsid-common'),
+	Common = require(global.__commonModule),
 	conf = Common.conf,
 	app = Common.app,
 	ldap = Common.ldap,
@@ -26,15 +26,15 @@ module.exports = function(redirect) {
 			var b = req.body, user = req.session.user, calls = 1, called = 0, reachedEnd, failures = {}, failed = false, values = {}, failReason = {};
 			function fail(field, reason, idx) {
 				failed = true;
-				
+
 				if (typeof idx == 'number') {
 					if (!failures[field]) failures[field] = new Array;
 					failures[field][idx] = true;
 				}
 				else failures[field] = true;
-				
+
 				if (reason) failReason[field] = reason;
-				
+
 				log.debug('validation error in '+field);
 			}
 			function empty(field) {
@@ -64,13 +64,13 @@ module.exports = function(redirect) {
 					else return next();
 				}
 			}
-			
+
 			for (field in req.body) {
 				values[field] = b[field];
-				
+
 				// only validate if field has been changed OR if field is not part of user (such as recaptcha validation)
 				if (!user || !user[conf.user[field]] || (user[conf.user[field]] && b[field] != user[conf.user[field]])) {
-				
+
 					if (field == 'username') {
 						if (empty(field) && !conf.user.usernameRegex.exec(b[field])) fail(field); // not a legal username
 						else { // check against current usernames
@@ -99,15 +99,15 @@ module.exports = function(redirect) {
 							b[field] = [b[field]];
 							values[field] = [b[field]];
 						}
-						
+
 						// perform validation
 						for (var i=0; i<b[field].length; i++) {
 							if (!b[field][i]) b[field].splice(i, 1); // delete any empty cells
 							else {
 								if ((!conf.email.validation.emailRegex.test(b[field][i]))) fail(field, undefined, i); // ensure the text entered is an email address
-								
+
 								if (b[field][i].indexOf('+') > -1 && !conf.validation.allowPlusInEmail) fail(field, 'Due to incompatibilities with the Google Apps APIs, email addresses cannot contain "+".', i); // ensure address doesn't break Google
-							
+
 								if (conf.email.validation.forceUniqueSecondaryEmail) { // ensure address is unique
 									calls++;
 									var thisField = field;
@@ -143,7 +143,7 @@ module.exports = function(redirect) {
 							challenge: req.body.recaptcha_challenge_field,
 							response:  req.body.recaptcha_response_field
 						}, recaptcha = new Recaptcha(conf.validation.recaptchaPublic, conf.validation.recaptchaPrivate, captchaData);
-						
+
 					    recaptcha.verify(function(success, error_code) {
 					        if (!success) fail(field);
 					        finish();

@@ -15,7 +15,7 @@
 var express = require('express'),
 	MySQLSessionStore = require('connect-mysql-session')(express),
 	url = require('url'),
-	Common = require('./openmrsid-common'),
+	Common = require(global.__commonModule),
 	app = Common.app,
 	conf = Common.conf,
 	mid = Common.mid,

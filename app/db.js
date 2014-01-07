@@ -1,5 +1,5 @@
 var Sequelize = require('sequelize'),
-	Common = require('./openmrsid-common'),
+	Common = require(global.__commonModule),
 	conf = Common.conf,
 	log = Common.logger.add('database');
 
