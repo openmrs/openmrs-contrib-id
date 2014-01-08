@@ -2,6 +2,7 @@ var should = require('should')
 ,   _ = require('underscore')
 ,   request = require('supertest')
 ,   express = require('express')
+,   crypto = require('crypto')
 ;
 
 global.__commonModule = './commonmock.test'
@@ -16,7 +17,13 @@ describe('generateTimestamp', function() {
     app.use(botproof.generateTimestamp)
 
     app.use(function(req, res) {
-      res.local('timestamp').should.be.approximately(Date.now(), 5000)
+      var enc = res.local('timestamp')
+      ,   decph = crypto.createDecipher('aes192', botproof.SECRET)
+
+      decph.update(enc, 'hex')
+      var dec = decph.final('utf8')
+
+      dec.should.be.approximately(Date.now(), 5000)
       res.end()
     })
 
@@ -48,6 +55,42 @@ describe('checkTimestamp', function() {
     .post('/')
     .end(function(){})
 
+  })
+
+  it('should delay forms submitted under 5s', function(done) {
+    this.timeout(6000);
+
+    var app = express.createServer()
+
+    app.use(express.bodyParser())
+    app.use(botproof.generateTimestamp)
+    app.use(function(req, res, next) {
+      req.body.timestamp = res.local('timestamp')
+      next()
+    })
+    app.use(botproof.checkTimestamp)
+    app.use(function(req, res) {
+      res.end()
+    })
+
+    app.error(function(err) {
+      return done(err);
+    })
+
+    var start = Date.now();
+
+    request(app)
+    .post('/')
+    .send({username: 'bilbo'})
+    .end(function(res) {
+      var stop = Date.now()
+      try {
+        (stop - start).should.be.above(4999)
+        done()
+      } catch (e) {
+        done(e)
+      }
+    })
   })
 })
 

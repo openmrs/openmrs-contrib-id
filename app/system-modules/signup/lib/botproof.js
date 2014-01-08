@@ -52,14 +52,26 @@ module.exports = {
     // be used to invoke all methods, as defined below.
 
     generateTimestamp: function generateTimestamp(req, res, next) {
-        var timestamp = Date.now();
-        res.local('timestamp', timestamp)
+        var timestamp = Date.now(),
+            cipher = crypto.createCipher('aes192', SECRET)
+
+        cipher.update(timestamp.toString())
+
+        res.local('timestamp', cipher.final('hex'))
         next();
     },
 
     checkTimestamp: function checkTimestamp(req, res, next) {
         if (!req.body.timestamp) return badRequest(next);
-        var then = new Date(parseInt(req.body.timestamp, 10))
+
+        // Decipher
+        var decipher = crypto.createDecipher('aes192', SECRET)
+
+        decipher.update(req.body.timestamp, 'hex')
+        var timestamp = decipher.final('utf8');
+
+
+        var then = new Date(parseInt(timestamp, 10))
         ,   now = new Date(Date.now());
 
         // Throw out malformed timestamps
@@ -70,13 +82,17 @@ module.exports = {
         log.trace('submission time difference: '+diff);
 
         // Throw out a time in the future or too far in the past.
-        if (diff < 0 || diff > signupConf.signupFormMaxAgeHours *60*60*1000) {
-            return badRequest(next);
+        if (diff < 0) {
+            return badRequest(next, 'Submitted form received from a time in the'+
+                ' future');
+        } else if (diff > signupConf.signupFormMaxAgeHours *60*60*1000) {
+            return badRequest(next, '')
         }
 
         // Delay the submission if it was completed too soon
         if (diff < minimumTime) {
-            log.debug('deferring submission received in '+diff+' ms');
+            log.info('deferring submission received in '+diff+' ms from '+
+                ip(req));
             return setTimeout(next, minimumTime - diff);
         }
 
@@ -126,14 +142,7 @@ module.exports = {
             if (req.body[hashed]) {
                 result[f] = req.body[hashed] || '';
                 log.trace('unscrambled field "'+f+'"='+req.body[hashed])
-            } /*else if (f !== signupConf.honeypotFieldName) {
-                // We are expecting a field that we didn't get. The request is
-                // malformed and should be re-sent. This excludes the honeypot
-                // field which of course SHOULD be blank.
-                log.warn('expected field "'+f+'" not found in submission (coul'+
-                    'd have been left blank)');
-                return badRequest(next);
-            }*/
+            }
         }
 
         // Patch the captcha challenge field over to our results. The field
@@ -141,8 +150,7 @@ module.exports = {
         // is loaded, so we are unable to hash it. Since this field is inserted
         // dynamically, it is still relatively bot-proof.
         var rcf = 'recaptcha_challenge_field';
-        if (!req.body[rcf]) return badRequest(next);
-        result[rcf] = req.body[rcf];
+        if (req.body[rcf]) result[rcf] = req.body[rcf];
 
         // Replace the body with the un-hashed results.
         req.body = result;
@@ -178,7 +186,7 @@ module.exports = {
         if (err) return next(err);
 
         if (_.contains(results, true)) { // if this address was indicated as spam
-          log.info('IP address ' + ip + ' flagged as spam')
+          log.info('IP address ' + ip(req) + ' flagged as spam')
           return badRequest(next);
         }
 
@@ -186,6 +194,8 @@ module.exports = {
       })
     }
 }
+
+module.exports.SECRET = SECRET // used by testing
 
 
 module.exports.generators = [
