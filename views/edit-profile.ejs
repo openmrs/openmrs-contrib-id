@@ -63,7 +63,7 @@
 				%><input type="text" name="secondaryemail" placeholder="Secondary Email" value="<% if (failed && values.secondaryemail) {
 					%><%= values.secondaryemail[i] %><%
 					} else {
-					%><%= secmail[i]%><% } %>"><% } %>
+					%><%= secmail[i] || '' %><% } %>"><% } %>
 			
 			<span class="description">
 				<span class="failtext"><% if (failReason.secondaryemail) { %><%= failReason.secondaryemail %><% } else { %>Invalid email address.<% } %> </span>
