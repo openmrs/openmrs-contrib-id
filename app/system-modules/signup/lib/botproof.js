@@ -169,16 +169,20 @@ module.exports = {
 
     spamListLookup: function spamListLookup(req, res, next) {
       var rev = reverseIp(req)
+      ,   spams = signupConf.dnsSpamLists
 
       // check the address with each list
-      async.map(signupConf.dnsSpamLists, function iterate(list, cb) {
-        dns.lookup(rev + '.' + list, function(err, result) {
+      async.map(Object.keys(spams), function (list, cb) {
+        dns.lookup(rev + '.' + list, function(err, address) {
           if (err) {
             if (err.code === 'ENOTFOUND') cb(null, false) // address not on list
             else cb(err)
 
-          } else { // address IS on list
+          } else if (_.contains(spams[list].returnCodes, address)) {
+          // address IS on list and proper return code specified
             cb(null, true)
+          } else {
+            cb(null, false)
           }
         })
 

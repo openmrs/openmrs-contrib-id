@@ -12,8 +12,13 @@
     "signupFormMaxAgeHours": 12,
     "honeypotFieldName": "country",
 
-    "dnsSpamLists": [
-        "b.barracudacentral.org",
-        "zen.spamhaus.org"
-    ]
+    "dnsSpamLists": {
+        "b.barracudacentral.org": {
+            "returnCodes": ["127.0.0.2"]
+        },
+        "zen.spamhaus.org": {
+            "returnCodes": ["127.0.0.2", "127.0.0.3", "127.0.0.4", "127.0.0.5",
+                            "127.0.0.6", "127.0.0.7"]
+        }
+    }
 }

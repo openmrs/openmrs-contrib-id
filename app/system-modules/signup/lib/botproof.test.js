@@ -57,7 +57,7 @@ describe('checkTimestamp', function() {
 
   })
 
-  it('should delay forms submitted under 5s', function(done) {
+  it.skip('should delay forms submitted under 5s', function(done) {
     this.timeout(6000);
 
     var app = express.createServer()
@@ -176,6 +176,21 @@ describe('spamListLookup', function() {
     request(app)
     .get('/')
     .set('X-Forwarded-For', '74.125.225.1') // google.com's address
+    .expect(200, done)
+  })
+
+  it('should not be triggered by a ZEN PBL address', function(done) {
+    var app = express.createServer()
+    app.enable('trust proxy') // so we can fake ip addresses
+
+    app.use(botproof.spamListLookup);
+    app.use(function(req, res) {
+      res.end()
+    })
+
+    request(app)
+    .get('/')
+    .set('X-Forwarded-For', '64.134.160.4')
     .expect(200, done)
   })
 })
