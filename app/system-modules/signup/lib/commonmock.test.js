@@ -6,6 +6,7 @@ module.exports = {
       _.extend(this.helpers, obj)
     }
   },
+  conf: require('../../../conf'),
   logger: {
     add: function() {
       return {

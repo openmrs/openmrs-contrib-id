@@ -3,9 +3,12 @@ var should = require('should')
 ,   request = require('supertest')
 ,   express = require('express')
 ,   crypto = require('crypto')
+,   fs = require('fs')
 ;
 
-global.__commonModule = './commonmock.test'
+global.__commonModule = fs.realpathSync('./commonmock.test.js')
+
+require(global.__commonModule).db = require('../../../db')
 
 var botproof = require('./botproof');
 
@@ -147,6 +150,9 @@ describe('spamListLookup', function() {
     app.enable('trust proxy') // so we can fake ip addresses
 
     app.use(botproof.spamListLookup);
+    app.use(function(req, res) {
+      res.end()
+    })
 
     app.error(function(error, req, res) {
       try {
@@ -160,7 +166,10 @@ describe('spamListLookup', function() {
     request(app)
     .get('/')
     .set('X-Forwarded-For', '194.158.204.250') // known bad address
-    .end(function(){})
+    .end(function(err, res){
+      if (res.statusCode === 200)
+        done(new Error('known bad address passed'))
+    })
 
   })
 

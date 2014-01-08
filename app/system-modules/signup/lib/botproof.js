@@ -6,7 +6,13 @@ var crypto = require('crypto')
 ,   async = require('async')
 ,   _ = require('underscore')
 ,   dns = require('dns')
+,   db = Common.db
 ;
+
+db.define('IPWhitelist', {
+    id: {type: db.INTEGER, primaryKey: true},
+    address: db.STRING
+})
 
 var SECRET = crypto.createHash('sha1').update(Math.random().toString())
              .digest('hex');
@@ -180,7 +186,14 @@ module.exports = {
 
           } else if (_.contains(spams[list].returnCodes, address)) {
           // address IS on list and proper return code specified
-            cb(null, true)
+
+            db.find('IPWhitelist', {address: ip(req)}, function(err, insts) {
+                if (insts.length) // address is whitelisted
+                    cb(null, false)
+                else
+                    cb(null, true)
+            })
+
           } else {
             cb(null, false)
           }
