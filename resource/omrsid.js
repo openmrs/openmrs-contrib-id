@@ -183,8 +183,8 @@ $().ready(function(){
         $('.field input:focus').siblings('.description').css('visibility', 'visible');
 
     // Check for valid usernames on signup
-    var searchTimeout = {}, origUserText = $('.field input[name=username]').siblings('span').html();
-    $('.field input[name=username]').keyup(function(){
+    var searchTimeout = {}, origUserText = $('.field input[placeholder=Username]').siblings('span').html();
+    $('.field input[placeholder=Username]').keyup(function(){
         var userInput = this, userVal = $(this).val();
         clearTimeout(searchTimeout);
         if (userVal) {
