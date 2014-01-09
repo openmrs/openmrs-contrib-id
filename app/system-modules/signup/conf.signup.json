@@ -13,7 +13,7 @@
     "honeypotFieldName": "country",
 
     "dnsSpamLists": {
-        "b.barracudacentral.org": {
+        "bl.spamcop.net": {
             "returnCodes": ["127.0.0.2"]
         },
         "zen.spamhaus.org": {
