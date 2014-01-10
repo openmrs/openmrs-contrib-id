@@ -166,8 +166,8 @@ describe('spamListLookup', function() {
     request(app)
     .get('/')
     .set('X-Forwarded-For', '194.158.204.250') // known bad address
-    .end(function(err, res){
-      if (res.statusCode === 200)
+    .end(function(res){
+      if (res.status === 200)
         done(new Error('known bad address passed'))
     })
 
@@ -201,6 +201,36 @@ describe('spamListLookup', function() {
     .get('/')
     .set('X-Forwarded-For', '64.134.160.4')
     .expect(200, done)
+  })
+
+  it('should respond with a human readable error', function(done) {
+    var app = express.createServer()
+    app.enable('trust proxy') // so we can fake ip addresses
+
+    app.use(botproof.spamListLookup);
+    app.use(function(req, res) {
+      res.end()
+    })
+
+    app.error(function(error, req, res) {
+      try {
+        error.statusCode.should.equal(400)
+        error.message.should.match(new RegExp("Your IP address, [0-9.]+, was "+
+          "flagged as a spam address by our spam-blocking lists. Please open an "+
+          "issue if you believe this is in error."))
+        done()
+      } catch (e) {
+        done(e)
+      }
+    })
+
+    request(app)
+    .get('/')
+    .set('X-Forwarded-For', '194.158.204.250') // known bad address
+    .end(function(res){
+      if (res.status === 200)
+        done(new Error('known bad address passed'))
+    })
   })
 })
 
