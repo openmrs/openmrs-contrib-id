@@ -204,7 +204,9 @@ module.exports = {
 
         if (_.contains(results, true)) { // if this address was indicated as spam
           log.info('IP address ' + ip(req) + ' flagged as spam')
-          return badRequest(next);
+          return badRequest(next, "Your IP address, "+ip(req)+", was "+
+          "flagged as a spam address by our spam-blocking lists. Please open an "+
+          "issue if you believe this is in error.");
         }
 
         next(); // not spam!
