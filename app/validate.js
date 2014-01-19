@@ -53,7 +53,7 @@ module.exports = function(redirect) {
 			function finish() {
 				called++;
 				if (called == calls && reachedEnd) {
-					app.helpers({failed: true, values: values, fail: failures, failReason: failReason});
+					req.session.validation = {failed: true, values: values, fail: failures, failReason: failReason};
 					if (failed == true) {
 						if (redirect) return res.redirect(redirect); // redirect to predefined destination
 						else if (req.body.destination) { // redirect to the destination login page
@@ -124,7 +124,7 @@ module.exports = function(redirect) {
 					if (field == 'confirmpassword')
 						if (b['newpassword'] != b[field]) fail(field);
 					if (field == 'currentpassword') {
-						if (!b[field]) fail(currentField, 'Authentication required to change password.');
+						if (!b[field]) fail(field, 'Authentication required to change password.');
 						else {
 							var currentField = field;
 							calls++;
@@ -159,3 +159,20 @@ module.exports = function(redirect) {
 		else next();
 	}
 };
+
+// check for validation records (presumably coming from a failed POST that we're
+// being redirected from). if any are found, move them to the render variables
+module.exports.receive = function receiveValidation() {
+	return function(req, res, next) {
+
+		var rs = req.session,
+				rsv = rs.validation;
+
+		if (rs && Object.keys(rsv).length) {
+			res.locals(rsv) // include the properties from validation
+			req.session.validation = {};
+		}
+
+		next();
+	}
+}

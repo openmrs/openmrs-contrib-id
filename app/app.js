@@ -71,18 +71,14 @@ app.get('/', function(req, res, next){
 if (!req.session.user) return next();
 
 https.get({host: 'answers.openmrs.org', path: '/users/'+req.session.user.uid }, function(response) {
-	if (response.statusCode == 200) app.helpers({osqaUser: true});
-	else app.helpers({osqaUser: false});
-
-	app.dynamicHelpers({
-
-	});
+	if (response.statusCode == 200) res.locals({osqaUser: true});
+	else res.locals({osqaUser: false});
 
 	res.render('root');
 });
 });
 
-app.get(/^\/login\/?$/, mid.forceLogout, function(req, res, next){
+app.get(/^\/login\/?$/, mid.forceLogout, validate.receive(), function(req, res, next){
 	res.render('login');
 });
 
@@ -104,7 +100,7 @@ app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 				log.debug('known login failure');
 				log.info('authentication failed for "'+username+'" ('+e.message+')');
 				req.flash('error', 'Login failed.');
-				app.helpers({fail: {loginusername: false, loginpassword: true},
+				res.locals({fail: {loginusername: false, loginpassword: true},
 					values: {loginusername: username,
 					loginpassword: password}});
 				if (req.body.destination) { // redirect to the destination login page
@@ -132,7 +128,6 @@ app.post('/login', mid.stripNewlines, validate(), function(req, res, next){
 			if (e) return next(e);
 			req.session.user = userobj;
 			log.debug('user '+username+' stored in session');
-			app.helpers()._locals.clearErrors(); // keeps "undefined" from showing up in error values
 			finish();
 		});
 
@@ -156,10 +151,7 @@ app.get('/disconnect', function(req, res, next) {
 
 // USER PROFILE
 
-app.get('/profile', mid.forceLogin, function(req, res, next){
-
-	var sidebar = app.helpers()._locals.sidebar;
-	var sidebar = (typeof sidebar == 'object') ? sidebar : []; // if no sidebars yet, set as empty array
+app.get('/profile', mid.forceLogin, validate.receive(), function(req, res, next){
 
 	// check if any emails being verified
 
@@ -354,7 +346,7 @@ app.get('/profile-email/cancel/:actionId', function(req, res, next){
 	})
 });
 
-app.get('/password', mid.forceLogin, function(req, res, next){
+app.get('/password', mid.forceLogin, validate.receive(), function(req, res, next){
 	res.render('edit-password');
 });
 
@@ -441,7 +433,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 
 });
 
-app.get('/reset/:id', function(req, res, next){
+app.get('/reset/:id', validate.receive(), function(req, res, next){
 	var resetId = req.params.id;
 	verification.check(resetId, function(err, valid, locals){
 		if (err) return next(err);
@@ -464,7 +456,6 @@ app.post('/reset/:id', validate(), function(req, res, next){
 				log.info('password reset for "'+locals.username+'"');
 				verification.clear(req.params.id); // remove validation from DB
 				req.flash('success', 'Password has been reset successfully. You may now log in across the OpenMRS Community.');
-				app.helpers()._locals.clearErrors(); // keeps "undefined" from showing up in error values
 				res.redirect('/');
 			});
 		}

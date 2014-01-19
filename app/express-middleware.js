@@ -20,36 +20,42 @@ var crypto = require('crypto'),
 	log = Common.logger.add('middleware'),
 	conf = Common.conf;
 
+
+function setTypes (req, res){
+	// Change undefined variables to default values; keep us from getting "undefined" errors from EJS
+	var current = res.locals(), replace = {};
+
+	replace.title = (current.title) ? current.title : conf.site.title;
+	replace.failed = (current.failed) ? current.failed : false;
+	replace.showHeadlineAvatar = (current.showHeadlineAvatar) ? current.showHeadlineAvatar : true;
+	replace.showSidebar = (current.showSidebar) ? current.showSidebar : true;
+
+	['sidebar'].forEach(function(prop){
+		replace[prop] = (current[prop]) ? current[prop] : [];
+	});
+	['bodyAppend', 'headAppend', 'headline', 'viewName', 'emailUpdated'].forEach(function(prop){
+		replace[prop] = (current[prop]) ? current[prop] : '';
+	});
+	['flash', 'fail', 'values', 'failReason', 'navLinks', 'progress', 'sidebarParams', 'validation'].forEach(function(prop){
+		replace[prop] = (current[prop]) ? current[prop] : {};
+	});
+	res.locals(replace);
+}
+
 exports.openmrsHelper = function(){
 	return function(req, res, next){
 		if (req.url != '/favicon.ico') {
 			if (req.session.user) {
 				var mailHash = crypto.createHash('md5').update(req.session.user.mail).digest('hex');
-				app.helpers({connected: true, user: req.session.user, mailHash: mailHash});
+				res.locals({connected: true, user: req.session.user, mailHash: mailHash});
 			}
-			else app.helpers({connected: false});
+			else res.locals({connected: false});
 		}
+
+		setTypes(req, res);
+
 		next();
 	};
-};
-
-exports.clear = function(){
-	var current = app.helpers()._locals, replace = new Object();
-
-	// change undefined variables to default values
-	replace.title = (current.title) ? current.title : conf.site.titleg;
-	replace.failed = (current.failed) ? current.failed : false;
-
-	['defaultSidebar', 'sidebar'].forEach(function(prop){
-		replace[prop] = (current[prop]) ? current[prop] : [];
-	});
-	['bodyAppend', 'headAppend'].forEach(function(prop){
-		replace[prop] = (current[prop]) ? current[prop] : '';
-	});
-	['flash', 'fail', 'values', 'failReason'].forEach(function(prop){
-		replace[prop] = (current[prop]) ? current[prop] : {};
-	});
-	app.helpers(replace);
 };
 
 exports.restrictTo = function(role) {
