@@ -1,6 +1,8 @@
 <% name = 'login' %>
 <% title = 'OpenMRS ID - Login' %>
-<% headline = 'Login to the Dashboard' %>
+<% headline = 'Login with your OpenMRS ID' %>
+<% sidebar.unshift('sidebar/id-whatis') %>
+
 <form action="/login" method="post">
 	<p><em></em></p>
 	<input type="hidden" name="destination" id="redirect-to">
@@ -23,5 +25,5 @@
 		</span>
 	</div>
 	
-	<input type="submit" value="Login to the Dashboard &#187;">
+	<input type="submit" value="Login with OpenMRS ID &#187;">
 </form>
