@@ -168,7 +168,7 @@ module.exports.receive = function receiveValidation() {
 		var rs = req.session,
 				rsv = rs.validation;
 
-		if (rs && Object.keys(rsv).length) {
+		if (rs && rsv && Object.keys(rsv).length) {
 			res.locals(rsv) // include the properties from validation
 			req.session.validation = {};
 		}
