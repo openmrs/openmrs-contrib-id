@@ -145,7 +145,12 @@ app.get('/disconnect', function(req, res, next) {
 		log.info(req.session.user.uid+': disconnecting');
 		req.session.destroy();
 	}
-	res.redirect('/');
+	// redirect to a predefined destination or to home
+	if (req.param('destination')) {
+		res.redirect(req.param('destination'))
+	} else {
+		res.redirect('/');
+	}
 });
 
 
