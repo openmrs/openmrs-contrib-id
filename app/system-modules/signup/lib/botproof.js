@@ -10,7 +10,7 @@ var crypto = require('crypto')
 ;
 
 db.define('IPWhitelist', {
-    id: {type: db.INTEGER, primaryKey: true},
+    id: {type: db.INTEGER, primaryKey: true, autoIncrement: true},
     address: db.STRING
 })
 
