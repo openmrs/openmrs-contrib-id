@@ -13,6 +13,7 @@
  */
 
 var express = require('express'),
+	connect = require('connect'),
 	MySQLSessionStore = require('connect-mysql-session')(express),
 	url = require('url'),
 	Common = require(global.__commonModule),
@@ -50,6 +51,7 @@ app.configure(function(){ // executed under all environments
 
 app.configure('development', function(){
 	app.use(express.errorHandler({ showStack: true, dumpExceptions: true }));
+	app.use(connect.logger('dev'))
 
 });
 
