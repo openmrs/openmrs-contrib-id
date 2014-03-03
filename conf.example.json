@@ -1,7 +1,10 @@
 {
-  "secrets": {
+  "strategies": {
 
-    "discourse": "1234567890abcdef"
+    "discourse": {
+      "secret": "1234567890abcdef",
+      "returnURL": "http://talk.openmrs.org/session/sso_login?{{QUERY}}"
+    }
 
   }
 }
