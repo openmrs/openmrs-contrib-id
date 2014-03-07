@@ -12,8 +12,8 @@
     "url": "https://github.com/elliottwilliams/openmrs-contrib-globalnavbar"
   },
   "dependencies": {
-    "jeesh": "*",
-    "backbone": "*",
+    "jeesh": "~0.0.6",
+    "backbone": "~1.1.2",
     "reqwest": "~0.8.3"
   },
   "bundledDependencies": [

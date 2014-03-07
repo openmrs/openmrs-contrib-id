@@ -50,7 +50,17 @@
             this.updateReveal();
 
             $("body").prepend(this.el);
+
+            this.triggerScrollOnFirstRender();
         },
+
+        // Some applications (ahem, Discourse), need the scroll event fired so
+        // they can re-position their headers. This helps prevent the navbar
+        // from appearing overtop a header. This function should only be called
+        // on the first render.
+        triggerScrollOnFirstRender: _.once(function() {
+            window.dispatchEvent(new Event('scroll'))
+        }),
 
         // Change the navbar's class (a state class) and the text of the hidden-
         // ness button when we hide or unhide.
