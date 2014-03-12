@@ -2,6 +2,10 @@
     var reqwest = require('reqwest')
     , lazyload = require('lazyload')
 
+    // Expose the navbar's ender sandbox
+    module.exports.ender = $
+
+
     module.exports.hostname = function(path) {
         var a = document.createElement("a");
         a.href = document.getElementById("globalnav-script").src;

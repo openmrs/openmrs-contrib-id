@@ -11,6 +11,11 @@ if(!function(){}.bind){
   }
 }
 
+// Inject margin as soon as possible, to prevent flash of un-navbarred content
+OpenMRSNavbar.ender.domReady(function() {
+  document.body.style.paddingTop = '27px'
+})
+
 OpenMRSNavbar.loadStylesheet(function() {
     OpenMRSNavbar.instance = new OpenMRSNavbar.Model();
 });

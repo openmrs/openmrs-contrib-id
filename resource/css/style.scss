@@ -28,7 +28,7 @@ $concealTime: 100ms;
 #globalnav-container {
 	width: 100%;
 	height: 27px;
-    margin: 0;
+    margin: -27px 0 0; // -27px offsets the navbar from the global margin in boot.js
     padding: 0;
     border: 0;
 
