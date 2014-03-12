@@ -1,50 +1,50 @@
 {
   "name": "openmrsid",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "dependencies": {
     "connect": {
       "version": "2.3.3",
-      "from": "connect@2.3.3",
+      "from": "https://registry.npmjs.org/connect/-/connect-2.3.3.tgz",
       "resolved": "https://registry.npmjs.org/connect/-/connect-2.3.3.tgz",
       "dependencies": {
         "mime": {
           "version": "1.2.4",
-          "from": "mime@1.2.4",
+          "from": "https://registry.npmjs.org/mime/-/mime-1.2.4.tgz",
           "resolved": "https://registry.npmjs.org/mime/-/mime-1.2.4.tgz"
         },
         "formidable": {
           "version": "1.0.11",
-          "from": "formidable@1.0.11",
+          "from": "https://registry.npmjs.org/formidable/-/formidable-1.0.11.tgz",
           "resolved": "https://registry.npmjs.org/formidable/-/formidable-1.0.11.tgz"
         },
         "crc": {
           "version": "0.2.0",
-          "from": "crc@0.2.0",
+          "from": "https://registry.npmjs.org/crc/-/crc-0.2.0.tgz",
           "resolved": "https://registry.npmjs.org/crc/-/crc-0.2.0.tgz"
         },
         "cookie": {
           "version": "0.0.3",
-          "from": "cookie@0.0.3",
+          "from": "https://registry.npmjs.org/cookie/-/cookie-0.0.3.tgz",
           "resolved": "https://registry.npmjs.org/cookie/-/cookie-0.0.3.tgz"
         },
         "fresh": {
           "version": "0.0.1",
-          "from": "fresh@0.0.1",
+          "from": "https://registry.npmjs.org/fresh/-/fresh-0.0.1.tgz",
           "resolved": "https://registry.npmjs.org/fresh/-/fresh-0.0.1.tgz"
         },
         "bytes": {
           "version": "0.0.1",
-          "from": "bytes@0.0.1",
+          "from": "https://registry.npmjs.org/bytes/-/bytes-0.0.1.tgz",
           "resolved": "https://registry.npmjs.org/bytes/-/bytes-0.0.1.tgz"
         },
         "range-parser": {
           "version": "0.0.1",
-          "from": "range-parser@0.0.1",
+          "from": "https://registry.npmjs.org/range-parser/-/range-parser-0.0.1.tgz",
           "resolved": "https://registry.npmjs.org/range-parser/-/range-parser-0.0.1.tgz"
         },
         "debug": {
           "version": "0.7.2",
-          "from": "debug@0.7.2",
+          "from": "https://registry.npmjs.org/debug/-/debug-0.7.2.tgz",
           "resolved": "https://registry.npmjs.org/debug/-/debug-0.7.2.tgz"
         }
       }
@@ -61,16 +61,16 @@
     },
     "express": {
       "version": "2.5.9",
-      "from": "express@2.5.9",
+      "from": "https://registry.npmjs.org/express/-/express-2.5.9.tgz",
       "resolved": "https://registry.npmjs.org/express/-/express-2.5.9.tgz",
       "dependencies": {
         "connect": {
           "version": "1.9.2",
-          "from": "connect@1.x",
+          "from": "connect@1.9.2",
           "dependencies": {
             "formidable": {
               "version": "1.0.14",
-              "from": "formidable@1.0.x"
+              "from": "formidable@1.0.14"
             }
           }
         },
