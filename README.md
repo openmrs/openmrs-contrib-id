@@ -5,7 +5,7 @@ User signup and self-service web application, built for [OpenMRS](http://openmrs
 
 ##Installation:
 
-See `[installing-openmrsid.md](https://github.com/openmrs/openmrs-contrib-id/blob/master/installing-openmrsid.md)`
+See [`installing-openmrsid.md`](https://github.com/openmrs/openmrs-contrib-id/blob/master/installing-openmrsid.md)
 
 ##Features:
 
