@@ -46,17 +46,17 @@ Installing OpenMRS ID
 	cd ../..
 	```
     
-6. Copy `app/conf.example.js` to `app/conf.js`. Edit `conf.js` and modify configuration with:
+7. Copy `app/conf.example.js` to `app/conf.js`. Edit `conf.js` and modify configuration with:
 
-	- LDAP credentials for the `omrsid` account
-	- LDAP resource uri's (e.g. replace `dc=example` with `dc=openmrs,dc=org`)
-	- Mysql database name and credentials
-	- Postfix mail sending credentials and port
-	- reCAPTCHA keys (if you have them—they are required for signup)
-
-	In addition, remove the items in the `user-modules` array. Modules need to be manually downloaded and placed in the `app/user-modules` directory.
+	1. LDAP credentials for the `omrsid` account
+	2. LDAP resource uri's (e.g. replace `dc=example` with `dc=openmrs,dc=org`)
+	3. Mysql database name and credentials
+	4. Postfix mail sending credentials and port
+	5. reCAPTCHA keys (if you have them—they are required for signup)
+ 
+	In addition, remove the items in the `user-modules` array. Modules need to be manually downloaded and placed in the `app/user-modules` directory.	
 	
-7. Start OpenMRS ID in development mode from the base project directory:
+8. Start OpenMRS ID in development mode from the base project directory:
 
 	```
 	node app/app
