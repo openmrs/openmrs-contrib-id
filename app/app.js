@@ -489,8 +489,7 @@ app.get('*', function(req, res, next){
 	if (req.header('Accept') && req.header('Accept').indexOf('text/html') > -1) {
 		// send an HTML error page
 		res.statusCode = 404;
-		var err = new Error('The requested resource "'+req.url+'" was not found. (404)');
-		res.render('error', {e: err});
+		res.render('404');
 	}
 	else {
 		res.statusCode = 404;
