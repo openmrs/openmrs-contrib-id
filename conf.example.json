@@ -4,6 +4,12 @@
     "discourse": {
       "secret": "1234567890abcdef",
       "returnURL": "http://talk.openmrs.org/session/sso_login?{{QUERY}}"
+    },
+    "deskcom": {
+        "apiKey": "Your API KEY to deskcom site",
+        "siteKey": "The site key, i.e., the subdomain of your site",
+        "maxMinute": "Max expire time measured by minute",
+        "returnURL": "https://help.openmrs.org/customer/authentication/multipass/callback?multipass={{MULTIPASS}}&signature={{SIGNATURE}}"
     }
 
   }
