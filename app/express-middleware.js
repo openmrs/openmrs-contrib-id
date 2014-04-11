@@ -23,7 +23,8 @@ var crypto = require('crypto'),
 
 function setTypes (req, res){
 	// Change undefined variables to default values; keep us from getting "undefined" errors from EJS
-	var current = res.locals(), replace = {};
+	var current = res.locals() || {}
+	,   replace = {};
 
 	replace.title = (current.title) ? current.title : conf.site.title;
 	replace.failed = (current.failed) ? current.failed : false;
