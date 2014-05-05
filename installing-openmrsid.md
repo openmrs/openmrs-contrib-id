@@ -12,13 +12,13 @@ Installing OpenMRS ID
     mysql -uroot
     > CREATE DATABASE id_dashboard
     > CHARACTER SET utf8
-    > DEFAULT COLLATEutf8_general_ci;
+    > DEFAULT COLLATE utf8_general_ci;
     ```
     
 3. Install Node. For development environments, I use [nvm][1]. Install the latest from the Node 0.8.x tree:
 
 	 ```
-     curl https://raw.github.com/creationix/nvm/master/install.sh | sh
+     curl https://raw.githubusercontent.com/creationix/nvm/v0.6.1/install.sh | sh
 
      # Restart your terminal session
      nvm install v0.8
