@@ -485,7 +485,7 @@ app.get('/edit/profile?', function(req, res){res.redirect('/profile')});
 app.get('/edit/password', function(req, res){res.redirect('/password')});
 
 // 404's
-app.get('*', function(req, res, next){
+app.use(function(req, res, next){
 	if (req.header('Accept') && req.header('Accept').indexOf('text/html') > -1) {
 		// send an HTML error page
 		res.statusCode = 404;
