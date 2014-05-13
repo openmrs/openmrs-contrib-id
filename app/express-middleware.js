@@ -45,7 +45,7 @@ function setTypes (req, res){
 
 exports.openmrsHelper = function(){
 	return function(req, res, next){
-		if (req.url != '/favicon.ico') {
+		if (req.originalUrl != '/favicon.ico') {
 			if (req.session.user) {
 				var mailHash = crypto.createHash('md5').update(req.session.user.mail).digest('hex');
 				res.locals({connected: true, user: req.session.user, mailHash: mailHash});
@@ -64,10 +64,10 @@ exports.restrictTo = function(role) {
 		var fail = function() {
 			req.flash('error', 'You are not authorized to access this resource.');
 			if (req.session.user) {
-				if (req.url=='/') res.redirect(url.resolve(conf.site.url, '/disconnect'));
+				if (req.originalUrl=='/') res.redirect(url.resolve(conf.site.url, '/disconnect'));
 				else res.redirect('/');
 			}
-			else res.redirect(url.resolve(conf.site.url, '/login?destination='+encodeURIComponent(req.url)));
+			else res.redirect(url.resolve(conf.site.url, '/login?destination='+encodeURIComponent(req.originalUrl)));
 		};
 
 		if (req.session.user) {
@@ -81,16 +81,16 @@ exports.restrictTo = function(role) {
 exports.forceLogin = function(req, res, next) {
 	if (req.session.user) next();
 	else {
-		log.info('anonymous user: denied access to login-only '+req.url);
-		req.flash('error', 'You must be logged in to access '+req.url);
-		res.redirect(url.resolve(conf.site.url, '/login?destination='+encodeURIComponent(req.url)));
+		log.info('anonymous user: denied access to login-only '+req.originalUrl);
+		req.flash('error', 'You must be logged in to access '+req.originalUrl);
+		res.redirect(url.resolve(conf.site.url, '/login?destination='+encodeURIComponent(req.originalUrl)));
 	}
 };
 
 exports.forceLogout = function(req, res, next) {
 	if (req.session.user) {
-		log.info(req.session.user[conf.user.username]+': denied access to anonymous-only '+req.url);
-		req.flash('error', 'You must be logged out to access '+req.url);
+		log.info(req.session.user[conf.user.username]+': denied access to anonymous-only '+req.originalUrl);
+		req.flash('error', 'You must be logged out to access '+req.originalUrl);
 		res.redirect('/');
 	}
 	else next();
