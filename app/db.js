@@ -15,6 +15,9 @@ exports.INTEGER = Sequelize.INTEGER;
 exports.DATE = Sequelize.DATE;
 exports.BOOLEAN = Sequelize.BOOLEAN;
 exports.FLOAT = Sequelize.FLOAT;
+exports.UUID = Sequelize.UUID;
+exports.UUIDV1 = Sequelize.UUIDV1;
+exports.UUIDV4 = Sequelize.UUIDV4;
 
 
 /*
