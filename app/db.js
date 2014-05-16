@@ -15,6 +15,9 @@ exports.INTEGER = Sequelize.INTEGER;
 exports.DATE = Sequelize.DATE;
 exports.BOOLEAN = Sequelize.BOOLEAN;
 exports.FLOAT = Sequelize.FLOAT;
+exports.UUID = Sequelize.UUID;
+exports.UUIDV1 = Sequelize.UUIDV1;
+exports.UUIDV4 = Sequelize.UUIDV4;
 
 
 /*
@@ -47,10 +50,13 @@ exports.define = function(name, properties, methods, callback) {
 	// Sync new model to database and callback
 	models[name].sync().success(function() {
 		log.debug('Model "'+name+'" defined and synced.');
-		return callback();
+		callback();
 	}).error(function(err){
-		return callback(err);
+		callback(err);
 	});
+
+  // Return the abstract DB model
+  return models[name]
 };
 
 // get a new instance of a model, ready to accept attributes
