@@ -145,7 +145,7 @@ module.exports = function(redirect) {
 						}, recaptcha = new Recaptcha(conf.validation.recaptchaPublic, conf.validation.recaptchaPrivate, captchaData);
 
 					    recaptcha.verify(function(success, error_code) {
-					        if (!success) fail(field);
+					        if (!success) fail('recaptcha_response_field', 'Error: ' + error_code);
 					        finish();
 					    });
 					}
