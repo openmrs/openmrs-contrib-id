@@ -30,7 +30,8 @@ global.__apppath = __dirname;
 try {
   fs.readFileSync(__dirname + '/conf.js');
 } catch (e) {
-  console.log('ERROR: Configuration file not found at (' + __dirname + '/conf.js)! Exiting…');
+  console.log('ERROR: Configuration file not found at (' +
+    __dirname + '/conf.js)! Exiting…');
   return;
 }
 
@@ -63,98 +64,80 @@ ROUTES
 */
 require('./routes');
 
-// LOGIN-LOGOUT
-// app.get('/', function(req, res, next) {
+// app.get(/^\/login\/?$/, mid.forceLogout, validate.receive(),
+//   function(req, res, next) {
+//     res.render('login');
+//   }
+// );
 
-//   if (!req.session.user) return next();
+// app.post('/login', mid.stripNewlines, validate(), function(req, res, next) {
+//   var completed = 0,
+//     needToComplete = 1,
+//     userobj = {},
+//     username = req.body.loginusername,
+//     password = req.body.loginpassword;
 
-//   https.get({
-//     host: 'answers.openmrs.org',
-//     path: '/users/' + req.session.user.uid
-//   }, function(response) {
-//     if (response.statusCode == 200) res.locals({
-//       osqaUser: true
+
+
+//   var redirect = (req.body.destination) ? req.body.destination : '/';
+
+//   // do the actual authentication by forming a unique bind to the server as the authenticated user;
+//   // closes immediately (all operations work through system's LDAP bind)
+//   ldap.authenticate(username, password, function(e) {
+//     ldap.close(username);
+
+//     if (e) { // authentication error
+//       if (e.message == 'Invalid credentials') { // login failed
+//         log.debug('known login failure');
+//         log.info('authentication failed for "' + username + '" (' + e.message + ')');
+//         req.flash('error', 'Login failed.');
+//         res.locals({
+//           fail: {
+//             loginusername: false,
+//             loginpassword: true
+//           },
+//           values: {
+//             loginusername: username,
+//             loginpassword: password
+//           }
+//         });
+//         if (req.body.destination) { // redirect to the destination login page
+//           return res.redirect(url.resolve(conf.site.url, '/login?destination=' + encodeURIComponent(req.body.destination)));
+//         } else return res.redirect(url.resolve(conf.site.url, '/login')); // redirect to generic login page
+//       } else {
+//         log.debug('login error');
+//         return next(e);
+//       }
+//     }
+
+//     log.info(username + ': authenticated'); // no error!
+
+//     // get a crowd SSO token and set the cookie for it
+//     // not implemented yet :-(
+//     /*crowd.getToken(username, password, function(error, token) {
+//      if (error && error.name != 403) next(e);
+//      else res.cookie('crowd.token_key', token);
+//      finish();
+//    })*/
+
+//     // get user's profile and put it in memory
+//     log.trace('getting user data');
+//     ldap.getUser(username, function(e, userobj) {
+//       log.trace(' returned');
+//       if (e) return next(e);
+//       req.session.user = userobj;
+//       log.debug('user ' + username + ' stored in session');
+//       finish();
 //     });
-//     else res.locals({
-//       osqaUser: false
-//     });
 
-//     res.render('root');
+//     var finish = function() {
+//       completed++;
+//       if (completed == needToComplete) {
+//         res.redirect(url.resolve(conf.site.url, decodeURIComponent(redirect)));
+//       }
+//     }
 //   });
 // });
-
-app.get(/^\/login\/?$/, mid.forceLogout, validate.receive(), function(req, res, next) {
-  res.render('login');
-});
-
-app.post('/login', mid.stripNewlines, validate(), function(req, res, next) {
-  var completed = 0,
-    needToComplete = 1,
-    userobj = {},
-    username = req.body.loginusername,
-    password = req.body.loginpassword;
-
-
-
-  var redirect = (req.body.destination) ? req.body.destination : '/';
-
-  // do the actual authentication by forming a unique bind to the server as the authenticated user;
-  // closes immediately (all operations work through system's LDAP bind)
-  ldap.authenticate(username, password, function(e) {
-    ldap.close(username);
-
-    if (e) { // authentication error
-      if (e.message == 'Invalid credentials') { // login failed
-        log.debug('known login failure');
-        log.info('authentication failed for "' + username + '" (' + e.message + ')');
-        req.flash('error', 'Login failed.');
-        res.locals({
-          fail: {
-            loginusername: false,
-            loginpassword: true
-          },
-          values: {
-            loginusername: username,
-            loginpassword: password
-          }
-        });
-        if (req.body.destination) { // redirect to the destination login page
-          return res.redirect(url.resolve(conf.site.url, '/login?destination=' + encodeURIComponent(req.body.destination)));
-        } else return res.redirect(url.resolve(conf.site.url, '/login')); // redirect to generic login page
-      } else {
-        log.debug('login error');
-        return next(e);
-      }
-    }
-
-    log.info(username + ': authenticated'); // no error!
-
-    // get a crowd SSO token and set the cookie for it
-    // not implemented yet :-(
-    /*crowd.getToken(username, password, function(error, token) {
-			if (error && error.name != 403) next(e);
-			else res.cookie('crowd.token_key', token);
-			finish();
-		})*/
-
-    // get user's profile and put it in memory
-    log.trace('getting user data');
-    ldap.getUser(username, function(e, userobj) {
-      log.trace(' returned');
-      if (e) return next(e);
-      req.session.user = userobj;
-      log.debug('user ' + username + ' stored in session');
-      finish();
-    });
-
-    var finish = function() {
-      completed++;
-      if (completed == needToComplete) {
-        res.redirect(url.resolve(conf.site.url, decodeURIComponent(redirect)));
-      }
-    }
-  });
-});
 
 app.get('/disconnect', function(req, res, next) {
   if (req.session.user) {
