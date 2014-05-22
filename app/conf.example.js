@@ -15,6 +15,7 @@
 // valid JSON, except for RegExp's
 module.exports = {
     "site": {
+        // use full url, like http://localhost:3000/
         "url": "https://id.openmrs.org/",
         "title": "OpenMRS ID"
     },
