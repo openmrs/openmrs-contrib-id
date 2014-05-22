@@ -10,7 +10,7 @@ app.helpers({
 	defaultSidebar: conf.defaultSidebar,
 
 	aboutHTML: conf.aboutHTML,
-	siteURL: conf.siteURL,
+	siteURL: conf.site.url,
 	conf: conf,
 	url: url
 });
