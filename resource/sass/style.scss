@@ -1,5 +1,7 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,700,600|Crimson+Text:400,400italic,700);
-@import url(/resource/buttons/css/buttons.css);
+
+@import 'bourbon/bourbon';
+@import 'buttons';
 
 body {
 	font-family: 'Crimson Text', 'Baskerville', 'Palatino', 'Georgia', serif;
@@ -173,8 +175,10 @@ a:link i[class^="icon-"]  {
 	height: 45px;
 	position: relative;
 }
-input, button, textarea {
+#{$all-text-inputs}, textarea {
 	display: inline;
+	float: left;
+	margin: 0 0 18px;
 	padding: 6px;
 	border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -189,31 +193,24 @@ input, button, textarea {
 	-webkit-transition-property: background, box-shadow;
 	position: relative;
 	z-index: 20;
+
+	.two-up & {
+		width: 80px !important;
+		margin-right: 4px;
+		float: left !important;
+		clear: none;
+	}
+
+	.large & {
+		width: 374px;
+	}
+	.two-up.large & {
+		width: 178px !important;	
+	}
+
 }
-textarea {
-	height: 9em;
-}
-.large input, .large textarea {
-	width: 374px;
-}
-input[type="text"], input[type="password"], textarea {
-	float: left;
-	margin: 0 0 18px;
-	
-}
-input[type="checkbox"] {
-	padding: 0;
-}
-.two-up input{
-	width: 80px !important;
-	margin-right: 4px;
-	float: left !important;
-	clear: none;
-}
-.two-up.large input {
-	width: 178px !important;
-}
-input:focus, textarea:focus {
+
+#{$all-text-inputs-focus}, textarea:focus {
 	background: #fff;
 	border: 1px solid #444;
 	outline: none;
@@ -221,46 +218,16 @@ input:focus, textarea:focus {
 	-webkit-box-shadow: 0 0 8px #bbb;
 	-moz-box-shadow: 0 0 8px #bbb;
 }
-input[type=submit], button {
-	width: auto;
-	float: left;
-	padding: 5px 12px 6px;
-	margin-left: 1px;
-	cursor: pointer;
-	color: white;
-	text-shadow: 0 1px 0 #444;
-	border: none;
-	border-bottom: 2px solid transparent;
-	border-top: 0 solid #ccc;
-	box-shadow: 0 1px 1px #777;
-	overflow: visible; /*IE Fix*/
+
+textarea {
+	height: 9em;
 }
-/* Submit button colors */
-input[type=submit], input[type=submit].teal, button, button.teal {background: #269E91; border-bottom-color: #0E6B61;}
-input[type=submit].blue, button.blue {background: #5b57a6; border-bottom-color: #2e3192;}
-input[type=submit].orange, button.orange {background:	#f26522; border-bottom-color: #c4521a;}
-input[type=submit].gold, button.gold {background: #E29B23;border-bottom-color: #C18A18;}
-input[type=submit]:active, input[type=submit].active, button:active, button.active {
-	outline: none;
-	border-top-width: 1px;
-	border-bottom-width: 1px;
+
+input[type="checkbox"] {
+	padding: 0;
 }
-input[type=submit]:focus, button:focus {
-	box-shadow: 0 0 8px #777;
-	-webkit-box-shadow: 0 0 8px #777;
-	-moz-box-shadow: 0 0 8px #777;
-}
-input[type=submit].mini, button.mini {
-	padding: 2px 12px 3px;
-	font-size: 0.8em;
-	border-bottom-width: 1px;
-}
-input[type=submit].mini:active, input[type=submit].mini.active, button.mini:active, button.mini.active {
-	border-bottom-width: 0;
-}
-button > span {
-	pointer-events: none;
-}
+
+
 
 label, .labeltext {
 	line-height: 27px;
@@ -379,46 +346,46 @@ label {
 .popover.visible ~ .popover-direction, .popover.force-visible ~ .popover-direction {
 	display: block;
 }
-ul.popover {
-	margin: 0;
-	padding: 0;
-}
-ul.popover li {
-	font-size: 12px;
-	white-space: nowrap;
-	padding: 3px 12px;
-	display: block;
-	border-bottom: 1px solid #dedede;
-}
-ul.popover li:last-child {
-	border-bottom: none;
-}
+// ul.popover {
+// 	margin: 0;
+// 	padding: 0;
+// }
+// ul.popover li {
+// 	font-size: 12px;
+// 	white-space: nowrap;
+// 	padding: 3px 12px;
+// 	display: block;
+// 	border-bottom: 1px solid #dedede;
+// }
+// ul.popover li:last-child {
+// 	border-bottom: none;
+// }
 
-ul.popover > a, ul.popover > li {
-	padding: 6px 12px;
-	display: block;
-}
-ul.popover > a:first-of-type, ul.popover > li:first-of-type {
-	-moz-border-radius: 4px 4px 0 0;
-	-webkit-border-radius: 4px 4px 0 0;
-	border-radius: 4px 4px 0 0;
-}
-ul.popover > a:last-of-type, ul.popover > li:last-of-type {
-	-moz-border-radius: 0 0 4px 4px;
-	-webkit-border-radius: 0 0 4px 4px;
-	border-radius: 0 0 4px 4px;
-}
-ul.popover a:hover {
-	background: #f5f5f5;
-	background: -moz-linear-gradient(100% 100% 90deg, #f5f5f5, #fff);
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#f5f5f5));
-/* 	background: cyan; */
-}
-ul.popover a:active {
-	background: #f5f5f5;
-	background: -moz-linear-gradient(100% 40% 90deg, #f5f5f5, #fff);
-	background: -webkit-gradient(linear, 0% 0%, 0% 40%, from(#fff), to(#f5f5f5));
-}
+// ul.popover > a, ul.popover > li {
+// 	padding: 6px 12px;
+// 	display: block;
+// }
+// ul.popover > a:first-of-type, ul.popover > li:first-of-type {
+// 	-moz-border-radius: 4px 4px 0 0;
+// 	-webkit-border-radius: 4px 4px 0 0;
+// 	border-radius: 4px 4px 0 0;
+// }
+// ul.popover > a:last-of-type, ul.popover > li:last-of-type {
+// 	-moz-border-radius: 0 0 4px 4px;
+// 	-webkit-border-radius: 0 0 4px 4px;
+// 	border-radius: 0 0 4px 4px;
+// }
+// ul.popover a:hover {
+// 	background: #f5f5f5;
+// 	background: -moz-linear-gradient(100% 100% 90deg, #f5f5f5, #fff);
+// 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#f5f5f5));
+// /* 	background: cyan; */
+// }
+// ul.popover a:active {
+// 	background: #f5f5f5;
+// 	background: -moz-linear-gradient(100% 40% 90deg, #f5f5f5, #fff);
+// 	background: -webkit-gradient(linear, 0% 0%, 0% 40%, from(#fff), to(#f5f5f5));
+// }
 .popover .heading {
 	text-transform: uppercase;
 	border-bottom-style: double; 
@@ -434,19 +401,23 @@ ul.popover a:active {
 	padding: 6px 12px;
 	font: 14px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
 
+	a.button:link, a.button:visited {
+		color: #000;
+	}
+
 	/* From WordPress */
-	border: 1px solid #ddd;
-	border-color: rgba(0,0,0,.15);
-	border-radius: 4px;
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	background: #f5f5f5;
-	background: -moz-linear-gradient(100% 100% 90deg, #f5f5f5, #fff);
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#f5f5f5));
-	-moz-box-shadow: 0 1px 1px rgba(0,0,0,.03);
-	-webkit-box-shadow: 0 1px 1px rgba(0,0,0,.03);
-	box-shadow: 0 1px 1px rgba(0,0,0,.03);
-	text-shadow: 0 1px 0 #fff;
+	// border: 1px solid #ddd;
+	// border-color: rgba(0,0,0,.15);
+	// border-radius: 4px;
+	// -moz-border-radius: 4px;
+	// -webkit-border-radius: 4px;
+	// background: #f5f5f5;
+	// background: -moz-linear-gradient(100% 100% 90deg, #f5f5f5, #fff);
+	// background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#f5f5f5));
+	// -moz-box-shadow: 0 1px 1px rgba(0,0,0,.03);
+	// -webkit-box-shadow: 0 1px 1px rgba(0,0,0,.03);
+	// box-shadow: 0 1px 1px rgba(0,0,0,.03);
+	// text-shadow: 0 1px 0 #fff;
 }
 #login-menu .popover {
 	right: 0;
@@ -454,9 +425,9 @@ ul.popover a:active {
 	padding: 10px 12px;
 
 }
-#login-menu ul.popover {
-	padding: 0;
-}
+// #login-menu ul.popover {
+// 	padding: 0;
+// }
 #login-menu .fail .failtext {
 	display: block !important;
 }
@@ -575,11 +546,11 @@ ul#services {
 	height: 47px;
 }
 
-#services li.teal {background: url(images/service_height.png) repeat-y 0 0}
-#services li.yellow {background: url(images/service_height.png) repeat-y -77px 0}
-#services li.blue {background: url(images/service_height.png) repeat-y -152px 0}
-#services li.red {background: url(images/service_height.png) repeat-y -227px 0}
-#services li.silver {background: url(images/service_height.png) repeat-y -302px 0}
+#services li.teal {background: url(/resource/images/service_height.png) repeat-y 0 0}
+#services li.yellow {background: url(/resource/images/service_height.png) repeat-y -77px 0}
+#services li.blue {background: url(/resource/images/service_height.png) repeat-y -152px 0}
+#services li.red {background: url(/resource/images/service_height.png) repeat-y -227px 0}
+#services li.silver {background: url(/resource/images/service_height.png) repeat-y -302px 0}
 
 #services li.teal span {background: url(/resource/images/service_point.png) no-repeat 0 bottom}
 #services li.yellow span {background: url(/resource/images/service_point.png) no-repeat -75px bottom}
@@ -625,9 +596,6 @@ ul#more a:link, ul#more a:link visited {
 	text-decoration: none;
 }
 
-#header a:link, #header a:visited, ul#menu {
-	color: #000;
-}
 .clear {
 	clear: both;
 }

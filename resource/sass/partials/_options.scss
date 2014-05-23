@@ -22,9 +22,12 @@ $unicorn-btn-font-family: "Helvetica Neue Light", "Helvetica Neue", "Helvetica",
 //////////////////////////////////////////////////////////
 
 // (name background-color font-color) add as many as you like.
-$unicorn-btn-actions: ('primary' #00A1CB #FFFFFF) ('action' #7db500 #FFFFFF) ('highlight' #F18D05 #FFFFFF) ('caution' #E54028 #FFFFFF) ('royal' #87318C #FFFFFF) ;
+$unicorn-btn-actions: ('primary' #00A1CB #FFFFFF) ('action' #7db500 #FFFFFF)
+  ('highlight' #F18D05 #FFFFFF) ('caution' #E54028 #FFFFFF)
+  ('royal' #87318C #FFFFFF) ('teal' #009384 #FFFFFF) ('violet' #5B57A6 #FFFFFF)
+  ('orange' #F26522 #FFFFFF) ('gold' #EEA616 #FFFFFF);
 // Remove any type to omit from final CSS build
-$unicorn-btn-types: 'flat' 'rounded' 'border' 'pill' 'glow';
+$unicorn-btn-types: 'flat' 'rounded' 'border' 'pill' 'glow' 'dropdown';
 $unicorn-btn-sizes: 'jumbo' 'large' 'small' 'tiny';
 $unicorn-btn-circle-size: 120px; //radius for circle buttons, circles only have one size
 
@@ -32,7 +35,7 @@ $unicorn-btn-circle-size: 120px; //radius for circle buttons, circles only have 
 //////////////////////////////////////////////////////////
 // DROPDOWN OPTIONS //////////////////////////////////////
 //////////////////////////////////////////////////////////
-$unicorn-btn-dropdown-background: #fcfcfc;
+$unicorn-btn-dropdown-background: #fff;
 $unicorn-btn-dropdown-link-color: #333;
 $unicorn-btn-dropdown-link-hover: #FFF;
 $unicorn-btn-dropdown-link-hover-background: #3c6ab9;

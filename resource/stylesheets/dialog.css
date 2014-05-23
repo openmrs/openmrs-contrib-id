@@ -1,0 +1,8 @@
+/* line 3, ../sass/dialog.scss */
+#headline h1, #content, .container { width: auto; max-width: 900px; }
+
+/* line 8, ../sass/dialog.scss */
+#headline h1 { padding-left: 60px; }
+
+/* line 12, ../sass/dialog.scss */
+#main form { padding-left: 0; }

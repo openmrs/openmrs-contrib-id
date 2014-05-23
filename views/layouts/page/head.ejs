@@ -1,20 +1,27 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title><%= title %></title>
-  <link rel="stylesheet" href="/resource/style.css">
+  <link rel="stylesheet" href="/resource/stylesheets/style.css">
   <link rel="stylesheet" href="/resource/font/font-awesome.css">
+
+  <!-- <link href="/resource/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <link href="/resource/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" /> -->
+  <!--[if IE]>
+      <link href="/stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+  <![endif]-->
 
   <% enqueuedStylesheets.forEach(function(cssHref) { %>
   <link rel="stylesheet" href="<%= cssHref %>">
   <% }) %>
 
-  <% enqueuedScripts.forEach(function(jsSrc, opts) { %>
-    <script id="<%= opts.id %>"src="<%= jsSrc %>"></script>
+  <script src="/resource/scripts/jquery.min.js"></script>
+  <script src="/resource/scripts/omrsid.js"></script>
+  <script src="/resource/scripts/buttons.js"></script>
+
+  <% enqueuedScripts.forEach(function(s) { %>
+    <script id="<%= s.opts ? s.opts.id : null  %>"src="<%= s.script %>"></script>
   <% }) %>
 
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-  <script src="/resource/omrsid.js"></script>
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

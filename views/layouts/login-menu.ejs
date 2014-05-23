@@ -1,6 +1,6 @@
 <div id="login-menu"> 
   <% if (!connected) { %>
-    <a href="/login" class="popover-trigger" data-popid="login">Log In</a>
+    <a href="/login" class="button button-border popover-trigger" data-popid="login">Log In</a>
     <form action="/login" method="post" class="popover" data-popid="login">
       <input class="use-placeholder" type="text" placeholder="OpenMRS ID" name="loginusername">
       <input class="use-placeholder" type="password" placeholder="Password" name="loginpassword">
@@ -12,10 +12,15 @@
   <% } %>
   
   <% if (connected) { %>
-    <a href="#" class="popover-trigger" data-popid="login"><%= user[conf.user.displayname] %></a>
-    <ul class="popover" data-popid="login">
-      <a href="/disconnect"><li>Log Out</li></a>
-    </ul>
-    <div class="popover-direction" data-popid="login"></div>
+    <span class="button-dropdown" data-buttons="dropdown">
+
+      <a href="#" class="button button-border"><%= user[conf.user.displayname] %></a>
+
+      <ul class="button-dropdown-menu-below">
+        <li><a href="/profile">View Your Profile</a></li>
+        <li><a href="/disconnect">Log Out</a></li>
+      </ul>
+
+    </span>
   <% } %>
 </div>

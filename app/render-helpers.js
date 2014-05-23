@@ -71,8 +71,11 @@ app.dynamicHelpers({
 	enqueuedScripts: function(req, res) {
 		var enqueuedScripts = [];
 
-		res.local('script', function(script) {
-			enqueuedScripts.push(script);
+		res.local('script', function(script, opts) {
+			enqueuedScripts.push({
+				script: script,
+				opts: opts
+			});
 		});
 
 		return enqueuedScripts;
