@@ -1,0 +1,21 @@
+<div id="login-menu"> 
+  <% if (!connected) { %>
+    <a href="/login" class="popover-trigger" data-popid="login">Log In</a>
+    <form action="/login" method="post" class="popover" data-popid="login">
+      <input class="use-placeholder" type="text" placeholder="OpenMRS ID" name="loginusername">
+      <input class="use-placeholder" type="password" placeholder="Password" name="loginpassword">
+      <input type="submit" value="Log In &#187;">
+        <span class="failtext">Authentication failed.</span>
+        <span><a href="/reset">Password Recovery &#187;</a></span>
+    </form>
+    <div class="popover-direction" data-popid="login"></div>
+  <% } %>
+  
+  <% if (connected) { %>
+    <a href="#" class="popover-trigger" data-popid="login"><%= user[conf.user.displayname] %></a>
+    <ul class="popover" data-popid="login">
+      <a href="/disconnect"><li>Log Out</li></a>
+    </ul>
+    <div class="popover-direction" data-popid="login"></div>
+  <% } %>
+</div>
