@@ -24,7 +24,8 @@ A few modules (providing additional functionality) have been created. They can b
 
 * [openmrs-contrib-globalnavbar](https://github.com/elliottwilliams/openmrs-contrib-globalnavbar)
 * [openmrs-contrib-dashboard-groups](https://github.com/elliottwilliams/openmrs-contrib-dashboard-groups)
-* [openmrs-contrib-freshdesk-sso](https://github.com/elliottwilliams/openmrs-contrib-freshdesksso)
+<!-- out-of-dated -->
+<!-- * [openmrs-contrib-freshdesk-sso](https://github.com/elliottwilliams/openmrs-contrib-freshdesksso) -->
 
 
 ##Why We Built It:
