@@ -1,0 +1,7 @@
+<div id="headline" <% if (showHeadlineAvatar) { %>class="with-avatar"<% } %>>
+  <h1><%- headline %>
+  <% if (connected && showHeadlineAvatar) { %>
+  <img src="https://wiki.openmrs.org/rest/cas/1.0/avatar/server/<%= mailHash %>?s=51" alt="<%= user[conf.user.displayname] %>">
+  <% } %>
+  </h1>
+</div>
