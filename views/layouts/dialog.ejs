@@ -1,0 +1,22 @@
+<% style('/resource/dialog.css') %>
+<% style('//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css') %>
+
+<% include page/top %>
+
+<% include header/top %>
+    <% include login-menu %>
+<% include header/bottom %>    
+
+<% include headline %>
+<% include flash-alerts %>
+
+
+<div id="content" class="container">
+  <div id="main">
+  
+  <%- body %>
+  </div>
+  
+</div>
+
+<% include page/bottom %>

@@ -1,0 +1,31 @@
+<% script('/globalnav/js/app-optimized.js', {id: 'globalnav-script'}) %>
+
+<% include page/top %>
+
+<% include header/top %>
+		<% include service-banners %>
+		<% include login-menu %>
+<% include header/bottom %>		
+
+
+<% include user-nav %>
+<% include headline %>
+<% include flash-alerts %>
+
+
+<div id="content" class="container">
+	<div id="main"<% if (showSidebar == false) { %> class="no-sidebar"<% } %>>
+	
+	<%- body %>
+	</div>
+	
+	<% if (showSidebar == true) { %>
+	<div id="sidebar">
+		<%- partial('sidebar', sidebar.concat(defaultSidebar)) %>
+		<div id="about"><%- aboutHTML %></div>
+	</div>
+	<% } %>
+	
+</div>
+
+<% include page/bottom %>
