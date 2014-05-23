@@ -12,13 +12,8 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 var express = require('express');
-// var ejs = require('ejs');
 var fs = require('fs');
-var path = require('path');
-// var connect = require('connect');
 var mail = require('nodemailer');
-// var https = require('https');
-// var crypto = require('crypto');
 var app = express.createServer();
 
 // establish module & global variables
@@ -37,14 +32,7 @@ try {
 
 var Common = require('./openmrsid-common');
 var conf = Common.conf;
-var ldap = Common.ldap;
-// var db = Common.db;
-var mid = Common.mid;
-// var renderHelpers = Common.renderHelpers;
 var log = Common.logger.add('express');
-var validate = Common.validate;
-// var environment = Common.environment;
-var verification = Common.verification;
 
 mail.SMTP = conf.email.smtp;
 
@@ -63,65 +51,6 @@ ROUTES
 */
 require('./routes');
 
-
-// RESOURCES
-
-app.get('/resource/*', function(req, res, next) {
-  var resourcePath = path.join(__dirname, '/../resource/', req.params[0]);
-  res.sendfile(resourcePath);
-});
-
-// Legacy Redirects
-app.get('/edit/profile?', function(req, res) {
-  res.redirect('/profile')
-});
-app.get('/edit/password', function(req, res) {
-  res.redirect('/password')
-});
-
-// 404's
-app.use(function(req, res, next) {
-  if (req.header('Accept') && req.header('Accept').indexOf('text/html') > -1) {
-    // send an HTML error page
-    res.statusCode = 404;
-    res.render('404');
-  } else {
-    res.statusCode = 404;
-    res.end('The requested resource was not found.');
-  }
-});
-
-
-// Errors
-app.error(function(err, req, res, next) {
-  log.error('Caught error: ' + err.name);
-  if (!res.headerSent) {
-    // ONLY try to send an error response if the response is still being
-    // formed. Otherwise, we'd be stuck in an infinite loop.
-    res.statusCode = err.statusCode || 500;
-    if (req.accepts('text/html')) {
-      res.render('error', {
-        e: err
-      });
-    } else if (req.accepts('application/json')) {
-      res.json({
-        statusCode: res.statusCode,
-        error: err
-      }, {
-        'Content-Type': 'application/json'
-      });
-    } else {
-      res.send("Error: " + err.message + "\n\n" + err.stack, {
-        'Content-Type': 'text/plain'
-      });
-    }
-  } else {
-    // Silently fail and write to log
-    log.warn('^^ Headers sent before error encountered');
-  }
-
-
-});
 
 process.on('uncaughtException', function(err) {
   console.log(err);
