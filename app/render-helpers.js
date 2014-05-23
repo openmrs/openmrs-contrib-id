@@ -12,7 +12,8 @@ app.helpers({
 	aboutHTML: conf.aboutHTML,
 	siteURL: conf.siteURL,
 	conf: conf,
-	url: url
+	url: url,
+
 });
 
 app.dynamicHelpers({
@@ -55,6 +56,26 @@ app.dynamicHelpers({
 		});
 
 		return links;
+	},
+
+	enqueuedStylesheets: function(req, res) {
+		var enqueuedStylesheets = [];
+
+		res.local('style', function(stylesheet) {
+			enqueuedStylesheets.push(stylesheet);
+		});
+
+		return enqueuedStylesheets;
+	},
+
+	enqueuedScripts: function(req, res) {
+		var enqueuedScripts = [];
+
+		res.local('script', function(script) {
+			enqueuedScripts.push(script);
+		});
+
+		return enqueuedScripts;
 	}
 
 });
