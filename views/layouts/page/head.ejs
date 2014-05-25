@@ -1,7 +1,6 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <title><%= title %></title>
-  <link rel="stylesheet" href="/resource/stylesheets/style.css">
   <link rel="stylesheet" href="/resource/font/font-awesome.css">
 
   <!-- <link href="/resource/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
@@ -16,7 +15,6 @@
 
   <script src="/resource/scripts/jquery.min.js"></script>
   <script src="/resource/scripts/omrsid.js"></script>
-  <script src="/resource/scripts/buttons.js"></script>
 
   <% enqueuedScripts.forEach(function(s) { %>
     <script id="<%= s.opts ? s.opts.id : null  %>"src="<%= s.script %>"></script>
