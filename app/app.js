@@ -473,12 +473,6 @@ app.post('/reset/:id', validate(), function(req, res, next){
 
 
 
-// RESOURCES
-
-app.get('/resource/*', function(req, res, next){
-	var resourcePath = path.join(__dirname, '/../resource/', req.params[0]);
-	res.sendfile(resourcePath);
-});
 
 // Legacy Redirects
 app.get('/edit/profile?', function(req, res){res.redirect('/profile')});

@@ -16,6 +16,8 @@ var express = require('express'),
 	connect = require('connect'),
 	MySQLSessionStore = require('connect-mysql-session')(express),
 	url = require('url'),
+	path = require('path'),
+	lessMiddleware = require('less-middleware'),
 	Common = require(global.__commonModule),
 	app = Common.app,
 	conf = Common.conf,
@@ -53,9 +55,24 @@ app.configure('development', function(){
 	app.use(express.errorHandler({ showStack: true, dumpExceptions: true }));
 	app.use(connect.logger('dev'))
 
+	app.use('/resource', lessMiddleware('/less', {
+		dest: '/stylesheets',
+		pathRoot: path.join(__dirname, '/../resource/')
+	}));
+
+	app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
+
 });
 
 app.configure('production', function(){
 	app.use(express.errorHandler());
+
+	app.use('/resource', lessMiddleware('/less', {
+		dest: '/stylesheets',
+		pathRoot: path.join(__dirname, '/../resource/'),
+		once: true
+	}));
+
+	app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
 
 });
