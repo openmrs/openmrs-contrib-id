@@ -2,6 +2,9 @@
  * This is the router for /profile. It displays a users profile,
  * and hanldes its editing.
  */
+var path = require('path');
+
+var settings = require('../settings');
 
 var Common = require(global.__commonModule);
 var conf = Common.conf;
@@ -58,7 +61,7 @@ app.get('/profile', mid.forceLogin, validate.receive(),
 
 
     // render the page
-    res.render('edit-profile', {
+    res.render(path.join(settings.viewPath, 'edit-profile'), {
       progress: fieldsInProgress,
       inProgress: inProgress,
       newSecondary: newSecondary,
