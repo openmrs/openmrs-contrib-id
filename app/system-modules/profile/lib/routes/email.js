@@ -1,3 +1,7 @@
+/**
+ * This file handles all user-email request
+ */
+
 var Common = require(global.__commonModule);
 var conf = Common.conf;
 var ldap = Common.ldap;

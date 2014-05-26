@@ -109,7 +109,6 @@ app.post('/profile', mid.forceLogin, mid.secToArray, validate(),
         associatedId: updUser[conf.user.username],
         subject: '[OpenMRS] Email address verification',
         template: path.join(settings.viewPath,'/email/email-verify.ejs'),
-        // template: '../views/email/email-verify.ejs',
         locals: {
           displayName: updUser[conf.user.displayname],
           username: updUser[conf.user.username],
