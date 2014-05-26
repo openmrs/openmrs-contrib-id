@@ -1,26 +1,34 @@
-<div id="login-menu"> 
+<div id="login-menu" class="col-sm-2"> 
   <% if (!connected) { %>
-    <a href="/login" class="button button-border popover-trigger" data-popid="login">Log In</a>
-    <form action="/login" method="post" class="popover" data-popid="login">
-      <input class="use-placeholder" type="text" placeholder="OpenMRS ID" name="loginusername">
-      <input class="use-placeholder" type="password" placeholder="Password" name="loginpassword">
-      <input type="submit" value="Log In &#187;">
-        <span class="failtext">Authentication failed.</span>
-        <span><a href="/reset">Password Recovery &#187;</a></span>
+    <button class="btn btn-primary" data-toggle="popover" data-placement="bottom" data-content-id="login-form">Log In</button>
+
+    <script type="text/html" data-target="popover" data-content-id="login-form">
+    <form action="/login" method="post">
+      <div class="form-group">
+        <label for="loginusername">OpenMRS ID</label>
+        <input class="use-placeholder" type="text" placeholder="OpenMRS ID" name="loginusername">
+      </div>
+      <div class="form-group">
+        <label for="loginpassword">Password</label>
+        <input class="use-placeholder" type="password" placeholder="Password" name="loginpassword">
+      </div>
+      <div class="form-group">
+        <span class="failtext">Authentication failed.
+        <a href="/reset">Password Recovery &#187;</a></span>
+      </div>
+      <input type="submit" class="btn btn-primary btn-sm" value="Log In &#187;">
     </form>
+    </script>
     <div class="popover-direction" data-popid="login"></div>
   <% } %>
   
   <% if (connected) { %>
-    <span class="button-dropdown" data-buttons="dropdown">
-
-      <a href="#" class="button button-border"><%= user[conf.user.displayname] %></a>
-
-      <ul class="button-dropdown-menu-below">
+    <div class="dropdown">
+      <a href="#" data-toggle="dropdown" class="btn btn-primary"><%= user[conf.user.displayname] %></a>
+      <ul class="dropdown-menu">
         <li><a href="/profile">View Your Profile</a></li>
         <li><a href="/disconnect">Log Out</a></li>
       </ul>
-
-    </span>
+    </div>
   <% } %>
 </div>

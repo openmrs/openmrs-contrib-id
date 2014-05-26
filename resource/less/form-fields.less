@@ -1,9 +1,13 @@
+@import "typography";
+
 #inputs {
   display: inline;
   float: left;
   margin: 0 0 18px;
   padding: 6px;
   border-radius: 4px;
+  font-size: 11px;
+  font-family: @control-type;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border: 1px solid #CCC;
@@ -18,7 +22,7 @@
   z-index: 20;
 
   .two-up & {
-    width: 80px !important;
+    width: 87px !important;
     margin-right: 4px;
     float: left !important;
     clear: none;
@@ -58,19 +62,25 @@ input {
   &[type="checkbox"] {
     padding: 0;
   }
+
+  &[type="submit"] {
+    display: block;
+  }
 }
 
 
-label, .labeltext {
-  line-height: 27px;
-  padding-top: 7px;
-  font: 11px sans-serif;
-}
-label {
-  width: 200px;
-  position: absolute;
-  left: -206px;
-  text-align: right;
+#content {
+  label, .labeltext {
+    line-height: 27px;
+    padding-top: 7px;
+    font: 11px sans-serif;
+  }
+  label {
+    width: 200px;
+    position: absolute;
+    left: -206px;
+    text-align: right;
+  }
 }
 
 
@@ -139,12 +149,6 @@ label {
   }
 
 }
-
-/* Hide the honeypot field */
-.field:nth-of-type(4) {
-  display: none;
-}
-
 
 
 

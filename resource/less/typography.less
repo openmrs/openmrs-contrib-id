@@ -1,25 +1,31 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,700,600|Crimson+Text:400,400italic,700);
 
+@display-type:  'Open Sans', 'Helvetica', 'Arial', sans-serif;
+@body-type:     'Crimson Text', 'Baskerville', 'Palatino', 'Georgia', serif;
+@control-type:  'Lucida Grande', 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+
 body {
-  font-family: 'Crimson Text', 'Baskerville', 'Palatino', 'Georgia', serif;
+  font-family: @body-type;
   font-size: 16px;
   color: #555555;
 }
 
-a:link, a:visited {
-  color: #b38936;
-  text-decoration: none;
-}
-a:hover {
-  color: #4d4129;
-  text-decoration: underline;
+a:not(.btn) {
+  &:link, &:visited {
+    color: #b38936;
+    text-decoration: none;
+  }
+  &:hover {
+    color: #4d4129;
+    text-decoration: underline;
+  }
 }
 
 .placeholder, .hint {
   color: #ccc;
 }
 .status {
-  font: 10px 'Lucida Grande', 'Segoe UI', 'Helvetica', 'Arial', sans-serif; 
+  font: 10px @control-type; 
 }
 
 b, strong {
@@ -31,12 +37,12 @@ i[class^="icon-"] { /* for font-awesome */
 
 
 h1 {
-  font: bold 24px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
+  font: bold 24px @display-type;
   color: #4d4129;
   margin-bottom: 12px;
 }
 h2 {
-  font: 600 18px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
+  font: 600 18px @display-type;
   color: #4d4129;
   text-shadow: 0 2px 0 #ebe6dd;
   padding: 0;
@@ -49,6 +55,11 @@ h2 {
   & > h2 {
     margin: 18px 0 6px;
   }
+}
+
+// Button types
+input[type="submit"], button {
+  font-family: @control-type;
 }
 
 // Font awesome-related overrides

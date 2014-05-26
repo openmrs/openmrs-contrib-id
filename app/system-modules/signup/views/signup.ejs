@@ -130,7 +130,9 @@
 	<input type="hidden" name="<%=disguise('timestamp', spinner)%>"
 		value="<%=timestamp%>">
 	
-	<input type="submit" name="<%=disguise('submit',spinner)%>" class="icon-ok" value="Join the Community &#187;"
-		<% if (renderLayout == false) { %> formtarget="_blank"<% } %>>
+	<div class="field">
+		<input type="submit" class="btn btn-success" name="<%=disguise('submit',spinner)%>" class="icon-ok" value="Join the Community &#187;"
+			<% if (renderLayout == false) { %> formtarget="_blank"<% } %>>
+	</div>
 
 </form>

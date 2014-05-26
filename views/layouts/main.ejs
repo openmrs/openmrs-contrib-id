@@ -1,3 +1,6 @@
+<% style('/resource/bootstrap/css/bootstrap.min.css') %>
+<% script('/resource/bootstrap/js/bootstrap.min.js') %>
+
 <% script('/globalnav/js/app-optimized.js', {id: 'globalnav-script'}) %>
 <% style('/resource/stylesheets/style.css') %>
 
@@ -14,13 +17,13 @@
 
 
 <div id="content" class="container">
-	<div id="main"<% if (showSidebar == false) { %> class="no-sidebar"<% } %>>
+	<div id="main" class="col-md-9">
 	
 	<%- body %>
 	</div>
 	
 	<% if (showSidebar == true) { %>
-	<div id="sidebar">
+	<div id="sidebar" class="col-md-3">
 		<%- partial('sidebar', sidebar.concat(defaultSidebar)) %>
 		<div id="about"><%- aboutHTML %></div>
 	</div>
