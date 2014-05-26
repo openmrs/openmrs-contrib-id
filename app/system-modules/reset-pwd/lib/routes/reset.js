@@ -1,4 +1,10 @@
+/**
+ * This file handles the password-reset functionalities
+ */
+
 var path = require('path');
+
+var settings = require('../settings');
 
 var Common = require(global.__commonModule);
 var app = Common.app;
@@ -10,7 +16,7 @@ var ldap = Common.ldap;
 var log = Common.logger.add('express');
 
 app.get('/reset', mid.forceLogout, function(req, res, next) {
-  res.render('reset-public');
+  res.render(path.join(settings.viewPath, 'reset-public'));
 });
 
 app.post('/reset', mid.forceLogout, function(req, res, next) {
@@ -53,8 +59,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
         urlBase: 'reset',
         email: address,
         subject: '[OpenMRS] Password Reset for ' + username,
-        template: path.join(global.__apppath,'../views/email/password-reset.ejs'),
-        // template: '../views/email/password-reset.ejs',
+        template: path.join(settings.viewPath, 'email/password-reset.ejs'),
         locals: {
           username: username,
           displayName: obj[conf.ldap.user.displayname],
@@ -92,7 +97,7 @@ app.get('/reset/:id', validate.receive(), function(req, res, next) {
       return next(err);
     }
     if (valid) {
-      res.render('reset-private', {
+      res.render(path.join(settings.viewPath, 'reset-private'), {
         username: locals.username
       });
     } else {
