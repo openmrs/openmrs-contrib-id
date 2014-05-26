@@ -11,13 +11,18 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-var log4js = require('log4js'),
-	Common = require(global.__commonModule),
-	conf = Common.conf;
+var path = require('path');
+
+var log4js = require('log4js');
+var Common = require(global.__commonModule);
+var conf = Common.conf;
+
 
 log4js.loadAppender('console');
 log4js.loadAppender('file');
-var	file = log4js.appenders.file(__dirname + conf.logger.relativePath);
+var	file = log4js.appenders.file(
+  path.join(__dirname, conf.logger.relativePath)
+);
 
 log4js.replaceConsole();
 log4js.addAppender(file, 'console'); // added by default
@@ -28,17 +33,24 @@ exports.add = function(logname) {
 	log4js.addAppender(file, logname);
 
 	// use environment specified for Express
-	if (process.env.NODE_ENV == 'development') thisLog.setLevel('debug');
-	else if (process.env.NODE_ENV == 'production') thisLog.setLevel('info');
-	else if (process.env.NODE_ENV == 'trace') thisLog.setLevel('trace');
-	else thisLog.setLevel('debug');
+	if (process.env.NODE_ENV === 'development') {
+    thisLog.setLevel('debug');
+  } else if (process.env.NODE_ENV === 'production') {
+    thisLog.setLevel('info');
+	} else if (process.env.NODE_ENV === 'trace') {
+    thisLog.setLevel('trace');
+	} else {
+    thisLog.setLevel('debug');
+  }
 
 	return thisLog;
 };
 
 // ADDED for hopes of bot detection
 
-var signupFile = log4js.appenders.file(__dirname + '/../logs/signuplog.log');
+var signupFile = log4js.appenders.file(
+  path.join(__dirname, '/../logs/signuplog.log')
+);
 var signupLog = log4js.getLogger('signup-log');
 log4js.addAppender(signupFile, 'signup-log');
 
