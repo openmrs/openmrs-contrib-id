@@ -1,3 +1,5 @@
+var path = require('path');
+
 var Common = require(global.__commonModule);
 var app = Common.app;
 var conf = Common.conf;
@@ -51,7 +53,8 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
         urlBase: 'reset',
         email: address,
         subject: '[OpenMRS] Password Reset for ' + username,
-        template: '../views/email/password-reset.ejs',
+        template: path.join(global.__apppath,'../views/email/password-reset.ejs'),
+        // template: '../views/email/password-reset.ejs',
         locals: {
           username: username,
           displayName: obj[conf.ldap.user.displayname],

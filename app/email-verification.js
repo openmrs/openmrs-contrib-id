@@ -68,7 +68,8 @@ exports.begin = function(settings, callback) {
 			finishCreate();
 		});
 
-		fs.readFile(path.join(__dirname, template), 'utf-8', function(err, data) {
+		// fs.readFile(path.join(__dirname, template), 'utf-8', function(err, data) {
+    fs.readFile(template, 'utf-8', function(err, data) {
 			if (err) return callback(err);
 			var template = data.toString();
 			var rendered = ejs.render(template, {
