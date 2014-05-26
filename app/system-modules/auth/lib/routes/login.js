@@ -2,6 +2,9 @@
  * This is the login logic for Dashboard
  */
 var url = require('url');
+var path = require('path');
+
+var settings = require('../settings');
 
 // Dashboard Common
 var Common   = require(global.__commonModule);
@@ -14,7 +17,9 @@ var log      = Common.logger.add('express');
 
 app.get(/^\/login\/?$/, mid.forceLogout, validate.receive(),
   function(req, res, next) {
-    res.render('login');
+    var tmp = path.join(settings.viewPath,'login');
+    log.debug(tmp);
+    res.render(tmp);
   }
 );
 
