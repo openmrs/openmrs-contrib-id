@@ -45,7 +45,7 @@ app.configure(function configureExpress() { // executed under all environments
       logging: false,
     }
   );
-  app.use (
+  app.use(
     express.session({
       store: sessionStore,
       secret: conf.session.secret

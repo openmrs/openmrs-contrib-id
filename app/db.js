@@ -4,8 +4,8 @@ var conf = Common.conf;
 var log = Common.logger.add('database');
 
 var sql = new Sequelize(conf.db.dbname, conf.db.username, conf.db.password, {
-    logging: false
-  });
+  logging: false
+});
 var models = [];
 
 // Expose Datatypes

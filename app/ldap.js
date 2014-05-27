@@ -14,66 +14,72 @@
 
 //var LDAPServer = require('../node-LDAP/LDAP').Connection,
 var LDAPServer = require('LDAP'),
-	url = require('url'),
-	Common = require(global.__commonModule),
-	conf = Common.conf,
-	log = Common.logger.add('ldap');
+  url = require('url'),
+  Common = require(global.__commonModule),
+  conf = Common.conf,
+  log = Common.logger.add('ldap');
 
-var	system = new LDAPServer({uri: conf.ldap.server.uri, version: 3}), // system-bind operations (usual operations)
-	userbinds = new Object, // object of user-bind connections (auths and password changes)
-	systemTimeoutNode;
+var system = new LDAPServer({
+    uri: conf.ldap.server.uri,
+    version: 3
+  }), // system-bind operations (usual operations)
+  userbinds = new Object, // object of user-bind connections (auths and password changes)
+  systemTimeoutNode;
 
 // // // // // // // // // // INTERNAL FUNCTIONS // // // // // // // // // //
 
 function toLdapForm(user, op) { // Changes a user object to an LDAP array
-	if (op == undefined) op = 'modify'
-	var out = new Array;
-	for (var attr in user) {
-		if (attr == 'dn' || (attr == conf.ldap.user.password && op != 'add') || (attr == conf.ldap.user.username && op != 'add') || attr == 'memberof') continue; // protect from a few illegal changes
-		var obj = new Object;
-			obj.op = op;
+  if (op == undefined) op = 'modify'
+  var out = new Array;
+  for (var attr in user) {
+    if (attr == 'dn' || (attr == conf.ldap.user.password && op != 'add') || (attr == conf.ldap.user.username && op != 'add') || attr == 'memberof') continue; // protect from a few illegal changes
+    var obj = new Object;
+    obj.op = op;
 
-		obj.attr = attr;
-		if (typeof user[attr] == 'object') obj.vals = user[attr];
-		else obj.vals = [user[attr].toString()];
-		out.push(obj);
-	}
+    obj.attr = attr;
+    if (typeof user[attr] == 'object') obj.vals = user[attr];
+    else obj.vals = [user[attr].toString()];
+    out.push(obj);
+  }
 
-	return out;
+  return out;
 }
 
 function systemTimeout() {
-	systemTimeoutNode = setTimeout(function(){log.debug('system connection closing');system.close()}, 60000);
+  systemTimeoutNode = setTimeout(function() {
+    log.debug('system connection closing');
+    system.close()
+  }, 60000);
 }
 
 var connect = function(cb) { // a new connect function
-	log.trace('LDAP connection check');
+  log.trace('LDAP connection check');
 
-	// get stats to check & ensure that a connection is present
-	var stats = system.getStats();
-	if (stats.opens > 0 && stats.disconnects == stats.reconnects) // if connection has opened and is not dc'd
-		cb()
+  // get stats to check & ensure that a connection is present
+  var stats = system.getStats();
+  if (stats.opens > 0 && stats.disconnects == stats.reconnects) // if connection has opened and is not dc'd
+    cb()
 
-	else { // we need to connect
-		log.info('opening connection to LDAP server...');
-		system.open(function(err){
-			log.trace('connection open returned');
-			if (err) return cb(err);
+  else { // we need to connect
+    log.info('opening connection to LDAP server...');
+    system.open(function(err) {
+      log.trace('connection open returned');
+      if (err) return cb(err);
 
-			system.simplebind({
-				binddn: conf.ldap.server.rdn+'='+conf.ldap.server.loginUser+','+conf.ldap.server.baseDn,
-				password: conf.ldap.server.password
-			}, function(err, data){
-				log.trace('binding to server returned');
+      system.simplebind({
+        binddn: conf.ldap.server.rdn + '=' + conf.ldap.server.loginUser + ',' + conf.ldap.server.baseDn,
+        password: conf.ldap.server.password
+      }, function(err, data) {
+        log.trace('binding to server returned');
 
-				if (err) return cb(err);
-				else { // connected!
-					log.info('connected to LDAP server');
-					cb();
-				}
-			});
-		});
-	}
+        if (err) return cb(err);
+        else { // connected!
+          log.info('connected to LDAP server');
+          cb();
+        }
+      });
+    });
+  }
 }
 
 // // // // // // // // // // USER-BOUND FUNCTIONS // // // // // // // // // //
@@ -81,63 +87,73 @@ var connect = function(cb) { // a new connect function
 /* authenticates user to a new LDAP Connection, immediately disconnects on success
  * callback passes error */
 exports.authenticate = function(user, pass, cb) {
-	if (!cb) cb = new Function;
-	log.trace(user+': will authenticate')
+  if (!cb) cb = new Function;
+  log.trace(user + ': will authenticate')
 
-	var userdn = conf.ldap.user.rdn+'='+user+','+conf.ldap.user.baseDn;
-	userbinds[user] = new LDAPServer({uri: conf.ldap.server.uri, version: 3});
-	userbinds[user].open(function(e){
-		if (e) return cb(e);
-		try {userbinds[user].simpleBind({binddn: userdn, password: pass}, function(e){
-			if (e) return cb(e);
-			cb(e);
-		});}
-		catch (ex) {
-			return cb(ex);
-		}
-	});
+  var userdn = conf.ldap.user.rdn + '=' + user + ',' + conf.ldap.user.baseDn;
+  userbinds[user] = new LDAPServer({
+    uri: conf.ldap.server.uri,
+    version: 3
+  });
+  userbinds[user].open(function(e) {
+    if (e) return cb(e);
+    try {
+      userbinds[user].simpleBind({
+        binddn: userdn,
+        password: pass
+      }, function(e) {
+        if (e) return cb(e);
+        cb(e);
+      });
+    } catch (ex) {
+      return cb(ex);
+    }
+  });
 }
 
 exports.close = function(user) {
-	if (typeof(user)=='object') user = user[conf.ldap.user.rdn]; // convert to username if a userobj is given
-	log.trace(user+': closing bind')
-	userbinds[user].close();
-	delete userbinds[user];
-	log.debug(user+': user bind closed');
+  if (typeof(user) == 'object') user = user[conf.ldap.user.rdn]; // convert to username if a userobj is given
+  log.trace(user + ': closing bind')
+  userbinds[user].close();
+  delete userbinds[user];
+  log.debug(user + ': user bind closed');
 };
 
 
 /* changes password for an existing user
  * callback returns error */
-exports.changePassword = function(userobj, oldPass, newPass, cb){
-	if (!cb) cb = new Function;
-	var username = userobj[conf.ldap.user.rdn];
+exports.changePassword = function(userobj, oldPass, newPass, cb) {
+  if (!cb) cb = new Function;
+  var username = userobj[conf.ldap.user.rdn];
 
-	if (typeof(userobj)=='object' && typeof(oldPass)=='string' && typeof(newPass)=='string') {
+  if (typeof(userobj) == 'object' && typeof(oldPass) == 'string' && typeof(newPass) == 'string') {
 
-		function onceConnected() {
-			userbinds[username].modify(userobj.dn, [
-				{op: 'delete', attr: conf.ldap.user.password, vals: [oldPass]},
-				{op: 'add', attr: conf.ldap.user.password, vals: [newPass]}
-			], function(e){
-				if (e) return cb(e);
-				log.debug('password changed for '+username);
-				exports.close(username);
-				cb(e);
-			});
-		}
+    function onceConnected() {
+      userbinds[username].modify(userobj.dn, [{
+        op: 'delete',
+        attr: conf.ldap.user.password,
+        vals: [oldPass]
+      }, {
+        op: 'add',
+        attr: conf.ldap.user.password,
+        vals: [newPass]
+      }], function(e) {
+        if (e) return cb(e);
+        log.debug('password changed for ' + username);
+        exports.close(username);
+        cb(e);
+      });
+    }
 
-		if (userbinds[username]) onceConnected();
-		else exports.authenticate(username, oldPass, function(e){
-			if (e) return cb(e);
-			onceConnected();
-		});
+    if (userbinds[username]) onceConnected();
+    else exports.authenticate(username, oldPass, function(e) {
+      if (e) return cb(e);
+      onceConnected();
+    });
 
-	}
-
-	else {
-		return cb(new Error('Incorrect arguments for password change'));
-	}
+  } else {
+    return cb(new Error('Incorrect arguments for password change'));
+  }
 }
 
 
@@ -146,354 +162,366 @@ exports.changePassword = function(userobj, oldPass, newPass, cb){
 /* gets a user object for specified username, with first/last name, email, uid, and groups
  * callback returns error and retreived user object */
 exports.getUser = function(user, cb) {
-	if (!cb) cb = new Function;
-	connect(function(e){
-		if (e) {
-			log.error('ldap system connection error while getting user');
-			return cb(e);
-		}
+  if (!cb) cb = new Function;
+  connect(function(e) {
+    if (e) {
+      log.error('ldap system connection error while getting user');
+      return cb(e);
+    }
 
-		// allows only valid names to be searched for
-		log.trace('check validity of username '+user);
-		if ( !conf.ldap.user.usernameRegex.exec(user) ) return cb(new Error('Illegal username specified'));
+    // allows only valid names to be searched for
+    log.trace('check validity of username ' + user);
+    if (!conf.ldap.user.usernameRegex.exec(user)) return cb(new Error('Illegal username specified'));
 
-		else {
-			log.trace('getting user data from LDAP');
-			var completed = 0, userobj = new Object, groups = new Array;
+    else {
+      log.trace('getting user data from LDAP');
+      var completed = 0,
+        userobj = new Object,
+        groups = new Array;
 
-			// get user profile
-			system.search({
-				base: conf.ldap.user.baseDn,
-				scope: system.SUBTREE,
-				filter: '('+conf.ldap.user.rdn+'='+user+')',
-				attrs: conf.ldap.user.username+' '+conf.ldap.user.firstname+' '+conf.ldap.user.lastname+' '+conf.ldap.user.displayname+' '+
-					conf.ldap.user.email+' '+conf.ldap.user.secondaryemail+' objectClass'
-			}, function(e,d){
-				if (e) return cb(e);
+      // get user profile
+      system.search({
+        base: conf.ldap.user.baseDn,
+        scope: system.SUBTREE,
+        filter: '(' + conf.ldap.user.rdn + '=' + user + ')',
+        attrs: conf.ldap.user.username + ' ' + conf.ldap.user.firstname + ' ' + conf.ldap.user.lastname + ' ' + conf.ldap.user.displayname + ' ' +
+          conf.ldap.user.email + ' ' + conf.ldap.user.secondaryemail + ' objectClass'
+      }, function(e, d) {
+        if (e) return cb(e);
 
-				// empty user record; ldap has no record for requested user
-				if (d.length == 0) return cb(new Error('User data not found'));
+        // empty user record; ldap has no record for requested user
+        if (d.length == 0) return cb(new Error('User data not found'));
 
-				// multiple records returned, there is clearly a problem with the user search
-				else if (d.length != 1) {
-					log.warn('getUser search returned multiple users for the same ID - something is wrong');
-					return cb(new Error('Failed to retrieve user data for ' + user));
-				}
+        // multiple records returned, there is clearly a problem with the user search
+        else if (d.length != 1) {
+          log.warn('getUser search returned multiple users for the same ID - something is wrong');
+          return cb(new Error('Failed to retrieve user data for ' + user));
+        } else {
+          for (attr in d[0]) {
+            if (attr == conf.ldap.user.secondaryemail)
+              userobj[attr] = d[0][attr];
+            else if (typeof d[0][attr] == 'object' && d[0][attr].length < 2)
+              userobj[attr] = d[0][attr].toString();
+            else
+              userobj[attr] = d[0][attr];
+          }
 
-				else {
-					for (attr in d[0]) {
-						if (attr == conf.ldap.user.secondaryemail)
-							userobj[attr] = d[0][attr];
-						else if (typeof d[0][attr] == 'object' && d[0][attr].length < 2)
-							userobj[attr] = d[0][attr].toString();
-						else
-							userobj[attr] = d[0][attr];
-					}
+          if (!userobj[conf.ldap.user.secondaryemail]) userobj[conf.ldap.user.secondaryemail] = [];
 
-					if (!userobj[conf.ldap.user.secondaryemail]) userobj[conf.ldap.user.secondaryemail] = [];
+          finish()
+        }
+      });
 
-					finish()
-				}
-			});
+      // get user's groups
+      system.search({
+        base: conf.ldap.group.baseDn,
+        scope: system.SUBTREE,
+        filter: '(' + conf.ldap.group.member + '=' + conf.ldap.user.rdn + '=' + user + ',' + conf.ldap.user.baseDn + ')',
+        attrs: conf.ldap.group.rdn
+      }, function(e, d) {
+        if (e) return cb(e);
 
-			// get user's groups
-			system.search({
-				base: conf.ldap.group.baseDn,
-				scope: system.SUBTREE,
-				filter: '('+conf.ldap.group.member+'='+conf.ldap.user.rdn+'='+user+','+conf.ldap.user.baseDn+')',
-				attrs: conf.ldap.group.rdn
-			}, function(e,d){
-				if (e) return cb(e);
-
-				d.forEach(function(item) {
-					groups.push(item[conf.ldap.group.rdn][0].toString());
-				});
-				userobj.memberof = groups;
-				finish();
-			});
+        d.forEach(function(item) {
+          groups.push(item[conf.ldap.group.rdn][0].toString());
+        });
+        userobj.memberof = groups;
+        finish();
+      });
 
 
-			function finish(){
-				completed++;
-				if (completed == 2)	cb(undefined, userobj); // FINALLY, all done
-			}
-		}
-	});
+      function finish() {
+        completed++;
+        if (completed == 2) cb(undefined, userobj); // FINALLY, all done
+      }
+    }
+  });
 }
 
 /* gets user object by (primary) email address (calls getUser)
  * callback return error, user object */
 exports.getUserByEmail = function(email, cb) {
-	connect(function(e) {
-		system.search({
-			base: conf.ldap.user.baseDn,
-			scope: system.SUBTREE,
-			filter: '('+conf.ldap.user.email+'='+email+')',
-			attrs: conf.ldap.user.username
-		}, function(e,d) {
-			if (e) return cb(e);
-			if (d[0] && d[0][conf.ldap.user.username]) {
-				username = d[0][conf.ldap.user.username];
-				exports.getUser(username, function(e, obj) {
-					if (e) return cb(e);
-					cb(e, obj, email); // return email so caller has context for the response (aka validation.js)
-				});
-			}
-			else return cb(new Error('User data not found'));
-		});
-	});
+  connect(function(e) {
+    system.search({
+      base: conf.ldap.user.baseDn,
+      scope: system.SUBTREE,
+      filter: '(' + conf.ldap.user.email + '=' + email + ')',
+      attrs: conf.ldap.user.username
+    }, function(e, d) {
+      if (e) return cb(e);
+      if (d[0] && d[0][conf.ldap.user.username]) {
+        username = d[0][conf.ldap.user.username];
+        exports.getUser(username, function(e, obj) {
+          if (e) return cb(e);
+          cb(e, obj, email); // return email so caller has context for the response (aka validation.js)
+        });
+      } else return cb(new Error('User data not found'));
+    });
+  });
 }
 
 
 /* pushes the entire user object to LDAP, updates group memberships
  * callback returns error and updated user object */
 exports.updateUser = function(user, cb) { // updates user using modified "user" object
-	var finished = 0, removedGroups = new Array, everyGroup = new Array, everyLength, groupsIterated = 0;
-	if (!cb) cb = new Function;
-	connect(function(e){if (e) return cb(e);
+  var finished = 0,
+    removedGroups = new Array,
+    everyGroup = new Array,
+    everyLength, groupsIterated = 0;
+  if (!cb) cb = new Function;
+  connect(function(e) {
+    if (e) return cb(e);
 
-		// send and get new user data; callback
-		log.trace('sending modify call to server');
-		system.modify(user.dn, toLdapForm(user, 'replace'), function(e){
-			if (e) return cb(e);
-			finish();
-		});
+    // send and get new user data; callback
+    log.trace('sending modify call to server');
+    system.modify(user.dn, toLdapForm(user, 'replace'), function(e) {
+      if (e) return cb(e);
+      finish();
+    });
 
-		// parse groups in object; update groups for user by comparing userobj's groups with their groups in the server
-		system.search({
-			base: conf.ldap.group.baseDn,
-			scope: system.SUBTREE,
-			filter: '('+conf.ldap.group.rdn+'=*)',
-			attrs: conf.ldap.group.rdn
-		}, function(e,d) {
-			log.trace('group search returned');
-			d.forEach(function(obj){
-				everyGroup.push(obj[conf.ldap.group.rdn].toString());
-			});
-			everyLength = everyGroup.length;
+    // parse groups in object; update groups for user by comparing userobj's groups with their groups in the server
+    system.search({
+      base: conf.ldap.group.baseDn,
+      scope: system.SUBTREE,
+      filter: '(' + conf.ldap.group.rdn + '=*)',
+      attrs: conf.ldap.group.rdn
+    }, function(e, d) {
+      log.trace('group search returned');
+      d.forEach(function(obj) {
+        everyGroup.push(obj[conf.ldap.group.rdn].toString());
+      });
+      everyLength = everyGroup.length;
 
-			function groupDone() {
-				groupsIterated++;
-				if (groupsIterated == everyLength) finish();
-			}
+      function groupDone() {
+        groupsIterated++;
+        if (groupsIterated == everyLength) finish();
+      }
 
-			everyGroup.forEach(function(group){
-				var groupDN = conf.ldap.group.rdn+'='+group+','+conf.ldap.group.baseDn;
-				system.search({
-					base: conf.ldap.group.baseDn,
-					scope: system.SUBTREE,
-					filter: '('+conf.ldap.group.rdn+'='+group+')',
-					attrs: conf.ldap.group.member
-				}, function(e,d){
-					if (e) return cb(e);
+      everyGroup.forEach(function(group) {
+        var groupDN = conf.ldap.group.rdn + '=' + group + ',' + conf.ldap.group.baseDn;
+        system.search({
+          base: conf.ldap.group.baseDn,
+          scope: system.SUBTREE,
+          filter: '(' + conf.ldap.group.rdn + '=' + group + ')',
+          attrs: conf.ldap.group.member
+        }, function(e, d) {
+          if (e) return cb(e);
 
-					var allMembers = d[0].member,
-						allIndex = allMembers.indexOf(user.dn),
-						userIndex = user.memberof.indexOf(group);
+          var allMembers = d[0].member,
+            allIndex = allMembers.indexOf(user.dn),
+            userIndex = user.memberof.indexOf(group);
 
-					function updateMembers() {
-						var memberObj = new Object;
-						memberObj[conf.ldap.group.member] = allMembers;
-						system.modify(groupDN, toLdapForm(memberObj, 'replace'), function(e){
-							if (e) cb(e);
-						});
-					}
+          function updateMembers() {
+            var memberObj = new Object;
+            memberObj[conf.ldap.group.member] = allMembers;
+            system.modify(groupDN, toLdapForm(memberObj, 'replace'), function(e) {
+              if (e) cb(e);
+            });
+          }
 
-					/*if ((allIndex > -1 && userIndex > -1) || (allIndex < 0 && userIndex < 0)) // stays a member/nonmember
+          /*if ((allIndex > -1 && userIndex > -1) || (allIndex < 0 && userIndex < 0)) // stays a member/nonmember
 						log.debug('no action for '+group);*/
-					if (allIndex > -1 && userIndex < 0) { // is a member, no longer a member
-						log.trace('group processor: remove '+user[conf.ldap.user.username]+' from '+group);
-						allMembers.splice(allIndex, 1);
-						updateMembers();
-					}
-					else if (allIndex < 0 && userIndex > -1) { // is not a member, will become a member
-						log.trace('group processor: add '+user[conf.ldap.user.username]+' to '+group);
-						allMembers.push(user.dn);
-						updateMembers();
-					}
-					groupDone();
-				});
-			});
-		});
+          if (allIndex > -1 && userIndex < 0) { // is a member, no longer a member
+            log.trace('group processor: remove ' + user[conf.ldap.user.username] + ' from ' + group);
+            allMembers.splice(allIndex, 1);
+            updateMembers();
+          } else if (allIndex < 0 && userIndex > -1) { // is not a member, will become a member
+            log.trace('group processor: add ' + user[conf.ldap.user.username] + ' to ' + group);
+            allMembers.push(user.dn);
+            updateMembers();
+          }
+          groupDone();
+        });
+      });
+    });
 
 
-		function finish() {
-			log.trace('updateuser finish called');
-			finished++;
-			if (finished == 2) {
-				exports.getUser(user[conf.ldap.user.rdn], function(e, changedUser){
-					if (e) return cb(e);
-					cb(e, changedUser);
-				});
-			}
-		}
-	});
+    function finish() {
+      log.trace('updateuser finish called');
+      finished++;
+      if (finished == 2) {
+        exports.getUser(user[conf.ldap.user.rdn], function(e, changedUser) {
+          if (e) return cb(e);
+          cb(e, changedUser);
+        });
+      }
+    }
+  });
 };
 
 
 /* creates a user object, pushes it to LDAP, applies default groups
  * callback returns error and created user object */
-exports.addUser = function(id, given, family, email, password, cb){
-	if (!cb) cb = new Function;
-	var calledArgs = arguments;
-	connect(function(e){if (e) return cb(e);
+exports.addUser = function(id, given, family, email, password, cb) {
+  if (!cb) cb = new Function;
+  var calledArgs = arguments;
+  connect(function(e) {
+    if (e) return cb(e);
 
-		if (calledArgs.length == 5 || (calledArgs.length == 6 && typeof(cb) == 'function')) {
+    if (calledArgs.length == 5 || (calledArgs.length == 6 && typeof(cb) == 'function')) {
 
-			// create a user object, which will be passed to updateUser
-			var user = new Object;
-			user[conf.ldap.user.username] = id;
-			user[conf.ldap.user.firstname] = given;
-			user[conf.ldap.user.lastname] = family;
-			user[conf.ldap.user.displayname] = given+' '+family;
-			user[conf.ldap.user.email] = email;
-			user[conf.ldap.user.password] = password;
-			user.objectClass = conf.ldap.user.defaultObjectClass;
-			user.dn = conf.ldap.user.rdn+'='+id+','+conf.ldap.user.baseDn;
+      // create a user object, which will be passed to updateUser
+      var user = new Object;
+      user[conf.ldap.user.username] = id;
+      user[conf.ldap.user.firstname] = given;
+      user[conf.ldap.user.lastname] = family;
+      user[conf.ldap.user.displayname] = given + ' ' + family;
+      user[conf.ldap.user.email] = email;
+      user[conf.ldap.user.password] = password;
+      user.objectClass = conf.ldap.user.defaultObjectClass;
+      user.dn = conf.ldap.user.rdn + '=' + id + ',' + conf.ldap.user.baseDn;
 
-			system.add(user.dn, toLdapForm(user, 'add'), function(e){
-				if (e) return cb(e);
+      system.add(user.dn, toLdapForm(user, 'add'), function(e) {
+        if (e) return cb(e);
 
-				// get the new user profile and add it to the default groups
-				exports.getUser(user[conf.ldap.user.username], function(e, createdUser){
-					if (e) return cb(e);
-					createdUser.memberof = conf.ldap.user.defaultGroups;
+        // get the new user profile and add it to the default groups
+        exports.getUser(user[conf.ldap.user.username], function(e, createdUser) {
+          if (e) return cb(e);
+          createdUser.memberof = conf.ldap.user.defaultGroups;
 
-					// update user to add the group permissions; give the new user to the caller because we're done
-					exports.updateUser(createdUser, function(e, newUser){
-						if (e) return cb(e);
-						cb(e, newUser);
-					});
-				});
-			});
-		}
-		else {
-			return cb(new Error('wrong formatting of arguments'));
-		}
-	});
+          // update user to add the group permissions; give the new user to the caller because we're done
+          exports.updateUser(createdUser, function(e, newUser) {
+            if (e) return cb(e);
+            cb(e, newUser);
+          });
+        });
+      });
+    } else {
+      return cb(new Error('wrong formatting of arguments'));
+    }
+  });
 };
 
 /* deletes the specified user. used only for testing purposes (since
  * OpenMRS ID restrictions do not allow account deletion)
  * callback returns error */
 exports.deleteUser = function(id, cb) {
-	cb = cb || function(){};
+  cb = cb || function() {};
 
-	// lookup DN of user
-	exports.getUser(id, function callback(err, user) {
-		if (err) return cb(err);
-		system.remove(user.dn, function callback(err) {
-			if (err) return cb(err);
-			cb(); // removed!
-		})
-	})
+  // lookup DN of user
+  exports.getUser(id, function callback(err, user) {
+    if (err) return cb(err);
+    system.remove(user.dn, function callback(err) {
+      if (err) return cb(err);
+      cb(); // removed!
+    })
+  })
 };
 
 /* resets a user by changing their password policy to allow setting
  * w/o the old password, setting the new password, and changing the
  * user's ppolicy back
  * callback returns error */
-exports.resetPassword = function(input, newPassword, cb){
-	if (!cb) cb = new Function;
+exports.resetPassword = function(input, newPassword, cb) {
+  if (!cb) cb = new Function;
 
-	var reset = function(userdn) {
-		log.debug(userdn+': changing pwdPolicy to allow reset');
-		system.search({
-			base: userdn,
-			scope: system.SUBTREE,
-			filter: '('+conf.ldap.user.rdn+'=*)',
-			attrs: 'pwdPolicySubentry'
-		}, function(e,d) {
-			if (e) return cb(e);
-			var neededOp = '';
-			if (d[0].pwdPolicySubentry) {
-				neededOp = 'replace';
-				log.warn('"'+userdn+'" already has a pwdPolicySubentry attribute, which is not supposed to appear on users (!)')
-			}
-			else neededOp = 'add';
+  var reset = function(userdn) {
+    log.debug(userdn + ': changing pwdPolicy to allow reset');
+    system.search({
+      base: userdn,
+      scope: system.SUBTREE,
+      filter: '(' + conf.ldap.user.rdn + '=*)',
+      attrs: 'pwdPolicySubentry'
+    }, function(e, d) {
+      if (e) return cb(e);
+      var neededOp = '';
+      if (d[0].pwdPolicySubentry) {
+        neededOp = 'replace';
+        log.warn('"' + userdn + '" already has a pwdPolicySubentry attribute, which is not supposed to appear on users (!)')
+      } else neededOp = 'add';
 
-			log.info('resetting password for '+userdn);
-			system.modify(userdn, [
-				{op: neededOp, attr: 'pwdPolicySubentry', vals: [conf.ldap.user.passwordResetPolicy]}
-			], function(e){
-				if (e) return cb(e);
+      log.info('resetting password for ' + userdn);
+      system.modify(userdn, [{
+        op: neededOp,
+        attr: 'pwdPolicySubentry',
+        vals: [conf.ldap.user.passwordResetPolicy]
+      }], function(e) {
+        if (e) return cb(e);
 
-				system.modify(userdn, [
-					{op: 'replace', attr: 'userPassword', vals: [newPassword]},
-					{op: 'delete', attr: 'pwdPolicySubentry', vals: [conf.ldap.user.passwordResetPolicy]}
-				], function(e){
-					if (e) return cb(e);
-					else cb();
-				});
+        system.modify(userdn, [{
+          op: 'replace',
+          attr: 'userPassword',
+          vals: [newPassword]
+        }, {
+          op: 'delete',
+          attr: 'pwdPolicySubentry',
+          vals: [conf.ldap.user.passwordResetPolicy]
+        }], function(e) {
+          if (e) return cb(e);
+          else cb();
+        });
 
-			});
-		});
-	}
+      });
+    });
+  }
 
-	connect(function(e){if (e) return cb(e);
-		if (input.indexOf('@') > -1) { // if email string given to reset with
-			system.search({
-				base: conf.ldap.user.baseDn,
-				scope: system.SUBTREE,
-				filter: '('+conf.ldap.user.email+'='+input+')',
-				attrs: conf.ldap.user.username
-			}, function(e,d) {
-				if (e) return cb(e);
-				userdn = d[0]['dn'].toString();
-				reset(userdn);
-			});
-		}
-		else { // if username given to reset with
-			system.search({
-				base: conf.ldap.user.baseDn,
-				scope: system.SUBTREE,
-				filter: '('+conf.ldap.user.rdn+'='+input+')',
-				attrs: conf.ldap.user.username
-			}, function(e,d) {
-				if (e) return cb(e);
-				userdn = d[0]['dn'].toString();
-				reset(userdn);
-			});
-		}
-	});
+  connect(function(e) {
+    if (e) return cb(e);
+    if (input.indexOf('@') > -1) { // if email string given to reset with
+      system.search({
+        base: conf.ldap.user.baseDn,
+        scope: system.SUBTREE,
+        filter: '(' + conf.ldap.user.email + '=' + input + ')',
+        attrs: conf.ldap.user.username
+      }, function(e, d) {
+        if (e) return cb(e);
+        userdn = d[0]['dn'].toString();
+        reset(userdn);
+      });
+    } else { // if username given to reset with
+      system.search({
+        base: conf.ldap.user.baseDn,
+        scope: system.SUBTREE,
+        filter: '(' + conf.ldap.user.rdn + '=' + input + ')',
+        attrs: conf.ldap.user.username
+      }, function(e, d) {
+        if (e) return cb(e);
+        userdn = d[0]['dn'].toString();
+        reset(userdn);
+      });
+    }
+  });
 };
 
-exports.lockoutUser = function(username, cb){
-connect(function(e){if (e) return cb(e);
+exports.lockoutUser = function(username, cb) {
+  connect(function(e) {
+    if (e) return cb(e);
 
-	// get user to modify
-	exports.getUser(username, function(err, obj) {
-		if (err) return cb(err);
-		if (!obj) return cb(new Error('Unable to retreive user'));
-		obj.pwdAccountLockedTime = '000001010000Z'; // set account as locked out
+    // get user to modify
+    exports.getUser(username, function(err, obj) {
+      if (err) return cb(err);
+      if (!obj) return cb(new Error('Unable to retreive user'));
+      obj.pwdAccountLockedTime = '000001010000Z'; // set account as locked out
 
-		exports.updateUser(obj, function(err) {
-			if (err) return cb(err);
-			else return cb();
-		});
-	});
+      exports.updateUser(obj, function(err) {
+        if (err) return cb(err);
+        else return cb();
+      });
+    });
 
-});
+  });
 }
 
 // callback returns error and userobj
-exports.enableUser = function(username, cb){
-connect(function(e){if (e) return cb(e);
+exports.enableUser = function(username, cb) {
+  connect(function(e) {
+    if (e) return cb(e);
 
-	// get user to modify
-	exports.getUser(username, function(err, obj) {
-		if (err) return cb(err);
-		if (!obj) return cb(new Error('Unable to retreive user'));
+    // get user to modify
+    exports.getUser(username, function(err, obj) {
+      if (err) return cb(err);
+      if (!obj) return cb(new Error('Unable to retreive user'));
 
-		// remove account lock
-		system.modify(obj.dn, [
-			{op: 'delete', attr: 'pwdAccountLockedTime', vals: ''}
-		], function(err){
-			if (err) return cb(err);
-			else return cb(null, obj); // finished
-		});
-	});
-});
+      // remove account lock
+      system.modify(obj.dn, [{
+        op: 'delete',
+        attr: 'pwdAccountLockedTime',
+        vals: ''
+      }], function(err) {
+        if (err) return cb(err);
+        else return cb(null, obj); // finished
+      });
+    });
+  });
 }
 
 // tests
