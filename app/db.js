@@ -22,6 +22,8 @@ exports.UUIDV4 = Sequelize.UUIDV4;
 
 /*
 EXPOSED DATA METHODS
+Better not using methods other than define.
+They are just wrapper of Sequelize methods' wrapper, use those methods directly.
 ====================
 */
 
@@ -85,20 +87,30 @@ exports.create = function(model) {
   return instance;
 };
 
-// take an array of instance values, and push to db ONLY IF model's table is empty
+// take an array of instance values,
+// and push to db ONLY IF model's table is empty
 exports.initiate = function(model, defaults, callback) {
   log.trace('initiate called');
   if (!models[model]) {
-    log.warn("Requested model " + model + " doesn't exist.");
+    log.warn('Requested model ' + model + ' doesn\'t exist.');
     return;
   }
-  if (!callback) callback = function(err) {
-    if (err) log.error(err);
-  };
+  if (!callback) {
+    callback = function(err) {
+      if (err) {
+        log.error(err);
+      }
+    };
+  }
 
   // get all instances of model and do not initiate if any already exist
   exports.getAll(model, function(err, instances) {
-    if (err) return callback(err);
+    if (err) {
+      return callback(err);
+    }
+    if (instances.length > 0) {
+      return callback();
+    }
     if (instances.length === 0) {
       log.debug('initiating ' + model);
 
@@ -107,21 +119,26 @@ exports.initiate = function(model, defaults, callback) {
       defaults.forEach(function(entry) {
         var inst = models[model].build(); // define instance to build on to
         for (var key in entry) {
-          inst[key] = entry[key]; // set instance value to passed value
+          if (entry.hasOwnProperty(key)) {
+            inst[key] = entry[key]; // set instance value to passed value
+          }
         }
         chain.push(inst);
       });
 
       exports.chainSave(chain, function(err) {
-        if (err) return callback(err);
+        if (err) {
+          return callback(err);
+        }
         callback(); // all done!
       });
-    } else callback(); // finish doing nothing if model doesn't need initiation
+    }
   });
 
 };
 
-// send an updated instance back to the DB, optionally only updating certain attributes
+// send an updated instance back to the DB,
+// optionally only updating certain attributes
 exports.update = function(instance, attrs, callback) {
   log.trace('updating instance of ' + instance.__factory.name);
   // detect whether attrs & callback are present
