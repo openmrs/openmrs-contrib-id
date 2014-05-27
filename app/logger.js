@@ -20,7 +20,7 @@ var conf = Common.conf;
 
 log4js.loadAppender('console');
 log4js.loadAppender('file');
-var	file = log4js.appenders.file(
+var file = log4js.appenders.file(
   path.join(__dirname, conf.logger.relativePath)
 );
 
@@ -29,21 +29,21 @@ log4js.addAppender(file, 'console'); // added by default
 
 // call this to get a log for any module
 exports.add = function(logname) {
-	var thisLog = log4js.getLogger(logname);
-	log4js.addAppender(file, logname);
+  var thisLog = log4js.getLogger(logname);
+  log4js.addAppender(file, logname);
 
-	// use environment specified for Express
-	if (process.env.NODE_ENV === 'development') {
+  // use environment specified for Express
+  if (process.env.NODE_ENV === 'development') {
     thisLog.setLevel('debug');
   } else if (process.env.NODE_ENV === 'production') {
     thisLog.setLevel('info');
-	} else if (process.env.NODE_ENV === 'trace') {
+  } else if (process.env.NODE_ENV === 'trace') {
     thisLog.setLevel('trace');
-	} else {
+  } else {
     thisLog.setLevel('debug');
   }
 
-	return thisLog;
+  return thisLog;
 };
 
 // ADDED for hopes of bot detection
