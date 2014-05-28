@@ -1,6 +1,8 @@
 <% if (flash) { for (type in flash) { %>
 <% flash[type].forEach(function(msg){ %>
   <div class="flash <%= type %>">
-    <span><%- msg %></span>
+    <div class="container">
+      <aside class="col-md-12"><%- msg %></aside>
+    </div>
   </div>
 <% }); } } %>
