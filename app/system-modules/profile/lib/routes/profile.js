@@ -127,11 +127,11 @@ app.post('/profile', mid.forceLogin, mid.secToArray, validate(),
     if (emailsChanged.length === 1) {
       req.flash('info', 'The email address "' + emailsChanged.join(', ') +
         '" needs to be verified. ' +
-        'Verification instructons have been sent to the address.');
+        'Verification instructions have been sent to the address.');
     } else if (emailsChanged.length > 1) {
       req.flash('info', 'The email addresses "' + emailsChanged.join(', ') +
         '" need to be verified. ' +
-        'Verification instructons have been sent to these addresses.');
+        'Verification instructions have been sent to these addresses.');
     }
 
     // don't push new email addresses into session
