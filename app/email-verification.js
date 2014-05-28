@@ -19,7 +19,7 @@ mail.SMTP = conf.email.smtp;
  *   urlBase      (required) e.g. 'reset' or 'signup'
  *   email,       (required) string of email address to send to
  *   subject,     (required) subject of email sent
- *   template,    (required) relative path to template file
+ *   template,    (required) absolute path to template file
  *   associatedId (if exists) user this request belongs to
  *   locals,      extra local vars to pass to template renderer and to active
  *   timeout,     time before exiration, defaults to never
@@ -68,7 +68,6 @@ exports.begin = function(settings, callback) {
     finishCreate();
   });
 
-  // fs.readFile(path.join(__dirname, template), 'utf-8', function(err, data) {
   fs.readFile(template, 'utf-8', function(err, data) {
     if (err) return callback(err);
     var template = data.toString();
