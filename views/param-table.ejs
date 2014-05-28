@@ -59,10 +59,7 @@ $(function() {
 			%>
 			<td>
 				<%if (columns[j].editable) { %>
-					<% if (data[i].displayType == 'textarea') { %>
-						<textarea type="<%=data[i].displayType%>" class="<%=columns[j].type%>" placeholder="<%=columns[j].value%>" name="<%=i%>-<%=columns[j].name%>"><%=data[i][columns[j].name]%></textarea>
-					<% } else { %>
-						<input type="<%=data[i].displayType%>" class="<%=columns[j].type%>" placeholder="<%=columns[j].value%>" name="<%=i%>-<%=columns[j].name%>" value="<%=data[i][columns[j].name]%>"><% } %>
+					<input type="text" class="<%=columns[j].type%>" placeholder="<%=columns[j].value%>" name="<%=i%>-<%=columns[j].name%>" value="<%=data[i][columns[j].name]%>">
 				<% } else { %>
 					<input type="hidden" class="<%=columns[j].type%>" placeholder="<%=columns[j].value%>" name="<%=i%>-<%=columns[j].name%>" value="<%=data[i][columns[j].name]%>"><%=data[i][columns[j].name]%>
 				<% } %>

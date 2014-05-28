@@ -5,19 +5,19 @@
 
 <p>To embed the navigation bar, include this code anywhere in the <code>&lt;head&gt;</code> or <code>&lt;body&gt;</code>:</p>
 
-<p><code>&lt;script type="text/javascript" id="globalnav-script" src="<%= url.resolve(conf.site.url, '/globalnav/js/app-optimized.js') %>"&gt;&lt;/script&gt;</code></p>
+<p><pre>&lt;script type="text/javascript" id="globalnav-script" src="<%= url.resolve(conf.site.url, '/globalnav/js/app-optimized.js') %>"&gt;&lt;/script&gt;</pre></p>
 
 <form action="/admin/globalnav/links" method="post">
 	<h2>Links</h2>
 	<%- partial('param-table', {
 		tableName: 'links',
 		columns: [
-			{type: 'name', value: 'Name', name: 'name'},
-			{type: 'value', value: 'URL', name: 'url'}
+			{type: 'name', value: 'Name', name: 'name', displayType: 'text'},
+			{type: 'value', value: 'URL', name: 'url', displayType: 'text'}
 			],
 		data: links
 	}) %>
-	<input type="submit" value="Save">
+	<input type="submit" class="btn btn-success" value="Save">
 </form>
 
 <form action="/admin/globalnav/prefs" method="post">
@@ -43,5 +43,5 @@
 		</div>
 		
 	<% } %>
-	<input type="submit" value="Save">
+	<input type="submit" class="btn btn-success" value="Save">
 </form>
