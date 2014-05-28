@@ -12,50 +12,65 @@
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
 
-var express = require('express'),
-	connect = require('connect'),
-	MySQLSessionStore = require('connect-mysql-session')(express),
-	url = require('url'),
-	Common = require(global.__commonModule),
-	app = Common.app,
-	conf = Common.conf,
-	mid = Common.mid,
-	log = Common.logger.add('environment');
+var express = require('express');
+var connect = require('connect');
+var MySQLSessionStore = require('connect-mysql-session')(express);
+var url = require('url');
+var Common = require(global.__commonModule);
+var app = Common.app;
+var conf = Common.conf;
+var mid = Common.mid;
+var log = Common.logger.add('environment');
 
 /* http://expressjs.com/guide.html:
- * To alter the environment we can set the NODE_ENV environment variable, for example:
+ * To alter the environment we can set the NODE_ENV environment variable,
+ *   for example:
  *
  * $ NODE_ENV=production node app.js
- * This is very important, as many caching mechanisms are only enabled when in production.
+ * This is very important, as many caching mechanisms are only enabled
+ *   when in production.
  */
 
-app.configure(function(){ // executed under all environments
-	app.use(express.bodyParser());
-	app.use(express.cookieParser());
-	app.use(express.session({
-		store: new MySQLSessionStore(conf.db.dbname, conf.db.username, conf.db.password, {
-			defaultExpiration: conf.session.duration, // session timeout if browser does not terminate session (1 day)
-			logging: false
-		}),
-		secret: conf.session.secret
-	}));
+app.configure(function configureExpress() { // executed under all environments
+  app.use(express.bodyParser());
+  app.use(express.cookieParser());
 
-	app.use(mid.openmrsHelper());
+  // store express session in MySQL
+  var sessionStore = new MySQLSessionStore(
+    conf.db.dbname,
+    conf.db.username,
+    conf.db.password, {
+      // session timeout if browser does not terminate session (1 day)
+      defaultExpiration: conf.session.duration,
+      logging: false,
+    }
+  );
+  app.use(
+    express.session({
+      store: sessionStore,
+      secret: conf.session.secret
+    })
+  );
 
-	app.set('view engine', 'ejs');
-	app.set('views', __dirname + '/../views');
+  app.use(mid.openmrsHelper());
 
-	var siteURLParsed = url.parse(conf.site.url, false, true);
-	app.set('basepath', siteURLParsed.pathname);
+  app.set('view engine', 'ejs');
+  app.set('views', __dirname + '/../views');
+
+  var siteURLParsed = url.parse(conf.site.url, false, true);
+  app.set('basepath', siteURLParsed.pathname);
 });
 
-app.configure('development', function(){
-	app.use(express.errorHandler({ showStack: true, dumpExceptions: true }));
-	app.use(connect.logger('dev'))
+app.configure('development', function() {
+  app.use(express.errorHandler({
+    showStack: true,
+    dumpExceptions: true
+  }));
+  app.use(connect.logger('dev'));
 
 });
 
-app.configure('production', function(){
-	app.use(express.errorHandler());
+app.configure('production', function() {
+  app.use(express.errorHandler());
 
 });

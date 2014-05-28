@@ -1,8 +1,7 @@
-var should = require('should')
-,   _ = require('underscore')
-,   request = require('supertest')
-,   express = require('express')
-;
+var should = require('should'),
+  _ = require('underscore'),
+  request = require('supertest'),
+  express = require('express');
 
 var middleware = require('./middleware')
 
@@ -25,14 +24,14 @@ describe('includeEmpties', function() {
     })
 
     request(app)
-    .post('/')
-    .send({
-      username: 'srmn',
-      firstname: 'Saruman',
-      email: 'swhite@isenguard.biz',
-      password: 'secret',
-      timestamp: '1234567890'
-    })
-    .end(function() {})
+      .post('/')
+      .send({
+        username: 'srmn',
+        firstname: 'Saruman',
+        email: 'swhite@isenguard.biz',
+        password: 'secret',
+        timestamp: '1234567890'
+      })
+      .end(function() {})
   })
 })
