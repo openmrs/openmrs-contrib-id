@@ -1,10 +1,9 @@
-var should = require('should')
-,   _ = require('underscore')
-,   request = require('supertest')
-,   express = require('express')
-,   crypto = require('crypto')
-,   fs = require('fs')
-;
+var should = require('should'),
+  _ = require('underscore'),
+  request = require('supertest'),
+  express = require('express'),
+  crypto = require('crypto'),
+  fs = require('fs');
 
 global.__commonModule = fs.realpathSync('./commonmock.test.js')
 
@@ -20,8 +19,8 @@ describe('generateTimestamp', function() {
     app.use(botproof.generateTimestamp)
 
     app.use(function(req, res) {
-      var enc = res.local('timestamp')
-      ,   decph = crypto.createDecipher('aes192', botproof.SECRET)
+      var enc = res.local('timestamp'),
+        decph = crypto.createDecipher('aes192', botproof.SECRET)
 
       decph.update(enc, 'hex')
       var dec = decph.final('utf8')
@@ -31,8 +30,8 @@ describe('generateTimestamp', function() {
     })
 
     request(app)
-    .get('/')
-    .expect(200, done)
+      .get('/')
+      .expect(200, done)
   })
 
 })
@@ -55,8 +54,8 @@ describe('checkTimestamp', function() {
     })
 
     request(app)
-    .post('/')
-    .end(function(){})
+      .post('/')
+      .end(function() {})
 
   })
 
@@ -83,17 +82,19 @@ describe('checkTimestamp', function() {
     var start = Date.now();
 
     request(app)
-    .post('/')
-    .send({username: 'bilbo'})
-    .end(function(res) {
-      var stop = Date.now()
-      try {
-        (stop - start).should.be.above(4999)
-        done()
-      } catch (e) {
-        done(e)
-      }
-    })
+      .post('/')
+      .send({
+        username: 'bilbo'
+      })
+      .end(function(res) {
+        var stop = Date.now()
+        try {
+          (stop - start).should.be.above(4999)
+          done()
+        } catch (e) {
+          done(e)
+        }
+      })
   })
 })
 
@@ -123,9 +124,11 @@ describe('checkHoneypot', function() {
     })
 
     request(app)
-    .post('/')
-    .send(form({country: 'Canada'}))
-    .expect(400, done)
+      .post('/')
+      .send(form({
+        country: 'Canada'
+      }))
+      .expect(400, done)
   })
 
   it('should do nothing otherwise', function(done) {
@@ -138,9 +141,9 @@ describe('checkHoneypot', function() {
     });
 
     request(app)
-    .post('/')
-    .send(form())
-    .expect(200, done)
+      .post('/')
+      .send(form())
+      .expect(200, done)
   })
 })
 
@@ -164,9 +167,9 @@ describe('spamListLookup', function() {
     })
 
     request(app)
-    .get('/')
-    .set('X-Forwarded-For', '194.158.204.250') // known bad address
-    .end(function(res){
+      .get('/')
+      .set('X-Forwarded-For', '194.158.204.250') // known bad address
+    .end(function(res) {
       if (res.status === 200)
         done(new Error('known bad address passed'))
     })
@@ -183,8 +186,8 @@ describe('spamListLookup', function() {
     })
 
     request(app)
-    .get('/')
-    .set('X-Forwarded-For', '74.125.225.1') // google.com's address
+      .get('/')
+      .set('X-Forwarded-For', '74.125.225.1') // google.com's address
     .expect(200, done)
   })
 
@@ -198,9 +201,9 @@ describe('spamListLookup', function() {
     })
 
     request(app)
-    .get('/')
-    .set('X-Forwarded-For', '64.134.160.4')
-    .expect(200, done)
+      .get('/')
+      .set('X-Forwarded-For', '64.134.160.4')
+      .expect(200, done)
   })
 
   it('should respond with a human readable error', function(done) {
@@ -215,8 +218,8 @@ describe('spamListLookup', function() {
     app.error(function(error, req, res) {
       try {
         error.statusCode.should.equal(400)
-        error.message.should.match(new RegExp("Your IP address, [0-9.]+, was "+
-          "flagged as a spam address by our spam-blocking lists. Please open an "+
+        error.message.should.match(new RegExp("Your IP address, [0-9.]+, was " +
+          "flagged as a spam address by our spam-blocking lists. Please open an " +
           "issue if you believe this is in error."))
         done()
       } catch (e) {
@@ -225,9 +228,9 @@ describe('spamListLookup', function() {
     })
 
     request(app)
-    .get('/')
-    .set('X-Forwarded-For', '194.158.204.250') // known bad address
-    .end(function(res){
+      .get('/')
+      .set('X-Forwarded-For', '194.158.204.250') // known bad address
+    .end(function(res) {
       if (res.status === 200)
         done(new Error('known bad address passed'))
     })
@@ -237,15 +240,15 @@ describe('spamListLookup', function() {
 describe('generators', function() {
   it('should be an array of all generator functions', function() {
     botproof.generators.should.contain(botproof.generateTimestamp)
-                       .and.contain(botproof.generateSpinner)
+      .and.contain(botproof.generateSpinner)
   })
 })
 
 describe('parsers', function() {
   it('should be an array of all parser functions', function() {
     botproof.parsers.should.contain(botproof.unscrambleFields)
-                    .and.contain(botproof.checkTimestamp)
-                    .and.contain(botproof.checkHoneypot)
-                    .and.contain(botproof.spamListLookup)
+      .and.contain(botproof.checkTimestamp)
+      .and.contain(botproof.checkHoneypot)
+      .and.contain(botproof.spamListLookup)
   })
 })
