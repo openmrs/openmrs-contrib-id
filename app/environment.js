@@ -45,12 +45,26 @@ app.configure(function configureExpress() { // executed under all environments
       logging: false,
     }
   );
-  app.use(
-    express.session({
-      store: sessionStore,
-      secret: conf.session.secret
-    })
-  );
+  var session = express.session({
+    store: sessionStore,
+    secret: conf.session.secret
+  });
+  var exceptions = [
+    /^\/globalnav($|\/.*$)/,
+    /^\/resource\/.*$/,
+  ];
+
+  var sessionHandler = function(req, res, next) {
+    function test(reg) {
+      return reg.test(req.url);
+    }
+    if (exceptions.some(test)) {
+      return next();
+    }
+    return session(req,res,next);
+  };
+
+  app.use(sessionHandler);
 
   app.use(mid.openmrsHelper());
 

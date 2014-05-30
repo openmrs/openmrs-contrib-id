@@ -46,7 +46,7 @@ function setTypes(req, res) {
 exports.openmrsHelper = function() {
   return function(req, res, next) {
     if (req.originalUrl != '/favicon.ico') {
-      if (req.session.user) {
+      if (req. session && req.session.user) {
         var mailHash = crypto.createHash('md5').update(req.session.user.mail).digest('hex');
         res.locals({
           connected: true,
