@@ -47,13 +47,9 @@ app.configure(function configureExpress() { // executed under all environments
   );
   var session = express.session({
     store: sessionStore,
-    secret: conf.session.secret
+    secret: conf.session.secret,
   });
-  var exceptions = [
-    /^\/globalnav($|\/.*$)/,
-    /^\/resource\/.*$/,
-  ];
-
+  var exceptions = conf.sessionExceptions;
   var sessionHandler = function(req, res, next) {
     function test(reg) {
       return reg.test(req.url);
