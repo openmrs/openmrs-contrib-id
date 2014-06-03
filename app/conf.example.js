@@ -135,7 +135,13 @@ module.exports = {
   "userModules": [
     "openmrs-contrib-dashboard-groups",
     "openmrs-contrib-globalnavbar",
-  ]
+  ],
+
+  // a exceptionlists of session middlware, use regular expressions
+  "sessionExceptions": [
+    /^\/globalnav($|\/.*$)/,
+    /^\/resource\/.*$/,
+  ],
 };
 
 // expose shorthand method used by view renderers

@@ -1,9 +1,9 @@
-var Common = require(global.__commonModule),
-  app = Common.app,
-  log = Common.logger.add('render-helpers'),
-  conf = Common.conf,
-  userNav = Common.userNav,
-  url = require('url');
+var Common = require(global.__commonModule);
+var app = Common.app;
+var log = Common.logger.add('render-helpers');
+var conf = Common.conf;
+var userNav = Common.userNav;
+var url = require('url');
 
 // insert our own GLOBAL variables to be used in rendering
 app.helpers({
@@ -17,35 +17,50 @@ app.helpers({
 
 app.dynamicHelpers({
   flash: function(req) {
-    // Makes it easier to display flash messages, which are created via req.flash() and erased each page render
-    return req.flash();
+    // Makes it easier to display flash messages,
+    // which are created via req.flash() and erased each page render
+    if (req.session) {
+      return req.flash();
+    }
+    return null;
   },
 
   navLinks: function(req, res) {
     // Uses login state and privileges to generate the links to include in the user navigation bar
 
     var list = userNav.list;
-    links = [];
+    var links = [];
 
     log.trace('userNavLinks: entering for loop');
-    if (req.session.user) log.trace('userNavLinks: current groups: ' + req.session.user.memberof.toString());
+    if (req.session && req.session.user) {
+      log.trace('userNavLinks: current groups: ' +
+        req.session.user.memberof.toString());
+    }
 
     // Build list of links to display
     list.forEach(function(link) {
 
       // determine if session has access to page
       if (link.requiredGroup) {
-        if (req.session.user && req.session.user.memberof.indexOf(link.requiredGroup) > -1)
+        if (req.session && req.session.user &&
+          req.session.user.memberof.indexOf(link.requiredGroup) > -1) {
+
           links.push(link);
-        else if (link.visibleLoggedIn) {
-          if (req.session.user) links.push(link);
+        } else if (link.visibleLoggedIn) {
+          if (req.session && req.session.user) {
+            links.push(link);
+          }
         }
       }
       if (link.visibleLoggedIn && !link.requiredGroup) {
-        if (req.session.user) links.push(link);
+        if (req.session && req.session.user) {
+          links.push(link);
+        }
       }
       if (link.visibleLoggedOut) {
-        if (!req.session.user) links.push(link);
+        if (req.session && !req.session.user) {
+          links.push(link);
+        }
       }
     });
 
