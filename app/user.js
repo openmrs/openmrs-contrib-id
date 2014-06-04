@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Common = require(global.__commonModule);
-var conf = Common.conf;
+var conf = require('./conf');
 
 var uidRegex = conf.user.usernameRegex;
 var emailRegex = conf.email.validation.emailRegex;
@@ -21,7 +20,14 @@ function emailsValidator(emailList) {
 
   var tmp = emailList.slice(); // make a copy, so we won't affect the original
   tmp.sort();
-  for (var i = 1; i < tmp.length; i++) {
+
+  var i;
+  for (i = 1; i < tmp.length; i++) {
+    if (!emailRegex.test(tmp[i])) {
+      return false;
+    }
+  }
+  for (i = 1; i < tmp.length; i++) {
     if (tmp[i] === tmp[i - 1]) {
       return false;
     }

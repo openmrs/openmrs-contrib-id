@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 
-var Common = require(global.__commonModule);
-var conf = Common.conf;
+var conf = require('./conf');
 var uri = conf.mongo.uri;
 var dbUser = conf.mongo.user;
 var pwd = conf.mongo.password;
