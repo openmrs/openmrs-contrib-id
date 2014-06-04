@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+
 var Schema = mongoose.Schema;
 
 var conf = require('./conf');
@@ -13,27 +14,40 @@ function uidValidator(argument) {
 
 // Ensure the email list is not empty and no duplicate
 // Because mongo won't ensure all the members to be unique in one array
-function emailsValidator(emailList) {
-  if (!emailList.length) {
-    return false;
-  }
+var nonEmpty = {
+  validator: function (ar) {
+    return ar.length > 0;
+  },
+  msg: 'The array can\'t be empty'
+};
 
-  var tmp = emailList.slice(); // make a copy, so we won't affect the original
-  tmp.sort();
-
-  var i;
-  for (i = 1; i < tmp.length; i++) {
-    if (!emailRegex.test(tmp[i])) {
-      return false;
-    }
-  }
-  for (i = 1; i < tmp.length; i++) {
-    if (tmp[i] === tmp[i - 1]) {
-      return false;
-    }
-  }
-  return true;
+function validEmail(email) {
+  return emailRegex.test(email);
 }
+
+var chkEmailsValid = {
+  validator: function (emails) {
+    return emails.every(validEmail);
+  },
+  msg: 'Some email are illegal'
+};
+
+var chkArrayDuplicate = {
+  validator: function (arr) {
+    var sorted = arr.slice();
+    sorted.sort();
+
+    var i;
+    for (i = 1; i < sorted.length; ++i) {
+      if (sorted[i] === sorted[i-1]) {
+        return false;
+      }
+      return true;
+    }
+  },
+  msg: 'Some items are duplicate'
+};
+
 
 var userSchema = new Schema({
   username: {
@@ -71,7 +85,7 @@ var userSchema = new Schema({
     type: [String], // All the users' Emails
     required: true,
     unique: true,
-    validate: emailsValidator,
+    validate: [nonEmpty,chkEmailsValid,chkArrayDuplicate],
   },
 
   password: {
