@@ -4,8 +4,9 @@ var should = require('should'),
   express = require('express'),
   crypto = require('crypto'),
   fs = require('fs');
+var path = require('path');
 
-global.__commonModule = fs.realpathSync('./commonmock.test.js')
+global.__commonModule = path.join(__dirname, './commonmock.test.js');
 
 require(global.__commonModule).db = require('../../../db')
 
