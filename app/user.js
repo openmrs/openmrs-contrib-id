@@ -7,15 +7,22 @@ var conf = Common.conf;
 var uidRegex = conf.user.usernameRegex;
 var emailRegex = conf.email.validation.emailRegex;
 
-
+// Just a placeholder
 function uidValidator(argument) {
-  return true; // do something else maybe check the length.
+  return true; // do something else, maybe check the length.
 }
 
+// Ensure the email list is not empty and no duplicate
+// Because mongo won't ensure all the members to be unique in one array
 function emailsValidator(emailList) {
-  emailList.sort();
-  for (var i = 1; i < emailList.length; i++) {
-    if (emailList[i] === emailList[i - 1]) {
+  if (!emailList.length) {
+    return false;
+  }
+
+  var tmp = emailList.slice(); // make a copy, so we won't affect the original
+  tmp.sort();
+  for (var i = 1; i < tmp.length; i++) {
+    if (tmp[i] === tmp[i - 1]) {
       return false;
     }
   }
@@ -33,12 +40,10 @@ var userSchema = new Schema({
 
   firstName: {
     type: String,
-    required: true,
   },
 
   lastName: {
     type: String,
-    required: true,
   },
 
   displayName: {
@@ -60,7 +65,6 @@ var userSchema = new Schema({
     type: [String], // All the users' Emails
     required: true,
     unique: true,
-    // match: [emailRegex, 'Illegal Email address'],
     validate: emailsValidator,
   },
 

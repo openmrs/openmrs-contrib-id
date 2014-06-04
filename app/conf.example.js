@@ -72,6 +72,11 @@ module.exports = {
     "username": "db_user",
     "password": "secret"
   },
+  "mongo": {
+    "uri": "mongodb://localhost/test",
+    "user": "omrsid",
+    "password": "secret",
+  },
   "session": {
     "__comment3": "session storage DB",
 

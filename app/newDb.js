@@ -1,8 +1,11 @@
 var mongoose = require('mongoose');
-var dbUser = 'omrisd';
-var pwd = 'secret';
 
-var uri = 'mongodb://localhost/test';
+var Common = require(global.__commonModule);
+var conf = Common.conf;
+var uri = conf.mongo.uri;
+var dbUser = conf.mongo.user;
+var pwd = conf.mongo.password;
+
 
 var options = {
   user : dbUser,
