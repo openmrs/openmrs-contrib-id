@@ -19,7 +19,8 @@
     "xml2js": "~0.1.14",
     "underscore": "~1.5.2",
     "async": "~0.2.9",
-    "mongoose": "~3.8.12"
+    "mongoose": "~3.8.12",
+    "lodash": "~2.4.1"
   },
   "engine": {
     "node": "~0.8.26"
@@ -27,7 +28,8 @@
   "devDependencies": {
     "supertest": "~0.8.2",
     "should": "~2.1.1",
-    "mocha": "~1.16.2"
+    "mocha": "~1.16.2",
+    "chai": "~1.9.1"
   },
   "scripts": {
     "test": "mocha app/**/*.test.js"

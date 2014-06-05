@@ -1,7 +1,8 @@
 var mongoose = require('mongoose');
-var assert = require('assert');
+var _ = require('lodash');
+var expect = require('chai').expect;
 
-require('../app/newDb');
+var conf = require('./conf');
 
 var User = require('../app/user');
 
@@ -27,17 +28,36 @@ var validinfo = {
   lastName: simpleString,
   displayName: simpleString,
   primaryEmail: validEmail1,
-  displayName: validEmail3,
+  displayEmail: validEmail3,
   emailList: [validEmail1, validEmail2],
   password: simpleString,
-}
+};
 
 
 describe('User', function() {
+  before(function (done) {
+    mongoose.connect(conf.mongoURI, done);
+  });
+
   describe('#save()', function() {
-    it('should store the user well', function(done) {
+    it('should store the valid user well', function(done) {
       var user = new User(validinfo);
       user.save(done);
     });
+
+    it('should fail when the user name is missing', function (done) {
+      var noUsername = _.clone(validinfo);
+      delete noUsername.username;
+
+      var user = new User(noUsername);
+      user.save(function (err) {
+        expect(err).not.to.be.null;
+        done();
+      });
+    });
+  });
+
+  after(function (done) {
+    mongoose.disconnect(done);
   });
 });
