@@ -42,12 +42,18 @@ var chkArrayDuplicate = {
       if (sorted[i] === sorted[i-1]) {
         return false;
       }
-      return true;
     }
+    return true;
   },
   msg: 'Some items are duplicate'
 };
 
+function arrToLowerCase(arr) {
+  arr.forEach(function (str, index, array) {
+    array[index] = str.toLowerCase();
+  });
+  return arr;
+}
 
 var userSchema = new Schema({
   username: {
@@ -74,6 +80,7 @@ var userSchema = new Schema({
     type: String, // Used for notifications
     match: [emailRegex, 'Illegal Email address'],
     required: true,
+    lowercase: true,
   },
 
   displayEmail: {
@@ -85,6 +92,7 @@ var userSchema = new Schema({
     type: [String], // All the users' Emails
     required: true,
     unique: true,
+    set: arrToLowerCase,
     validate: [nonEmpty,chkEmailsValid,chkArrayDuplicate],
   },
 
@@ -98,6 +106,10 @@ var userSchema = new Schema({
   }
   // something else
 });
+
+userSchema.path('primaryEmail').validate(function (email){
+  return -1 !== this.emailList.indexOf(email);
+}, 'The primaryEmail should be one member of emailList');
 
 var User = mongoose.model('User', userSchema);
 
