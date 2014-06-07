@@ -89,7 +89,7 @@ var userSchema = new Schema({
   },
 
   emailList: {
-    type: [String], // All the users' Emails
+    type: [String], // All the user's Emails
     required: true,
     unique: true,
     set: arrToLowerCase,
