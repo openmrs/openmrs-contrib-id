@@ -10,6 +10,12 @@
         "siteKey": "The site key, i.e., the subdomain of your site",
         "maxMinute": "Max expire time measured by minute",
         "returnURL": "https://help.openmrs.org/customer/authentication/multipass/callback?multipass={{MULTIPASS}}&signature={{SIGNATURE}}"
+    },
+    "atlas": {
+        "apiKey": "1234567890abcdef",
+        "siteKey": "locahost",
+        "maxMinute": "50",
+        "returnURL": "http://localhost/openmrs-contrib-atlas/public/auth/multipass/callback?multipass={{MULTIPASS}}&signature={{SIGNATURE}}"
     }
 
   }
