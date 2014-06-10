@@ -1,8 +1,12 @@
+/**
+ * This file defines the Schema of OpenMRS-ID
+ */
+
 var mongoose = require('mongoose');
 
 var Schema = mongoose.Schema;
 
-var conf = require('./conf');
+var conf = require('../conf');
 
 var uidRegex = conf.user.usernameRegex;
 var emailRegex = conf.email.validation.emailRegex;

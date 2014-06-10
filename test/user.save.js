@@ -5,7 +5,7 @@ var expect = require('chai').expect;
 var async = require('async');
 
 var conf = require('./conf');
-var User = require('../app/user');
+var User = require('../app/model/user');
 
 // data for testing purposes
 var VALID_EMAIL1 = 'foo@bar.com';
