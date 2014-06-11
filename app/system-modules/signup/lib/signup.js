@@ -77,6 +77,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     }
 
     var id = id.toLowerCase();
+    console.log('here 80');
 
     // will be called after account is created and validation process started
     var finishCalls = 0,
@@ -93,6 +94,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
         }
       }
     }
+    console.log('here 97');
 
     // add the user to ldap
     ldap.addUser(id, first, last, email, pass, function(e, userobj) {

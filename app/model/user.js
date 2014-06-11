@@ -105,12 +105,12 @@ var userSchema = new Schema({
     required: true,
   },
 
-  groups: {
+  groups: { // All the groups that user belong
     type: [String],
     validate: [chkArrayDuplicate],
   },
 
-  locked: {
+  locked: { // seal this user from log-in
     type: [Boolean],
     required: true,
   }
