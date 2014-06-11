@@ -21,6 +21,7 @@ test/conf.js
 #######################
 *.sublime-*
 .ldaprc
+*.todo
 
 # OS generated files #
 ######################
