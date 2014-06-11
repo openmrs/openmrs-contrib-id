@@ -33,6 +33,7 @@ var VALID_INFO1 = {
   displayEmail: VALID_EMAIL2,
   emailList: [VALID_EMAIL1, VALID_EMAIL3],
   password: SIMPLE_STRING,
+  locked: false,
 };
 
 var VALID_INFO2 = {
@@ -41,8 +42,10 @@ var VALID_INFO2 = {
   displayEmail: VALID_EMAIL2,
   emailList: [VALID_EMAIL2],
   password: SIMPLE_STRING,
+  locked: true,
 };
 
+var DUP_ERROR_CODE = 11000;
 
 
 describe('User', function() {
@@ -117,7 +120,8 @@ describe('User', function() {
       }
     ],
     function (err) {
-      expect(err).not.to.be.null;
+      expect(err).to.exist;
+      expect(err).to.have.property('code', DUP_ERROR_CODE);
       done();
     });
 
@@ -129,7 +133,10 @@ describe('User', function() {
 
     var user = new User(invalidUsernameInfo);
     user.save(function(err) {
-      expect(err).not.to.be.null;
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('username');
       done();
     });
   });
@@ -140,7 +147,10 @@ describe('User', function() {
 
     var user = new User(noUsernameInfo);
     user.save(function (err) {
-      expect(err).not.to.be.null;
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('username');
       done();
     });
   });
@@ -151,7 +161,10 @@ describe('User', function() {
 
     var user = new User(invalidDisplayEmailInfo);
     user.save(function (err) {
-      expect(err).not.to.be.null;
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('displayEmail');
       done();
     });
   });
@@ -162,7 +175,10 @@ describe('User', function() {
 
     var user = new User(noPrimaryEmailInfo);
     user.save(function (err) {
-      expect(err).not.to.be.null;
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('primaryEmail');
       done();
     });
   });
@@ -173,7 +189,10 @@ describe('User', function() {
 
     var user = new User(orphanPrimaryEmailInfo);
     user.save(function (err) {
-      expect(err).not.to.be.null;
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('primaryEmail');
       done();
     });
   });
@@ -184,7 +203,10 @@ describe('User', function() {
 
     var user = new User(emptyEmailListInfo);
     user.save(function (err) {
-      expect(err).not.to.be.null;
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('emailList');
       done();
     });
   });
@@ -195,7 +217,10 @@ describe('User', function() {
 
     var user = new User (invalidEmailListInfo);
     user.save(function (err) {
-      expect(err).not.to.be.null;
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('emailList');
       done();
     });
   });
@@ -207,7 +232,10 @@ describe('User', function() {
 
     var user = new User (dupEmailListInfo);
     user.save(function (err) {
-      expect(err).not.to.be.null;
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('emailList');
       done();
     });
   });
@@ -218,7 +246,24 @@ describe('User', function() {
 
     var user = new User (noPasswordInfo);
     user.save(function (err) {
-      expect(err).not.to.be.null;
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('password');
+      done();
+    });
+  });
+
+  it('should fail when the locked status is missing', function(done) {
+    var noLocked = _.cloneDeep(VALID_INFO1);
+    delete noLocked.locked;
+
+    var user = new User (noLocked);
+    user.save(function (err) {
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('locked');
       done();
     });
   });

@@ -104,9 +104,15 @@ var userSchema = new Schema({
     type: String, //hashed password
     required: true,
   },
+
   groups: {
     type: [String],
     validate: [chkArrayDuplicate],
+  },
+
+  locked: {
+    type: [Boolean],
+    required: true,
   }
   // something else
 });
