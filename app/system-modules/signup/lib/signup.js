@@ -100,6 +100,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     ldap.addUser(id, first, last, email, pass, function(e, userobj) {
       if (e) finish(e);
       log.info('created account "' + id + '"');
+      log.debug(userobj);
 
       // lock out the account until it has been verified
       ldap.lockoutUser(id, function(err) {

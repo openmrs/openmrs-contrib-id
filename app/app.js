@@ -15,6 +15,7 @@ var express = require('express');
 var fs = require('fs');
 var mail = require('nodemailer');
 var app = express.createServer();
+require('./newDb');
 
 // establish module & global variables
 module.exports = app;

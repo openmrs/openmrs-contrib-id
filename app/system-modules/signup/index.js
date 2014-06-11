@@ -1,1 +1,2 @@
-module.exports = require('./lib/signup');
+module.exports = require('./lib/newSignup');
+// module.exports = require('./lib/signup');
