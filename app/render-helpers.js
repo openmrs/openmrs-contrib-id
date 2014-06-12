@@ -34,7 +34,7 @@ app.dynamicHelpers({
     log.trace('userNavLinks: entering for loop');
     if (req.session && req.session.user) {
       log.trace('userNavLinks: current groups: ' +
-        req.session.user.memberof.toString());
+        req.session.user.groups.toString());
     }
 
     // Build list of links to display
@@ -43,7 +43,7 @@ app.dynamicHelpers({
       // determine if session has access to page
       if (link.requiredGroup) {
         if (req.session && req.session.user &&
-          req.session.user.memberof.indexOf(link.requiredGroup) > -1) {
+          req.session.user.groups.indexOf(link.requiredGroup) > -1) {
 
           links.push(link);
         } else if (link.visibleLoggedIn) {

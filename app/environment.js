@@ -62,7 +62,7 @@ app.configure(function configureExpress() { // executed under all environments
 
   app.use(sessionHandler);
 
-  app.use(mid.openmrsHelper());
+  app.use(mid.openmrsHelper);
 
   app.set('view engine', 'ejs');
   app.set('views', __dirname + '/../views');

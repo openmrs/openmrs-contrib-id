@@ -1,4 +1,6 @@
-var signupConf = require('../conf.signup.json')
+var signupConf = require('../conf.signup.json');
+var async = require('async');
+var _ = require('lodash');
 
 module.exports = {
 
@@ -7,11 +9,23 @@ module.exports = {
   // be caught by validation middleware.
   includeEmpties: function includeEmpties(req, res, next) {
     signupConf.signupFieldNames.forEach(function(n) {
-      req.body[n] = req.body[n] || ''
-    })
+      req.body[n] = req.body[n] || '';
+    });
 
 
-    next()
+    next();
+  },
+
+  function chkUsername() {
+    // body...
   }
+  validator: function validator(req, res, next) {
+    var body = req.body;
+    var failed = false;
+    var values = {};
+    var failures = {};
+    var failreasons = {};
 
-}
+  },
+
+};
