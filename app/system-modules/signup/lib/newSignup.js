@@ -50,7 +50,7 @@ app.get(/^\/signup\/?$|^\/$/i, validate.receive(), botproof.generators,
   var query = url.parse(req.url, true).query;
 
   for (var prop in query) {
-    if (/^(firstname|lastname|username|email|)$/.test(prop)) {
+    if (/^(firstName|lastName|username|primaryEmail|)$/.test(prop)) {
       values[prop] = query[prop];
     }
   }
@@ -68,15 +68,17 @@ app.get(/^\/signup\/?$|^\/$/i, validate.receive(), botproof.generators,
   });
 });
 
-app.get('/signup', mid.forceLogout); // prevent from getting 404'd if a logged-in user hits /signup
+// prevent from getting 404'd if a logged-in user hits /signup
+app.get('/signup', mid.forceLogout);
 
 app.post('/signup', mid.forceLogout, botproof.parsers,
-  signupMiddleware.includeEmpties, validate(), function(req, res, next) {
+  signupMiddleware.includeEmpties,
+  signupMiddleware.validator, function(req, res, next) {
 
   var id = req.body.username;
-  var first = req.body.firstname;
-  var last = req.body.lastname;
-  var email = req.body.email;
+  var first = req.body.firstName;
+  var last = req.body.lastName;
+  var email = req.body.primaryeMail;
   var pass = req.body.password;
   var captcha = req.body.recaptcha_response_field;
 
