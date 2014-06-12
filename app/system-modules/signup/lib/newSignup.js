@@ -75,8 +75,6 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
   signupMiddleware.includeEmpties,
   signupMiddleware.validator, function(req, res, next) {
 
-  console.log(req.body);
-
   var id = req.body.username;
   var first = req.body.firstName;
   var last = req.body.lastName;
@@ -85,7 +83,6 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
 
   id = id.toLowerCase();
 
-  // TODO
   var newUser = new User({
     username: id,
     firstName: first,
@@ -96,29 +93,30 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     password: pass,
     locked: true,
   });
+  var verificationOptions = {
+    urlBase: 'signup',
+    email: email,
+    subject: '[OpenMRS] Welcome to the OpenMRS Community',
+    template: path.join(__dirname, '../views/welcome-verify-email.ejs'),
+    locals: {
+      displayName: first + ' ' + last,
+      username: id,
+      userCredentials: {
+        id: id,
+        email: email
+      }
+    },
+    timeout: 0
+  };
+
+  log.debug(newUser);
+  log.debug(newUser.save);
+  function sendVerificationEmail(callback) {
+    verification.begin(verificationOptions, callback);
+  }
   async.series([
-    function (callback) {
-      newUser.save(callback);
-    },
-
-    function (callback) {
-      verification.begin({
-        urlBase: 'signup',
-        email: email,
-        subject: '[OpenMRS] Welcome to the OpenMRS Community',
-        template: path.join(__dirname, '../views/welcome-verify-email.ejs'),
-        locals: {
-          displayName: first + ' ' + last,
-          username: id,
-          userCredentials: {
-            id: id,
-            email: email
-          }
-        },
-        timeout: 0
-      }, callback);
-    },
-
+    newUser.save.bind(newUser),
+    sendVerificationEmail,
   ],
   function (err) {
     if (err) {
