@@ -1,11 +1,13 @@
 var async = require('async');
 var _ = require('lodash');
 var path = require('path');
+var Recaptcha = require('recaptcha').Recaptcha;
 
 var signupConf = require('../conf.signup.json');
 
 var Common = require(global.__commonModule);
 var conf = Common.conf;
+var log = Common.logger.add('signup validation');
 
 var User = require(path.join(global.__apppath, 'model/user'));
 
@@ -20,14 +22,9 @@ var EMAIL_PLUS_MSG = 'Due to incompatibilities with the Google Apps APIs, ' +
 
 function validator(req, res, next) {
   var body = req.body;
-  var failed = false;
-  var values = {};
-  var failures = {};
-  var failreasons = {};
-  var cacheList = ['username', 'firstName', 'lastName', 'primaryEmail'];
 
   function chkUsername(callback) {
-    var usernameRegex = conf.usernameRegex;
+    var usernameRegex = conf.user.usernameRegex;
     var username = body.username;
 
     if (_.isEmpty(username) || !usernameRegex.test(username)) {
@@ -72,22 +69,70 @@ function validator(req, res, next) {
     return callback(null, ret);
   }
 
+  function chkPassword(callback) {
+    var password = body.password;
+    if (_.isEmpty(password) || password.length < 8) {
+      return  callback(null, {password: true});
+    }
+  }
+
+  function chkRecaptcha(callback) {
+    var captchaData = {
+      remoteip: req.connection.remoteAddress,
+      challenge: req.body.recaptcha_challenge_field,
+      response: req.body.recaptcha_response_field,
+    };
+    var recaptcha = new Recaptcha(conf.validation.recaptchaPublic,
+      conf.validation.recaptchaPrivate, captchaData
+    );
+    recaptcha.verify(function (success, errorCode) {
+      if (errorCode) {
+        log.debug('error', errorCode);
+      }
+      if (!success) {
+        return callback(null, {recaptcha: true});
+      }
+    });
+  }
 
   async.series([
     chkUsername,
     chkPrimaryEmail,
     chkNames,
-
+    chkPassword,
+    chkRecaptcha,
   ],
   function (err, results) {
+    var failed = false;
+    var values = {};
+    var failures = {};
+    var failReason = {};
+    var cacheList = ['username', 'firstName', 'lastName', 'primaryEmail'];
+
     if (err) {
       return next(err);
     }
-    if (_.isEmpty(results)) {
-      // push local
-      return next();
-    }
+    failed = !_.isEmpty(results);
+    _.forIn(req.body, function (value, key) {
+      if (!failed && -1 !== _.indexOf(cacheList, key)) {
+        values[key] = value;
+        return ;
+      }
+      if (results[key]) {
+        failures[key] = value;
+      }
+      if (_.isString(value)) {
+        failReason[key] = value;
+      }
+    });
+    req.session.validation = {
+      failed: failed,
+      values: values,
+      fail: failures,
+      failReason: failReason,
+    };
   });
+  next();
 }
 
 module.exports = {
@@ -96,8 +141,6 @@ module.exports = {
   // This is useful because with the empty string, the submission error will
   // be caught by validation middleware.
   includeEmpties: function includeEmpties(req, res, next) {
-    console.log(req.body);
-
     signupConf.signupFieldNames.forEach(function(n) {
       req.body[n] = req.body[n] || '';
     });

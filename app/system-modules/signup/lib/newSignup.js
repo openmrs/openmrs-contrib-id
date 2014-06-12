@@ -75,18 +75,13 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
   signupMiddleware.includeEmpties,
   signupMiddleware.validator, function(req, res, next) {
 
+  console.log(req.body);
+
   var id = req.body.username;
   var first = req.body.firstName;
   var last = req.body.lastName;
-  var email = req.body.primaryeMail;
+  var email = req.body.primaryEmail;
   var pass = req.body.password;
-  var captcha = req.body.recaptcha_response_field;
-
-  if (!id || !first || !last || !email || !pass || !captcha) {
-    return res.send('Unauthorized POST error', {
-      'Content-Type': 'text/plain'
-    }, 403);
-  }
 
   id = id.toLowerCase();
 
