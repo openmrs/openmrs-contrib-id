@@ -39,33 +39,35 @@ ROUTES
 // get signup from /signup or from / and handle accordingly
 app.get(/^\/signup\/?$|^\/$/i, validate.receive(), botproof.generators,
   function(req, res, next) {
-    if (req.session.user) {
-      return next(); // pass onward if a user is signed in
+
+  if (req.session.user) {
+    return next(); // pass onward if a user is signed in
+  }
+
+  // parse querystrings for pre-populated data
+  var values = res.local('validation').values || {};
+  var renderLayout = true;
+  var query = url.parse(req.url, true).query;
+
+  for (var prop in query) {
+    if (/^(firstname|lastname|username|email|)$/.test(prop)) {
+      values[prop] = query[prop];
     }
+  }
 
-    // parse querystrings for pre-populated data
-    var values = res.local('validation').values || {};
-    var renderLayout = true;
-    var query = url.parse(req.url, true).query;
+  // handle layout query string & determine which view to render
+  renderLayout = (query.layout === 'false') ? false : true;
+  var viewPath = (renderLayout) ? __dirname + '/../views/signup' : __dirname + '/../views/signup-standalone';
 
-    for (var prop in query) {
-      if (/^(firstname|lastname|username|email|)$/.test(prop)) {
-        values[prop] = query[prop];
-      }
-    }
-
-    // handle layout query string & determine which view to render
-    renderLayout = (query.layout === 'false') ? false : true;
-    var viewPath = (renderLayout) ? __dirname + '/../views/signup' : __dirname + '/../views/signup-standalone';
-
-    // render the page
-    res.render(viewPath, {
-      values: values,
-      layout: renderLayout,
-      renderLayout: renderLayout, // allows view to see whether or not it has layout
-      bodyAppend: '<script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k=' + conf.validation.recaptchaPublic + '"></script>'
-    });
+  // render the page
+  res.render(viewPath, {
+    values: values,
+    layout: renderLayout,
+    renderLayout: renderLayout, // allows view to see whether or not it has layout
+    bodyAppend: '<script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k=' + conf.validation.recaptchaPublic + '"></script>'
   });
+});
+
 app.get('/signup', mid.forceLogout); // prevent from getting 404'd if a logged-in user hits /signup
 
 app.post('/signup', mid.forceLogout, botproof.parsers,
