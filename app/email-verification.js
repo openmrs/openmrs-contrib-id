@@ -222,17 +222,24 @@ exports.clear = function(verifyId, callback) {
 // credential can be email address or username
 exports.search = function(credential, type, callback) {
   // determine whether credential is email, username, or verifyId
-  if (conf.user.usernameRegex.test(credential)) var terms = {
-    associatedId: credential
-  }; // is a user id
-  else if (conf.email.validation.emailRegex.test(credential)) var terms = {
-    email: credential
-  }; // is an email address
-  else return callback(null, []); // return no matches
+  var terms;
+  if (conf.user.usernameRegex.test(credential)) {
+    terms = {
+      associatedId: credential
+    }; // is a user id
+  } else if (conf.email.validation.emailRegex.test(credential)) {
+    terms = {
+      email: credential
+    }; // is an email address
+  } else {
+    return callback(null, []); // return no matches
+  }
 
   // search DB and callback any instances found
   db.find('EmailVerification', terms, function(err, instances) {
-    if (instances.constructor != Array) instances = [instances];
+    if (instances.constructor !== Array) {
+      instances = [instances];
+    }
     callback(null, instances);
   });
 };

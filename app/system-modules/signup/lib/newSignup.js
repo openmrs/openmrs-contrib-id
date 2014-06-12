@@ -151,32 +151,21 @@ app.get('/signup/:id', function(req, res, next) {
       return res.redirect('/');
     }
     var username = locals.username;
-    User.findOneAndUpdate({username: username}, {locked: false},
-      function (err, user) {
-        if (err) {
-          return next(err);
-        }
-        log.debug(user.id + ': account enabled');
-        verification.clear(req.params.id);
-        req.flash('success', 'Your account was successfully created. Welcome!');
+    User.findOneAndUpdate({username: username}, {
+      locked: false
+    },
+    function (err, user) {
+      if (err) {
+        return next(err);
+      }
+      log.debug(user.id + ': account enabled');
+      verification.clear(req.params.id);
+      req.flash('success', 'Your account was successfully created. Welcome!');
 
-        req.session.user = user;
-        log.debug(user);
-        res.redirect('/');
+      req.session.user = user;
+      log.debug(user);
+      res.redirect('/');
     });
-    // enable the account, allowing logins
-    // ldap.enableUser(user.id, function(err, userobj) {
-    //   if (err) {
-    //     return next(err);
-    //   }
-    //   log.debug(user.id + ': account enabled');
-    //   verification.clear(req.params.id);
-    //   req.flash('success', 'Your account was successfully created. Welcome!');
-
-    //   req.session.user = userobj;
-    //   res.redirect('/');
-
-    // });
   });
 });
 
