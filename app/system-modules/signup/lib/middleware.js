@@ -23,60 +23,68 @@ var EMAIL_PLUS_MSG = 'Due to incompatibilities with the Google Apps APIs, ' +
 function validator(req, res, next) {
   var body = req.body;
 
-  function chkUsername(callback) {
+  var chkUsername = function(callback) {
     var usernameRegex = conf.user.usernameRegex;
     var username = body.username;
 
     if (_.isEmpty(username) || !usernameRegex.test(username)) {
-      return callback(null, {username: true});
+      // empty or not valid
+      return callback(null, true);
     }
     User.findOne({username: username}, function (err, user) {
       if (err) {
         return callback(err);
       }
-      return callback(null, {username: USERNAME_DUP_MSG});
+      if (user) {
+        // duplicate
+        return callback(null, USERNAME_DUP_MSG);
+      }
+      return callback(null, false);
     });
-  }
+  };
 
-  function chkPrimaryEmail(callback) {
+  var chkPrimaryEmail = function(callback) {
     var emailRegex = conf.email.validation.emailRegex;
     var primaryEmail = body.primaryEmail;
-    var allowPlus = conf.validation.allowPlusInEmail; // should be moved in
+    // should be moved in signup conf
+    var allowPlus = conf.validation.allowPlusInEmail;
     if (_.isEmpty(primaryEmail) || !emailRegex.test(primaryEmail)) {
-      return callback(null, {primaryEmail: true});
+      //empty or not valid
+      return callback(null, true);
     }
-    if (-1 === _.indexOf(primaryEmail, '+') && !allowPlus) {
-      return callback(null, {primaryEmail: EMAIL_PLUS_MSG});
+    if (-1 !== _.indexOf(primaryEmail, '+') && !allowPlus) {
+      // disobey the allowplus '+' rule
+      return callback(null, EMAIL_PLUS_MSG);
     }
     User.findOne({emailList: primaryEmail}, function (err, user) {
       if (err) {
         return callback(err);
       }
-      return callback(null, {primaryEmail: EMAIL_DUP_MSG});
+      if (user) {
+        // duplicate
+        return callback(null, EMAIL_DUP_MSG);
+      }
+      return callback(null, false);
     });
-  }
+  };
 
-  function chkNames(callback) {
-    var lastName = body.lastName;
-    var firstName = body.firstName;
-    var ret = {};
-    if (_.isEmpty(lastName)) {
-      ret.lastName = true;
+  var chkName = function(name, callback) {
+    if (_.isEmpty(name)) {
+      return callback(null, true);
     }
-    if (_.isEmpty(firstName)) {
-      ret.firstName = true;
-    }
-    return callback(null, ret);
-  }
+    return callback(null, false);
+  };
 
-  function chkPassword(callback) {
+  var chkPassword = function(callback) {
     var password = body.password;
     if (_.isEmpty(password) || password.length < 8) {
-      return  callback(null, {password: true});
+      // empty or too short
+      return  callback(null, true);
     }
-  }
+    return callback(null, false);
+  };
 
-  function chkRecaptcha(callback) {
+  var chkRecaptcha = function(callback) {
     var captchaData = {
       remoteip: req.connection.remoteAddress,
       challenge: req.body.recaptcha_challenge_field,
@@ -87,52 +95,60 @@ function validator(req, res, next) {
     );
     recaptcha.verify(function (success, errorCode) {
       if (errorCode) {
-        log.debug('error', errorCode);
+        log.debug('recaptcha error code', errorCode);
       }
       if (!success) {
-        return callback(null, {recaptcha: true});
+        return callback(null, true);
       }
+      return callback(null, false);
     });
-  }
+  };
 
-  async.series([
-    chkUsername,
-    chkPrimaryEmail,
-    chkNames,
-    chkPassword,
-    chkRecaptcha,
-  ],
+  async.series({
+    username: chkUsername,
+    primaryEmail: chkPrimaryEmail,
+    firstName: chkName.bind(null, body.firstName),
+    lastName: chkName.bind(null, body.lastName),
+    password: chkPassword,
+    recaptcha_response_field: chkRecaptcha,
+  },
   function (err, results) {
     var failed = false;
     var values = {};
     var failures = {};
     var failReason = {};
+    // values should be cached to reuse
     var cacheList = ['username', 'firstName', 'lastName', 'primaryEmail'];
 
     if (err) {
       return next(err);
     }
-    failed = !_.isEmpty(results);
-    _.forIn(req.body, function (value, key) {
-      if (!failed && -1 !== _.indexOf(cacheList, key)) {
+    log.debug(results);
+
+    _.forIn(results, function (value, key) {
+      if (!value && -1 !== _.indexOf(cacheList, key)) {// valid
         values[key] = value;
-        return ;
+        return;
       }
-      if (results[key]) {
-        failures[key] = value;
-      }
+      failed = true;
+      failures[key] = value;
       if (_.isString(value)) {
         failReason[key] = value;
       }
     });
+
+    if (!failed) { // if all valid, pass the requests to next handler
+      return next();
+    }
+
     req.session.validation = {
-      failed: failed,
+      failed: true,
       values: values,
       fail: failures,
       failReason: failReason,
     };
+    return res.redirect(req.url);
   });
-  next();
 }
 
 module.exports = {
