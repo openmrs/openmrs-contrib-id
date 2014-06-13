@@ -60,7 +60,7 @@ app.get(/^\/signup\/?$|^\/$/i, validate.receive(), botproof.generators,
 
   // render the page
   res.render(viewPath, {
-    values: values,
+    // values: values,
     layout: renderLayout,
     renderLayout: renderLayout, // allows view to see whether or not it has layout
     bodyAppend: '<script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k=' + conf.validation.recaptchaPublic + '"></script>'
@@ -108,8 +108,6 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     timeout: 0
   };
 
-  log.debug(newUser);
-  log.debug(newUser.save);
   function sendVerificationEmail(callback) {
     verification.begin(verificationOptions, callback);
   }
@@ -159,7 +157,6 @@ app.get('/signup/:id', function(req, res, next) {
       req.flash('success', 'Your account was successfully created. Welcome!');
 
       req.session.user = user;
-      log.debug(user);
       res.redirect('/');
     });
   });

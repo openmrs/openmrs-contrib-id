@@ -123,11 +123,10 @@ function validator(req, res, next) {
     if (err) {
       return next(err);
     }
-    log.debug(results);
 
     _.forIn(results, function (value, key) {
       if (!value && -1 !== _.indexOf(cacheList, key)) {// valid
-        values[key] = value;
+        values[key] = body[key];
         return;
       }
       failed = true;
@@ -142,7 +141,6 @@ function validator(req, res, next) {
     }
 
     req.session.validation = {
-      failed: true,
       values: values,
       fail: failures,
       failReason: failReason,
