@@ -1,0 +1,88 @@
+.popover {
+  display: none;
+  font-family: 'Open Sans', 'Helvetica', 'Arial', sans-serif;
+  position: absolute;
+  z-index: 50;
+  max-width: 300px;
+  
+  /* From WordPress */
+  background: #fff;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  border: 1px solid #e3e3e3;
+}
+.popover input {
+  float: none;
+  margin: 0 0 8px;
+  width: 178px;
+}
+.popover input[type="submit"] {
+  float: right;
+  width: auto;
+}
+.popover span, .popover p {
+  font: 10px 'Lucida Grande', 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+}
+.popover p {
+  padding: 6px 12px;
+}
+.popover-direction {
+  display: none;
+  
+  position: absolute;
+  bottom: -11px;
+  right: 45%;
+  background: url('/resource/images/nav-indicator.png') no-repeat;
+  height: 8px;
+  width: 14px;
+  z-index: 55;
+}
+.popover.visible, .popover.force-visible,
+.popover.visible ~ .popover-direction, .popover.force-visible ~ .popover-direction {
+  display: block;
+}
+// ul.popover {
+//  margin: 0;
+//  padding: 0;
+// }
+// ul.popover li {
+//  font-size: 12px;
+//  white-space: nowrap;
+//  padding: 3px 12px;
+//  display: block;
+//  border-bottom: 1px solid #dedede;
+// }
+// ul.popover li:last-child {
+//  border-bottom: none;
+// }
+
+// ul.popover > a, ul.popover > li {
+//  padding: 6px 12px;
+//  display: block;
+// }
+// ul.popover > a:first-of-type, ul.popover > li:first-of-type {
+//  -moz-border-radius: 4px 4px 0 0;
+//  -webkit-border-radius: 4px 4px 0 0;
+//  border-radius: 4px 4px 0 0;
+// }
+// ul.popover > a:last-of-type, ul.popover > li:last-of-type {
+//  -moz-border-radius: 0 0 4px 4px;
+//  -webkit-border-radius: 0 0 4px 4px;
+//  border-radius: 0 0 4px 4px;
+// }
+// ul.popover a:hover {
+//  background: #f5f5f5;
+//  background: -moz-linear-gradient(100% 100% 90deg, #f5f5f5, #fff);
+//  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#fff), to(#f5f5f5));
+// /*   background: cyan; */
+// }
+// ul.popover a:active {
+//  background: #f5f5f5;
+//  background: -moz-linear-gradient(100% 40% 90deg, #f5f5f5, #fff);
+//  background: -webkit-gradient(linear, 0% 0%, 0% 40%, from(#fff), to(#f5f5f5));
+// }
+.popover .heading {
+  text-transform: uppercase;
+  border-bottom-style: double; 
+}

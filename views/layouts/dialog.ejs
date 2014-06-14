@@ -1,0 +1,30 @@
+<% style('/resource/bootstrap/css/bootstrap.min.css') %>
+<% script('/resource/bootstrap/js/bootstrap.min.js') %>
+
+<% style('/resource/stylesheets/dialog.css') %>
+<% script('/resource/scripts/omrsid.js') %>
+
+
+<% include page/top %>
+
+<% include header/top %>
+    <% include login-menu-dialog %>
+<% include header/bottom %>    
+
+<!-- <div class="row" id="headline">
+  <div class="container">
+    <h1 class="col-md-4 col-md-offset-4"><%- headline %></h1>
+  </div>
+</div> -->
+<% include flash-alerts %>
+
+
+<div id="content" class="container">
+  <div id="main">
+  
+  <%- body %>
+  </div>
+  
+</div>
+
+<% include page/bottom %>

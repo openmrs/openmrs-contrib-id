@@ -16,6 +16,8 @@ var express = require('express');
 var connect = require('connect');
 var MySQLSessionStore = require('connect-mysql-session')(express);
 var url = require('url');
+var path = require('path');
+var lessMiddleware = require('less-middleware');
 var Common = require(global.__commonModule);
 var app = Common.app;
 var conf = Common.conf;
@@ -78,9 +80,24 @@ app.configure('development', function() {
   }));
   app.use(connect.logger('dev'));
 
+	app.use('/resource', lessMiddleware('/less', {
+		dest: '/stylesheets',
+		pathRoot: path.join(__dirname, '/../resource/')
+	}));
+
+	app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
+
 });
 
 app.configure('production', function() {
   app.use(express.errorHandler());
+
+	app.use('/resource', lessMiddleware('/less', {
+		dest: '/stylesheets',
+		pathRoot: path.join(__dirname, '/../resource/'),
+		once: true
+	}));
+
+	app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
 
 });

@@ -1,0 +1,50 @@
+.valid input, input.valid, .validtext, .noedit.valid p {
+  background: #ccffcc;
+}
+.valid input:focus, input.valid:focus {
+  box-shadow: 0 0 8px #9f9;
+  -webkit-box-shadow: 0 0 8px #9f9;
+  -moz-box-shadow: 0 0 8px #9f9;
+}
+.validtext {
+  display: none;
+}
+.valid .validtext {
+  display: inline;
+}
+
+.inprogress input, input.inprogress, .inprogresstext, .noedit.inprogress p {
+  background: #C6D6E0;
+}
+.inprogress input:focus, info.inprogress:focus {
+  box-shadow: 0 0 8px #83A6BD;
+  -webkit-box-shadow: 0 0 8px #83A6BD;
+  -moz-box-shadow: 0 0 8px #83A6BD;
+}
+.inprogresstext {
+  display: none;
+}
+.inprogress .inprogresstext {
+  display: inline;
+}
+.inprogress .description {
+  visibility: visible;
+}
+
+.fail input, input.fail, .failtext, .noedit.fail p {
+  background: #fcc;
+}
+.fail input:focus, input.fail:focus {
+  box-shadow: 0 0 8px #f99;
+  -webkit-box-shadow: 0 0 8px #f99;
+  -moz-box-shadow: 0 0 8px #f99;
+}
+.failtext {
+  display: none !important;
+}
+.fail .failtext {
+  display: inline !important;
+}
+.fail>.description {
+  visibility: visible;
+}

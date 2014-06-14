@@ -1,0 +1,45 @@
+.flash, .flash.info {
+  padding: 8px 8px;
+  border: 1px solid #ccc;
+  border-width: 1px 0 !important;
+  background: #ddd;
+  background: rgba(204, 204, 204, 0.4);
+  
+  background: #C6D6E0;
+  border-color: #83A6BD;
+  
+  font: 600 14px 'Open Sans', 'Helvetica', 'Arial', sans-serif;
+
+  &:last-of-type {
+    border-bottom-width: 1px;
+  }
+
+  aside {
+    display: block;
+    padding-left: 26px;
+    margin-left: 15px;
+    background: url('/resource/images/flash_message/info.png') no-repeat;
+  }
+
+  &.error {
+    border: 1px solid #930;
+    background: #fcc;
+    background: rgba(255, 204, 204, 0.6);
+    
+    background: #e3c8cd;
+    border-color: #c18490;  
+
+    span { background: url('/resource/images/flash_message/error.png') no-repeat; }
+  }
+
+  &.success {
+    border: 1px solid #393;
+    background: #cfc;
+    background: rgba(204, 255, 204, 0.6);
+    
+    background: #d1e2c7;
+    border-color: #9abf84;
+
+    span { background: url('/resource/images/flash_message/success.png') no-repeat; } 
+  }
+}
