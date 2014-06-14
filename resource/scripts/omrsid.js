@@ -228,8 +228,9 @@ $().ready(function(){
     $('.multi-field .field.next').focusin(duplicate);
     $('.multi-field .field input').focusout(function(){
         numberOfFields = $('.multi-field .field').not('.next').length;
-        if (numberOfFields > 1 && !$(this).attr('value')) {
-            if ($(this).parent().has('label').length > 0) var fieldLabel = $(this).parent().children('label')
+        if (numberOfFields > 1 && !$(this).val()) {
+            var fieldLabel;
+            if ($(this).parent().has('label').length > 0) fieldLabel = $(this).parent().children('label')
             $(this).parent().detach();
             if (fieldLabel) {
                 fieldLabel.prependTo('.multi-field .field:first-child');
