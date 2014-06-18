@@ -20,6 +20,7 @@ exports.mid           = require('./express-middleware');
 exports.renderHelpers = require('./render-helpers');
 exports.validate      = require('./validate');
 exports.environment   = require('./environment');
+exports.utils         = require('./utils');
 
 /*
 MODULES
