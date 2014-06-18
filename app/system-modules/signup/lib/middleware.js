@@ -1,3 +1,6 @@
+/**
+ * This file contains some middleware for signup, like validation.
+ */
 var async = require('async');
 var _ = require('lodash');
 var path = require('path');

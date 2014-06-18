@@ -1,3 +1,6 @@
+/**
+ * This file handles requests related with signup operations
+ */
 var url = require('url');
 var path = require('path');
 var botproof = require('./botproof');
