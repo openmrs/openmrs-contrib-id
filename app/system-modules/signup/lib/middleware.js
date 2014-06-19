@@ -107,7 +107,7 @@ function validator(req, res, next) {
     });
   };
 
-  async.series({
+  async.parallel({
     username: chkUsername,
     primaryEmail: chkPrimaryEmail,
     firstName: chkName.bind(null, body.firstName),
