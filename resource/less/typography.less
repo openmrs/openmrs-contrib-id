@@ -1,0 +1,73 @@
+@import url(//fonts.googleapis.com/css?family=Open+Sans:400,700,600|Crimson+Text:400,400italic,700);
+
+@display-type:  'Open Sans', 'Helvetica', 'Arial', sans-serif;
+@body-type:     'Crimson Text', 'Baskerville', 'Palatino', 'Georgia', serif;
+@control-type:  'Lucida Grande', 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+
+body {
+  font-family: @body-type;
+  font-size: 16px;
+  color: #555555;
+}
+
+a:not(.btn) {
+  &:link, &:visited {
+    color: #b38936;
+    text-decoration: none;
+  }
+  &:hover {
+    color: #4d4129;
+    text-decoration: underline;
+  }
+}
+
+.placeholder, .hint {
+  color: #ccc;
+}
+.status {
+  font: 10px @control-type; 
+}
+
+b, strong {
+  line-height: 16px;
+}
+i[class^="icon-"] { /* for font-awesome */
+  margin-right: 3px;
+}
+
+
+h1 {
+  font: bold 24px @display-type;
+  color: #4d4129;
+  margin-bottom: 12px;
+}
+h2 {
+  font: 600 18px @display-type;
+  color: #4d4129;
+  text-shadow: 0 2px 0 #ebe6dd;
+  padding: 0;
+  margin: 0 0 5px;
+
+  a:link, h2 a:visited {
+    color: #4d4129;
+  }
+
+  & > h2 {
+    margin: 18px 0 6px;
+  }
+}
+
+// Button types
+input[type="submit"], button, a.btn {
+  font-family: @control-type;
+}
+
+// Font awesome-related overrides
+button i[class^="icon-"] {
+  margin-right: 6px;
+  margin-left: -3px;
+  pointer-events: none;
+}
+a:link i[class^="icon-"]  {
+  text-decoration: none !important;
+}
