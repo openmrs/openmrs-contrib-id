@@ -111,7 +111,7 @@ var userSchema = new Schema({
   },
 
   locked: { // seal this user from log-in
-    type: [Boolean],
+    type: Boolean,
     required: true,
   }
   // something else
