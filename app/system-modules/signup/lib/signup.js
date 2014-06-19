@@ -16,6 +16,7 @@ var mid = Common.mid;
 var validate = Common.validate;
 var verification = Common.verification;
 var nav = Common.userNav;
+var utils = Common.utils;
 
 var User = require(path.join(global.__apppath, 'model/user'));
 
@@ -82,6 +83,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
   var last = req.body.lastName;
   var email = req.body.primaryEmail;
   var pass = req.body.password;
+  pass = utils.getSHA(pass);
 
   id = id.toLowerCase();
 

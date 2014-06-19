@@ -128,8 +128,10 @@ function validator(req, res, next) {
     }
 
     _.forIn(results, function (value, key) {
-      if (!value && -1 !== _.indexOf(cacheList, key)) {// valid
-        values[key] = body[key];
+      if (!value) {// valid
+        if (-1 !== _.indexOf(cacheList, key)) {
+          values[key] = body[key];
+        }
         return;
       }
       failed = true;
