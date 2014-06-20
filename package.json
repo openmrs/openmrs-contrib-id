@@ -21,7 +21,8 @@
     "async": "~0.2.9",
     "mongoose": "~3.8.12",
     "lodash": "~2.4.1",
-    "less-middleware": "~1.0.3"
+    "less-middleware": "~1.0.3",
+    "connect-mongo": "~0.4.1"
   },
   "engine": {
     "node": "~0.8.26"

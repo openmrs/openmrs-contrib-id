@@ -14,7 +14,7 @@
 
 var express = require('express');
 var connect = require('connect');
-var MySQLSessionStore = require('connect-mysql-session')(express);
+var MongoStore = require('connect-mongo')(express);
 var url = require('url');
 var path = require('path');
 var lessMiddleware = require('less-middleware');
@@ -37,16 +37,12 @@ app.configure(function configureExpress() { // executed under all environments
   app.use(express.bodyParser());
   app.use(express.cookieParser());
 
-  // store express session in MySQL
-  var sessionStore = new MySQLSessionStore(
-    conf.db.dbname,
-    conf.db.username,
-    conf.db.password, {
-      // session timeout if browser does not terminate session (1 day)
-      defaultExpiration: conf.session.duration,
-      logging: false,
-    }
-  );
+  // store express session in MongoDB
+  var sessionStore = new MongoStore({
+    url: conf.mongo.uri,
+    username: conf.mongo.username,
+    password: conf.mongo.password,
+  });
   var session = express.session({
     store: sessionStore,
     secret: conf.session.secret,
@@ -56,7 +52,7 @@ app.configure(function configureExpress() { // executed under all environments
     function test(reg) {
       return reg.test(req.url);
     }
-    if (exceptions.some(test)) {
+    if (exceptions.some(test)) { // we don't provide session for some exceptions
       return next();
     }
     return session(req,res,next);
