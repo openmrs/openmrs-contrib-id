@@ -96,7 +96,7 @@ exports.forceLogin = function(req, res, next) {
 
 exports.forceLogout = function(req, res, next) {
   if (req.session.user) {
-    log.info(req.session.user[conf.user.username] + ': denied access to anonymous-only ' + req.originalUrl);
+    log.info(req.session.user.username + ': denied access to anonymous-only ' + req.originalUrl);
     req.flash('error', 'You must be logged out to access ' + req.originalUrl);
     res.redirect('/');
   } else next();

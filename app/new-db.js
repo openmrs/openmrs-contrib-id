@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 var conf = require('./conf');
 var uri = conf.mongo.uri;
-var dbUser = conf.mongo.user;
+var dbUser = conf.mongo.username;
 var pwd = conf.mongo.password;
 
 
