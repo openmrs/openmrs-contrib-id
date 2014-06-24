@@ -114,6 +114,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
   };
 
   function sendVerificationEmail(callback) {
+    log.debug('Sending signup email verification');
     verification.begin(verificationOptions, callback);
   }
   async.series([
@@ -150,19 +151,26 @@ app.get('/signup/:id', function(req, res, next) {
       return res.redirect('/');
     }
     var username = locals.username;
-    User.findOneAndUpdate({username: username}, {
-      locked: false
-    },
-    function (err, user) {
+    User.findOne({username: username}, function (err, user) {
       if (err) {
         return next(err);
       }
-      log.debug(user.id + ': account enabled');
-      verification.clear(req.params.id);
-      req.flash('success', 'Your account was successfully created. Welcome!');
+      if (_.isEmpty(user)) {
+        return next(new Error('This record is lost'));
+      }
+      user.locked = false;
+      user.createdAt = undefined;
+      user.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+        log.debug(user.id + ': account enabled');
+        verification.clear(req.params.id);
+        req.flash('success', 'Your account was successfully created. Welcome!');
 
-      req.session.user = user;
-      res.redirect('/');
+        req.session.user = user;
+        res.redirect('/');
+      });
     });
   });
 });
