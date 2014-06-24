@@ -3,6 +3,8 @@
  */
 
 var path = require('path');
+var async = require('async');
+var _ = require('lodash');
 
 var settings = require('../settings');
 
@@ -14,6 +16,9 @@ var validate = Common.validate;
 var verification = Common.verification;
 var ldap = Common.ldap;
 var log = Common.logger.add('express');
+var utils = Common.utils;
+
+var User = require(path.join(global.__apppath, 'model/user'));
 
 app.get('/reset', mid.forceLogout, function(req, res, next) {
   res.render(path.join(settings.viewPath, 'reset-public'));
@@ -21,40 +26,35 @@ app.get('/reset', mid.forceLogout, function(req, res, next) {
 
 app.post('/reset', mid.forceLogout, function(req, res, next) {
   var resetCredential = req.body.resetCredential;
+  var USER_NOT_FOUND_MSG = 'User data not found';
 
-  var gotUser = function(e, obj) {
+  var filter = {};
+  if (resetCredential.indexOf('@') < 0) {
+    filter.username = resetCredential;
+  } else {
+    filter.emailList = resetCredential;
+  }
 
-    if (e) {
-      if (e.message === 'User data not found') {
+
+  var findUser = function (callback) {
+    User.findOne(filter, function (err, user) {
+      if (err) {
+        return callback(err);
+      }
+      if (_.isEmpty(user)) {
         log.info('reset requested for nonexistent user "' +
           resetCredential + '"');
-        return finish();
-      } else {
-        return next(e);
+        return callback(new Error(USER_NOT_FOUND_MSG));
       }
-    }
+      callback(null, user);
+    });
+  };
 
-    var username = obj[conf.ldap.user.username],
-      email = obj[conf.ldap.user.email],
-      secondaryMail = obj[conf.ldap.user.secondaryemail] || [];
-    // array of both pri. and sec. addresses to send to
-    var emails = secondaryMail.concat(email);
+  var sendEmails = function (user, callback) {
+    var username = user.username;
+    var emails = user.emailList;
 
-    // send the verifications
-    var errored = false;
-    var calls = 0;
-    var verificationCallback = function(err) {
-      calls++;
-      if (err && !errored) {
-        errored = true;
-        return next(err);
-      }
-      if (calls === emails.length && !errored) {
-        finish();
-      }
-    };
-
-    emails.forEach(function(address) {
+    var sendEmail = function (address, cb) {
       verification.begin({
         urlBase: 'reset',
         email: address,
@@ -62,32 +62,28 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
         template: path.join(settings.viewPath, 'email/password-reset.ejs'),
         locals: {
           username: username,
-          displayName: obj[conf.ldap.user.displayname],
+          displayName: user.displayName,
           allEmails: emails
         },
         timeout: conf.ldap.user.passwordResetTimeout
-      }, verificationCallback);
-    });
+      }, cb);
+    };
+    async.each(emails, sendEmail, callback);
   };
 
-  var finish = function() {
+  async.waterfall([
+    findUser,
+    sendEmails,
+  ],
+  function (err) {
+    if (err && err.message !== USER_NOT_FOUND_MSG) {
+      return next(err);
+    }
     req.flash('info', 'If the specified account exists,' +
       ' an email has been sent to your address(es) ' +
       'with further instructions to reset your password.');
     return res.redirect('/');
-  };
-
-  // Begin here.
-  if (resetCredential.indexOf('@') < 0) {
-    ldap.getUser(resetCredential, function(e, obj) {
-      gotUser(e, obj);
-    });
-  } else if (resetCredential.indexOf('@') > -1) {
-    ldap.getUserByEmail(resetCredential, function(e, obj) {
-      gotUser(e, obj);
-    });
-  }
-
+  });
 });
 
 app.get('/reset/:id', validate.receive(), function(req, res, next) {
@@ -113,21 +109,25 @@ app.post('/reset/:id', validate(), function(req, res, next) {
     if (err) {
       return next(err);
     }
-    if (valid) {
-      ldap.resetPassword(locals.username, req.body.newpassword, function(e) {
-        if (e) {
-          return next(e);
-        }
-        log.info('password reset for "' + locals.username + '"');
-        verification.clear(req.params.id); // remove validation from DB
-        req.flash('success', 'Password has been reset successfully. ' +
-          'You may now log in across the OpenMRS Community.');
-        res.redirect('/');
-      });
-    } else {
+    if (!valid) {
       req.flash('error',
         'The requested password reset has expired or does not exist.');
-      res.redirect('/');
+      return res.redirect('/');
     }
+    var password = utils.getSHA(req.body.newpassword);
+
+    User.findOneAndUpdate({username: locals.username}, {
+      password: password,
+    },
+    function (err) {
+      if (err) {
+        return next(err);
+      }
+      log.info('password reset for "' + locals.username + '"');
+      verification.clear(req.params.id); // remove validation from DB
+      req.flash('success', 'Password has been reset successfully. ' +
+        'You may now log in across the OpenMRS Community.');
+      res.redirect('/');
+    });
   });
 });
