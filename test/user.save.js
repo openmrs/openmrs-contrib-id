@@ -55,8 +55,11 @@ describe('User', function() {
         mongoose.connect(conf.mongoURI, callback);
       },
       function (callback) {
+        User.on('index', callback);
+      },
+      function (callback) {
         User.remove(callback);
-      }
+      },
     ],
     function (err) {
       done(err);
@@ -107,7 +110,7 @@ describe('User', function() {
 
   it('should fail when two user have same username', function(done) {
     var dupUsernameInfo = _.cloneDeep(VALID_INFO2);
-    dupUsernameInfo.username = VALID_INFO1.username;
+    dupUsernameInfo.username = VALID_INFO1.username.toUpperCase();
 
     var user1 = new User(VALID_INFO1);
     var user2 = new User(dupUsernameInfo);

@@ -64,6 +64,7 @@ var userSchema = new Schema({
     type: String,
     unique: true,
     required: true,
+    lowercase: true,
     match: [uidRegex, 'Illegal username'],
     validate: uidValidator,
   }, // unique username
@@ -113,7 +114,17 @@ var userSchema = new Schema({
   locked: { // seal this user from log-in
     type: Boolean,
     required: true,
-  }
+  },
+
+  createdAt: { // TTL index, let mongodb automatically delete this doc
+    type: Date,
+    expires: conf.mongo.commonExpireTime,
+    default: Date.now,
+  },
+
+  extra: {
+    type: Schema.Types.Mixed
+  },
   // something else
 });
 
