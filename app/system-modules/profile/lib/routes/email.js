@@ -1,78 +1,81 @@
 /**
  * This file handles all user-email request
  */
+var path = require('path');
+var async = require('async');
+var _ = require('lodash');
 
 var Common = require(global.__commonModule);
 var conf = Common.conf;
-var ldap = Common.ldap;
 var mid = Common.mid;
 var log = Common.logger.add('express');
 var verification = Common.verification;
-
 var app = Common.app;
+
+var settings = require('../settings');
+
+var NOT_FOUND_MSG = 'Verification record not found';
+
+
+var User = require(path.join(global.__apppath, 'model/user'));
 
 app.get('/profile-email/:id', function(req, res, next) {
   // check for valid profile-email verification ID
-  verification.check(req.params.id, function(err, valid, locals) {
-    if (valid) {
-      req.flash('success', 'Email address verified. Thanks!');
-    } else {
-      req.flash('error', 'Profile email address verification not found.');
-    }
 
-    // push updates to LDAP
-    ldap.getUser(locals.username, function(err, userobj) {
-      if (err) {
-        return next(err);
+  var newEmail = '';
+  var newUser = {};
+  var verifyId = req.params.id;
+
+  var checkVerification = function (callback) {
+    verification.check(req.params.id, function (err, valid, locals) {
+      if (!valid) {
+        req.flash('error', 'Profile email address verification not found.');
+        return callback(new Error(NOT_FOUND_MSG));
       }
-
-      // get new address and the address it's replacing
-      var newMail = locals.mail;
-      var corrMail = locals.newToOld[newMail];
-
-      // determine what kind of address (primary or sec.) it is & set it
-      if (userobj[conf.user.email] === corrMail) {
-        userobj[conf.user.email] = newMail; // prim. address
-      } else { // address is secondary
-        // user has some sec. addresses
-        if (userobj[conf.user.secondaryemail].length > 0) {
-          userobj[conf.user.secondaryemail].forEach(function(addr, i) {
-            if (addr === corrMail) {
-              userobj[conf.user.secondaryemail][i] = newMail;
-            // replace an existing sec. email
-            }
-          });
-          if (corrMail === '') {
-            // add a new sec. email
-            userobj[conf.user.secondaryemail].push(newMail);
-          }
-        } else {
-          // no current sec. mails, create the first one
-          userobj[conf.user.secondaryemail] = [newMail];
-        }
-      }
-
-      ldap.updateUser(userobj, function(e, returnedUser) {
-        if (e) {
-          return next(e);
-        }
-
-        verification.clear(req.params.id);
-
-        log.info(returnedUser.uid + ': profile-email validated & updated');
-        req.session.user = returnedUser;
-
-        // pass the updated email to renderer
-        res.local('emailUpdated', locals.email);
-
-        // redirect to profile page or homepage
-        if (req.session.user) {
-          res.redirect('/profile');
-        } else {
-          res.redirect('/');
-        }
-      });
+      newEmail = locals.mail;
+      return callback(null, locals.username);
     });
+  };
+
+  var findUser = function (username, callback) {
+    User.findOne({username: username}, callback);
+  };
+
+  var updateUser = function (user, callback) {
+    user.emailList.push(newEmail);
+    newUser = user;
+    user.save(function (err, username) {
+      if (err) {
+        return callback(err);
+      }
+      log.info('successfully updated email for ' + username);
+      return callback();
+    });
+  };
+
+  var clearRecord = function (callback) {
+    verification.clear(verifyId, callback);
+  };
+
+  async.waterfall([
+    checkVerification,
+    findUser,
+    updateUser,
+    clearRecord,
+  ],
+  function (err) {
+    if (err) {
+      if (err.message === NOT_FOUND_MSG) {
+        return res.redirect('/');
+      }
+      return next(err);
+    }
+    req.flash('success', 'Email address verified. Thanks!');
+    if (req.session.user) {
+      req.session.user = newUser;
+      return res.redirect('/profile');
+    }
+    return res.redirect('/');
   });
 });
 
@@ -105,5 +108,35 @@ app.get('/profile-email/cancel/:actionId', function(req, res, next) {
         '" cancelled.');
       res.redirect('/profile');
     });
+  });
+});
+
+app.post('/profile-email/add', function (req, res, next) {
+  var user = req.session.user;
+  var mail = req.body.newEmail;
+  console.log('entering');
+
+  log.debug(user.username + ': email address ' +
+      mail + ' will be verified');
+
+  // create verification instance
+  verification.begin({
+    urlBase: 'profile-email',
+    email: mail,
+    category: verification.categories.newEmail,
+    associatedId: user.username,
+    subject: '[OpenMRS] Email address verification',
+    template: path.join(settings.viewPath,'/email/email-verify.ejs'),
+    locals: {
+      displayName: user.displayName,
+      username: user.username,
+      mail: mail,
+    }
+  },
+  function(err) {
+    if (err) {
+      return next(err);
+    }
+    return res.redirect('/profile');
   });
 });
