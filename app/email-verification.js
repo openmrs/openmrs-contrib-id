@@ -238,7 +238,7 @@ exports.search = function(credential, category, callback) {
       email: credential // is an email address
     };
   } else {
-    return callback(null, []); // return no matches
+    return callback(new Error('invalid credential')); // return no matches
   }
   terms.category = category;
   // search DB and callback any instances found

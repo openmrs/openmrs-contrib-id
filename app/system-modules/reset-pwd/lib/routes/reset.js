@@ -57,7 +57,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
       verification.begin({
         urlBase: 'reset',
         email: address,
-        category: verification.category.resetPwd,
+        category: verification.categories.resetPwd,
         subject: '[OpenMRS] Password Reset for ' + username,
         template: path.join(settings.viewPath, 'email/password-reset.ejs'),
         locals: {
