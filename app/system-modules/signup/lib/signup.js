@@ -100,6 +100,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
   var verificationOptions = {
     urlBase: 'signup',
     email: email,
+    category: verification.category.signup,
     subject: '[OpenMRS] Welcome to the OpenMRS Community',
     template: path.join(__dirname, '../views/welcome-verify-email.ejs'),
     locals: {

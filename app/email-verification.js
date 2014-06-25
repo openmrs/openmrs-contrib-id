@@ -9,14 +9,12 @@ var _ = require('lodash');
 
 var Common = require(global.__commonModule);
 var conf = Common.conf;
-var db = Common.db;
 var log = Common.logger.add('email-verification');
 
 var emailPath = path.join(global.__apppath,'model/email-verification');
 
 var EmailVerification = require(emailPath);
 
-exports.active = {};
 mail.SMTP = conf.email.smtp;
 
 var simpleCallback = function (err) {
@@ -26,6 +24,7 @@ var simpleCallback = function (err) {
   }
 };
 
+exports.categories = EmailVerification.categories;
 // create a verification and send emails
 /* begin({
  *   urlBase      (required) e.g. 'reset' or 'signup'
@@ -46,12 +45,11 @@ exports.begin = function(settings, callback) {
   var associatedId = settings.associatedId || null;
   var locals = settings.locals || {};
   var timeout = settings.timeout || 172800000; // timeout of 48hr default
+  var category = settings.category;
 
   if (!callback) {// if callback is not provided
     callback = simpleCallback;
   }
-
-  var expiring = (timeout > 0);
 
   // begin standard verification
 
@@ -65,8 +63,8 @@ exports.begin = function(settings, callback) {
     var veriInfo = {
       verifyId: verifyId,
       actionId: actionId,
-      urlBase: urlBase,
       email: email,
+      category: category,
       associatedId: associatedId,
       settings: settings,
       locals: locals,
@@ -83,6 +81,7 @@ exports.begin = function(settings, callback) {
       return cb();
     });
   }
+
   function sendMail(cb) {
     fs.readFile(template, 'utf-8', function render(err, data) {
       if (err) {
@@ -94,7 +93,6 @@ exports.begin = function(settings, callback) {
         urlBase: urlBase,
         verifyId: verifyId,
         siteURL: conf.site.url,
-        expiring: expiring,
         expireDate: expireDate.toLocaleString(),
         url: url,
       });
@@ -119,6 +117,7 @@ exports.begin = function(settings, callback) {
       }
     });
   }
+
   async.series([
     storeInfo,
     sendMail,
@@ -147,7 +146,7 @@ exports.resend = function(actionId, callback) {
     log.debug('got instance to resend');
 
     // clear current verification
-    exports.clear(verification.verifyId, function(err) {
+    verification.remove(function(err) {
       if (err) {
         return callback(err);
       }
@@ -222,5 +221,31 @@ exports.clear = function(verifyId, callback) {
     }
     log.debug('successfully removed');
     return callback();
+  });
+};
+
+// returns any instances matching search paramaters
+// credential can be email address or username
+exports.search = function(credential, category, callback) {
+  // determine whether credential is email, username, or verifyId
+  var terms;
+  if (conf.user.usernameRegex.test(credential)) {
+    terms = {
+      associatedId: credential
+    }; // is a user id
+  } else if (conf.email.validation.emailRegex.test(credential)) {
+    terms = {
+      email: credential // is an email address
+    };
+  } else {
+    return callback(null, []); // return no matches
+  }
+  terms.category = category;
+  // search DB and callback any instances found
+  EmailVerification.find(terms, function (err, instances) {
+    if (err) {
+      return callback(err);
+    }
+    return callback(null, instances);
   });
 };

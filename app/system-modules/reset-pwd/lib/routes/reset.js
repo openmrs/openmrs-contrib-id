@@ -14,7 +14,6 @@ var conf = Common.conf;
 var mid = Common.mid;
 var validate = Common.validate;
 var verification = Common.verification;
-var ldap = Common.ldap;
 var log = Common.logger.add('express');
 var utils = Common.utils;
 
@@ -58,6 +57,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
       verification.begin({
         urlBase: 'reset',
         email: address,
+        category: verification.category.resetPwd,
         subject: '[OpenMRS] Password Reset for ' + username,
         template: path.join(settings.viewPath, 'email/password-reset.ejs'),
         locals: {

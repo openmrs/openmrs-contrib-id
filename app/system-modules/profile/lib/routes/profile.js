@@ -22,9 +22,7 @@ app.get('/profile', mid.forceLogin, validate.receive(),
   // check if any emails being verified
 
   var user = req.session.user;
-  var username = user[conf.user.username];
-  // var secondary = user[conf.user.secondaryemail] || [];
-  // var emails = secondary.concat(user[conf.user.email]);
+  var username = user.username;
 
   verification.search(username, 'profile-email',
     function(err, instances) {
@@ -106,6 +104,7 @@ app.post('/profile', mid.forceLogin, mid.secToArray, validate(),
       verification.begin({
         urlBase: 'profile-email',
         email: mail,
+        category: verification.category.newEmail,
         associatedId: updUser[conf.user.username],
         subject: '[OpenMRS] Email address verification',
         template: path.join(settings.viewPath,'/email/email-verify.ejs'),

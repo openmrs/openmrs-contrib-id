@@ -1,7 +1,19 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var _ = require('lodash');
 
 var conf = require('../conf');
+
+// category for verifications
+var categories = {
+  signup: 'signup',
+  resetPwd: 'reset password',
+  newEmail: 'add email',
+};
+var categoriesList = [];
+_.forIn(categories, function (value) {
+  categoriesList.push(value);
+});
 
 var emailSchema = new Schema({
   verifyId: {
@@ -14,16 +26,19 @@ var emailSchema = new Schema({
     required: true,
     unique: true,
   },
-  urlBase: {
-    type: String,
-    required: true,
-  },
   email: {
     type: String,
     required: true,
+    index: true,
   },
   associatedId: {
     type: String,
+    index: true,
+  },
+  category: {
+    type: String,
+    required: true,
+    enum: categoriesList,
   },
   settings: {
     type: {},
@@ -46,4 +61,5 @@ var emailSchema = new Schema({
 var EmailVertification = mongoose.model('EmailVertification', emailSchema);
 
 exports = module.exports = EmailVertification;
+exports.categories = categories;
 
