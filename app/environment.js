@@ -73,21 +73,24 @@ app.configure(function configureExpress() { // executed under all environments
   app.set('basepath', siteURLParsed.pathname);
 });
 
-app.configure('development', function() {
+function development() {
   app.use(express.errorHandler({
     showStack: true,
     dumpExceptions: true
   }));
   app.use(connect.logger('dev'));
 
-	app.use('/resource', lessMiddleware('/less', {
-		dest: '/stylesheets',
-		pathRoot: path.join(__dirname, '/../resource/')
-	}));
+  app.use('/resource', lessMiddleware('/less', {
+    dest: '/stylesheets',
+    pathRoot: path.join(__dirname, '/../resource/')
+  }));
 
-	app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
+  app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
 
-});
+}
+
+app.configure('development', development);
+app.configure('trace', development);
 
 app.configure('production', function() {
   app.use(express.errorHandler());

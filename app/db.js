@@ -32,11 +32,12 @@ exports.define = function(name, properties, methods, callback) {
 
   // Check arguments
   var a = arguments;
+
   // If methods and callback are defined
-  var threeParams = (typeof a[2]) === 'object' &&
-    ((typeof a[3]) === 'function');
+  var threeParams = (typeof a[2] === 'object');
+
   if (threeParams) {
-    callback = a[3];
+    callback = a[3] || function() {};
   } else if (typeof a[2] === 'function') { // If methods are not passed
     callback = a[2];
     methods = {};
