@@ -87,7 +87,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
   });
 });
 
-app.get('/reset/:id', validate.receive(), function(req, res, next) {
+app.get('/reset/:id', validate.receive, function(req, res, next) {
   var resetId = req.params.id;
   verification.check(resetId, function(err, valid, locals) {
     if (err) {
@@ -105,7 +105,7 @@ app.get('/reset/:id', validate.receive(), function(req, res, next) {
   });
 });
 
-app.post('/reset/:id', validate(), function(req, res, next) {
+app.post('/reset/:id', function(req, res, next) {
   verification.check(req.params.id, function(err, valid, locals) {
     if (err) {
       return next(err);

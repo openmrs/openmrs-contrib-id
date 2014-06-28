@@ -17,13 +17,13 @@ var app = Common.app;
 
 var User = require(path.join(global.__apppath, 'model/user'));
 
-app.get('/password', mid.forceLogin, validate.receive(),
+app.get('/password', mid.forceLogin, validate.receive,
   function(req, res, next) {
 
   res.render(path.join(settings.viewPath,'edit-password'));
 });
 
-app.post('/password', mid.forceLogin, validate(), function(req, res, next) {
+app.post('/password', mid.forceLogin, function(req, res, next) {
   var updUser = req.session.user;
 
   var findUser = function (callback) {

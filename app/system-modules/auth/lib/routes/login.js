@@ -19,7 +19,7 @@ var log      = Common.logger.add('express');
 
 var User = require(path.join(global.__apppath, 'model/user'));
 
-app.get(/^\/login\/?$/, mid.forceLogout, validate.receive(),
+app.get(/^\/login\/?$/, mid.forceLogout, validate.receive,
   function(req, res, next) {
     var tmp = path.join(settings.viewPath,'login');
     log.debug(tmp);
@@ -27,7 +27,7 @@ app.get(/^\/login\/?$/, mid.forceLogout, validate.receive(),
   }
 );
 
-app.post('/login', mid.stripNewlines, validate(), function(req, res, next) {
+app.post('/login', mid.stripNewlines, function(req, res, next) {
   var username = req.body.loginusername;
   var password = req.body.loginpassword;
   password = utils.getSHA(password);

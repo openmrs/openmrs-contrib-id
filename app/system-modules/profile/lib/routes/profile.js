@@ -19,7 +19,7 @@ var app = Common.app;
 
 var User = require(path.join(global.__apppath, 'model/user'));
 
-app.get('/profile', mid.forceLogin, validate.receive(),
+app.get('/profile', mid.forceLogin, validate.receive,
   function(req, res, next) {
 
   // check if any emails being verified
@@ -71,7 +71,7 @@ app.get('/profile', mid.forceLogin, validate.receive(),
 });
 
 // handle basical profile change, firstName and lastName only currently
-app.post('/profile', mid.forceLogin, validate(), function(req, res, next) {
+app.post('/profile', mid.forceLogin, function(req, res, next) {
   var username = req.session.user.username;
 
   var findUser = function (callback) {

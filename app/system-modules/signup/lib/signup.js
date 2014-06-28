@@ -40,7 +40,7 @@ ROUTES
 */
 
 // get signup from /signup or from / and handle accordingly
-app.get(/^\/signup\/?$|^\/$/i, validate.receive(), botproof.generators,
+app.get(/^\/signup\/?$|^\/$/i, validate.receive, botproof.generators,
   function(req, res, next) {
 
   if (req.session.user) {
