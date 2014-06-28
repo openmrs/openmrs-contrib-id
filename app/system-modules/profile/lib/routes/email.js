@@ -12,12 +12,12 @@ var log = Common.logger.add('express');
 var verification = Common.verification;
 var app = Common.app;
 
+var User = require(path.join(global.__apppath, 'model/user'));
+
 var settings = require('../settings');
 
 var NOT_FOUND_MSG = 'Verification record not found';
 
-
-var User = require(path.join(global.__apppath, 'model/user'));
 
 app.get('/profile-email/:id', function(req, res, next) {
   // check for valid profile-email verification ID
@@ -114,7 +114,6 @@ app.get('/profile-email/cancel/:actionId', function(req, res, next) {
 app.post('/profile-email/add', function (req, res, next) {
   var user = req.session.user;
   var mail = req.body.newEmail;
-  console.log('entering');
 
   log.debug(user.username + ': email address ' +
       mail + ' will be verified');
@@ -137,6 +136,66 @@ app.post('/profile-email/add', function (req, res, next) {
     if (err) {
       return next(err);
     }
+    return res.redirect('/profile');
+  });
+});
+
+app.post('/profile-email/delete', function (req, res, next) {
+  var user = req.session.user;
+  var email = req.body.email;
+  var category = verification.categories.newEmail;
+
+  // remove verifications
+  var findVerification = function (callback) {
+    verification.search(email, category, function (err, instances) {
+      if (err) {
+        return callback(err);
+      }
+      if (instances.length > 1) {
+        log.debug('There should be at most one instance matched');
+      }
+      return callback(null, instances[0]);
+    });
+  };
+
+  var deleteVerification = function (instance, callback) {
+    verification.clear(instance.verifyId, callback);
+  };
+
+  if (-1 === _.indexOf(user.emailList, email)) {
+    // delete veritification
+    async.waterfall([
+      findVerification,
+      deleteVerification,
+    ],
+    function (err) {
+      if (err) {
+        return next(err);
+      }
+      return res.redirect('/profile');
+    });
+  }
+
+  var findUser = function (callback) {
+    User.findOne({username: user.username}, callback);
+  };
+
+  var updateUser = function (user, callback) {
+    var index = _.indexOf(user.emailList, email);
+    user.emailList.splice(index, 1);
+    user.save(callback);
+  };
+
+  async.waterfall([
+    findUser,
+    updateUser,
+  ],
+  function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    log.info(user.username + ' successfully updated');
+    req.session.user = user;
     return res.redirect('/profile');
   });
 });

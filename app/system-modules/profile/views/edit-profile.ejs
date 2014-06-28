@@ -28,33 +28,32 @@
 </form>
 
 <h4> Emails </h4>
-<div class="multi-field">
-    <%
-    var length = emails.length;
-    for (var i = 0; i <= length; i++) {
-    %>
-    <div class="field">
-        <% if (i===length) {%>
-        <form action="/profile-email/add" method="post">
-            <input type="text" name="newEmail" value="Add another...">
-            <div class="field">
-                <input class="btn btn-success" type="submit" value="Update Profile &#187;">
-            </div>
-        <form/>
-        <% } else {%>
-        <input type="text" name="secondaryemail" placeholder="Secondary Email" value=<%= emails[i].email%> readonly>
-        <span>
-            <% if (emails[i].primary) { %>
-                <span> primary </span>
-            <% } %>
-            <% if (emails[i].notVerified) { %>
-                <span>
-                    (<a href="/profile-email/resend/<%= emails[i].actionId %>">Resend</a> or
-                    <a href="/profile-email/cancel/<%= emails[i].actionId %>">Cancel</a>)
-                </span>
-            <% } %>
-        </span>
+<%
+var length = emails.length;
+for (var i = 0; i <= length; i++) {
+%>
+<div class="field">
+    <% if (i===length) {%>
+    <form action="/profile-email/add" method="post">
+        <br>
+        <br>
+        <input type="text" name="newEmail" value="Add another...">
+        <input class="btn btn-success" type="submit" value="Add &#187;">
+    </form>
+    <% } else {%>
+    <form action="profile-email/delete" method="post">
+        <br>
+        <br>
+        <input type="text" name="email" value=<%= emails[i].email%> readonly>
+        <input class="btn btn-success" type="submit" value="delete &#187;">
+    </form>
+        <% if (emails[i].primary) { %>
+            primary
         <% } %>
-    </div>
+        <% if (emails[i].notVerified) { %>
+                (<a href="/profile-email/resend/<%= emails[i].actionId %>">Resend</a> or
+                <a href="/profile-email/cancel/<%= emails[i].actionId %>">Cancel</a>)
+        <% } %>
     <% } %>
 </div>
+<% } %>
