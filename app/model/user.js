@@ -128,6 +128,7 @@ var userSchema = new Schema({
   // something else
 });
 
+// ensure primaryEmail be one of emailList
 userSchema.path('primaryEmail').validate(function (email){
   return -1 !== this.emailList.indexOf(email);
 }, 'The primaryEmail should be one member of emailList');
@@ -135,3 +136,16 @@ userSchema.path('primaryEmail').validate(function (email){
 var User = mongoose.model('User', userSchema);
 
 exports = module.exports = User;
+
+/**
+ * Helper function for searching user via username case-insensitively.
+ * Just delegate the query to <code>Model.findOne</code>.
+ *
+ * @param  {string}   username The username used for searching,
+ * case-insensitive.
+ * @param  {Function} callback Receive(err,user)
+ */
+User.findByUsername = function (username, callback) {
+  username = username.toLowerCase();
+  User.findOne({username: username}, callback);
+};

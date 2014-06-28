@@ -38,7 +38,7 @@ app.get('/profile-email/:id', function(req, res, next) {
   };
 
   var findUser = function (username, callback) {
-    User.findOne({username: username}, callback);
+    User.findByUsername(username, callback);
   };
 
   var updateUser = function (user, callback) {
@@ -177,7 +177,7 @@ app.post('/profile-email/delete', function (req, res, next) {
   }
 
   var findUser = function (callback) {
-    User.findOne({username: user.username}, callback);
+    User.findByUsername(user.username, callback);
   };
 
   var updateUser = function (user, callback) {

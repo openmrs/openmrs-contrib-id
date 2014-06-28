@@ -35,7 +35,7 @@ app.post('/login', mid.stripNewlines, validate(), function(req, res, next) {
   var redirect = req.body.destination || '/';
 
   var findUser = function (callback) {
-    User.findOne({username: username}, function (err, user) {
+    User.findByUsername(username, function (err, user) {
       if (err) {
         return callback(err);
       }

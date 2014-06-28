@@ -24,7 +24,8 @@ app.get('/reset', mid.forceLogout, function(req, res, next) {
 });
 
 app.post('/reset', mid.forceLogout, function(req, res, next) {
-  var resetCredential = req.body.resetCredential;
+  // case-insensitive
+  var resetCredential = req.body.resetCredential.toLowerCase();
   var USER_NOT_FOUND_MSG = 'User data not found';
 
   var filter = {};
@@ -114,20 +115,23 @@ app.post('/reset/:id', validate(), function(req, res, next) {
         'The requested password reset has expired or does not exist.');
       return res.redirect('/');
     }
-    var password = utils.getSHA(req.body.newpassword);
 
-    User.findOneAndUpdate({username: locals.username}, {
-      password: password,
-    },
-    function (err) {
+    var password = utils.getSHA(req.body.newpassword);
+    var username = locals.username;
+
+    User.findByUsername(username, function (err, user) {
       if (err) {
         return next(err);
       }
-      log.info('password reset for "' + locals.username + '"');
-      verification.clear(req.params.id); // remove validation from DB
-      req.flash('success', 'Password has been reset successfully. ' +
-        'You may now log in across the OpenMRS Community.');
-      res.redirect('/');
+      user.password=password;
+
+      user.save(function (err) {
+        log.info('password reset for "' + username + '"');
+        verification.clear(req.params.id); // remove validation from DB
+        req.flash('success', 'Password has been reset successfully. ' +
+          'You may now log in across the OpenMRS Community.');
+        res.redirect('/');
+      });
     });
   });
 });

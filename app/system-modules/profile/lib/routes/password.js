@@ -27,7 +27,7 @@ app.post('/password', mid.forceLogin, validate(), function(req, res, next) {
   var updUser = req.session.user;
 
   var findUser = function (callback) {
-    User.findOne({username: updUser.username}, function (err, user) {
+    User.findByUsername(updUser.username, function (err, user) {
       if (err) {
         return callback(err);
       }

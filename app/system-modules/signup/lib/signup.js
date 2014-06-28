@@ -152,7 +152,7 @@ app.get('/signup/:id', function(req, res, next) {
       return res.redirect('/');
     }
     var username = locals.username;
-    User.findOne({username: username}, function (err, user) {
+    User.findByUsername(username, function (err, user) {
       if (err) {
         return next(err);
       }
@@ -188,7 +188,7 @@ app.get('/checkuser/*', function(req, res, next) {
     return res.end(JSON.stringify({illegal: true}));
   }
 
-  User.findOne({username: username}, function chkUser(err, user) {
+  User.findByUsername(username, function chkUser(err, user) {
     if (err) {
       return next(err);
     }

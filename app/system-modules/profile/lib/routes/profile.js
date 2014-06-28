@@ -75,7 +75,7 @@ app.post('/profile', mid.forceLogin, validate(), function(req, res, next) {
   var username = req.session.user.username;
 
   var findUser = function (callback) {
-    User.findOne({username: username}, callback);
+    User.findByUsername(username, callback);
   };
 
   var updateUser = function (user, callback) {
