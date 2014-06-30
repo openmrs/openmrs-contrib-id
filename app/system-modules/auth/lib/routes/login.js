@@ -70,7 +70,7 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
       }
       log.info('authentication failed for "' + username +
         '" (' + err.loginFail + ')');
-      req.flash('error', 'Login failed');
+      req.flash('error', err.loginFail);
       res.locals({
         fail: {
           loginusername: false,
