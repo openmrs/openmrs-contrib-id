@@ -112,7 +112,7 @@ app.get('/profile-email/cancel/:actionId', function(req, res, next) {
   });
 });
 
-app.post('/profile-email/add', profileMid.emailValidator,
+app.post('/profile-email/add', mid.forceLogin, profileMid.emailValidator,
   function (req, res, next) {
 
   var user = req.session.user;
@@ -143,7 +143,7 @@ app.post('/profile-email/add', profileMid.emailValidator,
   });
 });
 
-app.post('/profile-email/delete', function (req, res, next) {
+app.post('/profile-email/delete', mid.forceLogin, function (req, res, next) {
   var user = req.session.user;
   var email = req.body.email;
   var category = verification.categories.newEmail;
@@ -153,15 +153,43 @@ app.post('/profile-email/delete', function (req, res, next) {
     req.flash('error', 'You cannot delete the primaryEmail');
     return res.redirect('/profile');
   }
+  // verified
+  if (-1 !== _.indexOf(user.emailList, email)) {
+    var findUser = function (callback) {
+      User.findByUsername(user.username, callback);
+    };
 
-  // remove verifications
+    var updateUser = function (user, callback) {
+      var index = _.indexOf(user.emailList, email);
+      user.emailList.splice(index, 1);
+      user.save(callback);
+    };
+
+    async.waterfall([
+      findUser,
+      updateUser,
+    ],
+    function (err, user) {
+      if (err) {
+        return next(err);
+      }
+      log.info(user.username + ' successfully updated');
+      req.session.user = user;
+      return res.redirect('/profile');
+    });
+    return ;
+  }
+
+  // vnot verified
+  log.debug('deleting verification for new email');
+  var MSG = 'Email to delete not found'; // remove verifications
   var findVerification = function (callback) {
     verification.search(email, category, function (err, instances) {
       if (err) {
         return callback(err);
       }
       if (_.isEmpty(instances)) {
-        return callback(new Error('Email to delete not found'));
+        return callback(new Error(MSG));
       }
       if (instances.length > 1) {
         log.debug('There should be at most one instance matched');
@@ -182,31 +210,38 @@ app.post('/profile-email/delete', function (req, res, next) {
     ],
     function (err) {
       if (err) {
+        if (err.message === MSG) {
+          return ;
+        }
         return next(err);
       }
       return res.redirect('/profile');
     });
   }
+});
+
+app.post('/profile-email/primary', mid.forceLogin, function (req, res, next) {
+  var email = req.body.email;
+  var user = req.session.user;
 
   var findUser = function (callback) {
     User.findByUsername(user.username, callback);
   };
 
-  var updateUser = function (user, callback) {
-    var index = _.indexOf(user.emailList, email);
-    user.emailList.splice(index, 1);
+  var setEmail = function (user, callback) {
+    user.primaryEmail = email;
     user.save(callback);
   };
 
   async.waterfall([
     findUser,
-    updateUser,
+    setEmail,
   ],
   function (err, user) {
     if (err) {
       return next(err);
     }
-    log.info(user.username + ' successfully updated');
+    log.info(user.username + 'successfully updated');
     req.session.user = user;
     return res.redirect('/profile');
   });

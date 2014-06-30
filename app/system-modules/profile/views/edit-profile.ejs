@@ -47,6 +47,12 @@ for (var i = 0; i <= length; i++) {
         <input type="text" name="email" value=<%= emails[i].email%> readonly>
         <input class="btn btn-success" type="submit" value="delete &#187;">
     </form>
+    <% if (!emails[i].notVerified) { %>
+    <form action="profile-email/primary" method="post">
+        <input type="hidden" name="email" value=<%= emails[i].email%> readonly>
+        <input class="btn btn-success" type="submit" value="set as primary &#187;">
+    </form>
+    <% } %>
         <% if (emails[i].primary) { %>
             primary
         <% } %>
