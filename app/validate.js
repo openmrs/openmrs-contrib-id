@@ -19,10 +19,13 @@ var Recaptcha = require('recaptcha').Recaptcha;
 var path = require('path');
 
 var _ = require('lodash');
+var async = require('async');
 
 var Common = require(global.__commonModule);
 var conf = Common.conf;
 var log = Common.logger.add('validation');
+var utils = Common.utils;
+
 var User = require(path.join(global.__apppath, 'model/user'));
 
 var USERNAME_DUP_MSG = 'This username is already taken. Better luck next time';
@@ -43,22 +46,8 @@ var validate = {};
  * true means this field is wrong.
  */
 
-var isUsernameValid = function (username) {
-  var usernameRegex = conf.user.usernameRegex;
-  if (_.isEmpty(username) || !usernameRegex.test(username)) {
-    // ensure it not empty first, avoid auto-cast for (null) or (undefined)
-    return false;
-  }
-  return true;
-};
-
-var isEmailValid = function (email) {
-  var emailRegex = conf.email.validation.emailRegex;
-  if (_.isEmpty(email) || !emailRegex.test(email)) {
-    return false;
-  }
-  return true;
-};
+var isUsernameValid = utils.isUsernameValid;
+var isEmailValid = utils.isEmailValid;
 
 validate.chkUsernameInvalid = function (username, callback) {
   if (!isUsernameValid(username)) {
@@ -126,6 +115,10 @@ validate.chkLength = function(str, minLen, callback) {
   return callback(null, false);
 };
 
+validate.chkDiff = function (strA, strB, callback) {
+  return callback(null, strA !== strB);
+};
+
 /**
  * captcha has these attributes and may get this way
  * {
@@ -160,6 +153,49 @@ validate.receive = function (req, res, next) {
     req.session.validation = {};
   }
   next();
+};
+
+//
+validate.perform = function (validators, req, res, next) {
+  async.parallel(validators, function (err, results) {
+    var failed = false;
+    var values = {};
+    var failures = {};
+    var failReason = {};
+    // values should be cached to reuse
+    var cacheList = ['username', 'firstName', 'lastName', 'primaryEmail'];
+
+    if (err) {
+      return next(err);
+    }
+
+    // store the values
+    _.forIn(results, function (value, key) {
+      if (!value) {// valid
+        if (-1 !== _.indexOf(cacheList, key)) {
+          values[key] = req.body[key];
+        }
+        return;
+      }
+      failed = true;
+      failures[key] = value;
+      if (_.isString(value)) {
+        failReason[key] = value;
+      }
+    });
+
+    if (!failed) { // if all valid, pass the requests to next handler
+      log.debug('failed for validation');
+      return next();
+    }
+
+    req.session.validation = {
+      values: values,
+      fail: failures,
+      failReason: failReason,
+    };
+    return res.redirect(req.url);
+  });
 };
 
 exports = module.exports = validate;

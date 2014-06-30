@@ -7,6 +7,7 @@ var async = require('async');
 var _ = require('lodash');
 
 var settings = require('../settings');
+var resetMid = require('../middleware');
 
 var Common = require(global.__commonModule);
 var app = Common.app;
@@ -16,6 +17,7 @@ var validate = Common.validate;
 var verification = Common.verification;
 var log = Common.logger.add('express');
 var utils = Common.utils;
+
 
 var User = require(path.join(global.__apppath, 'model/user'));
 
@@ -105,7 +107,7 @@ app.get('/reset/:id', validate.receive, function(req, res, next) {
   });
 });
 
-app.post('/reset/:id', function(req, res, next) {
+app.post('/reset/:id', resetMid.validator, function(req, res, next) {
   verification.check(req.params.id, function(err, valid, locals) {
     if (err) {
       return next(err);
@@ -116,7 +118,7 @@ app.post('/reset/:id', function(req, res, next) {
       return res.redirect('/');
     }
 
-    var password = utils.getSHA(req.body.newpassword);
+    var password = utils.getSHA(req.body.newPassword);
     var username = locals.username;
 
     User.findByUsername(username, function (err, user) {

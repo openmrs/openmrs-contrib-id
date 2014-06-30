@@ -2,6 +2,10 @@
  * Some utility tools
  */
 var crypto = require('crypto');
+var _ = require('lodash');
+
+var Common = require(global.__commonModule);
+var conf = Common.conf;
 
 // password hashing
 exports.getSHA = function (cleartext) {
@@ -20,3 +24,19 @@ exports.checkSHA = function (cleartext, hashed) {
   return newHash === hashed;
 };
 
+exports.isUsernameValid = function (username) {
+  var usernameRegex = conf.user.usernameRegex;
+  if (_.isEmpty(username) || !usernameRegex.test(username)) {
+    // ensure it not empty first, avoid auto-cast for (null) or (undefined)
+    return false;
+  }
+  return true;
+};
+
+exports.isEmailValid = function (email) {
+  var emailRegex = conf.email.validation.emailRegex;
+  if (_.isEmpty(email) || !emailRegex.test(email)) {
+    return false;
+  }
+  return true;
+};

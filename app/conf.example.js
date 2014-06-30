@@ -73,9 +73,10 @@ module.exports = {
     "password": "secret"
   },
   "mongo": {
-    "uri": "mongodb://localhost/test",
-    "user": "omrsid",
+    "uri": "mongodb://localhost/id_dashboard",
+    "username": "mongo_user",
     "password": "secret",
+    "commonExpireTime": "2d"
   },
   "session": {
     "__comment3": "session storage DB",

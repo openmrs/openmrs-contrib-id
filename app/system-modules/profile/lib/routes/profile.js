@@ -7,6 +7,7 @@ var async = require('async');
 var _ = require('lodash');
 
 var settings = require('../settings');
+var profileMid = require('../middleware');
 
 var Common = require(global.__commonModule);
 var conf = Common.conf;
@@ -14,6 +15,7 @@ var mid = Common.mid;
 var log = Common.logger.add('express');
 var validate = Common.validate;
 var verification = Common.verification;
+
 
 var app = Common.app;
 
@@ -71,7 +73,9 @@ app.get('/profile', mid.forceLogin, validate.receive,
 });
 
 // handle basical profile change, firstName and lastName only currently
-app.post('/profile', mid.forceLogin, function(req, res, next) {
+app.post('/profile', mid.forceLogin, profileMid.profileValidator,
+  function(req, res, next) {
+
   var username = req.session.user.username;
 
   var findUser = function (callback) {

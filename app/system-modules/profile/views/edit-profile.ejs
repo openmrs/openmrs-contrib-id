@@ -51,8 +51,7 @@ for (var i = 0; i <= length; i++) {
             primary
         <% } %>
         <% if (emails[i].notVerified) { %>
-                (<a href="/profile-email/resend/<%= emails[i].actionId %>">Resend</a> or
-                <a href="/profile-email/cancel/<%= emails[i].actionId %>">Cancel</a>)
+                <a href="/profile-email/resend/<%= emails[i].actionId %>">Resend</a>
         <% } %>
     <% } %>
 </div>

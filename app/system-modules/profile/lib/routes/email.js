@@ -15,11 +15,12 @@ var app = Common.app;
 var User = require(path.join(global.__apppath, 'model/user'));
 
 var settings = require('../settings');
+var profileMid = require('../middleware');
 
 var NOT_FOUND_MSG = 'Verification record not found';
 
 
-app.get('/profile-email/:id', function(req, res, next) {
+app.get('/profile-email/verify/:id', function(req, res, next) {
   // check for valid profile-email verification ID
 
   var newEmail = '';
@@ -111,7 +112,9 @@ app.get('/profile-email/cancel/:actionId', function(req, res, next) {
   });
 });
 
-app.post('/profile-email/add', function (req, res, next) {
+app.post('/profile-email/add', profileMid.emailValidator,
+  function (req, res, next) {
+
   var user = req.session.user;
   var mail = req.body.newEmail;
 
@@ -120,7 +123,7 @@ app.post('/profile-email/add', function (req, res, next) {
 
   // create verification instance
   verification.begin({
-    urlBase: 'profile-email',
+    urlBase: 'profile-email/verify',
     email: mail,
     category: verification.categories.newEmail,
     associatedId: user.username,
@@ -145,11 +148,20 @@ app.post('/profile-email/delete', function (req, res, next) {
   var email = req.body.email;
   var category = verification.categories.newEmail;
 
+  // primaryEmail can't be deleted
+  if (email === user.primaryEmail) {
+    req.flash('error', 'You cannot delete the primaryEmail');
+    return res.redirect('/profile');
+  }
+
   // remove verifications
   var findVerification = function (callback) {
     verification.search(email, category, function (err, instances) {
       if (err) {
         return callback(err);
+      }
+      if (_.isEmpty(instances)) {
+        return callback(new Error('Email to delete not found'));
       }
       if (instances.length > 1) {
         log.debug('There should be at most one instance matched');
