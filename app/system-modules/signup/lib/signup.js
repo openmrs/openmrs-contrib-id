@@ -82,8 +82,11 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     var finishCalls = 0,
       errored = false;
     var finish = function(err) {
-      if (err && errored == false) { // handle error
-        return next(err);
+      if (errored) {
+        return ;
+      }
+      if (err) { // handle error
+        next(err);
         errored = true;
       } else {
         finishCalls++;
