@@ -142,37 +142,46 @@ app.get('/signup/verify', function(req, res, next) {
 
 // verification
 app.get('/signup/:id', function(req, res, next) {
-  //ToDo
-  verification.check(req.params.id, function(err, valid, locals) {
+  var INVALID_MSG = 'The requested signup verification does not exist.';
+  var findUsernameByVerifyID = function(callback) {
+    verification.check(req.params.id, function (err, valid, locals) {
+      if (err) {
+        return callback(err);
+      }
+      if (!valid) {
+        return callback({failMessage: INVALID_MSG});
+      }
+      return callback(null, locals.username);
+    });
+  };
+
+  // clear locked and expiration flag
+  var updateUser = function (user, callback) {
+    user.locked = false;
+    user.createdAt = undefined;
+    user.addGroups(conf.user.defaultGroups, callback);
+  };
+
+  async.waterfall([
+    findUsernameByVerifyID,
+    User.findByUsername.bind(User),
+    updateUser,
+  ],
+  function (err, user) {
     if (err) {
+      if (err.failMessage) {
+        req.flash('error', err.failMessage);
+        return res.redirect('/');
+      }
       return next(err);
     }
-    if (!valid) {
-      req.flash('error', 'The requested signup verification does not exist.');
-      return res.redirect('/');
-    }
-    var username = locals.username;
-    User.findByUsername(username, function (err, user) {
-      if (err) {
-        return next(err);
-      }
-      if (_.isEmpty(user)) {
-        return next(new Error('This record is lost'));
-      }
-      user.locked = false;
-      user.createdAt = undefined;
-      user.save(function (err) {
-        if (err) {
-          return next(err);
-        }
-        log.debug(user.id + ': account enabled');
-        verification.clear(req.params.id);
-        req.flash('success', 'Your account was successfully created. Welcome!');
+    // we don't have to wait clear
+    verification.clear(req.params.id);
+    log.debug(user.id + ': account enabled');
+    req.flash('success', 'Your account was successfully created. Welcome!');
 
-        req.session.user = user;
-        res.redirect('/');
-      });
-    });
+    req.session.user = user;
+    res.redirect('/');
   });
 });
 

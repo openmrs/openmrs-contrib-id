@@ -3,10 +3,13 @@
  */
 
 var mongoose = require('mongoose');
+var async = require('async');
+var _ = require('lodash');
 
 var Schema = mongoose.Schema;
 
 var conf = require('../conf');
+var Group = require('./group');
 
 var uidRegex = conf.user.usernameRegex;
 var emailRegex = conf.email.validation.emailRegex;
@@ -149,3 +152,35 @@ User.findByUsername = function (username, callback) {
   username = username.toLowerCase();
   User.findOne({username: username}, callback);
 };
+
+/**
+ * Add specific groups to an user instance, and the user to those groups as well
+ * @param {[String]}   groups  groupNames
+ * @param {Function} callback  same as the one of <code>Model#save</code>
+ */
+User.prototype.addGroups = function (groups, callback) {
+  if (!Array.isArray(groups)) {
+    groups = [groups];
+  }
+  var user = this;
+  var userRef = {id: user.id, username: user.username};
+  async.map(groups, function addToGroup(group, cb) {
+    Group.findOne({groupName: group}, function (err, group) {
+      if (err) {
+        return cb(err);
+      }
+      group.userList.push(userRef);
+      group.save(cb);
+    });
+  },
+  function (err) {
+    if (err) {
+      return callback(err);
+    }
+    user.groups = _.union(user.groups, groups);
+    user.save(callback);
+  });
+};
+
+/// ToDO
+/// Remove user instances with records stored in groups
