@@ -5,8 +5,6 @@ var path = require('path');
 var async = require('async');
 var _ = require('lodash');
 
-var settings = require('../settings');
-
 var Common = require(global.__commonModule);
 var mid = Common.mid;
 var log = Common.logger.add('express');
@@ -17,13 +15,18 @@ var app = Common.app;
 
 var User = require(path.join(global.__apppath, 'model/user'));
 
+var settings = require('../settings');
+var profileMid = require('../middleware');
+
 app.get('/password', mid.forceLogin, validate.receive,
   function(req, res, next) {
 
   res.render(path.join(settings.viewPath,'edit-password'));
 });
 
-app.post('/password', mid.forceLogin, function(req, res, next) {
+app.post('/password', mid.forceLogin, profileMid.passwordValidator,
+  function(req, res, next) {
+
   var updUser = req.session.user;
 
   var findUser = function (callback) {
@@ -46,11 +49,12 @@ app.post('/password', mid.forceLogin, function(req, res, next) {
     findUser,
     changePassword,
   ],
-  function (err) {
+  function (err, user) {
     log.trace('password change no errors');
     log.info(updUser.username + ': password updated');
 
     req.flash('success', 'Password changed.');
+    req.session.user = user;
     res.redirect('/');
   });
 });

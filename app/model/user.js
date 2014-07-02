@@ -173,6 +173,7 @@ userSchema.pre('save', function (next) {
     });
     return;
   }
+  // already stored in LDAP, modify it
   var getUser = function (callback) {
     ldap.getUser(uid, function (err, userobj) {
       if (err) {
@@ -181,6 +182,7 @@ userSchema.pre('save', function (next) {
       return callback(null ,userobj);
     });
   };
+
   var updateUser = function (userobj, callback) {
     // update attributes one by one
     userobj[conf.user.username] = uid;
@@ -188,13 +190,22 @@ userSchema.pre('save', function (next) {
     userobj[conf.user.lastname] = last;
     userobj[conf.user.displayname] = disp;
     userobj[conf.user.email] = email;
-    userobj[conf.user.password] = pass;
     userobj.memberof = groups;
     ldap.updateUser(userobj, callback);
   };
+
+  // due to limitation of LDAP, password shall be dealt individually
+  var changePassword = function (userobj, callback) {
+    if (userobj[conf.user.password] === pass) { // not changed
+      return callback();
+    }
+    ldap.resetPassword(uid, pass, callback);
+  };
+
   async.waterfall([
     getUser,
     updateUser,
+    changePassword,
   ],
   function (err) {
     if (err) {

@@ -89,7 +89,9 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
   });
 });
 
-app.get('/reset/:id', validate.receive, function(req, res, next) {
+app.get('/reset/:id', mid.forceLogout, validate.receive,
+  function(req, res, next) {
+
   var resetId = req.params.id;
   verification.check(resetId, function(err, valid, locals) {
     if (err) {
@@ -107,7 +109,9 @@ app.get('/reset/:id', validate.receive, function(req, res, next) {
   });
 });
 
-app.post('/reset/:id', resetMid.validator, function(req, res, next) {
+app.post('/reset/:id', mid.forceLogout, resetMid.validator,
+  function(req, res, next) {
+
   verification.check(req.params.id, function(err, valid, locals) {
     if (err) {
       return next(err);
@@ -128,6 +132,10 @@ app.post('/reset/:id', resetMid.validator, function(req, res, next) {
       user.password=password;
 
       user.save(function (err) {
+        if (err) {
+          log.error('password reset failed');
+          return next(err);
+        }
         log.info('password reset for "' + username + '"');
         verification.clear(req.params.id); // remove validation from DB
         req.flash('success', 'Password has been reset successfully. ' +

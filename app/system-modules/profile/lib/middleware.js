@@ -62,3 +62,16 @@ exports.profileValidator = function (req, res, next) {
   };
   validate.perform(validators, req, res, next);
 };
+
+exports.passwordValidator = function (req, res, next) {
+  var passhash = req.session.user.password;
+  var currentpassword = req.body.currentpassword;
+  var newpassword = req.body.newpassword;
+  var confirmpassword = req.body.confirmpassword;
+  var validators = {
+    currentpassword: validate.chkPassword.bind(null,currentpassword,passhash),
+    newpassword: validate.chkLength.bind(null,newpassword,8),
+    confirmpassword: validate.chkDiff.bind(null,newpassword, confirmpassword),
+  };
+  validate.perform(validators, req, res, next);
+};

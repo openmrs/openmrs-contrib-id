@@ -36,6 +36,8 @@ var EMAIL_DUP_MSG = 'This email address is already registered. ' +
 var EMAIL_PLUS_MSG = 'Due to incompatibilities with the Google Apps APIs, ' +
   'email addresses cannot contain "+".';
 
+var WRONG_PWD_MSG = 'Wrong password, please check';
+
 var validate = {};
 
 /**
@@ -98,6 +100,13 @@ validate.chkEmailInvalidOrDup = function (email, callback) {
     }
     return callback(null, false);
   });
+};
+
+validate.chkPassword = function (password, passhash, callback) {
+  if (!utils.checkSHA(password, passhash)) {
+    return callback(null, WRONG_PWD_MSG);
+  }
+  return callback(null, false);
 };
 
 validate.chkEmpty = function (str, callback) {
