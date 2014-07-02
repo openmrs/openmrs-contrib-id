@@ -83,7 +83,6 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
   var last = req.body.lastName;
   var email = req.body.primaryEmail;
   var pass = req.body.password;
-  pass = utils.getSHA(pass);
 
   id = id.toLowerCase();
 
@@ -177,7 +176,7 @@ app.get('/signup/:id', function(req, res, next) {
     }
     // we don't have to wait clear
     verification.clear(req.params.id);
-    log.debug(user.id + ': account enabled');
+    log.debug(user.username + ': account enabled');
     req.flash('success', 'Your account was successfully created. Welcome!');
 
     req.session.user = user;

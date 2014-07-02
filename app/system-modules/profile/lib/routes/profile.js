@@ -85,6 +85,7 @@ app.post('/profile', mid.forceLogin, profileMid.profileValidator,
   var updateUser = function (user, callback) {
     user.firstName = req.body.firstName;
     user.lastName = req.body.lastName;
+    user.displayName = req.body.firstName + ' ' + req.body.lastName;
     user.save(callback);
   };
 

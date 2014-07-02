@@ -38,7 +38,7 @@ app.post('/password', mid.forceLogin, function(req, res, next) {
     });
   };
   var changePassword = function (user, callback) {
-    user.password = utils.getSHA(req.body.newpassword);
+    user.password = req.body.newpassword;
     user.save(callback);
   };
 

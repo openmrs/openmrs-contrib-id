@@ -7,6 +7,10 @@ var async = require('async');
 var _ = require('lodash');
 
 var Schema = mongoose.Schema;
+var Common = require(global.__commonModule);
+var log = Common.logger.add('user model');
+var ldap = Common.ldap;
+var utils = Common.utils;
 
 var conf = require('../conf');
 var Group = require('./group');
@@ -128,7 +132,11 @@ var userSchema = new Schema({
   extra: {
     type: Schema.Types.Mixed
   },
-  // something else
+
+  inLDAP: {// flag used to mark whether this record is stored in LDAP yet
+    type: Boolean,
+    default: false,
+  },
 });
 
 // ensure primaryEmail be one of emailList
@@ -136,9 +144,128 @@ userSchema.path('primaryEmail').validate(function (email){
   return -1 !== this.emailList.indexOf(email);
 }, 'The primaryEmail should be one member of emailList');
 
+// sync with LDAP
+userSchema.pre('save', function (next) {
+  // aliases
+  var uid = this.username;
+  var first = this.firstName;
+  var last = this.lastName;
+  var disp = this.displayName;
+  var email = this.primaryEmail; // only sync primary email with OpenLDAP
+  var pass = this.password;
+  var groups = this.groups;
+  var that = this;
+  if (0 !== pass.indexOf('{SHA}')) {
+    this.password = utils.getSHA(pass);
+  }
+  if (this.locked) {
+    return next();
+  }
+  if (!this.inLDAP) { // not stored in LDAP yet
+    ldap.addUser(uid, first, last, email, pass, function (err) {
+      if (err) {
+        log.error(uid + ' failed to add record to OpenLDAP');
+        return next(err);
+      }
+      log.info(uid + ' stored in OpenLDAP');
+      that.inLDAP = true;
+      return next();
+    });
+    return;
+  }
+  var getUser = function (callback) {
+    ldap.getUser(uid, function (err, userobj) {
+      if (err) {
+        return callback(err);
+      }
+      return callback(null ,userobj);
+    });
+  };
+  var updateUser = function (userobj, callback) {
+    // update attributes one by one
+    userobj[conf.user.username] = uid;
+    userobj[conf.user.firstname] = first;
+    userobj[conf.user.lastname] = last;
+    userobj[conf.user.displayname] = disp;
+    userobj[conf.user.email] = email;
+    userobj[conf.user.password] = pass;
+    userobj.memberof = groups;
+    ldap.updateUser(userobj, callback);
+  };
+  async.waterfall([
+    getUser,
+    updateUser,
+  ],
+  function (err) {
+    if (err) {
+      log.error(uid + ' failed to sync with OpenLDAP');
+      return next(err);
+    }
+    return next();
+  });
+});
+
+
 var User = mongoose.model('User', userSchema);
 
 exports = module.exports = User;
+
+/**
+ * Dynamically retrieve data from OpenLDAP
+ */
+var findAndSync = function(filter, callback) {
+  var findMongo = function (cb) {
+    User.findOne(filter,cb);
+  };
+  var findLDAP = function (user, cb) {
+    if (user) { // Found in mongo
+      return cb(null, user);
+    }
+    // not found in mongo, have a try in OpenLDAP
+    var finder;
+    var condition;
+    if (filter.username) {
+      finder = ldap.getUser;
+      condition = filter.username;
+    } else {
+      finder = ldap.getUserByEmail;
+      condition = filter.primaryEmail;
+    }
+    finder(condition, function (err, userobj) {
+      if (err.message === 'User data not found') {
+        return callback();
+      }
+      if (err) {
+        return callback(err);
+      }
+      var userInfo = {
+        username: userobj[conf.user.username],
+        firstName: userobj[conf.user.firstname],
+        lastName: userobj[conf.user.lastname],
+        displayName: userobj[conf.user.displayname],
+        primaryEmail: userobj[conf.user.email],
+        password: userobj[conf.user.password],
+        emailList: [userobj[conf.user.email]],
+        groups: userobj.memberof,
+        locked: false,
+        createdAt: undefined,
+        inLDAP: true,
+      };
+      var user = new User(userInfo);
+      user.save(cb);
+    });
+  };
+  async.waterfall([
+    findMongo,
+    findLDAP,
+  ],
+  function (err, user) {
+    if (err) {
+      return callback(err);
+    }
+    return callback(null ,user);
+  });
+};
 
 /**
  * Helper function for searching user via username case-insensitively.
@@ -150,8 +277,18 @@ exports = module.exports = User;
  */
 User.findByUsername = function (username, callback) {
   username = username.toLowerCase();
-  User.findOne({username: username}, callback);
+  findAndSync({username: username}, callback);
 };
+
+/**
+ * Just similar to above
+ */
+User.findByEmail = function (primaryEmail, callback) {
+  primaryEmail = primaryEmail.toLowerCase();
+  findAndSync({primaryEmail: primaryEmail}, callback);
+};
+
+
 
 /**
  * Add specific groups to an user instance, and the user to those groups as well

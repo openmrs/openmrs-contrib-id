@@ -118,7 +118,7 @@ app.post('/reset/:id', resetMid.validator, function(req, res, next) {
       return res.redirect('/');
     }
 
-    var password = utils.getSHA(req.body.newPassword);
+    var password = req.body.newPassword;
     var username = locals.username;
 
     User.findByUsername(username, function (err, user) {

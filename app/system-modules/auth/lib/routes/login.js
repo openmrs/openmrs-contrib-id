@@ -30,7 +30,6 @@ app.get(/^\/login\/?$/, mid.forceLogout, validate.receive,
 app.post('/login', mid.stripNewlines, function(req, res, next) {
   var username = req.body.loginusername;
   var password = req.body.loginpassword;
-  password = utils.getSHA(password);
 
   var redirect = req.body.destination || '/';
 
@@ -52,7 +51,7 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
     return callback(null, user);
   };
   var checkPassword = function (user, callback) {
-    if (!_.isEqual(password, user.password)) {
+    if (!utils.checkSHA(password, user.password)) {
       return callback({loginFail: 'Wrong password'});
     }
     return callback(null, user);

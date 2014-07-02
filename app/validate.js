@@ -185,7 +185,7 @@ validate.perform = function (validators, req, res, next) {
     });
 
     if (!failed) { // if all valid, pass the requests to next handler
-      log.debug('failed for validation');
+      log.debug('successed for validation');
       return next();
     }
 
