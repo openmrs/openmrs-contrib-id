@@ -224,14 +224,15 @@ var findAndSync = function(filter, callback) {
     // not found in mongo, have a try in OpenLDAP
     var finder;
     var condition;
-    if (filter.username) {
+    if (filter.username) {// choose finder
       finder = ldap.getUser;
       condition = filter.username;
     } else {
       finder = ldap.getUserByEmail;
-      condition = filter.primaryEmail;
+      condition = filter.emailList;
     }
-    finder(condition, function (err, userobj) {
+
+    finder(condition, function (err, userobj) {// find in OpenLDAP
       if (err) {
         if (err.message === 'User data not found') {
           return callback();
@@ -283,11 +284,20 @@ User.findByUsername = function (username, callback) {
 /**
  * Just similar to above
  */
-User.findByEmail = function (primaryEmail, callback) {
-  primaryEmail = primaryEmail.toLowerCase();
-  findAndSync({primaryEmail: primaryEmail}, callback);
+User.findByEmail = function (email, callback) {
+  email = email.toLowerCase();
+  findAndSync({emailList: email}, callback);
 };
 
+/**
+ * Just a delegator
+ */
+User.findByFilter = function (filter, callback) {
+  _.forIn(filter, function (value, key) {
+    filter[key] = value.toLowerCase;
+  });
+  findAndSync(filter, callback);
+};
 
 
 /**

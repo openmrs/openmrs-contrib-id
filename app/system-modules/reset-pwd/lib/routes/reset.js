@@ -39,7 +39,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 
 
   var findUser = function (callback) {
-    User.findOne(filter, function (err, user) {
+    User.findByFilter(filter, function (err, user) {
       if (err) {
         return callback(err);
       }

@@ -88,7 +88,7 @@ validate.chkEmailInvalidOrDup = function (email, callback) {
     // disobey the allowplus '+' rule
     return callback(null, EMAIL_PLUS_MSG);
   }
-  User.findOne({emailList: email}, function (err, user) {
+  User.findByEmail(email, function (err, user) {
     if (err) {
       return callback(err);
     }
