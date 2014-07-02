@@ -232,10 +232,10 @@ var findAndSync = function(filter, callback) {
       condition = filter.primaryEmail;
     }
     finder(condition, function (err, userobj) {
-      if (err.message === 'User data not found') {
-        return callback();
-      }
       if (err) {
+        if (err.message === 'User data not found') {
+          return callback();
+        }
         return callback(err);
       }
       var userInfo = {

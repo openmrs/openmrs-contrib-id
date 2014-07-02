@@ -185,7 +185,7 @@ exports.getUser = function(user, cb) {
         scope: system.SUBTREE,
         filter: '(' + conf.ldap.user.rdn + '=' + user + ')',
         attrs: conf.ldap.user.username + ' ' + conf.ldap.user.firstname + ' ' + conf.ldap.user.lastname + ' ' + conf.ldap.user.displayname + ' ' +
-          conf.ldap.user.email + ' ' + conf.ldap.user.secondaryemail + ' objectClass'
+          conf.ldap.user.email + ' ' + conf.ldap.user.password + ' ' + conf.ldap.user.secondaryemail + ' objectClass'
       }, function(e, d) {
         if (e) return cb(e);
 
