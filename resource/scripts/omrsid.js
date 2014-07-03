@@ -252,10 +252,7 @@ $().ready(function(){
     // Bootstrap Popovers
     $('[data-toggle="popover"]').popover({html: true});
     $('script[data-target="popover"]').each(function(i, content) {
-        // var id = $(content).attr('data-content-id');
-        console.debug(content);
         var id = content.dataset.contentId;
-        console.debug(id);
         $('[data-toggle="popover"][data-content-id="' + id + '"]')[0]
             .dataset.content = $(this).html();
 
