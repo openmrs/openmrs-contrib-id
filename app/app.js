@@ -15,7 +15,6 @@ var express = require('express');
 var fs = require('fs');
 var mail = require('nodemailer');
 var app = express.createServer();
-require('./new-db');
 
 // establish module & global variables
 module.exports = app;
@@ -34,6 +33,8 @@ try {
 var Common = require('./openmrsid-common');
 var conf = Common.conf;
 var log = Common.logger.add('express');
+
+require('./new-db')(app);
 
 mail.SMTP = conf.email.smtp;
 
