@@ -263,7 +263,7 @@ var findAndSync = function(filter, callback) {
   };
 
   // store the data retrieved to Mongo
-  var syncMongo = function (userobj, callback) {
+  var syncMongo = function (userobj, cb) {
     var userInfo = {
       username: userobj[conf.user.username],
       firstName: userobj[conf.user.firstname],
@@ -272,13 +272,12 @@ var findAndSync = function(filter, callback) {
       primaryEmail: userobj[conf.user.email],
       password: userobj[conf.user.password],
       emailList: [userobj[conf.user.email]],
-      // groups: userobj.memberof, /// ToDo deal with groups exclusively
       locked: false,
       createdAt: undefined,
       inLDAP: true,
     };
     var user = new User(userInfo);
-    user.addGroupsAndSave(userobj.memberof);
+    user.addGroupsAndSave(userobj.memberof, cb);
   };
 
   async.waterfall([
@@ -290,6 +289,7 @@ var findAndSync = function(filter, callback) {
     if (err) {
       return callback(err);
     }
+    log.info(user.username + ' retrieved from OpenLDAP and stored');
     return callback(null ,user);
   });
 };
@@ -337,11 +337,14 @@ User.prototype.addGroupsAndSave = function (groups, callback) {
     groups = [groups];
   }
   var user = this;
-  var userRef = {id: user.id, username: user.username};
+  var userRef = {objId: user.id, username: user.username};
   async.map(groups, function addToGroup(group, cb) {
     Group.findOne({groupName: group}, function (err, group) {
       if (err) {
         return cb(err);
+      }
+      if (_.isEmpty(group)) {
+        return cb('No such groups');
       }
       group.member.push(userRef);
       group.save(cb);
@@ -355,6 +358,3 @@ User.prototype.addGroupsAndSave = function (groups, callback) {
     user.save(callback);
   });
 };
-
-/// ToDO
-/// Remove user instances with records stored in groups

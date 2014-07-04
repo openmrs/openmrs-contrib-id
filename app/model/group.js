@@ -8,7 +8,7 @@ var ObjectId = Schema.Types.ObjectId;
 
 // reference to a specifc user object, and store the username for easy access
 var userRefSchema = new Schema({
-  id: {
+  objId: {
     type: ObjectId,
   },
   username: {
