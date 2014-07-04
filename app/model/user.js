@@ -317,6 +317,7 @@ User.findByFilter = function (filter, callback) {
  * @param {Function} callback  same as the one of <code>Model#save</code>
  */
 User.prototype.addGroups = function (groups, callback) {
+  // ToDo May have duplicate problems
   if (!Array.isArray(groups)) {
     groups = [groups];
   }
@@ -327,7 +328,7 @@ User.prototype.addGroups = function (groups, callback) {
       if (err) {
         return cb(err);
       }
-      group.userList.push(userRef);
+      group.member.push(userRef);
       group.save(cb);
     });
   },

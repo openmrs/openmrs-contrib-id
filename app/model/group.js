@@ -25,7 +25,7 @@ var groupSchema = new Schema({
   description: {
     type: String,
   },
-  userList: {
+  member: {
     type: [userRefSchema],
   },
 });
