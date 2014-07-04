@@ -223,16 +223,24 @@ exports = module.exports = User;
 
 /**
  * Dynamically retrieve data from OpenLDAP
+ * Temporary solution for sync
  */
 var findAndSync = function(filter, callback) {
+
   var findMongo = function (cb) {
-    User.findOne(filter,cb);
+    User.findOne(filter, function (err, user) {
+      if (err) {
+        return cb(err);
+      }
+      if (user) { // if found, directly end the chain
+        return callback(null, user);
+      }
+      return cb();
+    });
   };
-  var findLDAP = function (user, cb) {
-    if (user) { // Found in mongo
-      return cb(null, user);
-    }
-    // not found in mongo, have a try in OpenLDAP
+
+  // not found in mongo, have a try in OpenLDAP
+  var findLDAP = function (cb) {
     var finder;
     var condition;
     if (filter.username) {// choose finder
@@ -245,31 +253,38 @@ var findAndSync = function(filter, callback) {
 
     finder(condition, function (err, userobj) {// find in OpenLDAP
       if (err) {
-        if (err.message === 'User data not found') {
+        if (err.message === 'User data not found') {// not found, end chain
           return callback();
         }
-        return callback(err);
+        return cb(err);
       }
-      var userInfo = {
-        username: userobj[conf.user.username],
-        firstName: userobj[conf.user.firstname],
-        lastName: userobj[conf.user.lastname],
-        displayName: userobj[conf.user.displayname],
-        primaryEmail: userobj[conf.user.email],
-        password: userobj[conf.user.password],
-        emailList: [userobj[conf.user.email]],
-        groups: userobj.memberof,
-        locked: false,
-        createdAt: undefined,
-        inLDAP: true,
-      };
-      var user = new User(userInfo);
-      user.save(cb);
+      return cb(null ,userobj);
     });
   };
+
+  // store the data retrieved to Mongo
+  var syncMongo = function (userobj, callback) {
+    var userInfo = {
+      username: userobj[conf.user.username],
+      firstName: userobj[conf.user.firstname],
+      lastName: userobj[conf.user.lastname],
+      displayName: userobj[conf.user.displayname],
+      primaryEmail: userobj[conf.user.email],
+      password: userobj[conf.user.password],
+      emailList: [userobj[conf.user.email]],
+      // groups: userobj.memberof, /// ToDo deal with groups exclusively
+      locked: false,
+      createdAt: undefined,
+      inLDAP: true,
+    };
+    var user = new User(userInfo);
+    user.addGroupsAndSave(userobj.memberof);
+  };
+
   async.waterfall([
     findMongo,
     findLDAP,
+    syncMongo,
   ],
   function (err, user) {
     if (err) {
@@ -316,7 +331,7 @@ User.findByFilter = function (filter, callback) {
  * @param {[String]}   groups  groupNames
  * @param {Function} callback  same as the one of <code>Model#save</code>
  */
-User.prototype.addGroups = function (groups, callback) {
+User.prototype.addGroupsAndSave = function (groups, callback) {
   // ToDo May have duplicate problems
   if (!Array.isArray(groups)) {
     groups = [groups];

@@ -158,7 +158,7 @@ app.get('/signup/:id', function(req, res, next) {
   var updateUser = function (user, callback) {
     user.locked = false;
     user.createdAt = undefined;
-    user.addGroups(conf.user.defaultGroups, callback);
+    user.addGroupsAndSave(conf.user.defaultGroups, callback);
   };
 
   async.waterfall([
