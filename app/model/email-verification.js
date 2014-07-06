@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
+// var Common = require(global.__commonModule);
+// var fields = Common.module.dbAdmin.fields;
 
 var conf = require('../conf');
 
@@ -43,10 +45,12 @@ var emailSchema = new Schema({
   settings: {
     type: {},
     required: true,
+    // formageField: fields.JsonField
   },
   locals: {
     type: {},
     required: true,
+    // formageField: fields.JsonField
   },
   timeoutDate: { // optional
     type: Date,
@@ -57,6 +61,13 @@ var emailSchema = new Schema({
     default: Date.now,
   },
 });
+
+
+// Formage configuration.
+emailSchema.header_lines = [
+   '<script src="/resource/ace-json-build.js"></script>',
+   '<script src="/resource/ace-bootstrap.js"></script>'
+];
 
 var EmailVertification = mongoose.model('EmailVertification', emailSchema);
 

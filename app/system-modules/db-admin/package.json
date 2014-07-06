@@ -1,0 +1,24 @@
+{
+  "name": "openmrs-contrib-id-dbadmin",
+  "version": "0.0.0",
+  "description": "OpenMRS ID database admin module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openmrs/openmrs-contrib-id.git"
+  },
+  "author": "Elliott Williams <elliott@openmrs.org>",
+  "license": "MPLv2",
+  "bugs": {
+    "url": "https://github.com/openmrs/openmrs-contrib-id/issues"
+  },
+  "homepage": "https://github.com/openmrs/openmrs-contrib-id",
+  "dependencies": {
+    "express": "^3.13.0",
+    "formage": "^2.7.29",
+    "mongoose": "^3.8.12"
+  }
+}
