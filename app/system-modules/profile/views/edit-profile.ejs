@@ -3,8 +3,6 @@
 <% headline = user.displayName+"'s Profile" %>
 <% sidebar = ['sidebar/editprofile-avatar'] %>
 
-<% style('/resource/bootstrap3-editable/css/bootstrap-editable.css', 10) %>
-<% script('/resource/bootstrap3-editable/js/bootstrap-editable.min.js', 10) %>
 <% style('/resource/stylesheets/profile/profile.css') %>
 
 <form action="/profile" method="post">
@@ -32,6 +30,19 @@
 </form>
 
 <h2>Email Addresses</h2>
+
+<p>
+    OpenMRS Community Applications and Mailing Lists contact you via your
+    email address. Your email address is not shown to the public, but can
+    be optionally shown to other OpenMRS Community members.
+</p>
+<p>
+    Adding multiple email addresses allows you to use them on different 
+    mailing lists, and allows you to reset your account password from multiple
+    email addresses. If you have an <b>@openmrs.org</b> email address, it's a
+    good idea to add an additional email.
+</p>
+
 <div class="row">
 <ul class="email-selector list-group col-md-8">
     <%
@@ -50,11 +61,6 @@
                 <span class="badge">Needs Verification</span>
             <% } %>
         </h3>
-
-        <!-- <a class="btn btn-default change-address">
-            <span class="glyphicon glyphicon-pencil"></span>
-            Change
-        </a> -->
 
         <a class="btn btn-default <% if (m.primary) { %>disabled<% } %>"
         href="/profile-email/delete/<%= encodeURIComponent(m.email) %>">
@@ -113,23 +119,3 @@
     </li>
 <ul>
 </div>
-
-<script type="text/javascript">
-/*$().ready(function() {
-    $('.email-selector h3 .email-address').each(function(i, addr) {
-        $(addr).editable({
-            type: 'text',
-            mode: 'inline',
-            name: 'newEmail',
-            pk: $(addr).html(),
-            // toggle: 'manual',
-            url: '/profile-email/change'
-        });
-    });
-
-    $('.email-selector .change-address').click(function() {
-        var address = $(this).siblings('h3').children('.email-address');
-        address.editable('show');
-    });
-});*/
-</script>

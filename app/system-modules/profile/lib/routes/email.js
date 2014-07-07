@@ -18,7 +18,6 @@ var settings = require('../settings');
 var profileMid = require('../middleware');
 
 var NOT_FOUND_MSG = 'Verification record not found';
-var EMAIL_NOT_FOUND_MSG = 'Email address not found';
 
 
 app.get('/profile-email/verify/:id', function(req, res, next) {
@@ -246,51 +245,4 @@ app.get('/profile-email/primary/:email', mid.forceLogin, function (req, res, nex
     req.session.user = user;
     return res.redirect('/profile');
   });
-});
-
-app.post('/profile-email/change', mid.forceLogin,
-function (req, res, next) {
-
-  var email = req.body.pk;
-  var newEmail = req.body.value;
-  var user = req.session.user;
-
-  var findUser = function (callback) {
-    User.findByUsername(user.username, callback);
-  };
-
-  var changeEmail = function (user, callback) {
-    var i = _.indexOf(user.emailList, email);
-    if (i < 0) {
-      // req.flash('error', 'Email address to change not found.');
-      return callback(new Error(EMAIL_NOT_FOUND_MSG));
-    }
-    user.emailList[i] = newEmail;
-
-    // Update the primary address, as well.
-    if (user.primaryEmail === email) {
-      user.primaryEmail = newEmail;
-    }
-
-    log.debug('saving user. new emailList = ', user.emailList);
-    user.save(callback);
-  }
-
-  async.waterfall([
-    findUser,
-    changeEmail
-  ],
-  function (err, user) {
-    log.debug('save complete');
-    if (err) {
-      log.debug('error: ', err);
-      var status = 500 || err.statusCode;
-      var text = err.message || err.name;
-      return res.send(text, status);
-    }
-
-    req.session.user = user;
-
-    return res.send(newEmail);
-  })
 });
