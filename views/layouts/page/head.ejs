@@ -9,8 +9,8 @@
       <link href="/stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
   <![endif]-->
 
-  <% enqueuedStylesheets.forEach(function(cssHref) { %>
-  <link rel="stylesheet" href="<%= cssHref %>">
+  <% enqueuedStylesheets.forEach(function(style) { %>
+  <link rel="stylesheet" href="<%= style.css %>">
   <% }) %>
 
   <script src="/resource/scripts/jquery.min.js"></script>
