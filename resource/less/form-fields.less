@@ -2,10 +2,7 @@
 
 // Abstract definitions, attached to multiple selectors in the "Content" section
 // below.
-#inputs {
-  display: inline;
-  float: left;
-  margin: 0 0 18px;
+#input-appearance {
   padding: 6px;
   border-radius: 4px;
   font-size: 11px;
@@ -14,13 +11,21 @@
   -moz-border-radius: 4px;
   border: 1px solid #CCC;
   background: #F7F7F7;
-  width: 178px;
-  clear: both;
   transition: background 100ms;
   transition-property: background, box-shadow;
   -webkit-transition: background 100ms;
   -webkit-transition-property: background, box-shadow;
   position: relative;
+}
+
+#input-form-fields {
+  #input-appearance();
+
+  display: inline;
+  float: left;
+  margin: 0 0 18px;
+  width: 178px;
+  clear: both;
   z-index: 20;
 
   .two-up& {
@@ -48,8 +53,19 @@
 }
 
 // Content
-#main form {
+#main > form {
   padding-left: 25px;
+  margin-bottom: 2em;
+}
+
+input {
+  &[type="text"], &[type="password"] {
+    #input-appearance(); 
+
+    &:focus {
+      #inputs-focus();
+    }
+  }
 }
 
 .field {
@@ -59,17 +75,13 @@
   position: relative;
 
   textarea { 
-    #inputs(); 
+    #input-form-fields(); 
 
     height: 9em;
   }
   input {
     &[type="text"], &[type="password"] {
-      #inputs(); 
-
-      &:focus {
-        #inputs-focus();
-      }
+      #input-form-fields(); 
     }
 
     &[type="checkbox"] {

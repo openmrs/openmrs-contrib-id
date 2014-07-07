@@ -2,13 +2,22 @@
 
 .email-selector {
 
-  .badge-primary {
-    background-color: @brand-primary;
+  .badge {
+    position: relative;
+    top: -.083333333em;
+
+    &.badge-primary {
+      background-color: @brand-primary;
+    }
   }
 
   .add-email-address {
     // border-top-width: 2px;
     // border-top-color: #bbb;
+  }
+
+  .btn.disabled {
+    cursor: not-allowed;
   }
 
 }
