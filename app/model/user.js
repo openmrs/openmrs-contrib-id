@@ -7,10 +7,11 @@ var async = require('async');
 var _ = require('lodash');
 
 var Schema = mongoose.Schema;
-var Common = require(global.__commonModule);
-var log = Common.logger.add('user model');
-var ldap = Common.ldap;
-var utils = Common.utils;
+
+var log = require('../logger').add('user model');
+var log;
+var ldap = require('../ldap');
+var utils = require('../utils');
 
 var conf = require('../conf');
 var Group = require('./group');
@@ -137,6 +138,13 @@ var userSchema = new Schema({
     type: Boolean,
     default: false,
   },
+
+  // Special flag used to skip the LDAP procedure.
+  // Note that this flag will be deleted in pre middleware,
+  // so it will only works once.
+  skipLDAP: {
+    type: Boolean,
+  },
 });
 
 // ensure primaryEmail be one of emailList
@@ -159,6 +167,10 @@ userSchema.pre('save', function (next) {
     this.password = utils.getSHA(pass);
   }
   if (this.locked) {
+    return next();
+  }
+  if (this.skipLDAP) {
+    this.skipLDAP = undefined;
     return next();
   }
   if (!this.inLDAP) { // not stored in LDAP yet

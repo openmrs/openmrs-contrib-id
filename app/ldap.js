@@ -13,11 +13,10 @@
  */
 
 //var LDAPServer = require('../node-LDAP/LDAP').Connection,
-var LDAPServer = require('LDAP'),
-  url = require('url'),
-  Common = require(global.__commonModule),
-  conf = Common.conf,
-  log = Common.logger.add('ldap');
+var LDAPServer = require('LDAP');
+var url = require('url');
+var conf = require('./conf');
+var log = require('./logger').add('ldap');
 
 var system = new LDAPServer({
     uri: conf.ldap.server.uri,

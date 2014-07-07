@@ -3,9 +3,7 @@
  */
 var crypto = require('crypto');
 var _ = require('lodash');
-
-var Common = require(global.__commonModule);
-var conf = Common.conf;
+var conf = require('./conf');
 
 // password hashing
 exports.getSHA = function (cleartext) {

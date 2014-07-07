@@ -34,6 +34,7 @@ var VALID_INFO1 = {
   emailList: [VALID_EMAIL1, VALID_EMAIL3],
   password: SIMPLE_STRING,
   locked: false,
+  skipLDAP: true,
 };
 
 var VALID_INFO2 = {
@@ -43,6 +44,7 @@ var VALID_INFO2 = {
   emailList: [VALID_EMAIL2],
   password: SIMPLE_STRING,
   locked: true,
+  skipLDAP: true,
 };
 
 var DUP_ERROR_CODE = 11000;
