@@ -45,11 +45,11 @@ app.get('/profile-email/verify/:id', function(req, res, next) {
   var updateUser = function (user, callback) {
     user.emailList.push(newEmail);
     newUser = user;
-    user.save(function (err, username) {
+    user.save(function (err, user) {
       if (err) {
         return callback(err);
       }
-      log.info('successfully updated email for ' + username);
+      log.info('successfully updated email for ' + user.username);
       return callback();
     });
   };

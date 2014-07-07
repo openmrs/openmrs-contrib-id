@@ -7,9 +7,8 @@ var url = require('url');
 var async = require('async');
 var _ = require('lodash');
 
-var Common = require(global.__commonModule);
-var conf = Common.conf;
-var log = Common.logger.add('email-verification');
+var conf = require('./conf');
+var log = require('./logger').add('email-verification');
 
 var emailPath = path.join(global.__apppath,'model/email-verification');
 
@@ -34,6 +33,7 @@ exports.categories = EmailVerification.categories;
  *   associatedId (if exists) user this request belongs to
  *   locals,      extra local vars to pass to template renderer and to active
  *   timeout,     time before exiration, defaults to never
+ *   category,    verification category, one of EmailVerificaion.categories
  * },callback)    receives errors
  */
 exports.begin = function(settings, callback) {
