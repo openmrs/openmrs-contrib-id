@@ -1,4 +1,4 @@
 test:
-	./node_modules/.bin/mocha  --reporter list
+	node  test/runner.js
 
 .PHONY: test

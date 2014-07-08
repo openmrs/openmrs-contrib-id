@@ -1,11 +1,10 @@
 /*jshint expr: true*/
-var mongoose = require('mongoose');
 var _ = require('lodash');
 var expect = require('chai').expect;
 var async = require('async');
 
-var conf = require('./conf');
 var User = require('../app/model/user');
+var ldap = require('../app/ldap');
 
 // data for testing purposes
 var VALID_EMAIL1 = 'foo@bar.com';
@@ -17,7 +16,7 @@ var ORPHAN_EMAIL = 'im@lonely.com';
 var INVALID_EMAIL = 'badatgoogle.com';
 
 
-var VALID_USERNAME1 = 'plypy';
+var VALID_USERNAME1 = 'Plypy';
 var VALID_USERNAME2 = 'plypx';
 
 var INVALID_USERNAME = 'Ply_py'; // contain one underscore
@@ -54,9 +53,6 @@ describe('User', function() {
   before(function (done) {
     async.series([
       function (callback) {
-        mongoose.connect(conf.mongoURI, callback);
-      },
-      function (callback) {
         User.on('index', callback);
       },
       function (callback) {
@@ -68,7 +64,7 @@ describe('User', function() {
     });
   });
 
-  beforeEach(function (done){
+  afterEach(function (done){
     User.remove(done);
   });
 
@@ -77,9 +73,6 @@ describe('User', function() {
       function (callback) {
         User.remove(callback);
       },
-      function (callback) {
-        mongoose.disconnect(callback);
-      }
     ],
     function (err) {
       done(err);
@@ -270,6 +263,80 @@ describe('User', function() {
       expect(err).to.have.property('errors');
       expect(err.errors).to.have.property('locked');
       done();
+    });
+  });
+
+  /// Some API tests
+  describe('finders', function() {
+    var userx;
+    beforeEach(function (done) {
+      userx = new User(VALID_INFO1);
+      userx.save(done);
+    });
+
+    describe('User.findByUsername', function() {
+      it('should find the record case-insensitively', function(done) {
+        var name = userx.username;
+        async.each([
+          name,
+          name.toLowerCase(),
+          name.toUpperCase()
+        ],
+        function (username, callback) {
+          User.findByUsername(username, function (err, user) {
+            if (err) {
+              return callback(err);
+            }
+            expect(user.username).to.be.equal(userx.username);
+            return callback();
+          });
+        }, done);
+      });
+    });
+
+    describe('User.findByEmail', function() {
+      it('should find the record case-insensitively', function(done) {
+        var email = userx.primaryEmail;
+        async.each([
+          email,
+          email.toLowerCase(),
+          email.toUpperCase()
+        ],
+        function (email, callback) {
+          User.findByEmail(email, function (err, user) {
+            if (err) {
+              return callback(err);
+            }
+            expect(user.username).to.be.equal(userx.username);
+            return callback();
+          });
+        }, done);
+      });
+    });
+
+  });
+
+  describe('sync with LDAP', function() {
+    var userx;
+    beforeEach(function (done) {
+      userx = new User(VALID_INFO1);
+      userx.skipLDAP = undefined;
+      console.log(userx);
+      userx.save(done);
+    });
+    afterEach(function (done) {
+      ldap.deleteUser(userx.username, done);
+    });
+
+    it('should find the record in LDAP with sync on', function(done) {
+      ldap.getUser(userx.username, function (err, userobj) {
+        if (err) {
+          return done(err);
+        }
+        console.log(userobj);
+        expect(userobj.username).to.be.equal(userx.username);
+        return done();
+      });
     });
   });
 
