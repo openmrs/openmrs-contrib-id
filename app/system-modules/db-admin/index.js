@@ -5,10 +5,10 @@ var Common = require(global.__commonModule);
 var fields = require('./lib/fields');
 var widgets = require('./lib/widgets');
 
-var app = express.createServer();
+var app = express();
 
 app.use(express.cookieParser('2w98dfuslk'));
-app.use(express.session({secret: key: 'id-admin'}));
+app.use(express.cookieSession({key: 'id-admin'}));
 
 formage.init(app, express, models, {
   title: 'OpenMRS ID Database Admin',
