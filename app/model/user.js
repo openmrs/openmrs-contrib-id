@@ -356,7 +356,7 @@ User.prototype.addGroupsAndSave = function (groups, callback) {
         return cb(err);
       }
       if (_.isEmpty(group)) {
-        return cb('No such groups');
+        return cb(new Error('No such groups'));
       }
       group.member.push(userRef);
       group.save(cb);
