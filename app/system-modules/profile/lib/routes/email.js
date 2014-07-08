@@ -143,9 +143,9 @@ app.post('/profile-email/add', mid.forceLogin, profileMid.emailValidator,
   });
 });
 
-app.post('/profile-email/delete', mid.forceLogin, function (req, res, next) {
+app.get('/profile-email/delete/:email', mid.forceLogin, function (req, res, next) {
   var user = req.session.user;
-  var email = req.body.email;
+  var email = req.params.email;
   var category = verification.categories.newEmail;
 
   // primaryEmail can't be deleted
@@ -220,8 +220,8 @@ app.post('/profile-email/delete', mid.forceLogin, function (req, res, next) {
   }
 });
 
-app.post('/profile-email/primary', mid.forceLogin, function (req, res, next) {
-  var email = req.body.email;
+app.get('/profile-email/primary/:email', mid.forceLogin, function (req, res, next) {
+  var email = req.params.email;
   var user = req.session.user;
 
   var findUser = function (callback) {
