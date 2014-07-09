@@ -18,6 +18,8 @@ var url = require('url');
 var conf = require('./conf');
 var log = require('./logger').add('ldap');
 
+var async = require('async');
+
 var system = new LDAPServer({
     uri: conf.ldap.server.uri,
     version: 3
@@ -522,6 +524,45 @@ exports.enableUser = function(username, cb) {
     });
   });
 }
+
+/**
+ * Add a group to LDAP
+ * @param {Object}   group Options used to create a new group, it has groupName
+ *                         and description attributes.
+ * @param {Function} cb    Pass err
+ */
+exports.addGroup = function (group, cb) {
+  //aliases
+  var rdn = conf.ldap.group.rdn;
+  var baseDn = conf.ldap.group.baseDn;
+  var objectClass = conf.ldap.group.objectClass;
+  var groupName = group.groupName;
+  var description = group.description;
+  var addGroup = function (callback) {
+    var dn = rdn + '=' + groupName + ','+ baseDn;
+    var attrs = [
+      {attr: 'objectClass', vals: [objectClass]},
+      {attr: 'cn', vals: [groupName]},
+      {attr: 'member', vals: ['']},
+    ];
+    if (description) {
+      attrs.push({attr: 'description', vals: [description]});
+    }
+    system.add(dn, attrs, callback);
+  };
+  async.series([
+    connect,
+    addGroup
+  ],
+  function (err) {
+    if (err) {
+      log.error('failed to add groups');
+      return cb(err);
+    }
+    log.info('successfully added group ' + groupName);
+    return cb();
+  });
+};
 
 // tests
 
