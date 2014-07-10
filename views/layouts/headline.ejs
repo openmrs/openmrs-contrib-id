@@ -2,7 +2,7 @@
   <div class="container">
     <h1 class="col-md-8 col-md-offset-1"><%- headline %>
   <% if (connected && showHeadlineAvatar) { %>
-    <img src="https://wiki.openmrs.org/rest/cas/1.0/avatar/server/<%= mailHash %>?s=51" alt="<%= user[conf.user.displayname] %>">
+    <img src="https://wiki.openmrs.org/rest/cas/1.0/avatar/server/<%= mailHash %>?s=51" alt="<%= user.displayName %>">
     <% } %>
     </h1>
   </div>
