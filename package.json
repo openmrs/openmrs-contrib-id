@@ -8,7 +8,7 @@
     "connect-mysql-session": "~0.1.1",
     "ejs": "~1",
     "express": "~3.13.0",
-    "LDAP": "~1.0.4",
+    "LDAP": "~1.2.0",
     "mysql": "~2.0.0-alpha8",
     "nodemailer": "~0.3.20",
     "qs": "~0.4.2",
