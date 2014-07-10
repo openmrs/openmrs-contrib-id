@@ -332,7 +332,7 @@ User.findByEmail = function (email, callback) {
  */
 User.findByFilter = function (filter, callback) {
   _.forIn(filter, function (value, key) {
-    filter[key] = value.toLowerCase;
+    filter[key] = value.toLowerCase();
   });
   findAndSync(filter, callback);
 };

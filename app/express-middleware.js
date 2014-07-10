@@ -11,14 +11,10 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-var crypto = require('crypto'),
-  Recaptcha = require('recaptcha').Recaptcha,
-  connect = require('connect'),
-  url = require('url'),
-  Common = require(global.__commonModule),
-  app = Common.app,
-  log = Common.logger.add('middleware'),
-  conf = Common.conf;
+var crypto = require('crypto');
+var url = require('url');
+var log = require('./logger').add('express-middleware');
+var conf = require('./conf');
 
 
 function setTypes(req, res) {
@@ -141,6 +137,6 @@ exports.parseParamTable = function(req, res, next) {
 
     generatedList[ind][type] = req.body[a];
   }
-  res.local('params', generatedList);
+  res.locals.params = generatedList;
   next();
 };

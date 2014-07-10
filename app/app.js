@@ -14,12 +14,14 @@
 var express = require('express');
 var fs = require('fs');
 var mail = require('nodemailer');
-var app = express.createServer();
-require('./new-db');
+var app = express();
 
 // establish module & global variables
-module.exports = app;
+exports = module.exports = app;
 global.__apppath = __dirname;
+
+require('./environment');
+require('./new-db');
 
 // fail if no configuration file found
 try {
@@ -59,5 +61,5 @@ process.on('uncaughtException', function(err) {
 
 
 /* App startup: */
-app.listen(3000);
-log.info('Express started on port ' + app.address().port);
+app.listen(app.get('port'));
+log.info('Express started on port ' + app.get('port'));

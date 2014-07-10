@@ -48,7 +48,7 @@ app.get(/^\/signup\/?$|^\/$/i, validate.receive, botproof.generators,
   }
 
   // parse querystrings for pre-populated data
-  var values = res.local('validation').values || {};
+  var values = res.locals.validation.values || {};
   var renderLayout = true;
   var query = url.parse(req.url, true).query;
 
@@ -65,7 +65,6 @@ app.get(/^\/signup\/?$|^\/$/i, validate.receive, botproof.generators,
   // render the page
   res.render(viewPath, {
     // values: values,
-    layout: renderLayout,
     renderLayout: renderLayout, // allows view to see whether or not it has layout
     bodyAppend: '<script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k=' + conf.validation.recaptchaPublic + '"></script>'
   });
@@ -186,7 +185,7 @@ app.get('/signup/:id', function(req, res, next) {
 
 // AJAX, check whether or not user exists
 app.get('/checkuser/*', function(req, res, next) {
-  if (!req.isXMLHttpRequest) {
+  if (!req.xhr) {
     return res.redirect('/signup');
   }
   var username = req.params[0];

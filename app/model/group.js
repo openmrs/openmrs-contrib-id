@@ -42,7 +42,13 @@ groupSchema.pre('save', function (next) {
     return next();
   }
   var group = {groupName: this.groupName, description: this.description};
-  ldap.addGroup(group, next);
+  ldap.addGroup(group, function (err) {
+    if (err) {
+      return next(err);
+    }
+    this.inLDAP = true;
+    return next();
+  });
 });
 
 var Group = mongoose.model('Group', groupSchema);

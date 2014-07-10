@@ -7,7 +7,7 @@
     "connect": "~2.3.3",
     "connect-mysql-session": "~0.1.1",
     "ejs": "~1",
-    "express": "~2.5.9",
+    "express": "~3.13.0",
     "LDAP": "~1.0.4",
     "mysql": "~2.0.0-alpha8",
     "nodemailer": "~0.3.20",
@@ -22,8 +22,9 @@
     "lodash": "~2.4.1",
     "less-middleware": "~1.0.3",
     "connect-mongo": "~0.4.1",
-    "ldapjs": "~0.7.1",
-    "log4js": "~0.5.8"
+    "log4js": "~0.5.8",
+    "connect-flash": "~0.1.1",
+    "ejs-locals": "~1.0.2"
   },
   "engine": {
     "node": "~0.8.26"

@@ -49,7 +49,7 @@ function hashField(name, spin) {
 }
 
 // Expose stuff.
-app.helpers({
+app.locals({
   disguise: hashField
 })
 
@@ -64,7 +64,7 @@ module.exports = {
 
     cipher.update(timestamp.toString())
 
-    res.local('timestamp', cipher.final('hex'))
+    res.locals.timestamp = cipher.final('hex')
     next();
   },
 
@@ -111,7 +111,7 @@ module.exports = {
     // secret. It's a hidden field within the page.
 
     // Generate the spinner and attach it to the request.
-    var timestamp = res.local('timestamp'),
+    var timestamp = res.locals.timestamp,
       hash = crypto.createHash('md5');
 
     log.trace('generating spinner with timestamp "' + timestamp + '" for ' +
@@ -122,7 +122,7 @@ module.exports = {
       .update(SECRET);
     var spin = hash.digest('hex');
 
-    res.local('spinner', spin);
+    res.locals.spinner = spin;
     next();
   },
 
