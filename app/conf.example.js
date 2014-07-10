@@ -64,7 +64,8 @@ module.exports = {
     "group": {
       "baseDn": "ou=groups,dc=example",
       "member": "member",
-      "rdn": "cn"
+      "rdn": "cn",
+      "objectClass": "groupOfNames"
     }
   },
   "db": {
