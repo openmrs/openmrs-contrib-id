@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var express = require('express');
 
 var conf = require('./conf');
 var uri = conf.mongo.uri;

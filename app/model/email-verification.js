@@ -43,10 +43,12 @@ var emailSchema = new Schema({
   settings: {
     type: {},
     required: true,
+    // formageField: fields.JsonField
   },
   locals: {
     type: {},
     required: true,
+    // formageField: fields.JsonField
   },
   timeoutDate: { // optional
     type: Date,
@@ -58,8 +60,15 @@ var emailSchema = new Schema({
   },
 });
 
+
+
 var EmailVertification = mongoose.model('EmailVertification', emailSchema);
 
 exports = module.exports = EmailVertification;
 exports.categories = categories;
 
+// Formage configuration.
+// EmailVertification.header_lines = [
+//   '<script src="/resource/ace-json-build.js"></script>',
+//   '<script src="/resource/ace-bootstrap.js"></script>'
+// ];

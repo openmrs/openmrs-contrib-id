@@ -28,6 +28,7 @@ function uidValidator(argument) {
 // Because mongo won't ensure all the members to be unique in one array
 var nonEmpty = {
   validator: function (ar) {
+    log.debug('nonEmpty');
     return ar.length > 0;
   },
   msg: 'The array can\'t be empty'
@@ -39,6 +40,7 @@ function validEmail(email) {
 
 var chkEmailsValid = {
   validator: function (emails) {
+    log.debug('chkEmailsValid');
     return emails.every(validEmail);
   },
   msg: 'Some email are illegal'
@@ -46,6 +48,7 @@ var chkEmailsValid = {
 
 var chkArrayDuplicate = {
   validator: function (arr) {
+    log.debug('chkArrayDuplicate');
     var sorted = arr.slice();
     sorted.sort();
 
@@ -74,7 +77,7 @@ var userSchema = new Schema({
     required: true,
     lowercase: true,
     match: [uidRegex, 'Illegal username'],
-    validate: uidValidator,
+    validate: [uidValidator],
   }, // unique username
 
   firstName: {
@@ -154,6 +157,9 @@ userSchema.path('primaryEmail').validate(function (email){
 
 // sync with LDAP
 userSchema.pre('save', function (next) {
+
+  log.debug(':: wat');
+
   // aliases
   var uid = this.username;
   var first = this.firstName;
@@ -227,7 +233,6 @@ userSchema.pre('save', function (next) {
     return next();
   });
 });
-
 
 var User = mongoose.model('User', userSchema);
 

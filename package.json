@@ -5,17 +5,12 @@
   "main": "./app/app.js",
   "dependencies": {
     "connect": "~2.3.3",
-    "connect-mysql-session": "~0.1.1",
     "ejs": "~1",
     "express": "~3.13.0",
     "LDAP": "~1.2.0",
-    "mysql": "~2.0.0-alpha8",
     "nodemailer": "~0.3.20",
-    "qs": "~0.4.2",
-    "querystring": "~0.1.0",
     "recaptcha": "~1.1.0",
     "sequelize": "~1.7.5",
-    "xml2js": "~0.1.14",
     "underscore": "~1.5.2",
     "async": "~0.2.9",
     "mongoose": "~3.8.12",
@@ -24,7 +19,10 @@
     "connect-mongo": "~0.4.1",
     "log4js": "~0.5.8",
     "connect-flash": "~0.1.1",
-    "ejs-locals": "~1.0.2"
+    "ejs-locals": "~1.0.2",
+    "xml2js": "~0.1.14",
+    "formage": "~2.7.29",
+    "mysql": "~2.3.2"
   },
   "engine": {
     "node": "~0.8.26"
