@@ -1,4 +1,4 @@
 module.exports = {
-    version: require('./lib/version'),
+    version: require('./package.json').version,
     module:  require('./lib/global-nav')
 };
