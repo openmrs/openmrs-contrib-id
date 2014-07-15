@@ -77,6 +77,7 @@ app.use(mid.openmrsHelper);
 //development
 if ('development' === app.get('env')) {
   log.info('Running in development mode');
+
   app.use(express.errorHandler({
     showStack: true,
     dumpExceptions: true
@@ -96,12 +97,12 @@ if ('production' === app.get('env')) {
   log.info('Running in production mode');
   app.use(express.errorHandler());
 
-	app.use('/resource', lessMiddleware('/less', {
-		dest: '/stylesheets',
-		pathRoot: path.join(__dirname, '/../resource/'),
-		once: true
-	}));
+  app.use('/resource', lessMiddleware('/less', {
+    dest: '/stylesheets',
+    pathRoot: path.join(__dirname, '/../resource/'),
+    once: true
+  }));
 
-	app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
+  app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
 
 }

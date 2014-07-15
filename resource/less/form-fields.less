@@ -39,7 +39,7 @@
     width: 374px;
   }
   .two-up.large& {
-    width: 178px !important;  
+    width: 178px !important;
   }
 
   &:focus {
@@ -64,7 +64,7 @@
 
 input {
   &[type="text"], &[type="password"] {
-    #input-appearance(); 
+    #input-appearance();
 
     &:focus {
       #inputs-focus();
@@ -78,14 +78,14 @@ input {
   height: 45px;
   position: relative;
 
-  textarea { 
-    #input-form-fields(); 
+  textarea {
+    #input-form-fields();
 
     height: 9em;
   }
   input {
     &[type="text"], &[type="password"] {
-      #input-form-fields(); 
+      #input-form-fields();
     }
 
     &[type="checkbox"] {
@@ -96,8 +96,10 @@ input {
       display: block;
     }
   }
+}
 
 
+.content {
   label, .labeltext {
     line-height: 27px;
     padding-top: 7px;
@@ -160,8 +162,8 @@ input {
     height: auto;
     max-height: 27px;
 
-    &:last-child { 
-      height: 45px; 
+    &:last-child {
+      height: 45px;
 
       input {
         border-radius: 0 0 4px 4px;

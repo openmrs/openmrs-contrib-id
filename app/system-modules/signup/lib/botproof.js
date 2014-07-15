@@ -166,6 +166,9 @@ module.exports = {
   // Invalidate the request if the honeypot has been filled (presumably by a
   // bot). Honeypot field name is configured in conf.signup.js
   checkHoneypot: function checkHoneypot(req, res, next) {
+
+    log.debug("checking honeypot");
+
     if (req.body[signupConf.honeypotFieldName])
       return badRequest(next);
 
@@ -223,9 +226,8 @@ module.exports.generators = [
   module.exports.generateSpinner
 ];
 
-module.exports.parsers = [
-  module.exports.unscrambleFields,
-  module.exports.checkTimestamp,
-  module.exports.checkHoneypot,
-  module.exports.spamListLookup
-];
+var parsers = module.exports.parsers = []
+parsers.push(module.exports.unscrambleFields);
+parsers.push(module.exports.checkTimestamp);
+if (!signupConf.disableHoneypot) parsers.push(module.exports.checkHoneypot);
+parsers.push(module.exports.spamListLookup);
