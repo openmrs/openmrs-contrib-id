@@ -136,6 +136,7 @@ module.exports = {
     "auth",
     "profile",
     "reset-pwd",
+    "db-admin",
   ],
 
   // user-configured modules
