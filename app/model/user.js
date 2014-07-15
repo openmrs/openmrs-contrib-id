@@ -9,7 +9,6 @@ var _ = require('lodash');
 var Schema = mongoose.Schema;
 
 var log = require('../logger').add('user model');
-var log;
 var ldap = require('../ldap');
 var utils = require('../utils');
 
@@ -147,6 +146,10 @@ var userSchema = new Schema({
   },
 });
 
+// diable autoIndex in production
+if ('production' === process.env.NODE_ENV) {
+  userSchema.set('autoIndex', false);
+}
 // ensure primaryEmail be one of emailList
 userSchema.path('primaryEmail').validate(function (email){
   return -1 !== this.emailList.indexOf(email);

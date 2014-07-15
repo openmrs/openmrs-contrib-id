@@ -37,9 +37,7 @@ function (err) {
     process.exit();
   }
   mocha.run(function (failures) {
-    process.on('exit', function () {
-      process.exit(failures);
-    });
+    process.exit(failures);
   });
 });
 

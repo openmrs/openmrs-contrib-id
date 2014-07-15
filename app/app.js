@@ -14,6 +14,7 @@
 var express = require('express');
 var fs = require('fs');
 var mail = require('nodemailer');
+var mongoose = require('mongoose');
 var app = express();
 
 // establish module & global variables
@@ -58,6 +59,15 @@ require('./routes');
 process.on('uncaughtException', function(err) {
   console.log(err);
 });
+
+// Do something before close the app
+var gracefulExit = function () {
+  mongoose.connection.close(function () {
+    console.log('Mongoose connection closed');
+    process.exit();
+  });
+};
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
 
 
 /* App startup: */

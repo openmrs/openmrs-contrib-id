@@ -61,6 +61,9 @@ var emailSchema = new Schema({
 });
 
 
+if ('production' === process.env.NODE_ENV) {
+  emailSchema.set('autoIndex', false);
+}
 
 var EmailVertification = mongoose.model('EmailVertification', emailSchema);
 
