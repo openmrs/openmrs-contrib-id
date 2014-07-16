@@ -39,7 +39,7 @@ exports.useSidebar = [mid.restrictTo('dashboard-administrators'),
       head = res.locals.headAppend || '';
 
     // merge admin-sidebar with current
-    res.local.sidebar = sidebar.concat(__dirname + '/../views/sidebar-admin');
+    res.locals.sidebar = sidebar.concat(__dirname + '/../views/sidebar-admin');
     params[__dirname + '/../views/sidebar-admin'] = {
       className: 'box',
       locals: {
