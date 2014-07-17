@@ -6,6 +6,14 @@ Group.formage = {
     'groupName',
     'description',
   ],
+
+  search: [
+    'groupName',
+  ],
+
+  exclude: [
+    'inLDAP',
+  ],
 };
 
 exports = module.exports = Group;
