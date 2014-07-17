@@ -78,14 +78,17 @@ var userSchema = new Schema({
 
   firstName: {
     type: String,
+    index: true,
   },
 
   lastName: {
     type: String,
+    index: true,
   },
 
   displayName: {
     type: String,
+    index: true,
   },
 
   primaryEmail: {
@@ -93,6 +96,7 @@ var userSchema = new Schema({
     match: [emailRegex, 'Illegal Email address'],
     required: true,
     lowercase: true,
+    index: true,
   },
 
   displayEmail: {
