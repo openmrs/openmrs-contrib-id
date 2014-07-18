@@ -14,11 +14,15 @@
 var express = require('express');
 var fs = require('fs');
 var mail = require('nodemailer');
-var app = express.createServer();
+var mongoose = require('mongoose');
+var app = express();
 
 // establish module & global variables
-module.exports = app;
+exports = module.exports = app;
 global.__apppath = __dirname;
+
+require('./environment');
+require('./new-db');
 
 // fail if no configuration file found
 try {
@@ -56,7 +60,16 @@ process.on('uncaughtException', function(err) {
   console.log(err);
 });
 
+// Do something before close the app
+var gracefulExit = function () {
+  mongoose.connection.close(function () {
+    console.log('Mongoose connection closed');
+    process.exit();
+  });
+};
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
+
 
 /* App startup: */
-app.listen(3000);
-log.info('Express started on port ' + app.address().port);
+app.listen(app.get('port'));
+log.info('Express started on port ' + app.get('port'));

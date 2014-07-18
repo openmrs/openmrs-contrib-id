@@ -1,9 +1,8 @@
 @import "typography";
 
-#inputs {
-  display: inline;
-  float: left;
-  margin: 0 0 18px;
+// Abstract definitions, attached to multiple selectors in the "Content" section
+// below.
+#input-appearance {
   padding: 6px;
   border-radius: 4px;
   font-size: 11px;
@@ -12,27 +11,39 @@
   -moz-border-radius: 4px;
   border: 1px solid #CCC;
   background: #F7F7F7;
-  width: 178px;
-  clear: both;
   transition: background 100ms;
   transition-property: background, box-shadow;
   -webkit-transition: background 100ms;
   -webkit-transition-property: background, box-shadow;
   position: relative;
+}
+
+#input-form-fields {
+  #input-appearance();
+
+  display: inline;
+  float: left;
+  margin: 0 0 18px;
+  width: 178px;
+  clear: both;
   z-index: 20;
 
-  .two-up & {
+  .two-up& {
     width: 87px !important;
     margin-right: 4px;
     float: left !important;
     clear: none;
   }
 
-  .large & {
+  .large& {
     width: 374px;
   }
-  .two-up.large & {
-    width: 178px !important;  
+  .two-up.large& {
+    width: 178px !important;
+  }
+
+  &:focus {
+    #inputs-focus();
   }
 }
 
@@ -45,31 +56,48 @@
   -moz-box-shadow: 0 0 8px #bbb;
 }
 
-textarea { 
-  #inputs(); 
-
-  height: 9em;
+// Content
+#main > form {
+  padding-left: 25px;
+  margin-bottom: 2em;
 }
+
 input {
   &[type="text"], &[type="password"] {
-    #inputs(); 
+    #input-appearance();
 
     &:focus {
       #inputs-focus();
     }
   }
-
-  &[type="checkbox"] {
-    padding: 0;
-  }
-
-  &[type="submit"] {
-    display: block;
-  }
 }
 
+.field {
+  display: block;
+  clear: both;
+  height: 45px;
+  position: relative;
 
-.content {
+  textarea {
+    #input-form-fields();
+
+    height: 9em;
+  }
+  input {
+    &[type="text"], &[type="password"] {
+      #input-form-fields();
+    }
+
+    &[type="checkbox"] {
+      padding: 0;
+    }
+
+    &[type="submit"] {
+      display: block;
+    }
+  }
+
+
   label, .labeltext {
     line-height: 27px;
     padding-top: 7px;
@@ -81,8 +109,36 @@ input {
     left: -206px;
     text-align: right;
   }
-}
 
+  & > .description {
+    display: inline-block;
+    background: #FFFBF2;
+    visibility: hidden;
+    width: 300px;
+    position: relative;
+    z-index: 25;
+    top: 4px;
+    margin: 1px 0 0 28px;
+    color: #444;
+    font-size: 14px;
+
+    &:before {
+      content: "\2014";
+      position: absolute;
+      left: -18px;
+      top: -1px;
+    }
+  }
+
+  &.two-up .description {
+    left: -4px;
+  }
+
+  &.large .description {
+    width: 195px;
+    float: right;
+  }
+}
 
 .field.noedit {
   height: 37px;
@@ -104,8 +160,8 @@ input {
     height: auto;
     max-height: 27px;
 
-    &:last-child { 
-      height: 45px; 
+    &:last-child {
+      height: 45px;
 
       input {
         border-radius: 0 0 4px 4px;
@@ -148,48 +204,6 @@ input {
     opacity: 0.5;
   }
 
-}
-
-
-
-#main form {
-  padding-left: 25px;
-}
-
-.field {
-  display: block;
-  clear: both;
-  height: 45px;
-  position: relative;
-
-  & > .description {
-    display: inline-block;
-    background: #FFFBF2;
-    visibility: hidden;
-    width: 300px;
-    position: relative;
-    z-index: 25;
-    top: 4px;
-    margin: 1px 0 0 28px;
-    color: #444;
-    font-size: 14px;
-
-    &:before {
-      content: "\2014";
-      position: absolute;
-      left: -18px;
-      top: -1px;
-    }
-  }
-
-  &.two-up .description {
-    left: -4px;
-  }
-
-  &.large .description {
-    width: 195px;
-    float: right;
-  }
 }
 
 

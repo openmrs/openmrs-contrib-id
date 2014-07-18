@@ -13,11 +13,12 @@
  */
 
 //var LDAPServer = require('../node-LDAP/LDAP').Connection,
-var LDAPServer = require('LDAP'),
-  url = require('url'),
-  Common = require(global.__commonModule),
-  conf = Common.conf,
-  log = Common.logger.add('ldap');
+var LDAPServer = require('LDAP');
+var url = require('url');
+var conf = require('./conf');
+var log = require('./logger').add('ldap');
+
+var async = require('async');
 
 var system = new LDAPServer({
     uri: conf.ldap.server.uri,
@@ -185,7 +186,7 @@ exports.getUser = function(user, cb) {
         scope: system.SUBTREE,
         filter: '(' + conf.ldap.user.rdn + '=' + user + ')',
         attrs: conf.ldap.user.username + ' ' + conf.ldap.user.firstname + ' ' + conf.ldap.user.lastname + ' ' + conf.ldap.user.displayname + ' ' +
-          conf.ldap.user.email + ' ' + conf.ldap.user.secondaryemail + ' objectClass'
+          conf.ldap.user.email + ' ' + conf.ldap.user.password + ' ' + conf.ldap.user.secondaryemail + ' objectClass'
       }, function(e, d) {
         if (e) return cb(e);
 
@@ -523,6 +524,45 @@ exports.enableUser = function(username, cb) {
     });
   });
 }
+
+/**
+ * Add a group to LDAP
+ * @param {Object}   group Options used to create a new group, it has groupName
+ *                         and description attributes.
+ * @param {Function} cb    Pass err
+ */
+exports.addGroup = function (group, cb) {
+  //aliases
+  var rdn = conf.ldap.group.rdn;
+  var baseDn = conf.ldap.group.baseDn;
+  var objectClass = conf.ldap.group.objectClass;
+  var groupName = group.groupName;
+  var description = group.description;
+  var addGroup = function (callback) {
+    var dn = rdn + '=' + groupName + ','+ baseDn;
+    var attrs = [
+      {attr: 'objectClass', vals: [objectClass]},
+      {attr: 'cn', vals: [groupName]},
+      {attr: 'member', vals: ['']},
+    ];
+    if (description) {
+      attrs.push({attr: 'description', vals: [description]});
+    }
+    system.add(dn, attrs, callback);
+  };
+  async.series([
+    connect,
+    addGroup
+  ],
+  function (err) {
+    if (err) {
+      log.error('failed to add groups');
+      return cb(err);
+    }
+    log.info('successfully added group ' + groupName);
+    return cb();
+  });
+};
 
 // tests
 

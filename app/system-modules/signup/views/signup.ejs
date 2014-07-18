@@ -19,7 +19,7 @@
 			placeholder="Username"
 			<% if (values.username) { %>value="<%= values.username %>"
 			<% } else { %>autofocus<% } %>>
-		
+
 		<span class="description">
 			<span class="failtext"><% if (failReason.username) { %>
 				<%= failReason.username %>
@@ -29,19 +29,19 @@
 		</span>
 
 	</div>
-	
-	<div class="field two-up<% if (fail.firstname || fail.lastname ) { %> fail<% } %>">
+
+	<div class="field two-up<% if (fail.firstName || fail.lastName ) { %> fail<% } %>">
 		<label>Name</label>
-		<input type="text" name="<%=disguise('firstname', spinner)%>"
-			placeholder="Given Name"<% if (values.firstname) { %>
-			value="<%= values.firstname %>"<% } else if (values.username) { %>
+		<input type="text" name="<%=disguise('firstName', spinner)%>"
+			placeholder="Given Name"<% if (values.firstName) { %>
+			value="<%= values.firstName %>"<% } else if (values.username) { %>
 			autofocus<% } %>>
 
-		<input type="text" name="<%=disguise('lastname', spinner)%>" placeholder="Surname"
-			<% if (values.lastname) { %>value="<%= values.lastname %>"
-			<% } else if (values.username && values.firstname) { %>
+		<input type="text" name="<%=disguise('lastName', spinner)%>" placeholder="Surname"
+			<% if (values.lastName) { %>value="<%= values.lastName %>"
+			<% } else if (values.username && values.firstName) { %>
 			autofocus<% } %>>
-		
+
 		<span class="description">
 			<span class="failtext">
 				Both a given name and surname are required.
@@ -49,18 +49,18 @@
 			Your name identifies you across the OpenMRS Community.
 		</span>
 	</div>
-	
-	<div class="field<% if (fail.email) { %> fail<% } %>">
+
+	<div class="field<% if (fail.primaryEmail) { %> fail<% } %>">
 		<label>Email</label>
-		<input type="text" name="<%=disguise('email', spinner)%>"
+		<input type="text" name="<%=disguise('primaryEmail', spinner)%>"
 			placeholder="Email Address"
-			<% if (values.email) { %>value="<%= values.email %>"
-			<% } else if (values.username && values.firstname && values.lastname) { %>
+			<% if (values.primaryEmail) { %>value="<%= values.primaryEmail %>"
+			<% } else if (values.username && values.firstName && values.lastName) { %>
 			autofocus<% } %>>
-		
+
 		<span class="description">
 			<span class="failtext">
-				<% if (failReason.email) { %><%= failReason.email %>
+				<% if (failReason.primaryEmail) { %><%= failReason.primaryEmail %>
 				<% } else { %>Please enter a valid email address.<% } %>
 			</span>
 			We'll send any notifications to this address. You'll always be able
@@ -79,15 +79,15 @@
 			</span>
 		</span>
 	</div>
-	
+
 	<div class="field<% if (fail.password) { %> fail<% } %>">
 		<label>Password</label>
 
 		<input type="password" name="<%=disguise('password', spinner)%>"
 			placeholder="Password"
-			<% if (values.username && values.firstname && values.lastname && values.email) { %>
+			<% if (values.username && values.firstName && values.lastName && values.primaryEmail) { %>
 			autofocus<% } %>>
-		
+
 		<span class="description">
 			<span class="failtext">
 				<% if (failReason.password) { %><%= failReason.password %>
@@ -96,13 +96,13 @@
 			Passwords must be at least 8 characters long.
 		</span>
 	</div>
-	
+
 	<div class="field<% if (fail.recaptcha_response_field) { %> fail<% } %>" id="recaptcha_widget">
 		<label>Captcha</label>
 		<input type="text" id="recaptcha_response_field"
 			name="<%=disguise('recaptcha_response_field', spinner)%>"
 			placeholder="Are you human?">
-		
+
 		<span class="description">
 			<span class="failtext">
 				<% if (failReason.recaptcha_response_field) { %><%= failReason.recaptcha_response_field %>
@@ -129,7 +129,7 @@
 	<input type="hidden" name="spinner" value="<%=spinner%>">
 	<input type="hidden" name="<%=disguise('timestamp', spinner)%>"
 		value="<%=timestamp%>">
-	
+
 	<div class="field">
 		<input type="submit" class="btn btn-success" name="<%=disguise('submit',spinner)%>" class="icon-ok" value="Join the Community &#187;"
 			<% if (renderLayout == false) { %> formtarget="_blank"<% } %>>

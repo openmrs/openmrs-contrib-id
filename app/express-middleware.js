@@ -11,20 +11,16 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-var crypto = require('crypto'),
-  Recaptcha = require('recaptcha').Recaptcha,
-  connect = require('connect'),
-  url = require('url'),
-  Common = require(global.__commonModule),
-  app = Common.app,
-  log = Common.logger.add('middleware'),
-  conf = Common.conf;
+var crypto = require('crypto');
+var url = require('url');
+var log = require('./logger').add('express-middleware');
+var conf = require('./conf');
 
 
 function setTypes(req, res) {
   // Change undefined variables to default values; keep us from getting "undefined" errors from EJS
-  var current = res.locals() || {},
-    replace = {};
+  var current = res.locals() || {};
+  var replace = {};
 
   replace.title = (current.title) ? current.title : conf.site.title;
   replace.failed = (current.failed) ? current.failed : false;
@@ -43,26 +39,30 @@ function setTypes(req, res) {
   res.locals(replace);
 }
 
-exports.openmrsHelper = function() {
-  return function(req, res, next) {
-    if (req.originalUrl != '/favicon.ico') {
-      if (req. session && req.session.user) {
-        var mailHash = crypto.createHash('md5').update(req.session.user.mail).digest('hex');
-        res.locals({
-          connected: true,
-          user: req.session.user,
-          mailHash: mailHash
-        });
-      } else res.locals({
-        connected: false
-      });
-    }
+exports.openmrsHelper = function(req, res, next) {
+  if (req.originalUrl === '/favicon.ico') {
+    return next();
+  }
 
-    setTypes(req, res);
+  if (req.session && req.session.user) {
+    var user = req.session.user;
+    var mailHash = crypto.createHash('md5')
+      .update(user.primaryEmail).digest('hex');
 
-    next();
-  };
+    res.locals({
+      connected: true,
+      user: req.session.user,
+      mailHash: mailHash
+    });
+  } else {
+    res.locals({
+      connected: false
+    });
+  }
+  setTypes(req, res);
+  next();
 };
+
 
 exports.restrictTo = function(role) {
   return function(req, res, next) {
@@ -75,7 +75,7 @@ exports.restrictTo = function(role) {
     };
 
     if (req.session.user) {
-      if (req.session.user.memberof.indexOf(role) > -1) next();
+      if (req.session.user.groups.indexOf(role) > -1) next();
       else fail();
     } else fail();
   };
@@ -92,7 +92,7 @@ exports.forceLogin = function(req, res, next) {
 
 exports.forceLogout = function(req, res, next) {
   if (req.session.user) {
-    log.info(req.session.user[conf.user.username] + ': denied access to anonymous-only ' + req.originalUrl);
+    log.info(req.session.user.username + ': denied access to anonymous-only ' + req.originalUrl);
     req.flash('error', 'You must be logged out to access ' + req.originalUrl);
     res.redirect('/');
   } else next();
@@ -137,6 +137,6 @@ exports.parseParamTable = function(req, res, next) {
 
     generatedList[ind][type] = req.body[a];
   }
-  res.local('params', generatedList);
+  res.locals.params = generatedList;
   next();
 };

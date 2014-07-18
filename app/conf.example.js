@@ -64,13 +64,20 @@ module.exports = {
     "group": {
       "baseDn": "ou=groups,dc=example",
       "member": "member",
-      "rdn": "cn"
+      "rdn": "cn",
+      "objectClass": "groupOfNames"
     }
   },
   "db": {
     "dbname": "id_dashboard",
     "username": "db_user",
     "password": "secret"
+  },
+  "mongo": {
+    "uri": "mongodb://localhost/id_dashboard",
+    "username": "mongo_user",
+    "password": "secret",
+    "commonExpireTime": "2d"
   },
   "session": {
     "__comment3": "session storage DB",
@@ -129,6 +136,7 @@ module.exports = {
     "auth",
     "profile",
     "reset-pwd",
+    "db-admin",
   ],
 
   // user-configured modules

@@ -15,11 +15,13 @@ app/user-modules
 # Conf Files #
 ##############
 app/conf.js
+test/conf.js
 
 # Local Dev Resources #
 #######################
 *.sublime-*
 .ldaprc
+*.todo
 
 # OS generated files #
 ######################

@@ -1,8 +1,8 @@
-<div id="login-menu" class="col-sm-2"> 
-  
+<div id="login-menu" class="col-sm-2">
+
   <% if (connected) { %>
     <div class="dropdown">
-      <a href="#" data-toggle="dropdown" class="btn btn-primary"><%= user[conf.user.displayname] %></a>
+      <a href="#" data-toggle="dropdown" class="btn btn-primary"><%= user.displayName %></a>
       <ul class="dropdown-menu">
         <li><a href="/profile">View Your Profile</a></li>
         <li><a href="/disconnect?destination=<%=encodeURIComponent(url || '')%>">

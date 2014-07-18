@@ -18,8 +18,9 @@ exports.ldap          = require('./ldap');
 exports.userNav       = require('./user-nav');
 exports.mid           = require('./express-middleware');
 exports.renderHelpers = require('./render-helpers');
+exports.utils         = require('./utils');
 exports.validate      = require('./validate');
-exports.environment   = require('./environment');
+
 
 /*
 MODULES

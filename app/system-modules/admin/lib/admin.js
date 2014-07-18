@@ -34,12 +34,12 @@ exports.addModulePage = function(name, url) {
 // middleware, restricts to admin group, adds user-nav, css, and sidebar to any page
 exports.useSidebar = [mid.restrictTo('dashboard-administrators'),
   function(req, res, next) {
-    var sidebar = res.local('sidebar') || [], // get current sidebar and params
-      params = res.local('sidebarParams') || {},
-      head = res.local('headAppend') || '';
+    var sidebar = res.locals.sidebar || [], // get current sidebar and params
+      params = res.locals.sidebarParams || {},
+      head = res.locals.headAppend || '';
 
     // merge admin-sidebar with current
-    res.local('sidebar', sidebar.concat(__dirname + '/../views/sidebar-admin'));
+    res.locals.sidebar = sidebar.concat(__dirname + '/../views/sidebar-admin');
     params[__dirname + '/../views/sidebar-admin'] = {
       className: 'box',
       locals: {
@@ -47,13 +47,13 @@ exports.useSidebar = [mid.restrictTo('dashboard-administrators'),
         reqUrl: req.url
       }
     };
-    res.local('sidebarParams', params);
+    res.locals.sidebarParams = params;
 
     // merge admin.css with headAppend
-    res.local('headAppend', head + '<link rel="stylesheet" href="/admin/resource/admin.css">');
+    res.locals.headAppend = head + '<link rel="stylesheet" href="/admin/resource/admin.css">';
 
     // set view name to admin for user-nav
-    res.local('name', 'admin');
+    res.locals.name = 'admin';
     next();
   }
 ];
