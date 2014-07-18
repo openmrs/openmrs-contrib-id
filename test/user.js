@@ -274,6 +274,7 @@ describe('User', function() {
       expect(json).to.not.have.property('locked');
       expect(json).to.not.have.property('inLDAP');
       expect(json).to.not.have.property('skipLDAP');
+      done();
     });
   });
 
