@@ -1,8 +1,6 @@
 var fs = require('fs');
 
 fs.readdirSync(__dirname).forEach(function(file) {
-  console.debug(file);
-
   var regex = /^(.*).js$/.exec(file);
   if (!regex[1]) return;
 
