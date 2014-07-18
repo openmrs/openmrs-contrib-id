@@ -266,6 +266,17 @@ describe('User', function() {
     });
   });
 
+  it('should omit sensitive and internal attributes when transformed to JSON', function(done) {
+    var user = new User (VALID_INFO1);
+    user.save(function (err) {
+      var json = user.toJSON();
+      expect(json).to.not.have.property('password');
+      expect(json).to.not.have.property('locked');
+      expect(json).to.not.have.property('inLDAP');
+      expect(json).to.not.have.property('skipLDAP');
+    });
+  });
+
   /// Some API tests
   describe('finders', function() {
     var userx;

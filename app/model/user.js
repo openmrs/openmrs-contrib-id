@@ -231,6 +231,16 @@ userSchema.pre('save', function (next) {
   });
 });
 
+// When rendering JSON, omit sensitive attributes from the model
+userSchema.options.toJSON = {
+  transform: function(doc, ret, options) {
+    delete ret.password;
+    delete ret.locked;
+    delete ret.inLDAP;
+    delete ret.skipLDAP;
+  }
+};
+
 var User = mongoose.model('User', userSchema);
 
 exports = module.exports = User;
