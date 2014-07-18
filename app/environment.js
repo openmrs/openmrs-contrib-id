@@ -84,6 +84,9 @@ if ('development' === app.get('env')) {
   }));
   app.use(connect.logger('dev'));
 
+  var edt = require('express-debug');
+  edt(app, {});
+
   app.use('/resource', lessMiddleware('/less', {
     dest: '/stylesheets',
     pathRoot: path.join(__dirname, '/../resource/')
