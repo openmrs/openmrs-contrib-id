@@ -3,6 +3,8 @@
  */
 var url = require('url');
 var path = require('path');
+var async = require('async');
+var _ = require('lodash');
 
 var settings = require('../settings');
 
@@ -12,10 +14,12 @@ var app      = Common.app;
 var conf     = Common.conf;
 var mid      = Common.mid;
 var validate = Common.validate;
-var ldap     = Common.ldap;
+var utils    = Common.utils;
 var log      = Common.logger.add('express');
 
-app.get(/^\/login\/?$/, mid.forceLogout, validate.receive(),
+var User = require(path.join(global.__apppath, 'model/user'));
+
+app.get(/^\/login\/?$/, mid.forceLogout, validate.receive,
   function(req, res, next) {
     var tmp = path.join(settings.viewPath,'login');
     log.debug(tmp);
@@ -23,80 +27,74 @@ app.get(/^\/login\/?$/, mid.forceLogout, validate.receive(),
   }
 );
 
-app.post('/login', mid.stripNewlines, validate(), function(req, res, next) {
-  var completed = 0;
-  var needToComplete = 1;
-  // var userobj = {};
+app.post('/login', mid.stripNewlines, function(req, res, next) {
   var username = req.body.loginusername;
   var password = req.body.loginpassword;
 
+  var redirect = req.body.destination || '/';
 
-
-  var redirect = (req.body.destination) ? req.body.destination : '/';
-
-  // do the actual authentication by forming a unique bind to the server as
-  // the authenticated user; closes immediately (all operations work through
-  // system's LDAP bind)
-  ldap.authenticate(username, password, function handle(e) {
-    ldap.close(username);
-
-    if (e) { // authentication error
-      if (e.message === 'Invalid credentials') { // login failed
-        log.debug('known login failure');
-        log.info('authentication failed for "' + username +
-          '" (' + e.message + ')');
-        req.flash('error', 'Login failed.');
-        res.locals({
-          fail: {
-            loginusername: false,
-            loginpassword: true
-          },
-          values: {
-            loginusername: username,
-            loginpassword: password
-          }
-        });
-        if (req.body.destination) { // redirect to the destination login page
-          return res.redirect(
-            url.resolve(conf.site.url, '/login?destination=' +
-              encodeURIComponent(req.body.destination))
-          );
-        } else { // redirect to generic login page
-          return res.redirect(url.resolve(conf.site.url, '/login'));
-        }
-      } else {
-        log.debug('login error');
-        return next(e);
+  var findUser = function (callback) {
+    User.findByUsername(username, function (err, user) {
+      if (err) {
+        return callback(err);
       }
+      if (_.isEmpty(user)) {
+        return callback({loginFail: 'This user does not exist'});
+      }
+      return callback(null, user);
+    });
+  };
+  var checkLocked = function (user, callback) {
+    if (user.locked) {
+      return callback({loginFail: 'Please first verificate your email'});
+    }
+    return callback(null, user);
+  };
+  var checkPassword = function (user, callback) {
+    if (!utils.checkSHA(password, user.password)) {
+      return callback({loginFail: 'Wrong password'});
+    }
+    return callback(null, user);
+  };
+  async.waterfall([
+    findUser,
+    checkLocked,
+    checkPassword,
+  ],
+  function (err, user) {
+    if (err) {
+      if (_.isEmpty(err.loginFail)) {
+        log.debug('login error');
+        return next(err);
+      }
+      log.info('authentication failed for "' + username +
+        '" (' + err.loginFail + ')');
+      req.flash('error', err.loginFail);
+      res.locals({
+        fail: {
+          loginusername: false,
+          loginpassword: true
+        },
+        values: {
+          loginusername: username,
+          loginpassword: password
+        }
+      });
+      if (req.body.destination) { // redirect to the destination login page
+        var dest = url.resolve(conf.site.url, '/login?destination=' +
+          encodeURIComponent(req.body.destination));
+
+        return res.redirect(dest);
+      }
+      // redirect to generic login page
+      return res.redirect(url.resolve(conf.site.url, '/login'));
     }
 
-    log.info(username + ': authenticated'); // no error!
+    // no error
+    log.info(username + ': authenticated');
+    req.session.user = user;
+    log.debug('user ' + username + ' stored in session');
 
-    // get a crowd SSO token and set the cookie for it
-    // not implemented yet :-(
-    /*crowd.getToken(username, password, function(error, token) {
-      if (error && error.name != 403) next(e);
-      else res.cookie('crowd.token_key', token);
-      finish();
-    })*/
-
-    // get user's profile and put it in memory
-    log.trace('getting user data');
-    ldap.getUser(username, function(e, userobj) {
-      log.trace(' returned');
-      if (e) {
-        return next(e);
-      }
-      req.session.user = userobj;
-      log.debug('user ' + username + ' stored in session');
-      finish();
-    });
-
-    var finish = function() {
-      completed++;
-      if (completed === needToComplete) {
-        res.redirect(url.resolve(conf.site.url, decodeURIComponent(redirect)));
-      }
-    };
+    res.redirect(url.resolve(conf.site.url, decodeURIComponent(redirect)));
   });
 });

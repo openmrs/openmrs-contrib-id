@@ -14,8 +14,7 @@
 var path = require('path');
 
 var log4js = require('log4js');
-var Common = require(global.__commonModule);
-var conf = Common.conf;
+var conf = require('./conf');
 
 
 log4js.loadAppender('console');

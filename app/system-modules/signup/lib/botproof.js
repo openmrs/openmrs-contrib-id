@@ -1,12 +1,12 @@
-var crypto = require('crypto'),
-  Common = require(global.__commonModule),
-  app = Common.app,
-  log = Common.logger.add('botproof'),
-  signupConf = require('../conf.signup.json'),
-  async = require('async'),
-  _ = require('underscore'),
-  dns = require('dns'),
-  db = Common.db;
+var crypto = require('crypto');
+var Common = require(global.__commonModule);
+var app = Common.app;
+var log = Common.logger.add('botproof');
+var signupConf = require('../conf.signup.json');
+var async = require('async');
+var _ = require('lodash');
+var dns = require('dns');
+var db = Common.db;
 
 db.define('IPWhitelist', {
   id: {
@@ -15,7 +15,7 @@ db.define('IPWhitelist', {
     autoIncrement: true
   },
   address: db.STRING
-})
+});
 
 var SECRET = crypto.createHash('sha1').update(Math.random().toString())
   .digest('hex');
@@ -39,7 +39,7 @@ function badRequest(next, optionalMessage) {
 }
 
 function hashField(name, spin) {
-  // Disguise a legitimate field name (like "firstname") with an
+  // Disguise a legitimate field name (like "firstName") with an
   // obfuscated hash name based on this request's spinner.
 
   var hash = crypto.createHash('md5');
@@ -49,7 +49,7 @@ function hashField(name, spin) {
 }
 
 // Expose stuff.
-app.helpers({
+app.locals({
   disguise: hashField
 })
 
@@ -64,7 +64,7 @@ module.exports = {
 
     cipher.update(timestamp.toString())
 
-    res.local('timestamp', cipher.final('hex'))
+    res.locals.timestamp = cipher.final('hex')
     next();
   },
 
@@ -111,7 +111,7 @@ module.exports = {
     // secret. It's a hidden field within the page.
 
     // Generate the spinner and attach it to the request.
-    var timestamp = res.local('timestamp'),
+    var timestamp = res.locals.timestamp,
       hash = crypto.createHash('md5');
 
     log.trace('generating spinner with timestamp "' + timestamp + '" for ' +
@@ -122,7 +122,7 @@ module.exports = {
       .update(SECRET);
     var spin = hash.digest('hex');
 
-    res.local('spinner', spin);
+    res.locals.spinner = spin;
     next();
   },
 

@@ -14,15 +14,18 @@
 
 var express = require('express');
 var connect = require('connect');
-var MySQLSessionStore = require('connect-mysql-session')(express);
+var MongoStore = require('connect-mongo')(express);
 var url = require('url');
 var path = require('path');
 var lessMiddleware = require('less-middleware');
-var Common = require(global.__commonModule);
-var app = Common.app;
-var conf = Common.conf;
-var mid = Common.mid;
-var log = Common.logger.add('environment');
+var engine = require('ejs-locals');
+var flash = require('connect-flash');
+
+var app = require('./app');
+var conf = require('./conf');
+var mid = require('./express-middleware');
+var log = require('./logger').add('environment');
+
 
 /* http://expressjs.com/guide.html:
  * To alter the environment we can set the NODE_ENV environment variable,
@@ -33,52 +36,56 @@ var log = Common.logger.add('environment');
  *   when in production.
  */
 
-app.configure(function configureExpress() { // executed under all environments
-  app.use(express.bodyParser());
-  app.use(express.cookieParser());
+// common environments
+var siteURLParsed = url.parse(conf.site.url, false, true);
 
-  // store express session in MySQL
-  var sessionStore = new MySQLSessionStore(
-    conf.db.dbname,
-    conf.db.username,
-    conf.db.password, {
-      // session timeout if browser does not terminate session (1 day)
-      defaultExpiration: conf.session.duration,
-      logging: false,
-    }
-  );
-  var session = express.session({
-    store: sessionStore,
-    secret: conf.session.secret,
-  });
-  var exceptions = conf.sessionExceptions;
-  var sessionHandler = function(req, res, next) {
-    function test(reg) {
-      return reg.test(req.url);
-    }
-    if (exceptions.some(test)) {
-      return next();
-    }
-    return session(req,res,next);
-  };
+app.engine('ejs', engine);
+app.set('view engine', 'ejs');
+app.set('views', __dirname + '/../views');
+app.locals._layoutFile = '/layout.ejs';
+app.set('basepath', siteURLParsed.pathname);
+app.set('port', 3000);
 
-  app.use(sessionHandler);
+app.use(flash());
+app.use(express.bodyParser()); // should be replaced
+app.use(express.cookieParser());
 
-  app.use(mid.openmrsHelper());
-
-  app.set('view engine', 'ejs');
-  app.set('views', __dirname + '/../views');
-
-  var siteURLParsed = url.parse(conf.site.url, false, true);
-  app.set('basepath', siteURLParsed.pathname);
+// store express session in MongoDB
+var sessionStore = new MongoStore({
+  url: conf.mongo.uri,
+  username: conf.mongo.username,
+  password: conf.mongo.password,
 });
+var session = express.session({
+  store: sessionStore,
+  secret: conf.session.secret,
+});
+var exceptions = conf.sessionExceptions;
+var sessionHandler = function(req, res, next) {
+  function test(reg) {
+    return reg.test(req.url);
+  }
+  if (exceptions.some(test)) { // we don't provide session for some exceptions
+    return next();
+  }
+  return session(req,res,next);
+};
 
-function development() {
+app.use(sessionHandler);
+app.use(mid.openmrsHelper);
+
+//development
+if ('development' === app.get('env')) {
+  log.info('Running in development mode');
+
   app.use(express.errorHandler({
     showStack: true,
     dumpExceptions: true
   }));
   app.use(connect.logger('dev'));
+
+  var edt = require('express-debug');
+  edt(app, {});
 
   app.use('/resource', lessMiddleware('/less', {
     dest: '/stylesheets',
@@ -89,18 +96,16 @@ function development() {
 
 }
 
-app.configure('development', development);
-app.configure('trace', development);
-
-app.configure('production', function() {
+if ('production' === app.get('env')) {
+  log.info('Running in production mode');
   app.use(express.errorHandler());
 
-	app.use('/resource', lessMiddleware('/less', {
-		dest: '/stylesheets',
-		pathRoot: path.join(__dirname, '/../resource/'),
-		once: true
-	}));
+  app.use('/resource', lessMiddleware('/less', {
+    dest: '/stylesheets',
+    pathRoot: path.join(__dirname, '/../resource/'),
+    once: true
+  }));
 
-	app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
+  app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
 
-});
+}

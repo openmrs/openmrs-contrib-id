@@ -4,8 +4,9 @@ var should = require('should'),
   express = require('express'),
   crypto = require('crypto'),
   fs = require('fs');
+var path = require('path');
 
-global.__commonModule = fs.realpathSync('./commonmock.test.js')
+global.__commonModule = path.join(__dirname, './commonmock.test.js');
 
 require(global.__commonModule).db = require('../../../db')
 
@@ -19,7 +20,7 @@ describe('generateTimestamp', function() {
     app.use(botproof.generateTimestamp)
 
     app.use(function(req, res) {
-      var enc = res.local('timestamp'),
+      var enc = res.locals.timestamp,
         decph = crypto.createDecipher('aes192', botproof.SECRET)
 
       decph.update(enc, 'hex')
@@ -43,7 +44,7 @@ describe('checkTimestamp', function() {
     app.use(express.bodyParser())
     app.use(botproof.checkTimestamp)
 
-    app.error(function(err, req, res) {
+    app.use(function(err, req, res) {
       var test = null;
       try {
         err.statusCode.should.equal(400)
@@ -67,7 +68,7 @@ describe('checkTimestamp', function() {
     app.use(express.bodyParser())
     app.use(botproof.generateTimestamp)
     app.use(function(req, res, next) {
-      req.body.timestamp = res.local('timestamp')
+      req.body.timestamp = res.locals.timestamp
       next()
     })
     app.use(botproof.checkTimestamp)
@@ -75,7 +76,7 @@ describe('checkTimestamp', function() {
       res.end()
     })
 
-    app.error(function(err) {
+    app.use(function(err) {
       return done(err);
     })
 
@@ -118,7 +119,7 @@ describe('checkHoneypot', function() {
     app.use(express.bodyParser())
     app.use(botproof.checkHoneypot)
 
-    app.error(function(err, req, res, next) {
+    app.use(function(err, req, res, next) {
       res.statusCode = err.statusCode || 500;
       res.end();
     })
@@ -157,7 +158,7 @@ describe('spamListLookup', function() {
       res.end()
     })
 
-    app.error(function(error, req, res) {
+    app.use(function(error, req, res) {
       try {
         error.statusCode.should.equal(400)
         done()
@@ -215,7 +216,7 @@ describe('spamListLookup', function() {
       res.end()
     })
 
-    app.error(function(error, req, res) {
+    app.use(function(error, req, res) {
       try {
         error.statusCode.should.equal(400)
         error.message.should.match(new RegExp("Your IP address, [0-9.]+, was " +

@@ -2,9 +2,9 @@ var Common = require(global.__commonModule);
 var app = Common.app;
 var log = Common.logger.add('express');
 // Errors
-app.error(function(err, req, res, next) {
+app.use(function(err, req, res, next) {
   log.error('Caught error: ' + err.name);
-  if (!res.headerSent) {
+  if (!res.headersSent) {
     // ONLY try to send an error response if the response is still being
     // formed. Otherwise, we'd be stuck in an infinite loop.
     res.statusCode = err.statusCode || 500;
