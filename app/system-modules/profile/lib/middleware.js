@@ -5,6 +5,7 @@ var Common = require(global.__commonModule);
 var verification = Common.verification;
 var utils = Common.utils;
 var validate = Common.validate;
+var User = Common.models.user;
 
 exports.emailValidator = function (req, res, next) {
   var email = req.body.newEmail;
@@ -64,14 +65,22 @@ exports.profileValidator = function (req, res, next) {
 };
 
 exports.passwordValidator = function (req, res, next) {
-  var passhash = req.session.user.password;
-  var currentpassword = req.body.currentpassword;
-  var newpassword = req.body.newpassword;
-  var confirmpassword = req.body.confirmpassword;
-  var validators = {
-    currentpassword: validate.chkPassword.bind(null,currentpassword,passhash),
-    newpassword: validate.chkLength.bind(null,newpassword,8),
-    confirmpassword: validate.chkDiff.bind(null,newpassword, confirmpassword),
-  };
-  validate.perform(validators, req, res, next);
+
+  // Look up the user's canonical record to read the password. (it's not stored
+  // on req.session.user for security purposes.)
+  User.findById(req.session.user._id).exec()
+  .then(function(user) {
+
+    var passhash = user.password;
+    var currentpassword = req.body.currentpassword;
+    var newpassword = req.body.newpassword;
+    var confirmpassword = req.body.confirmpassword;
+    var validators = {
+      currentpassword: validate.chkPassword.bind(null,currentpassword,passhash),
+      newpassword: validate.chkLength.bind(null,newpassword,8),
+      confirmpassword: validate.chkDiff.bind(null,newpassword, confirmpassword),
+    };
+    validate.perform(validators, req, res, next);
+
+  }, next);
 };
