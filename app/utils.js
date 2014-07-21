@@ -6,19 +6,25 @@ var _ = require('lodash');
 var conf = require('./conf');
 
 // password hashing
-exports.getSHA = function (cleartext) {
+exports.getSSHA = function (cleartext, salt) {
+  if (_.isUndefined(salt)) {
+    salt = new Buffer(crypto.randomBytes(20)).toString('base64');
+  }
   var sum = crypto.createHash('sha1');
   sum.update(cleartext);
-  var digest = sum.digest('base64');
-  var ret = '{SHA}' + digest;
+  sum.update(salt);
+  var digest = sum.digest();
+  var ret = '{SSHA}' +  new Buffer(digest+salt,'binary').toString('base64');
   return ret;
 };
 
-exports.checkSHA = function (cleartext, hashed) {
-  if (0 !== hashed.indexOf('{SHA}')) {
+exports.checkSSHA = function (cleartext, hashed) {
+  if (0 !== hashed.indexOf('{SSHA}')) {
     return false;
   }
-  var newHash = exports.getSHA(cleartext);
+  var hash = new Buffer(hashed.substr(6),'base64');
+  var salt = hash.toString('binary', 20);
+  var newHash = exports.getSSHA(cleartext, salt);
   return newHash === hashed;
 };
 

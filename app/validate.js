@@ -103,7 +103,7 @@ validate.chkEmailInvalidOrDup = function (email, callback) {
 };
 
 validate.chkPassword = function (password, passhash, callback) {
-  if (!utils.checkSHA(password, passhash)) {
+  if (!utils.checkSSHA(password, passhash)) {
     return callback(null, WRONG_PWD_MSG);
   }
   return callback(null, false);

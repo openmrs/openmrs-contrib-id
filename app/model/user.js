@@ -170,8 +170,8 @@ userSchema.pre('save', function (next) {
   var pass = this.password;
   var groups = this.groups;
   var that = this;
-  if (0 !== pass.indexOf('{SHA}')) {
-    this.password = utils.getSHA(pass);
+  if (0 !== pass.indexOf('{SSHA}')) {
+    this.password = utils.getSSHA(pass);
   }
   if (this.locked) {
     return next();
