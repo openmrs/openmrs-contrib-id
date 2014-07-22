@@ -22,7 +22,6 @@ var User = require(path.join(global.__apppath, 'model/user'));
 app.get(/^\/login\/?$/, mid.forceLogout, validate.receive,
   function(req, res, next) {
     var tmp = path.join(settings.viewPath,'login');
-    log.debug(tmp);
     res.render(tmp);
   }
 );
@@ -51,7 +50,10 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
     return callback(null, user);
   };
   var checkPassword = function (user, callback) {
-    if (!utils.checkSHA(password, user.password)) {
+    if (_.isEmpty(user.password)) {
+      return callback({loginFail: 'Your password should be reset first'});
+    }
+    if (!utils.checkSSHA(password, user.password)) {
       return callback({loginFail: 'Wrong password'});
     }
     return callback(null, user);

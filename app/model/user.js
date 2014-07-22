@@ -15,14 +15,6 @@ var utils = require('../utils');
 var conf = require('../conf');
 var Group = require('./group');
 
-var uidRegex = conf.user.usernameRegex;
-var emailRegex = conf.email.validation.emailRegex;
-
-// Just a placeholder
-function uidValidator(argument) {
-  return true; // do something else, maybe check the length.
-}
-
 // Ensure the email list is not empty and no duplicate
 // Because mongo won't ensure all the members to be unique in one array
 var nonEmpty = {
@@ -30,17 +22,6 @@ var nonEmpty = {
     return ar.length > 0;
   },
   msg: 'The array can\'t be empty'
-};
-
-function validEmail(email) {
-  return emailRegex.test(email);
-}
-
-var chkEmailsValid = {
-  validator: function (emails) {
-    return emails.every(validEmail);
-  },
-  msg: 'Some email are illegal'
 };
 
 var chkArrayDuplicate = {
@@ -72,8 +53,6 @@ var userSchema = new Schema({
     unique: true,
     required: true,
     lowercase: true,
-    match: [uidRegex, 'Illegal username'],
-    validate: [uidValidator],
   }, // unique username
 
   firstName: {
@@ -93,7 +72,6 @@ var userSchema = new Schema({
 
   primaryEmail: {
     type: String, // Used for notifications
-    match: [emailRegex, 'Illegal Email address'],
     required: true,
     lowercase: true,
     index: true,
@@ -101,7 +79,6 @@ var userSchema = new Schema({
 
   displayEmail: {
     type: String, // Used for displaying
-    match: [emailRegex, 'Illegal Email address'],
   },
 
   emailList: {
@@ -109,12 +86,11 @@ var userSchema = new Schema({
     required: true,
     unique: true,
     set: arrToLowerCase,
-    validate: [nonEmpty,chkEmailsValid,chkArrayDuplicate],
+    validate: [nonEmpty, chkArrayDuplicate],
   },
 
   password: {
     type: String, //hashed password
-    required: true,
   },
 
   groups: { // All the groups that user belong
@@ -170,8 +146,8 @@ userSchema.pre('save', function (next) {
   var pass = this.password;
   var groups = this.groups;
   var that = this;
-  if (0 !== pass.indexOf('{SHA}')) {
-    this.password = utils.getSHA(pass);
+  if (!_.isEmpty(pass) && 0 !== pass.indexOf('{SSHA}')) {
+    this.password = utils.getSSHA(pass);
   }
   if (this.locked) {
     return next();
@@ -366,16 +342,23 @@ User.prototype.addGroupsAndSave = function (groups, callback) {
   }
   var user = this;
   var userRef = {objId: user.id, username: user.username};
-  async.map(groups, function addToGroup(group, cb) {
-    Group.findOne({groupName: group}, function (err, group) {
+  async.each(groups, function addToGroup(groupName, cb) {
+    // efficiently update groups
+    Group.findOneAndUpdate({groupName: groupName}, {
+      $addToSet: {
+        member: userRef,
+      }
+    },{
+      lean: true,
+      select: 'groupName',
+    }, function (err, group) {
       if (err) {
         return cb(err);
       }
       if (_.isEmpty(group)) {
         return cb(new Error('No such groups'));
       }
-      group.member.addToSet(userRef);
-      group.save(cb);
+      return cb();
     });
   },
   function (err) {

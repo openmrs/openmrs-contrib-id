@@ -3,10 +3,10 @@ var crypto = require('crypto');
 var expect = require('chai').expect;
 var utils = require('../app/utils');
 
-describe('SHA generator and checker', function() {
+describe('SSHA generator and checker', function() {
   it('the generator and checker should be at least corresponding', function() {
     var str = crypto.pseudoRandomBytes(20).toString('base64');
-    var hashed = utils.getSHA(str);
-    expect(utils.checkSHA(str, hashed)).to.be.true;
+    var hashed = utils.getSSHA(str);
+    expect(utils.checkSSHA(str, hashed)).to.be.true;
   });
 });

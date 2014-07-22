@@ -15,6 +15,8 @@ var userRefSchema = new Schema({
   username: {
     type: String,
   },
+},{
+  _id: false,
 });
 
 var groupSchema = new Schema({
