@@ -20,6 +20,6 @@
   "dependencies": {
     "cors": "^2.3.1",
     "ejs": "^1.0.0",
-    "express": "^2.5.11"
+    "express": "^3.14.0"
   }
 }
