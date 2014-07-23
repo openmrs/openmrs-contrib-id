@@ -1,6 +1,6 @@
 {
   "name": "openmrsid",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "A self-service management system for the OpenMRS ID single sign on identity.",
   "main": "./app/app.js",
   "dependencies": {
