@@ -6,9 +6,19 @@ var formage = require('formage');
 var utils = Common.utils;
 var _ = require('lodash');
 
+/**
+ * Mongoose models. Will be assigned when init() is called.
+ */
 var FormageUser;
 var User;
 
+/**
+ * Create or update a Formage user that corresponds to this Dashboard admin.
+ * @param  {User}     user     ID Dashboard user document
+ * @param  {Function} callback Optional callback that receives error and create
+ *                             Formage user
+ * @return {Promise}           Promise resolved after Formage user is saved
+ */
 function syncFormageUser(user, callback) {
 
   return FormageUser.findOne({username: user.username}).exec()
@@ -47,6 +57,12 @@ function syncFormageUser(user, callback) {
   }, onError);
 }
 
+
+/**
+ * Create a Formage user document for the given Dashboard user
+ * @param  {User}         user Dashboard user document
+ * @return {FormageUser}       Formage user document
+ */
 function createFormageUser(user) {
 
   var fu = new FormageUser({
@@ -61,21 +77,45 @@ function createFormageUser(user) {
 
 }
 
+/**
+ * Update the password hash on a formage user to match the given dashboard user
+ * @param  {FormageUser}  fu   Formage user to update
+ * @param  {User}         user Dashboard user to get the password hash from
+ * @return {FormageUser}  the updated Formage user
+ */
 function updatePassword(fu, user) {
   fu.passwordHash = user.password;
   return fu;
 }
 
+/**
+ * Handles what to do when a Dashboard user doc is saved
+ * @param  {User} user Dashboard user that was just saved
+ * @return {undefined}
+ */
 function onSave(user) {
 
   syncFormageUser(user);
 }
 
+/**
+ * Handles errors that occur during user sync.
+ * @param  {Error} err the error that occured
+ * @return {Error}     the (same) error that occured
+ */
 function onError(err) {
   log.error(err);
   return err;
 }
 
+/**
+ * Called by db-admin/index.js to bootstrap the sync. Establishes the relevant
+ * models, binds to the User save event, and syncs all current dashboard
+ * administrators at startup.
+ * @param  {Model} _FormageUser_ FormageUser mongoose model
+ * @param  {Model} _User_        Dashboard User mongoose model
+ * @return {undefined}
+ */
 module.exports = function init(_FormageUser_, _User_) {
 
   FormageUser = _FormageUser_;
@@ -97,7 +137,12 @@ module.exports = function init(_FormageUser_, _User_) {
 };
 
 
-// Override UserForm methods with our own
+/**
+ * Formage uses two functions, encryptSync and compareSync, to create and
+ * validate password hashes. Because we want to sync dashboard administators
+ * with Formage users, we need to replace their hashing functions with our
+ * own.
+ */
 var salt = 'wherestheninja'; // same salt formage uses internally
 formage.UserForm.encryptSync = _.partialRight(utils.getSSHA, salt);
 formage.UserForm.compareSync = utils.checkSSHA;
