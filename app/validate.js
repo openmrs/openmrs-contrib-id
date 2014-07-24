@@ -78,27 +78,32 @@ validate.chkEmailInvalid = function(email, callback) {
   if (!isEmailValid(email)) {
     return callback(null, true);
   }
-  return callback(null, false);
-};
-
-validate.chkEmailInvalidOrDup = function (email, callback) {
-  if (!isEmailValid(email)) {
-    return callback(null, true);
-  }
   var allowPlus = conf.validation.allowPlusInEmail;
   if (-1 !== _.indexOf(email, '+') && !allowPlus) {
     // disobey the allowplus '+' rule
     return callback(null, EMAIL_PLUS_MSG);
   }
-  User.findByEmail(email, function (err, user) {
+  return callback(null, false);
+};
+
+validate.chkEmailInvalidOrDup = function (email, callback) {
+  validate.chkEmailInvalid(email, function(err, result) {
     if (err) {
       return callback(err);
     }
-    if (user) {
-      // duplicate
-      return callback(null, EMAIL_DUP_MSG);
+    if (result) {
+      return callback(null, result);
     }
-    return callback(null, false);
+    User.findByEmail(email, function (err, user) {
+      if (err) {
+        return callback(err);
+      }
+      if (user) {
+        // duplicate
+        return callback(null, EMAIL_DUP_MSG);
+      }
+      return callback(null, false);
+    });
   });
 };
 
