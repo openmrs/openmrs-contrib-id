@@ -4,6 +4,7 @@ var expect = require('chai').expect;
 var async = require('async');
 
 var User = require('../app/model/user');
+var Group = require('../app/model/group');
 var ldap = require('../app/ldap');
 
 // data for testing purposes
@@ -32,6 +33,7 @@ var VALID_INFO1 = {
   displayEmail: VALID_EMAIL2,
   emailList: [VALID_EMAIL1, VALID_EMAIL3],
   password: SIMPLE_STRING,
+  groups: [],
   locked: false,
   skipLDAP: true,
 };
@@ -43,6 +45,15 @@ var VALID_INFO2 = {
   emailList: [VALID_EMAIL2],
   password: SIMPLE_STRING,
   locked: true,
+  skipLDAP: true,
+};
+
+var GROUP_NAME1 = 'Mafia';
+
+var ORPHAN_GROUP_NAME = 'Brotherhood';
+
+var GROUP1 = {
+  groupName: GROUP_NAME1,
   skipLDAP: true,
 };
 
@@ -238,6 +249,20 @@ describe('User', function() {
     });
   });
 
+  it('should fail when the groups have duplicate members', function(done) {
+    var dupGroupsInfo = _.cloneDeep(VALID_INFO1);
+    dupGroupsInfo.groups = [GROUP_NAME1, GROUP_NAME1];
+
+    var user = new User(dupGroupsInfo);
+    user.save(function (err) {
+      expect(err).to.exist;
+      expect(err).to.have.property('name', 'ValidationError');
+      expect(err).to.have.property('errors');
+      expect(err.errors).to.have.property('groups');
+      done();
+    });
+  });
+
   // it('should fail when the password is missing', function(done) {
   //   var noPasswordInfo = _.cloneDeep(VALID_INFO1);
   //   delete noPasswordInfo.password;
@@ -326,6 +351,85 @@ describe('User', function() {
       });
     });
 
+  });
+
+  describe('hook with groups', function () {
+    var groupx;
+    before(function (done) {
+      groupx = new Group(GROUP1);
+      groupx.save(done);
+    });
+
+    after(function (done) {
+      Group.remove(done);
+    });
+
+    beforeEach(function (done) {
+      Group.findOneAndUpdate({groupName: groupx.groupName}, {member: []}, done);
+    });
+
+    it('should save the user reference as well in groups', function (done) {
+      var userInfo = _.cloneDeep(VALID_INFO1);
+      var user = new User(userInfo);
+      user.groups.push(groupx.groupName);
+
+      user.save(function (err) {
+        expect(err).to.be.null;
+        Group.findOne({groupName: groupx.groupName}, function (err, group) {
+          expect(err).to.be.null;
+          expect(group.indexOfUser(user.username)).not.to.equal(-1);
+          expect(group.member).to.have.length(1);
+          done();
+        });
+      });
+    });
+
+    it ('should fail when the group does not exist', function (done) {
+      var userInfo = _.cloneDeep(VALID_INFO1);
+      var user = new User(userInfo);
+      user.groups.push(ORPHAN_GROUP_NAME);
+
+      user.save(function (err) {
+        expect(err).to.exist;
+        done();
+      });
+    });
+
+    it ('should update groups relation on both side', function (done) {
+      var userInfo = _.cloneDeep(VALID_INFO1);
+      var user = new User(userInfo);
+      user.groups.push(groupx.groupName);
+
+      async.series([
+        function initSave(callback) {
+          user.save(callback);
+        },
+        function deleteGroup(callback) {
+          user.groups = [];
+          user.save(callback);
+        },
+        function check(callback) {
+          Group.findOne({groupName: groupx.groupName}, function (err, group) {
+            expect(err).to.be.null;
+            expect(group.indexOfUser(user.username)).to.equal(-1);
+            expect(group.member).to.have.length(0);
+            return callback();
+          });
+        },
+        function addGroup(callback) {
+          user.groups = [groupx.groupName];
+          user.save(callback);
+        },
+        function checkAgain(callback) {
+          Group.findOne({groupName: groupx.groupName}, function (err, group) {
+            expect(err).to.be.null;
+            expect(group.indexOfUser(user.username)).not.to.equal(-1);
+            expect(group.member).to.have.length(1);
+            done();
+          });
+        }
+      ]);
+    });
   });
 
   /// TODO test with LDAP

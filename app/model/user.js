@@ -135,6 +135,78 @@ userSchema.path('primaryEmail').validate(function (email){
   return -1 !== this.emailList.indexOf(email);
 }, 'The primaryEmail should be one member of emailList');
 
+// maintain the groups relations
+userSchema.pre('save', function (next) {
+  var added = [];// groups need to add this user
+  var removed = [];// groups need to delete this user
+  var user = this;
+  var userRef = {objId: user.id, username: user.username};
+
+  // get the added and removed array
+  var prepare = function (callback) {
+    User.findById(user._id, function (err, oldUser) {
+      if (err) {
+        return callback(err);
+      }
+      added = _.difference(user.groups, oldUser.groups);
+      removed = _.difference(oldUser.groups, user.groups);
+      return callback();
+    });
+  };
+
+  var commonCallback = function (cb) {
+    return function (err, group) {
+      if (err) {
+        return cb(err);
+      }
+      if (_.isEmpty(group)) {
+        return cb(new Error('No such groups'));
+      }
+      return cb();
+    };
+  };
+
+  var addGroups = function (callback) {
+    async.each(added, function addToGroup(groupName, cb) {
+      // efficiently update groups
+      Group.findOneAndUpdate({groupName: groupName}, {
+        $addToSet: {
+          member: userRef,
+        }
+      },{
+        lean: true,
+        select: 'groupName',
+      }, commonCallback(cb));
+    }, callback);
+  };
+
+  var delGroups = function (callback) {
+    async.each(removed, function deleteFromGroup(groupName, cb) {
+      // efficiently update groups
+      Group.findOneAndUpdate({groupName: groupName}, {
+        $pop: {
+          member: userRef,
+        }
+      },{
+        lean: true,
+        select: 'groupName',
+      }, commonCallback(cb));
+    }, callback);
+  };
+
+  // real logic starts
+  if (this.isNew) {
+    added = this.groups;
+    return addGroups(next);
+  }
+
+  async.series([
+    prepare,
+    addGroups,
+    delGroups,
+  ], next);
+});
+
 // sync with LDAP
 userSchema.pre('save', function (next) {
   // aliases
@@ -153,7 +225,6 @@ userSchema.pre('save', function (next) {
     return next();
   }
   if (this.skipLDAP) {
-    this.skipLDAP = undefined;
     return next();
   }
   if (!this.inLDAP) { // not stored in LDAP yet
