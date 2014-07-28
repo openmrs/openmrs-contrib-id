@@ -52,6 +52,7 @@ if ('production' === process.env.NODE_ENV) {
 // currently we only support to add, no modification
 groupSchema.pre('save', function (next) {
   if (this.skipLDAP) {
+    this.skipLDAP = undefined;
     return next();
   }
   if (this.inLDAP) {
