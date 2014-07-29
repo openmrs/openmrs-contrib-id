@@ -11,6 +11,7 @@ var EMAIL_DUP_MSG = 'This email address is already registered. ' +
   'A unique email address must be provided.';
 
 exports.emailValidator = function (req, res, next) {
+  req.body.newEmail = req.body.newEmail.toLowerCase();
   var email = req.body.newEmail;
   var category = verification.categories.newEmail;
 
