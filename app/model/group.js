@@ -34,7 +34,14 @@ var groupSchema = new Schema({
   inLDAP: {
     type: Boolean,
     default: false,
-  }
+  },
+
+  // Special flag used to skip the LDAP procedure.
+  // Note that this flag will be deleted in pre middleware,
+  // so it will only works once.
+  skipLDAP: {
+    type: Boolean,
+  },
 });
 
 if ('production' === process.env.NODE_ENV) {
@@ -44,6 +51,10 @@ if ('production' === process.env.NODE_ENV) {
 // pre hooks used to sync with LDAP,
 // currently we only support to add, no modification
 groupSchema.pre('save', function (next) {
+  if (this.skipLDAP) {
+    this.skipLDAP = undefined;
+    return next();
+  }
   if (this.inLDAP) {
     return next();
   }
@@ -60,3 +71,13 @@ groupSchema.pre('save', function (next) {
 var Group = mongoose.model('Group', groupSchema);
 
 exports = module.exports = Group;
+
+Group.prototype.indexOfUser = function(username) {
+  username = username.toLowerCase();
+  for (var i = 0, len = this.member.length; i < len; ++i) {
+    if (this.member[i].username === username) {
+      return i;
+    }
+  }
+  return -1;
+};
