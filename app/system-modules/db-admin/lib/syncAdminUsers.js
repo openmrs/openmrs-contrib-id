@@ -22,19 +22,19 @@ var User;
 function syncFormageUser(user, callback) {
 
   return FormageUser.findOne({username: user.username}).exec()
-  .then(function(formageUser) {
+  .then(function (formageUser) {
 
     return (formageUser)
       ? updatePassword(formageUser, user)
       : createFormageUser(user);
 
   })
-  .then(function(formageUser) {
+  .then(function (formageUser) {
 
     var deferred = q.defer();
 
     if (formageUser.isModified()) {
-      return formageUser.save(function(err, fu) {
+      return formageUser.save(function (err, fu) {
         if (err) deferred.reject(err);
         else deferred.resolve(fu);
       });
@@ -46,7 +46,7 @@ function syncFormageUser(user, callback) {
     return deferred.promise;
 
   })
-  .then(function(formageUser) {
+  .then(function (formageUser) {
 
     log.debug('formage user ' + formageUser.username + ' saved');
 
@@ -54,7 +54,11 @@ function syncFormageUser(user, callback) {
       ? callback(null, formageUser)
       : formageUser;
 
-  }, onError);
+  }, function (err) {
+
+    callback(err);
+
+  });
 }
 
 
@@ -114,7 +118,8 @@ function onError(err) {
  * administrators at startup.
  * @param  {Model} _FormageUser_ FormageUser mongoose model
  * @param  {Model} _User_        Dashboard User mongoose model
- * @return {undefined}
+ * @return {Promise}             Promise resolved once admin users have been
+ *                                       synced
  */
 module.exports = function init(_FormageUser_, _User_) {
 
@@ -123,16 +128,27 @@ module.exports = function init(_FormageUser_, _User_) {
 
   User.schema.post('save', onSave);
 
+  var deferred = q.defer();
+
   User.find({groups: 'dashboard-administrators'}).exec()
-  .then(function(users) {
+  .then(function (users) {
 
-    log.debug('found', users.length, 'dashboard administrators');
+    log.debug('found ' + users.length + 'dashboard administrator(s)');
 
-    async.each(users, syncFormageUser, function() {
+    async.each(users, syncFormageUser, function (err) {
+
+      if (err) {
+        onError(err);
+        return deferred.reject(err);
+      }
+
       log.info('Synced all dashboard admin users to Formage user models.');
+      deferred.resolve();
     });
 
   }, onError);
+
+  return deferred.promise;
 
 };
 

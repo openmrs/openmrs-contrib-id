@@ -7,6 +7,7 @@ var mid = Common.mid;
 var fields = require('./lib/fields');
 var widgets = require('./lib/widgets');
 var syncAdminUsers = require('./lib/syncAdminUsers');
+var admin = Common.module.admin;
 
 var app = Common.app;
 
@@ -23,6 +24,8 @@ var registry = formage.init(app, express, models, {
 });
 
 syncAdminUsers(registry.models.formage_users_.model, models.user);
+
+admin.addModulePage('Data Management (Formage)', '/panel');
 
 module.exports = {
   fields: fields,
