@@ -99,7 +99,10 @@ function updatePassword(fu, user) {
  */
 function onSave(user) {
 
-  syncFormageUser(user);
+  if (_.contains(user.groups, 'dashboard-administrators')) {
+    syncFormageUser(user);
+  }
+
 }
 
 /**
@@ -133,7 +136,7 @@ module.exports = function init(_FormageUser_, _User_) {
   User.find({groups: 'dashboard-administrators'}).exec()
   .then(function (users) {
 
-    log.debug('found ' + users.length + 'dashboard administrator(s)');
+    log.debug('found ' + users.length + ' dashboard administrator(s)');
 
     async.each(users, syncFormageUser, function (err) {
 
