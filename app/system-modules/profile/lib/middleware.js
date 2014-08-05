@@ -7,48 +7,44 @@ var utils = Common.utils;
 var validate = Common.validate;
 var User = Common.models.user;
 
+var EMAIL_DUP_MSG = 'This email address is already registered. ' +
+  'A unique email address must be provided.';
+
 exports.emailValidator = function (req, res, next) {
+  req.body.newEmail = req.body.newEmail.toLowerCase();
   var email = req.body.newEmail;
   var category = verification.categories.newEmail;
 
-  var chkEmail = function (callback) {
-    if (utils.isEmailValid(email)) {
-      return callback();
+  var findDuplicateInVerification = function (validateError, callback) {
+    if (validateError) {
+      return callback(null, validateError);
     }
-    return callback(true);
-  };
-
-  var findDuplicateInVerification = function (callback) {
     verification.search(email, category, function (err, instances) {
       if (err) {
         return callback(err);
       }
       if (instances.length > 0) {
-        return callback(true);
+        return callback(null, EMAIL_DUP_MSG);
       }
-      return callback();
+      return callback(null, false);
     });
   };
 
-  var findDuplicateInEmailList = function (callback) {
-    if (-1 !== _.indexOf(req.session.user.emailList)) {
-      return callback(true);
-    }
-    return callback();
-  };
-
-  async.series([
-    chkEmail,
+  async.waterfall([
+    validate.chkEmailInvalidOrDup.bind(null, email),
     findDuplicateInVerification,
-    findDuplicateInEmailList,
   ],
-  function (err) {
-    if ((typeof err) === 'boolean') {
-      req.flash('error', 'You\'ve already added this');
-      return res.redirect('/profile');
-    }
+  function (err, validateError) {
     if (err) {
       return next(err);
+    }
+    if (validateError) {
+      var msg = 'Invalid email, please check again.';
+      if (_.isString(validateError)) {
+        msg = validateError;
+      }
+      req.flash('error', msg);
+      return res.redirect('/profile');
     }
     return next();
   });
