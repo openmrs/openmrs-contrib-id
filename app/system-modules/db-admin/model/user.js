@@ -2,7 +2,7 @@ var path = require('path');
 var User = require(path.join(global.__apppath, 'model/user'));
 
 User.formage = {
-  label: 'OpenMRS ID',
+  label: 'Users',
 
   // filters: [
   //   'username',
