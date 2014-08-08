@@ -45,7 +45,7 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
   };
   var checkLocked = function (user, callback) {
     if (user.locked) {
-      return callback({loginFail: 'Please first verificate your email'});
+      return callback({loginFail: 'You must verify your email address before logging in. Check your email for verification instructions.'});
     }
     return callback(null, user);
   };
