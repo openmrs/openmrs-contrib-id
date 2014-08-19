@@ -51,6 +51,10 @@ Whatever by the design or due to history, we have some implicit rules.
 
 + Routes structure, we tend to split different logic of routes into different files. You may refer details in the project.
 
++ Issue tracking, you'd better open a corresponding issue for a PR, [here](issues.openmrs.org/browse/ID) 
+
++ Comments, it's a good habbit to constantly add explanatory comments. When a part of logic is too long, and when some code is complicated, just add few comments. And for some functions that maybe used externally, you may add full [JSDoc](http://en.wikipedia.org/wiki/JSDoc).
+
 ### Helpful Tools
 
 For keeping a good code style, [JSHint](http://www.jshint.com/) is highly recommended, also if you want to auto beautify the code, you may use [JS-beautify](https://github.com/beautify-web/js-beautify).
