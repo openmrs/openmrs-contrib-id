@@ -18,7 +18,7 @@ Installing OpenMRS ID
     And add a user for that database
     ```
     > CREATE USER 'username'@'localhost' IDENTIFIED BY 'some_pass';
-    > GRANT ALL PRIVILEGES ON id_dashboard.* TO 'username'@'%' WITH GRANT OPTION;
+    > GRANT ALL PRIVILEGES ON id_dashboard.* TO 'username'@'localhost' WITH GRANT OPTION;
     ```
 
 3. Install a MongoDB server and configure it:
@@ -93,7 +93,7 @@ Installing OpenMRS ID
     
 6. Install project dependencies. This uses the `npm-shrinkwrap.json` file in the project to ensure the same dependency versions are installed that we use in production.
 
-    First, the [LDAP][4] module, which has C and libldap requirements, needs few packages for building. On Ubuntu, make sure the `build-essential`, `libldap2-dev`, and `uuid-dev` packages are installed.
+    First, the [LDAP][4] module, which has C and libldap requirements, needs few packages for building. On Ubuntu, **make sure the `build-essential`, `libldap2-dev`, and `uuid-dev` packages are installed**.
 
     Run this and wait.
 
