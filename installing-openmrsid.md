@@ -9,7 +9,7 @@ Installing OpenMRS ID
 
     ```
     apt-get install mysql-server
-    mysql -uroot
+    mysql -u root -p
     > CREATE DATABASE id_dashboard
     > CHARACTER SET utf8
     > DEFAULT COLLATE utf8_general_ci;
@@ -70,7 +70,7 @@ Installing OpenMRS ID
     })
     ```
 
-3. Install Node. For development environments, I use [nvm][1]. Install the latest from the Node 0.8.x tree:
+4. Install Node. For development environments, I use [nvm][1]. Install the latest from the Node 0.8.x tree:
 
 	 ```
      curl https://raw.githubusercontent.com/creationix/nvm/v0.13.1/install.sh | bash
@@ -84,14 +84,14 @@ Installing OpenMRS ID
      [[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh
      ```
 
-4. Clone [openmrs-contrib-id][2] and enter the project directory.
+5. Clone [openmrs-contrib-id][2] and enter the project directory.
 
 	```
     git clone https://github.com/openmrs/openmrs-contrib-id.git
     cd openmrs-contrib-id
     ```
     
-5. Install project dependencies. This uses the `npm-shrinkwrap.json` file in the project to ensure the same dependency versions are installed that we use in production.
+6. Install project dependencies. This uses the `npm-shrinkwrap.json` file in the project to ensure the same dependency versions are installed that we use in production.
 
     First, the [LDAP][4] module, which has C and libldap requirements, needs few packages for building. On Ubuntu, make sure the `build-essential`, `libldap2-dev`, and `uuid-dev` packages are installed.
 
@@ -105,7 +105,7 @@ Installing OpenMRS ID
 
 	1. LDAP credentials for the `omrsid` account
 	2. LDAP resource uri's (e.g. replace `dc=example` with `dc=openmrs,dc=org`)
-	3. Mysql database name and credentials
+	3. Mysql/MongoDB database name and credentials
 	4. Postfix mail sending credentials and port
 	5. reCAPTCHA keys (if you have them—they are required for signup)
  
