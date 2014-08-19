@@ -40,7 +40,7 @@
     "express-debug": "~1.1.0"
   },
   "scripts": {
-    "test": "mocha app/**/*.test.js"
+    "test": "make test"
   },
   "repository": {
     "type": "git",
