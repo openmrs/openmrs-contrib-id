@@ -2,7 +2,7 @@
 	%><style><%-prefs.customCSS%></style><%
 } %>
 <div id="globalnav">
-	<% if (prefs.cseId) { %><form method="get" action="http://www.google.com/cse">
+	<% if (prefs.cseId) { %><form method="get" action="https://www.google.com/cse">
         <input type="hidden" name="cx" value="<%= prefs.cseId %>">
         <input type="hidden" name="ie" value="UTF-8">
         <input type="text" class="field" name="q" id="s" placeholder="<%= prefs.csePlaceholder %>">
