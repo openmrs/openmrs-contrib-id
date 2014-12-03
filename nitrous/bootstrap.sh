@@ -3,6 +3,7 @@
 # OPENMRS ID NITROUS BOOTSTRAP
 
 cd ~
+mkdir ~/tmp
 
 ## INSTALL OPENLDAP
 
@@ -41,8 +42,6 @@ git checkout -f master
 echo
 echo "  Now fetching prebuilt LDAP configuration for OpenMRS ID."
 echo
-echo "  Press any key to continue, or CTRL-C to abort the installation."
-read
 
 cd ~/.parts/packages/openldap/2.4.39/
 mkdir -p var/lib/ldap
@@ -103,7 +102,7 @@ cd ~/workspace/openmrs-contrib-id
 
 # Install NVM and Node v0.8
 curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash
-source ~/.bashrc
+. ~/.nvm/nvm.sh
 nvm install v0.8.27
 nvm alias default v0.8.27
 
