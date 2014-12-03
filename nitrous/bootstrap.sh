@@ -19,13 +19,22 @@ git checkout elliott/openldap -q
 cd ~
 
 echo 
-echo "  We will now install OpenLDAP. This will take a while, and you will see"
-echo "  lots of output on your terminal. Be patient!"
+echo "  We will now install OpenLDAP. This may take a long time, and you will"
+echo "  see lots of output on your terminal. Be patient!"
 echo 
 echo "  Press any key to continue, or CTRL-C to abort the installation."
 read
 
 parts install openldap
+
+## SET UP GIT
+cd ~/workspace/openmrs-contrib-id
+git init .
+git remote add origin https://github.com/openmrs/openmrs-contrib-id.git
+git fetch origin master
+git checkout -f master
+git fetch origin nitrous
+git checkout -f nitrous
 
 ## CONFIGURE OPENLDAP
 
@@ -42,12 +51,12 @@ mkdir tmp
 cd tmp
 
 # Download prebuilt config
-wget http://cl.ly/3K3F3N0L223A/slapd.conf # CHANGE THIS
-cp slapd.conf ../etc/openldap/slapd.conf
+cd ~/workspace/openmrs-contrib-id/nitrous
+cp slapd-premade.conf ../etc/openldap/slapd.conf
 
 # Download prebuilt dataset     
-wget THE_DATASET # CHANGE THIS
-slapadd -l THE_DATASET # CHANGE THIS
+cd ~/workspace/openmrs-contrib-id/nitrous
+slapadd -l ldap-premade.ldif
 
 # Start openldap, cross fingers
 parts start openldap
@@ -81,7 +90,7 @@ echo
 echo "  Installing libuuid"
 echo
 cd ~/tmp
-wget http://cl.ly/2N3H332x3f3d/libuuid-nitrous.tar.gz # CHANGE THIS
+cp ~/workspace/openmrs-contrib-id/nitrous/libuuid-nitrous.tar.gz ~/tmp
 tar -zxf libuuid-nitrous.tar.gz
 cp -r libuuid/* ~/.parts/
 
@@ -127,13 +136,6 @@ echo
 echo "  To start mailcatcher in the future, run the following command:"
 echo "    $ mailcatcher --http-ip 0.0.0.0 --http-port 4000"
 echo
-
-## SET UP GIT
-cd ~/workspace/openmrs-contrib-id
-git init .
-git remote add origin https://github.com/openmrs/openmrs-contrib-id.git
-git fetch origin master
-git checkout -f master
 
 ## START OPENMRSID
 echo
