@@ -30,11 +30,11 @@ parts install openldap
 ## SET UP GIT
 cd ~/workspace/openmrs-contrib-id
 git init .
-git remote add origin https://github.com/openmrs/openmrs-contrib-id.git
+git remote add origin https://github.com/elliottwilliams/openmrs-contrib-id.git
 git fetch origin master
 git checkout -f master
-git fetch origin nitrous
-git checkout -f nitrous
+#git fetch origin nitrous
+#git checkout -f nitrous
 
 ## CONFIGURE OPENLDAP
 
@@ -66,14 +66,14 @@ echo "  OpenLDAP configured and started successfully."
 echo
 
 ## SET UP MYSQL
-cd ~
-echo
-echo "  Now installing and configuring MySQL."
-echo
-parts install mysql
-parts start mysql
+#cd ~
+#echo
+#echo "  Now installing and configuring MySQL."
+#echo
+#parts install mysql
+#parts start mysql
 
-mysqladmin -u root create id_dashboard 
+#mysqladmin -u root create id_dashboard 
 
 
 ## SET UP MONGODB
