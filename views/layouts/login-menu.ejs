@@ -2,7 +2,7 @@
 <div id="login-menu" class="col-sm-10 col-xs-10 col-md-5">
 <% } %>
 <% if (connected) { %>
-<div id="login-menu" class="col-sm-2">
+<div id="login-menu" class="col-sm-4">
 <% } %>
 
   <% if (!connected) { %>
@@ -10,12 +10,13 @@
   <% } %>
 
   <% if (connected) { %>
-    <div class="dropdown">
-      <a href="#" data-toggle="dropdown" class="btn btn-primary"><%= user.displayName %></a>
-      <ul class="dropdown-menu">
-        <li><a href="/profile">View Your Profile</a></li>
-        <li><a href="/disconnect">Log Out</a></li>
-      </ul>
+    <div class="col-md-10" style="text-align:right">
+        <strong>Welcome, <%= user.displayName %></strong>
+        </br>
+        <a href="/disconnect">Log Out</a>
+    </div>
+    <div class="col-sm-2">
+        <img src="https://wiki.openmrs.org/rest/cas/1.0/avatar/server/<%= mailHash %>?s=51" alt="<%= user.displayName %>">
     </div>
   <% } %>
 </div>
