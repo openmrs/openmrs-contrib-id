@@ -83,6 +83,7 @@ echo
 parts install mongodb
 parts start mongodb
 mongo id_dashboard ~/workspace/openmrs-contrib-id/nitrous/mongo-setup.js
+mongorestore ~/workspace/openmrs-contrib-id/nitrous/mongo-premade/
 
 ## INSTALL uuid.h
 echo
