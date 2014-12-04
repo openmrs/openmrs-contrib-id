@@ -146,7 +146,6 @@ module.exports = {
 
   // user-configured modules
   "userModules": [
-    "openmrs-contrib-id-groups",
     "openmrs-contrib-id-styleguide"
   ],
 

@@ -111,10 +111,8 @@ cp nitrous/conf.js app/conf.js
 
 ## INSTALL USER-MODULES
 echo
-echo "  Now installing OpenMRS ID modules: openmrs-contrib-id-groups, openmrs-"
-echo "  contrib-id-styleguide"
+echo "  Now installing OpenMRS ID modules: openmrs-contrib-id-styleguide"
 echo
-git clone https://github.com/openmrs/openmrs-contrib-id-groups.git ~/workspace/openmrs-contrib-id/app/user-modules/openmrs-contrib-id-groups
 git clone https://github.com/elliottwilliams/openmrs-contrib-id-styleguide.git ~/workspace/openmrs-contrib-id/app/user-modules/openmrs-contrib-id-styleguide
 
 ## INSTALL MAILCATCHER
