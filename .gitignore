@@ -36,3 +36,4 @@ santa-tunnel.sh
 conf-controller.js
 .sass-cache
 resource/stylesheets/*
+*.sqlite
