@@ -31,11 +31,9 @@ parts install openldap
 ## SET UP GIT
 cd ~/workspace/openmrs-contrib-id
 git init .
-git remote add origin https://github.com/elliottwilliams/openmrs-contrib-id.git
+git remote add origin https://github.com/openmrs/openmrs-contrib-id.git
 git fetch origin master
 git checkout -f master
-#git fetch origin nitrous
-#git checkout -f nitrous
 
 ## CONFIGURE OPENLDAP
 
@@ -83,6 +81,7 @@ echo
 parts install mongodb
 parts start mongodb
 mongo id_dashboard ~/workspace/openmrs-contrib-id/nitrous/mongo-setup.js
+mongorestore ~/workspace/openmrs-contrib-id/nitrous/mongo-premade/
 
 ## INSTALL uuid.h
 echo
@@ -100,14 +99,8 @@ echo "  Now installing Node dependencies for OpenMRS ID."
 echo
 cd ~/workspace/openmrs-contrib-id
 
-# Install NVM and Node v0.8
-curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash
-. ~/.nvm/nvm.sh
-nvm install v0.8.27
-nvm alias default v0.8.27
-
 # Install Dependencies
-npm install
+npm install --no-shrinkwrap
 
 
 ## COPY CONFIG
@@ -116,10 +109,8 @@ cp nitrous/conf.js app/conf.js
 
 ## INSTALL USER-MODULES
 echo
-echo "  Now installing OpenMRS ID modules: openmrs-contrib-id-groups, openmrs-"
-echo "  contrib-id-styleguide"
+echo "  Now installing OpenMRS ID modules: openmrs-contrib-id-styleguide"
 echo
-git clone https://github.com/openmrs/openmrs-contrib-id-groups.git ~/workspace/openmrs-contrib-id/app/user-modules/openmrs-contrib-id-groups
 git clone https://github.com/elliottwilliams/openmrs-contrib-id-styleguide.git ~/workspace/openmrs-contrib-id/app/user-modules/openmrs-contrib-id-styleguide
 
 ## INSTALL MAILCATCHER

@@ -17,7 +17,7 @@ var os = require("os");
 module.exports = {
   "site": {
     // use full url, like http://localhost:3000/
-    "url": "https://" + os.hostname() + ".use1.nitrousbox.com",
+    "url": "http://" + os.hostname() + ".use1.nitrousbox.com",
     "title": "OpenMRS ID"
   },
   "ldap": {
@@ -73,7 +73,8 @@ module.exports = {
     "dbname": "id_dashboard",
     "username": "",
     "password": "",
-    "dialect": "sqlite"
+    "dialect": "sqlite",
+    "storage": "./id_dashboard.sqlite"
   },
   "mongo": {
     "uri": "mongodb://localhost/id_dashboard",
@@ -145,7 +146,6 @@ module.exports = {
 
   // user-configured modules
   "userModules": [
-    "openmrs-contrib-id-groups",
     "openmrs-contrib-id-styleguide"
   ],
 
