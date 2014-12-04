@@ -73,7 +73,8 @@ module.exports = {
     "dbname": "id_dashboard",
     "username": "",
     "password": "",
-    "dialect": "sqlite"
+    "dialect": "sqlite",
+    "storage": "./id_dashboard.sqlite"
   },
   "mongo": {
     "uri": "mongodb://localhost/id_dashboard",
