@@ -4,7 +4,11 @@ var conf = Common.conf;
 var log = Common.logger.add('database');
 
 var sql = new Sequelize(conf.db.dbname, conf.db.username, conf.db.password, {
-  logging: false
+  logging: false,
+  dialect: conf.db.dialect || 'mysql', // database type, defaults to mysql
+  
+  // If sqlite is used, we need to specify a file to store the DB in
+  storage: (conf.db.dialect == 'sqlite') ? conf.db.storage : null
 });
 var models = [];
 

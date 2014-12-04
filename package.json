@@ -37,7 +37,8 @@
     "should": "~2.1.1",
     "mocha": "~1.16.2",
     "chai": "~1.9.1",
-    "express-debug": "~1.1.0"
+    "express-debug": "~1.1.0",
+    "sqlite3": "^3.0.4"
   },
   "scripts": {
     "test": "make test"
