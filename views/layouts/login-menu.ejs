@@ -1,25 +1,12 @@
+<% if (!connected) { %>
+<div id="login-menu" class="col-sm-10 col-xs-10 col-md-5">
+<% } %>
+<% if (connected) { %>
 <div id="login-menu" class="col-sm-2">
-  <% if (!connected) { %>
-    <button class="btn btn-primary" data-toggle="popover" data-placement="bottom" data-content-id="login-form">Log In</button>
+<% } %>
 
-    <script type="text/html" data-target="popover" data-content-id="login-form">
-    <form action="/login" method="post">
-      <div class="form-group">
-        <label for="loginusername">OpenMRS ID</label>
-        <input class="use-placeholder" type="text" placeholder="OpenMRS ID" name="loginusername">
-      </div>
-      <div class="form-group">
-        <label for="loginpassword">Password</label>
-        <input class="use-placeholder" type="password" placeholder="Password" name="loginpassword">
-      </div>
-      <div class="form-group">
-        <span class="failtext">Authentication failed.
-        <a href="/reset">Password Recovery &#187;</a></span>
-      </div>
-      <input type="submit" class="btn btn-primary btn-sm" value="Log In &#187;">
-    </form>
-    </script>
-    <div class="popover-direction" data-popid="login"></div>
+  <% if (!connected) { %>
+    <p>Your OpenMRS ID is the key to participating in our open source community. Use it to access all of the tools and services listed on the links at the top of this page. <a href="http://go.openmrs.org/id">Read more on our Wiki.</a></p>
   <% } %>
 
   <% if (connected) { %>
