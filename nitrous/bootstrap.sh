@@ -31,11 +31,9 @@ parts install openldap
 ## SET UP GIT
 cd ~/workspace/openmrs-contrib-id
 git init .
-git remote add origin https://github.com/elliottwilliams/openmrs-contrib-id.git
+git remote add origin https://github.com/openmrs/openmrs-contrib-id.git
 git fetch origin master
 git checkout -f master
-#git fetch origin nitrous
-#git checkout -f nitrous
 
 ## CONFIGURE OPENLDAP
 
