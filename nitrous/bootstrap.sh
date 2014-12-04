@@ -100,14 +100,8 @@ echo "  Now installing Node dependencies for OpenMRS ID."
 echo
 cd ~/workspace/openmrs-contrib-id
 
-# Install NVM and Node v0.8
-curl https://raw.githubusercontent.com/creationix/nvm/v0.20.0/install.sh | bash
-. ~/.nvm/nvm.sh
-nvm install v0.8.27
-nvm alias default v0.8.27
-
 # Install Dependencies
-npm install
+npm install --no-shrinkwrap
 
 
 ## COPY CONFIG
