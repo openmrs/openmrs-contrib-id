@@ -10,7 +10,7 @@
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border: 1px solid #CCC;
-  background: #F7F7F7;
+  background: #FFFFFF;
   transition: background 100ms;
   transition-property: background, box-shadow;
   -webkit-transition: background 100ms;
@@ -24,22 +24,29 @@
   display: inline;
   float: left;
   margin: 0 0 18px;
-  width: 178px;
+  width: 100%;
   clear: both;
   z-index: 20;
 
   .two-up& {
-    width: 87px !important;
+    width: 49.52%;
+    margin-right: 4px;
+    float: left !important;
+    clear: none;
+  }
+  
+  .quarter&{
+    width: 24.5%;
     margin-right: 4px;
     float: left !important;
     clear: none;
   }
 
   .large& {
-    width: 374px;
+    width: 100%;
   }
   .two-up.large& {
-    width: 178px !important;
+    width: 100%;
   }
 
   &:focus {
