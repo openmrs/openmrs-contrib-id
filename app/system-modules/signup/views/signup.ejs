@@ -20,7 +20,7 @@
         <% if (values.username) { %>value="<%= values.username %>"
         <% } else { %>autofocus<% } %>>
 
-      <span class="description" style="background:#fff">
+      <span class="description">
         <span class="failtext"><% if (failReason.username) { %>
           <%= failReason.username %>
           <% } else { %>Please enter a valid username.<% } %>
@@ -41,7 +41,7 @@
         <% } else if (values.username && values.firstName) { %>
         autofocus<% } %>>
 
-        <span class="failtext">
+        <span class="failtext description">
           Both a given name and surname are required.
         </span>
 
@@ -54,7 +54,7 @@
         <% } else if (values.username && values.firstName && values.lastName) { %>
         autofocus<% } %>>
 
-        <span class="failtext">
+        <span class="failtext description">
           <% if (failReason.primaryEmail) { %><%= failReason.primaryEmail %>
           <% } else { %>Please enter a valid email address.<% } %>
         </span>
@@ -64,7 +64,7 @@
       <input type="text" name="<%=disguise('country', spinner)%>"
         placeholder="Country">
 
-        <span class="failtext">Please enter a country.</span>
+        <span class="failtext description">Please enter a country.</span>
     </div>
 
     <div class="field two-up<% if (fail.password) { %> fail<% } %>">
@@ -74,7 +74,7 @@
         <% if (values.username && values.firstName && values.lastName && values.primaryEmail) { %>
         autofocus<% } %>>
 
-      <span class="description" style="background:#fff">
+      <span class="description">
         <span class="failtext">
           <% if (failReason.password) { %><%= failReason.password %>
           <% } else { %>Please enter a valid password.<% } %>
