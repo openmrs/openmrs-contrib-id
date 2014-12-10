@@ -40,8 +40,11 @@
           <% } else if (values.username && values.firstName) { %>
           autofocus<% } %>>
 
-          <span class="failtext">
-            Both a given name and surname are required.
+          <span class="description">
+            <span class="failtext">
+              <!--must be differest spans or else is not highlighted red when form failed-->
+              Both a given name and surname are required.
+            </span>
           </span>
       </div>
 
@@ -53,10 +56,12 @@
           <% } else if (values.username && values.firstName && values.lastName) { %>
           autofocus<% } %>>
 
-          <span class="failtext">
-            <% if (failReason.primaryEmail) { %><%= failReason.primaryEmail %>
-            <% } else { %>Please enter a valid email address.<% } %>
-          </span>
+        <span class="description">
+            <span class="failtext">
+              <% if (failReason.primaryEmail) { %><%= failReason.primaryEmail %>
+              <% } else { %>Please enter a valid email address.<% } %>
+            </span>
+        </span>
       </div>
 
       <!--Country-->
@@ -64,7 +69,7 @@
         <input type="text" name="<%=disguise('country', spinner)%>"
           placeholder="Country">
 
-          <span class="failtext">Please enter a country.</span>
+          <span class="description failtext">Please enter a country.</span>
       </div>
 
       <!--Password-->

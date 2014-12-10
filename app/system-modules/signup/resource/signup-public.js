@@ -6,6 +6,6 @@
     }
 
     $(document).ready(function() {
-      //$('.field input[placeholder=Country]').parent().css('display', 'none')
+      $('.field input[placeholder=Country]').parent().css('display', 'none')
     })
 })()
