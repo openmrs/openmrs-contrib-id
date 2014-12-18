@@ -1,31 +1,38 @@
 <% name = 'login' %>
 <% title = 'OpenMRS ID - Login' %>
-<% headline = 'Login with your OpenMRS ID' %>
+<% headline = 'Sign In' %>
 <% sidebar.unshift('sidebar/id-whatis') %>
 
 <form action="/login" method="post">
 	<p><em></em></p>
 	<input type="hidden" name="destination" id="redirect-to">
 	
-	<div class="field<% if (fail.loginusername) {%> fail<% } %>">
-		<label>OpenMRS ID</label>
-		<input type="text" name="loginusername" placeholder="OpenMRS ID" <% if (failed) { %>value="<%= values.loginusername %>"<% } %> autofocus>
+  <span>Don't have an OpenMRS ID yet? <a href="/signup">Sign up.</a></span>
+  <br><br>
+  
+  <div class="row col-md-12">
+  <div class="panel panel-default panel-body">
+	<div class="two-up field<% if (fail.loginusername) {%> fail<% } %>">
+		<input type="text" name="loginusername" placeholder="Username" <% if (failed) { %>value="<%= values.loginusername %>"<% } %> autofocus>
 		<span class="description failtext">
 			<% if (values.loginusername == '') { %>A username must be supplied to log in.<% }
 			else { %>Make sure you are entering your OpenMRS ID, not your email address.<% } %>
 		</span>
 	</div>
 	
-	<div class="field<% if (fail.loginpassword) {%> fail<% } %>">
-		<label>Password</label>
+	<div class="two-up field<% if (fail.loginpassword) {%> fail<% } %>">
 		<input type="password" name="loginpassword" placeholder="Password">
 		<span class="description failtext">
-			<% if (values.loginpassword == '') { %>A password must be supplied to log in.<% }
-			else { %>If you have forgotten your password, you can <a href="/reset">reset it here</a>.<% } %>
+			<% if (values.loginpassword == '') { %>A password must be supplied to log in.<% } %>
 		</span>
 	</div>
+  <br>
+  <a href="/reset" style="padding-top:-30px">Forgot your password?</a>
+  <br><br>
 	
 	<div class="field">
-		<input class="btn btn-success" type="submit" value="Login with OpenMRS ID &#187;">
+		<input class="btn btn-success" type="submit" value="Sign In">
 	</div>
+  </div>
+  </div>
 </form>
