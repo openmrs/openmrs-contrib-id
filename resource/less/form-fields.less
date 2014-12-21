@@ -10,7 +10,7 @@
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border: 1px solid #CCC;
-  background: #FFFFFF;
+  background: #F7F7F7;
   transition: background 100ms;
   transition-property: background, box-shadow;
   -webkit-transition: background 100ms;
@@ -24,29 +24,22 @@
   display: inline;
   float: left;
   margin: 0 0 18px;
-  width: 100%;
+  width: 178px;
   clear: both;
   z-index: 20;
 
   .two-up& {
-    width: 49.52%;
-    margin-right: 4px;
-    float: left !important;
-    clear: none;
-  }
-  
-  .quarter&{
-    width: 24.5%;
+    width: 87px !important;
     margin-right: 4px;
     float: left !important;
     clear: none;
   }
 
   .large& {
-    width: 100%;
+    width: 374px;
   }
   .two-up.large& {
-    width: 100%;
+    width: 178px !important;
   }
 
   &:focus {
@@ -103,8 +96,10 @@ input {
       display: block;
     }
   }
+}
 
 
+.content {
   label, .labeltext {
     line-height: 27px;
     padding-top: 7px;
@@ -119,6 +114,7 @@ input {
 
   & > .description {
     display: inline-block;
+    background: #FFFBF2;
     visibility: hidden;
     width: 300px;
     position: relative;
