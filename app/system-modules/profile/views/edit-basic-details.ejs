@@ -1,0 +1,37 @@
+<div class="list-group">
+    <div class="list-group-item">
+
+        <form action="/profile" method="post">
+
+            <div class="field noedit">
+                <p class="h3"><%= user.username %> <small>Username</small></p>
+            </div>
+
+            <div class="field two-up<% if (fail.firstName || fail.lastName ) {
+                %> fail<% } %>">
+                <p><label>Name</label></p>
+                <input type="text" name="firstName" placeholder="Given Name" value="<%= (failed) ? values.firstName : user.firstName %>">
+                <input type="text" name="lastName" placeholder="Surname" value="<%= (failed) ? values.lastName : user.lastName %>">
+                <span class="description">
+                    <span class="failtext">Both a first and last name are required.</span>
+                    Your name identifies you across the OpenMRS Community.
+                </span>
+            </div>
+
+            <div class="field">
+                <input class="btn btn-success" type="submit" value="Update Profile &#187;">
+            </div>
+        </form>
+
+        <hr>
+
+        <h2>Your profile picture</h2>
+        <p>Profile pictures are managed along with your profile on the OpenMRS Wiki. Head over to Confluence to <a href="https://wiki.openmrs.org/users/viewmyprofile.action" target="_blank">edit your Wiki profile</a> or <a href="https://wiki.openmrs.org/users/editmyprofilepicture.action" target="_blank">change your profile picture</a>.</p>
+
+        <hr>
+
+        <h2><a href="#">Need to change your password?</a></h2>
+        <% include edit-password %>
+
+    </div>
+</div>
