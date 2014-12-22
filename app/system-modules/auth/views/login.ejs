@@ -12,15 +12,15 @@
   
   <div class="row col-md-12">
   <div class="panel panel-default panel-body">
-	<div class="two-up field<% if (fail.loginusername) {%> fail<% } %>">
-		<input type="text" name="loginusername" placeholder="Username" <% if (failed) { %>value="<%= values.loginusername %>"<% } %> autofocus>
+	<div class="field<% if (fail.loginusername) {%> fail<% } %>">
+		<input type="text" name="loginusername" placeholder="OpenMRS ID" <% if (failed) { %>value="<%= values.loginusername %>"<% } %> autofocus>
 		<span class="description failtext">
 			<% if (values.loginusername == '') { %>A username must be supplied to log in.<% }
 			else { %>Make sure you are entering your OpenMRS ID, not your email address.<% } %>
 		</span>
 	</div>
 	
-	<div class="two-up field<% if (fail.loginpassword) {%> fail<% } %>">
+	<div class="field<% if (fail.loginpassword) {%> fail<% } %>">
 		<input type="password" name="loginpassword" placeholder="Password">
 		<span class="description failtext">
 			<% if (values.loginpassword == '') { %>A password must be supplied to log in.<% } %>
