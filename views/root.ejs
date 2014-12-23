@@ -3,19 +3,20 @@
 <% headline = 'Welcome to the Dashboard, '+user.displayName+'.' %>
 <% if (user.groups.indexOf('dashboard-administrators') > -1) { sidebar = ['./../views/sidebar/crowd'] } %>
 
-<div style="font: 11px 'Open Sans', 'Helvetica', 'Arial', sans-serif;">
-  <center>
-    <p><h1>Welcome to the OpenMRS Community</h1>
-    <h4>We're glad you joined us! First, you should start making connections in the community by letting others know who you are, on the <a href="https://talk.openmrs.org/t/welcome-please-introduce-yourself/32">Discourse page</a> on OpenMRS Talk.</h4>
-    <a href="#"><div class="btn btn-primary btn-lg" id="button" style="margin-top:35px; margin-bottom:45px;">Start making connections</div></a>
-    </p>
-  </center>
-</div>
+<div id="welcome">
 
-<hr style="border: 2px solid gray;">
+<center>
+  <p><h1>Welcome to the OpenMRS Community</h1>
+  <h4>We're glad you joined us! First, you should start making connections in the community by letting others know who you are, on the <a href="https://talk.openmrs.org/t/welcome-please-introduce-yourself/32">Discourse page</a> on OpenMRS Talk.</h4>
+  <a href="#"><div class="btn btn-primary btn-lg" id="button" style="margin-top:35px; margin-bottom:45px;">Start making connections</div></a>
+  </p>
+</center>
 
-<div style="font: 11px 'Open Sans', 'Helvetica', 'Arial', sans-serif; margin-top:30px;">
-  <h4>After that, here are some other places you can use your OpenMRS ID:</h4></p>
+
+<hr>
+
+<div style="margin-top:30px;">
+  <h4>After that, here are some other places you can use your OpenMRS ID:</h4>
 
   <ul>
     <li><h5><a href="https://modules.openmrs.org">Modules:</a></h5></li>
@@ -26,6 +27,7 @@
     <li><h5><a href="https://issues.openmrs.org/secure/Dashboard.jspa">Issues:</a></h5></li>
     <li><h5><a href="https://github.com/openmrs/">Code:</a></h5></li>
   </ul>
+</div>
 </div>
 
 <!--<p>Don't regard the ID Dashboard as passé just yet! As the OpenMRS Community moves forward, you'll be able to control more and more of your Community Profile from here. Until then, why not <a href="#" class="highlight-banners">head over to another Community Application?</a></p>-->
