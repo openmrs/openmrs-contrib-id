@@ -1,26 +1,30 @@
-<div class="list-group">
+<div class="list-group col-md-6">
     <div class="list-group-item">
+        <h1><%= user.username %> <small>username</small></h1>
 
         <form action="/profile" method="post">
-
-            <div class="field noedit">
-                <p class="h3"><%= user.username %> <small>Username</small></p>
+          <div class="form-group<% if (fail.firstName || fail.lastName ) {
+                      %> fail<% } %>">
+            <label>Name</label>
+            <div class="row">
+              <div class="col-md-6">
+                <input type="text" name="firstName" placeholder="Given Name" value="<%= (failed) ? values.firstName : user.firstName %>" class="form-control">
+              </div>
+              <div class="col-md-6">
+                <input type="text" name="lastName" placeholder="Surname" value="<%= (failed) ? values.lastName : user.lastName %>" class="form-control">
+              </div>
             </div>
-
-            <div class="field two-up<% if (fail.firstName || fail.lastName ) {
-                %> fail<% } %>">
-                <p><label>Name</label></p>
-                <input type="text" name="firstName" placeholder="Given Name" value="<%= (failed) ? values.firstName : user.firstName %>">
-                <input type="text" name="lastName" placeholder="Surname" value="<%= (failed) ? values.lastName : user.lastName %>">
-                <span class="description">
-                    <span class="failtext">Both a first and last name are required.</span>
-                    Your name identifies you across the OpenMRS Community.
-                </span>
+            <span class="help-block description">
+              <span class="failtext">Both a first and last name are required.</span>
+              Your name identifies you across the OpenMRS Community.
+            </span>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <input class="btn btn-success pull-right" type="submit" value="Update Profile &#187;">
             </div>
-
-            <div class="field">
-                <input class="btn btn-success" type="submit" value="Update Profile &#187;">
-            </div>
+          </div>
+              
         </form>
 
         <hr>
@@ -30,7 +34,7 @@
 
         <hr>
 
-        <h2><a href="#">Need to change your password?</a></h2>
+        <h2><a href="#" id="editPasswordToggle">Need to change your password?</a></h2>
         <% include edit-password %>
 
     </div>
