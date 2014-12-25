@@ -260,7 +260,8 @@ $().ready(function(){
     
     /* toggle Edit Password form */
     $('#editPassword').hide();
-    $('#editPasswordToggle').on('click',function() {
+    $('#editPasswordToggle').on('click',function(e) {
+      e.preventDefault();
       $('#editPassword').slideToggle();
     });
 
