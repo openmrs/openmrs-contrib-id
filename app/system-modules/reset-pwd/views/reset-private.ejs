@@ -1,28 +1,31 @@
 <% name = 'reset-private' %>
 <% title = 'OpenMRS ID - Reset Password' %>
 <% headline = 'Reset Your Password' %>
-<form action="#" method="post">
-	<p>Enter a new password for <strong><%= username %></strong> in the field below.</p>
+<div class="panel panel-default">
+  <form action="#" method="post">
+    <div class="panel-body">
+      <p>Enter a new password for <strong><%= username %></strong> in the field below.</p>
 
-	<div class="field<% if (fail.newPassword) { %> fail <% } %>">
-		<input type="password" name="newPassword" placeholder="New Password" autofocus>
-		<label>New Password</label>
-		<span class="description">
-			<span class="failtext">Please enter a valid password.</span>
-			Passwords must be at least 8 characters in length.
-		</span>
-	</div>
+      <div class="field<% if (fail.newPassword) { %> fail <% } %>">
+        <input type="password" name="newPassword" placeholder="New Password" autofocus>
+        <label>New Password</label>
+        <span class="description">
+          <span class="failtext">Please enter a valid password.</span>
+          Passwords must be at least 8 characters in length.
+        </span>
+      </div>
 
-	<div class="field<% if (fail.confirmPassword) { %> fail <% } %>">
-		<input type="password" name="confirmPassword" placeholder="Confirm Password">
-		<label>Confirm Password</label>
-		<span class="description">
-			<span class="failtext">Passwords did not match.</span>
-			Check for typos!
-		</span>
-	</div>
-
-	<div class="field">
-		<input class="btn btn-success" type="submit" value="Reset Password &#187;">
-	</div>
-</form>
+      <div class="field<% if (fail.confirmPassword) { %> fail <% } %>">
+        <input type="password" name="confirmPassword" placeholder="Confirm Password">
+        <label>Confirm Password</label>
+        <span class="description">
+          <span class="failtext">Passwords did not match.</span>
+          Check for typos!
+        </span>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <input class="btn btn-success" type="submit" value="Reset Password &#187;">
+    </div>
+  </form>
+</div>
