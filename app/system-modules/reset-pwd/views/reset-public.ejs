@@ -5,7 +5,7 @@
   <form action="/reset" method="post" id="reset-form">
     <div class="panel-body">
         <p>Enter either your OpenMRS ID username or email address and we'll send you an email that includes your username and password reset instructions.</p>
-        <div class="field<% if (fail.resetCredential) { %>fail<% } %>">
+        <div class="form-group<% if (fail.resetCredential) { %>fail<% } %>">
           <input type="text" name="resetCredential" placeholder="Username or Email" autofocus>
         </div>
     </div>
