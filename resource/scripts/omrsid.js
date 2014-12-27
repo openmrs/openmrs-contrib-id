@@ -262,7 +262,8 @@ $().ready(function(){
     $('#addEmail').hide();
     $('#addEmailToggle').on('click',function(e) {
       e.preventDefault();
-      $('#addEmail').slideToggle();
+      $('#addEmail').toggle();
+      $('#addEmail input[name=newEmail]').focus();
     });
       
     /* toggle Edit Password form */
