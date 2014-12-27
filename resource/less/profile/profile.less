@@ -1,23 +1,21 @@
 @import "../colors";
 
+.list-group-item h1 {
+  margin-top: 10px;
+}
+
 .email-selector {
-
-  .badge {
-    position: relative;
-    top: -.083333333em;
-
-    &.badge-primary {
-      background-color: @brand-primary;
-    }
+  list-style: none;
+  
+  &.list-group {
+    margin-bottom: 0;
   }
+}
 
-  .add-email-address {
-    // border-top-width: 2px;
-    // border-top-color: #bbb;
-  }
+.form-horizontal label.control-label {
+  text-align: left;
+}
 
-  .btn.disabled {
-    cursor: not-allowed;
-  }
-
+.divide {
+  margin: 0 5px;
 }

@@ -257,5 +257,12 @@ $().ready(function(){
             .dataset.content = $(this).html();
 
     })
+    
+    /* toggle Edit Password form */
+    $('#addEmail').hide();
+    $('#addEmailToggle').on('click',function(e) {
+      e.preventDefault();
+      $('#addEmail').slideToggle();
+    });
 
 });
