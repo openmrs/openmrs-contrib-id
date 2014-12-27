@@ -258,11 +258,18 @@ $().ready(function(){
 
     })
     
-    /* toggle Edit Password form */
+    /* toggle Add Email form */
     $('#addEmail').hide();
     $('#addEmailToggle').on('click',function(e) {
       e.preventDefault();
       $('#addEmail').slideToggle();
+    });
+      
+    /* toggle Edit Password form */
+    $('#editPassword').hide();
+    $('#editPasswordToggle').on('click',function(e) {
+      e.preventDefault();
+      $('#editPassword').slideToggle();
     });
 
 });

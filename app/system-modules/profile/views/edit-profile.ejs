@@ -6,31 +6,9 @@
 <% style('/resource/stylesheets/profile/profile.css') %>
 
 <div class="col-md-6">
+  
+  <% include edit-basic-details %>
 
-  <form action="/profile" method="post">
-
-      <div class="field noedit">
-          <label>Username</label>
-          <p><%= user.username %></p>
-      </div>
-
-      <div class="field two-up<% if (fail.firstName || fail.lastName ) {
-          %> fail<% } %>">
-          <label>Name</label>
-          <input type="text" name="firstName" placeholder="Given Name" value="<%= (failed) ? values.firstName : user.firstName %>">
-          <input type="text" name="lastName" placeholder="Surname" value="<%= (failed) ? values.lastName : user.lastName %>">
-          <span class="description">
-              <span class="failtext">Both a first and last name are required.</span>
-              Your name identifies you across the OpenMRS Community.
-          </span>
-      </div>
-
-      <div class="field">
-          <input class="btn btn-success" type="submit" value="Update Profile &#187;">
-      </div>
-
-  </form>
- 
 </div>
 
 <div class="col-md-6">
