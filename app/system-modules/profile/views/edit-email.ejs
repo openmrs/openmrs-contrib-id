@@ -34,14 +34,7 @@
                       <% } %>
                   </span>
               </a>
-            <% } else { %>
-              <div class="checkbox">
-                <label>
-                  <input type="checkbox">
-                  Display to other OpenMRS community members
-                </label>
-              </div>
-          <% } %>
+            <% } %>
 
             <% if (m.notVerified) { %>
                 <span class="divide">|</span>
@@ -67,7 +60,7 @@
 
     </ul>
     
-    <h2><a href="#" id="addEmailToggle">Add Another</a></h2>
+    <h2><a href="#" id="addEmailToggle">Add Another...</a></h2>
     
     <% if (length==1) { %>
       <p>
