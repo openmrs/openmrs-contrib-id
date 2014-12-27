@@ -1,23 +1,16 @@
 @import "../colors";
 
 .email-selector {
-
-  .badge {
-    position: relative;
-    top: -.083333333em;
-
-    &.badge-primary {
-      background-color: @brand-primary;
-    }
-  }
-
   .add-email-address {
     // border-top-width: 2px;
     // border-top-color: #bbb;
   }
 
-  .btn.disabled {
-    cursor: not-allowed;
+  .email-primary, .email-needs-verification {
+    color: #999999;
   }
 
+  ul {
+    list-style-type: inherit;
+  }
 }

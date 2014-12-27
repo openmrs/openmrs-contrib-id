@@ -1,0 +1,75 @@
+<h2>My Email Address(es)</h2>
+
+<p>
+    Your email address is not displayed to the public. Is is only used for
+    OpenMRS Community Applications and Mailing List communications.
+</p>
+
+<ul class="email-selector list-group">
+    <%
+    var length = emails.length;
+    emails.forEach(function(m) {
+    %>
+    <li class="list-group-item">
+
+        <h3 class="list-group-item-heading">
+            <span class="email-address"><%= m.email %></span>
+            <% if (m.primary) { %>
+                <small class="email-primary">Primary Email Address</small>
+            <% } %>
+
+            <% if (m.notVerified) { %>
+                <small class="email-needs-verification">Needs Verification</small>
+            <% } %>
+        </h3>
+
+        <% if (!m.primary) { %>
+            <% if (m.notVerified) { %>
+                <a href="/profile-email/resend/<%= m.actionId %>">
+                    Resend Email Verification
+                </a>
+            <% } else { %>
+                <% if (!m.primary) { %>
+                    <a href="/profile-email/primary/<%= encodeURIComponent(m.email) %>">Make Primary</a>
+                <% } %>
+
+            <% } %>
+
+            |
+
+            <a href="/profile-email/delete/<%= encodeURIComponent(m.email) %>">Delete</a>
+        <% } %>
+
+    </li>
+    <% }) %>
+
+    <li class="list-group-item add-email-address">
+        <h3 class="list-group-item-heading">
+            <a data-toggle="collapse" href="#add-email-address-form" aria-expanded="false">
+                Add another...
+            </a>
+        </h3>
+        <form class="form collapse" action="/profile-email/add" method="post" id="add-email-address-form">
+            <div class="form-group">
+                <input class="form-control" type="text" name="newEmail" placeholder="Email Address">
+            </div>
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Add &#187;">
+            </div>
+        </form>
+
+        <% if(emails.length <= 1) { %>
+            <p>
+                Adding multiple email addresses to your account is recommended, especially
+                if your openmrs.org email address is your primary email address.
+                This allows you to:
+
+                <ul>
+                    <li>Subscribe different email addresses to different mailing lists</li>
+                    <li>Reset your password from multiple email addresses</li>
+                </ul>
+            </p>
+        <% } %>
+    </li>
+</ul>
