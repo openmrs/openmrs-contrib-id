@@ -1,8 +1,6 @@
-<ul id="user-nav">
-  <% var list = navLinks; for (var i = 0; i < list.length; i++) { %>  
-    <% var same = (name == list[i].viewName) ? true : false %>
-    <a<% if (same) { %> class="active"<% } %> href="<%= (same) ? "#" : list[i].url %>">
-      <li><% if (list[i].icon) { %><i class="<%= list[i].icon %>"></i><% } %><%= list[i].name %></li>
-    </a>
-  <% } %>
-</ul>
+<ol class="breadcrumb">
+  <li><a href="https://id.openmrs.org/edit/profile">My Profile</a></li>
+  <li><a href="https://id.openmrs.org/mailinglists">Mailing List</a></li>
+  <li><a href="https://id.openmrs.org/password">Edit Password</a></li>
+  <li class="active">Sign Up</li>
+</ol>
