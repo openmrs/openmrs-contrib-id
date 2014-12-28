@@ -1,4 +1,4 @@
-<div id="login-menu" class="col-md-4">
+<div id="login-menu" class="col-md-5">
   <% if (!connected) { %>
     <p>Your OpenMRS ID is the key to participating in our open source community. Use it to access all of the tools and services listed on the links at the top of this page. <a href="http://go.openmrs.org/id">Read more on our Wiki.</a>
     </p>
@@ -10,7 +10,7 @@
       <br>
       <a href="/disconnect">Log Out</a>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-1">
       <img src="https://wiki.openmrs.org/rest/cas/1.0/avatar/server/<%= mailHash %>?s=51" alt="<%= user.displayName %>">
     </div>
   <% } %>
