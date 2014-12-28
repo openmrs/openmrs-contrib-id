@@ -258,4 +258,13 @@ $().ready(function(){
 
     })
 
+    $('#add-email-address-link').on('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var addEmail = $('#add-email-address-form');
+        addEmail.toggle();
+        $('input[name=newEmail]', addEmail).focus();
+    });
+
 });
