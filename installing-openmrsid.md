@@ -70,6 +70,8 @@ Installing OpenMRS ID
     })
     ```
 
+    **You need to initialize the mongo as well, check the additional notes below**
+
 4. Install Node. For development environments, I use [nvm][1]. Install the latest from the Node 0.8.x tree:
 
 	 ```
@@ -117,9 +119,18 @@ Installing OpenMRS ID
 	node app/app
 	```
 
+### Addtional Notes
+
+1. For develpment purpose, it's not necessary to install and play the Postfix mailer. You may take a look of the [Mailcatcher][5], which is a ruby application that catches all the emails sent from local server.
+
+2. You may have noticed that we used groups to manage privileges. Due to historical reasons we stored our user data in 2 copies, one in LDAP, the other in the MongoDB. Before you create your first user, you shall initialize the Group collection in MongoDB as well. Check this [repo][6].
+
+Also if you want to access the admin panel, you must have an acount in admin groups. There is also a tool in this repo.
 
 [0]: https://gist.github.com/elliottwilliams/9548288
 [1]: https://github.com/creationix/nvm
 [2]: https://github.com/openmrs/openmrs-contrib-id
 [3]: http://docs.mongodb.org/manual/tutorial/install-mongodb-on-ubuntu/
 [4]: https://github.com/jeremycx/node-ldap
+[5]: http://mailcatcher.me/
+[6]: https://github.com/Plypy/OpenMRS-ID-Migrator
