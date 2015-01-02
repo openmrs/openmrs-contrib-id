@@ -123,9 +123,7 @@ Installing OpenMRS ID
 
 1. For develpment purpose, it's not necessary to install and play the Postfix mailer. You may take a look of the [Mailcatcher][5], which is a ruby application that catches all the emails sent from local server.
 
-2. You may have noticed that we used groups to manage privileges. Due to historical reasons we stored our user data in 2 copies, one in LDAP, the other in the MongoDB. Before you create your first user, you shall initialize the Group collection in MongoDB as well. Check this [repo][6].
-
-Also if you want to access the admin panel, you must have an acount in admin groups. There is also a tool in this repo.
+2. You may have noticed that we used groups to manage privileges. Due to historical reasons we stored our user data in 2 copies, one in LDAP, the other in the MongoDB. Before you create your first user, you shall initialize the Group collection in MongoDB as well. Check this [repo][6]. Also if you want to access the admin panel, you must have an acount in admin groups. There is also a tool in this repo.
 
 [0]: https://gist.github.com/elliottwilliams/9548288
 [1]: https://github.com/creationix/nvm
