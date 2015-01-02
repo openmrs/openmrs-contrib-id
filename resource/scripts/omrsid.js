@@ -258,4 +258,12 @@ $().ready(function(){
 
     })
 
+var pwdElement = document.getElementById("pwd")
+   $('#editPwdLink').on('click',function(e) {
+     e.preventDefault();
+     if(pwdElement.style.display=="block")
+       pwdElement.style.display = "none";
+     else
+       pwdElement.style.display = "block";
+   });
 });
