@@ -4,6 +4,8 @@
 var crypto = require('crypto');
 var _ = require('lodash');
 var conf = require('./conf');
+var request = require('request');
+var qs = require('querystring');
 
 // password hashing
 exports.getSSHA = function (cleartext, salt) {
@@ -43,4 +45,42 @@ exports.isEmailValid = function (email) {
     return false;
   }
   return true;
+};
+
+// new Recaptcha validator
+var Recaptcha = exports.Recaptcha = function(secret) {
+  if (_.isUndefined(secret)) {
+    console.error('missing recaptcha secret');
+    throw new Error('missing recaptcha secret');
+  }
+  this.secret = secret;
+};
+
+// make a GET request to verify reCAPTCHA
+Recaptcha.prototype.verify = function(data, callback) {
+  var baseUrl = 'https://www.google.com/recaptcha/api/siteverify';
+  var query = {
+    secret: this.secret,
+  };
+  if (_.isUndefined(data.response)) {
+    return callback('missing recaptcha response');
+  }
+  query.response = data.response;
+  if (data.remoteip) {
+    query.remoteip = data.remoteip;
+  }
+  query = qs.stringify(query);
+
+  var verifyUrl = baseUrl + '?' + query;
+  request.get(verifyUrl, function (err, response, body) {
+    if (err) {
+      return callback(err);
+    }
+    body = JSON.parse(body);
+    var errCode = body['error-codes'];
+    if (errCode) {
+      return callback(errCode);
+    }
+    return callback(null, body.success);
+  });
 };

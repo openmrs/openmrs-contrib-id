@@ -15,7 +15,6 @@
  * This source file contains the validation functions for all kinds of form.
  */
 
-var Recaptcha = require('recaptcha').Recaptcha;
 var path = require('path');
 
 var _ = require('lodash');
@@ -25,6 +24,7 @@ var Common = require(global.__commonModule);
 var conf = Common.conf;
 var log = Common.logger.add('validation');
 var utils = Common.utils;
+var Recaptcha = utils.Recaptcha;
 
 var User = require(path.join(global.__apppath, 'model/user'));
 
@@ -137,17 +137,15 @@ validate.chkDiff = function (strA, strB, callback) {
  * captcha has these attributes and may get this way
  * {
  *   remoteip: req.connection.remoteAddress,
- *   challenge: req.body.recaptcha_challenge_field,
- *   response: req.body.recaptcha_response_field,
+ *   response: req.body['g-recaptcha-response'],
  * }
  */
 validate.chkRecaptcha = function(captchaData, callback) {
-  var recaptcha = new Recaptcha(conf.validation.recaptchaPublic,
-    conf.validation.recaptchaPrivate, captchaData
-  );
-  recaptcha.verify(function (success, errorCode) {
-    if (errorCode) {
-      log.debug('recaptcha error code', errorCode);
+  var recaptcha = new Recaptcha(conf.validation.recaptchaPrivate);
+
+  recaptcha.verify(captchaData, function (err, success) {
+    if (err) {
+      log.error('recaptcha error code', err);
     }
     if (!success) {
       return callback(null, true);
