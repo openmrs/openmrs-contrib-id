@@ -6,6 +6,7 @@
 <% headAppend += '<script src="/signup/resource/md5.js"></script>\n' %>
 <% headAppend += '<script src="/signup/resource/signup-public.js"></script>\n' %>
 <% headAppend += '<script type="text/javascript">var SPINNER="'+spinner+'";</script>\n' %>
+<% headAppend += '<script src="https://www.google.com/recaptcha/api.js" async defer></script>\n' %>
 
 <form action="/signup" method="post" autocomplete="off">
 	<p>
@@ -97,34 +98,8 @@
 		</span>
 	</div>
 
-	<div class="field<% if (fail.recaptcha_response_field) { %> fail<% } %>" id="recaptcha_widget">
-		<label>Captcha</label>
-		<input type="text" id="recaptcha_response_field"
-			name="<%=disguise('recaptcha_response_field', spinner)%>"
-			placeholder="Are you human?">
-
-		<span class="description">
-			<span class="failtext">
-				<% if (failReason.recaptcha_response_field) { %><%= failReason.recaptcha_response_field %>
-				<% } else { %>Incorrect, please try again.<% } %>
-			</span>
-
-			<span class="recaptcha_only_if_image">Enter the words below:</span>
-			<span class="recaptcha_only_if_audio">Enter the numbers you hear:</span>
-			<div id="captcha-options">(
-				<a href="javascript:Recaptcha.reload()">new captcha</a>
-				<a href="javascript:Recaptcha.switch_type('audio')"
-					class="recaptcha_only_if_image">switch to audio captcha</a>
-				<a href="javascript:Recaptcha.switch_type('image')"
-					class="recaptcha_only_if_audio">switch to image captcha</a>
-				<a href="javascript:Recaptcha.showhelp()">help</a>
-			)</div>
-			<div id="recaptcha_image"></div>
-			<span id="captcha-credit">Thanks,
-				<a href="http://recaptcha.net/" target="_blank">reCAPTCHA!</a>
-			</span>
-		</span>
-	</div>
+    <div class="g-recaptcha" data-sitekey="6LfA9P8SAAAAAD6k4fE5ByOXZawM7PYJk3z71qMX"></div>
+    <div class="field"> </div>
 
 	<input type="hidden" name="spinner" value="<%=spinner%>">
 	<input type="hidden" name="<%=disguise('timestamp', spinner)%>"
