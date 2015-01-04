@@ -1,18 +1,18 @@
-<div id="login-menu">
+<div id="login-menu" class="col-md-4>
   <!-- If our user is not logged in -->
 <% if (!connected) { %> 
   <style>
-  h5 { text-align: center; } 
+  h5 { text-align: left; } 
   </style>
   <h5>Your OpenMRS ID is the key to participating in our open source community. Use it to access all of the tools and services listed on the links at the top of this page. <a href="#">Read more on our Wiki.</a></h5>
 <% } %>
   
   <!-- Otherwise -->
 <% if (connected) { %>
-<div class="col-md-2" id="displayUserName"> <b>Welcome, <%= user.displayName %></b>
+<div class="col-md-10" id="displayUserName" style="text-align:right"> <b>Welcome, <%= user.displayName %></b>
   <br>
   <a href="/disconnect">Log Out</a>
 </div>
- <img src="https://wiki.openmrs.org/rest/cas/1.0/avatar/server/<%= mailHash %>?s=51" alt="<%= user.displayName %>">
-<% } %>
+ <div class="col-md-2"><img src="https://wiki.openmrs.org/rest/cas/1.0/avatar/server/<%= mailHash %>?s=51" alt="<%= user.displayName %>">
+<% } %></div>
 </div>
