@@ -1,0 +1,20 @@
+<form action="/profile" method="post">
+
+    <h3><%= user.username %> <small>username</small></h3>
+
+    <h4>Name</h4>
+    <div class="field two-up<% if (fail.firstName || fail.lastName ) {
+        %> fail<% } %>">
+        <input type="text" name="firstName" placeholder="Given Name" value="<%= (failed) ? values.firstName : user.firstName %>">
+        <input type="text" name="lastName" placeholder="Surname" value="<%= (failed) ? values.lastName : user.lastName %>">
+        <span class="description">
+            <span class="failtext">Both a first and last name are required.</span>
+            Your name identifies you across the OpenMRS Community.
+        </span>
+    </div>
+
+    <div class="field">
+        <input class="btn btn-success" type="submit" value="Save Changes" style="float:right">
+    </div>
+
+</form>
