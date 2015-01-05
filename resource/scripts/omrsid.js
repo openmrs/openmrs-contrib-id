@@ -259,3 +259,14 @@ $().ready(function(){
     })
 
 });
+
+function passChange ()
+{
+  document.getElementById ('passform').style.display = 'block';
+}
+
+function addEmail ()
+{
+  document.getElementById ('addemail').style.display = 'block';
+}
+
