@@ -1,0 +1,77 @@
+<h2>My Email Address(es)</h2>
+
+<p>Your email address is not displayed to the public. It is only used for
+OpenMRS Community Applications and Mailing List communications</p>
+
+<div class="row">
+<ul class="list-unstyled col-md-6">
+    <%
+    var length = emails.length;
+    emails.forEach(function(m) {
+    %>
+    <li>
+      <div>
+        <h3 class="email-address">
+            <%= m.email %>
+            <% if (m.primary) { %>
+                <small>Primary</small>
+            <% } %>
+
+            <% if (m.notVerified) { %>
+                <small>Needs Verification</small>
+            <% } %>
+        </h3>
+      </div>
+      <% if (m.notVerified) { %>
+        <a href="/profile-email/resend/<%= m.actionId %>">
+          <span class="desc">Resend Email Verification</span>
+        </a>
+      <% } else { %>
+        <% if (!m.primary) { %>
+          <a href="/profile-email/primary/<%= encodeURIComponent(m.email) %>">
+            <span class="desc text-primary">Make Primary</span>
+          </a>
+            <% } %>
+      <% } %>
+      <% if (!m.primary) { %>
+      <span class="desc">|</span>
+      <a href="/profile-email/delete/<%= encodeURIComponent(m.email) %>">
+          <span class="desc text-danger">Delete</span>
+        </a>
+      <% } %>
+    </li>
+    <% }) %>
+
+</ul>
+</div>
+<div>
+<h2>
+  <a href="javascript:void(0)" onclick="addEmail()">
+    Add another...
+  </a>
+</h2>
+
+  <form id="addemail" style="display:none" class="form" action="/profile-email/add" method="post">
+    <div class="form-group">
+      <input class="form-control" type="text" name="newEmail" 
+        placeholder="Email Address">
+    </div>
+
+    <div class="form-group">
+      <input type="submit" class="btn btn-success" value="Add &#187;">
+    </div>
+
+  </form>
+  <% if (length == 1) { %>
+  <p style="font-family:sans-serif;font-size:11px">
+    Adding multiple email addresses to your account is recommended, especially
+    if your openmrs.org email address is your primary email address. This allows
+    you to:
+    <ul style="font-family:sans-serif;font-size:11px">
+      <li>Subscribe different email addresses to different mailing lists</li>
+      <li>Reset your password from multiple email addresses</li>
+  </ul>
+  </p>
+  <% } %>
+</div>
+
