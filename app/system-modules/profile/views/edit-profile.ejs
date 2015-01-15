@@ -1,33 +1,14 @@
 <% name = 'edit-profile' %>
 <% title = 'OpenMRS ID - Your Profile' %>
 <% headline = user.displayName+"'s Profile" %>
-<% sidebar = ['sidebar/editprofile-avatar'] %>
 
 <% style('/resource/stylesheets/profile/profile.css') %>
-
-<form action="/profile" method="post">
-
-    <div class="field noedit">
-        <label>Username</label>
-        <p><%= user.username %></p>
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        <% include edit-basic-details %>
     </div>
 
-    <div class="field two-up<% if (fail.firstName || fail.lastName ) {
-        %> fail<% } %>">
-        <label>Name</label>
-        <input type="text" name="firstName" placeholder="Given Name" value="<%= (failed) ? values.firstName : user.firstName %>">
-        <input type="text" name="lastName" placeholder="Surname" value="<%= (failed) ? values.lastName : user.lastName %>">
-        <span class="description">
-            <span class="failtext">Both a first and last name are required.</span>
-            Your name identifies you across the OpenMRS Community.
-        </span>
-    </div>
-
-    <div class="field">
-        <input class="btn btn-success" type="submit" value="Update Profile &#187;">
-    </div>
-
-</form>
+<div class="col-md-6 col-sm-12">
 
 <h2>Email Addresses</h2>
 
@@ -37,7 +18,7 @@
     be optionally shown to other OpenMRS Community members.
 </p>
 <p>
-    Adding multiple email addresses allows you to use them on different 
+    Adding multiple email addresses allows you to use them on different
     mailing lists, and allows you to reset your account password from multiple
     email addresses. If you have an <b>@openmrs.org</b> email address, it's a
     good idea to add an additional email.
@@ -74,7 +55,7 @@
             </span>
         </a>
 
-        
+
         <% if (m.notVerified) { %>
             <a class="btn btn-default"
             href="/profile-email/resend/<%= m.actionId %>">
@@ -108,7 +89,7 @@
         <form class="form" action="/profile-email/add" method="post">
             <div class="form-group">
                 <label>Add an Email Address</label>
-                <input class="form-control" type="text" name="newEmail" 
+                <input class="form-control" type="text" name="newEmail"
                 placeholder="Email Address">
             </div>
 
@@ -118,4 +99,7 @@
         </form>
     </li>
 <ul>
+</div>
+
+</div>
 </div>

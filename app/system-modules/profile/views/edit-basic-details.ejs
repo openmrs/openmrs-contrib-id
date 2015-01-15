@@ -1,0 +1,35 @@
+<h1 class="username">
+    <%= user.username %>
+    <small>username</small>
+</h1>
+
+<form action="/profile" method="post">
+    <div class="form-group two-up<% if (fail.firstName || fail.lastName ) { %> fail has-error<% } %>">
+        <label class="control-label" >Name</label>
+        <input type="text" name="firstName" placeholder="Given Name" value="<%= (failed) ? values.firstName : user.firstName %>">
+        <input type="text" name="lastName" placeholder="Surname" value="<%= (failed) ? values.lastName : user.lastName %>">
+        <div class="description">
+            <span class="failtext help-block">Both a first and last name are required.</span>
+            Your name identifies you across the OpenMRS Community.
+        </div>
+    </div>
+
+    <div class="form-group submit-right">
+        <input class="btn btn-success" type="submit" value="Update Profile &#187;">
+    </div>
+
+</form>
+
+<hr />
+
+<h2>Your profile picture</h2>
+<img src="https://wiki.openmrs.org/rest/cas/1.0/avatar/server/<%= mailHash %>?s=51" alt="<%= user.displayName %>" class="user-image">
+<p>
+    Profile pictures are managed along with your profile on the OpenMRS Wiki.
+    <a href="https://wiki.openmrs.org/users/editmyprofilepicture.action" target="_blank">Edit your profile picture on the Wiki &raquo;</a>
+</p>
+
+<hr />
+
+<h2><a href="#change-password-form" id="change-password-link">Need to change your password?</a></h2>
+<% include edit-password %>

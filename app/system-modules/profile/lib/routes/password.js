@@ -55,6 +55,6 @@ app.post('/password', mid.forceLogin, profileMid.passwordValidator,
 
     req.flash('success', 'Password changed.');
     req.session.user = user;
-    res.redirect('/');
+    res.redirect('/profile');
   });
 });

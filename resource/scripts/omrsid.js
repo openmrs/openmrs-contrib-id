@@ -258,4 +258,13 @@ $().ready(function(){
 
     })
 
+    $('#change-password-link').on('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var changePassword = $('#change-password-form');
+        changePassword.toggle();
+        $('input[name=currentpassword]', changePassword).focus();
+    });
+
 });
