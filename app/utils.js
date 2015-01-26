@@ -13,7 +13,7 @@ exports.getSSHA = function (cleartext, salt) {
   var sum = crypto.createHash('sha1');
   sum.update(cleartext);
   sum.update(salt);
-  var digest = sum.digest();
+  var digest = sum.digest('binary');
   var ret = '{SSHA}' +  new Buffer(digest+salt,'binary').toString('base64');
   return ret;
 };
