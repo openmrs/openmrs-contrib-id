@@ -130,6 +130,7 @@ var userSchema = new Schema({
 if ('production' === process.env.NODE_ENV) {
   userSchema.set('autoIndex', false);
 }
+
 // ensure primaryEmail be one of emailList
 userSchema.path('primaryEmail').validate(function (email){
   return -1 !== this.emailList.indexOf(email);
@@ -280,6 +281,11 @@ userSchema.pre('save', function (next) {
     }
     return next();
   });
+});
+
+// Hook to remove the record from LDAP
+userSchema.pre('remove', function (next) {
+  ldap.deleteUser(this.username, next);
 });
 
 // When rendering JSON, omit sensitive attributes from the model
