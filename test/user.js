@@ -407,10 +407,12 @@ describe('User', function() {
         function initSave(callback) {
           user.save(callback);
         },
+
         function deleteGroup(callback) {
           user.groups = [];
           user.save(callback);
         },
+
         function check(callback) {
           Group.findOne({groupName: groupx.groupName}, function (err, group) {
             expect(err).to.be.null;
@@ -419,19 +421,34 @@ describe('User', function() {
             return callback();
           });
         },
+
         function addGroup(callback) {
           user.groups = [groupx.groupName];
           user.save(callback);
         },
+
         function checkAgain(callback) {
           Group.findOne({groupName: groupx.groupName}, function (err, group) {
             expect(err).to.be.null;
             expect(group.indexOfUser(user.username)).not.to.equal(-1);
             expect(group.member).to.have.length(1);
-            done();
+            return callback();
           });
-        }
-      ]);
+        },
+
+        function deleteUser (callback) {
+          user.remove(callback);
+        },
+
+        function checkMore (callback) {
+          Group.findOne({groupName: groupx.groupName}, function (err, group) {
+            expect(err).to.be.null;
+            expect(group.member).to.be.empty;
+            return callback();
+          });
+        },
+
+      ], done);
     });
   });
 
