@@ -6,6 +6,7 @@ var async = require('async');
 var User = require('../app/model/user');
 var Group = require('../app/model/group');
 var ldap = require('../app/ldap');
+var conf = require('../app/conf');
 
 // data for testing purposes
 var VALID_EMAIL1 = 'foo@bar.com';
@@ -24,6 +25,8 @@ var INVALID_USERNAME = 'Ply_py'; // contain one underscore
 
 var SIMPLE_STRING = 'string';
 
+var VALID_PASSWORD = 'long_password';
+
 var VALID_INFO1 = {
   username: VALID_USERNAME1,
   firstName: SIMPLE_STRING,
@@ -32,7 +35,7 @@ var VALID_INFO1 = {
   primaryEmail: VALID_EMAIL1,
   displayEmail: VALID_EMAIL2,
   emailList: [VALID_EMAIL1, VALID_EMAIL3],
-  password: SIMPLE_STRING,
+  password: VALID_PASSWORD,
   groups: [],
   locked: false,
   skipLDAP: true,
@@ -432,27 +435,39 @@ describe('User', function() {
     });
   });
 
-  /// TODO test with LDAP
-  // describe('sync with LDAP', function() {
-  //   var userx;
-  //   beforeEach(function (done) {
-  //     userx = new User(VALID_INFO1);
-  //     userx.skipLDAP = undefined;
-  //     userx.save(done);
-  //   });
-  //   afterEach(function (done) {
-  //     ldap.deleteUser(userx.username, done);
-  //   });
+  // TODO test with LDAP
 
-  //   it('should find the record in LDAP with sync on', function(done) {
-  //     ldap.getUser(userx.username, function (err, userobj) {
-  //       if (err) {
-  //         return done(err);
-  //       }
-  //       expect(userobj.username).to.be.equal(userx.username);
-  //       return done();
-  //     });
-  //   });
-  // });
+});
 
+describe('sync with LDAP', function() {
+  var userx;
+  before(function (done) {
+    userx = new User(VALID_INFO1);
+    userx.username = 'uniqueuniquelonglong';
+    userx.skipLDAP = undefined;
+    userx.save(done);
+  });
+
+  it('should find the record in LDAP with sync on', function(done) {
+    ldap.getUser(userx.username, function (err, userobj) {
+      if (err) {
+        return done(err);
+      }
+      expect(userobj[conf.ldap.user.username]).to.be.equal(userx.username);
+      return done();
+    });
+  });
+
+  after(function (done) {
+    userx.remove(function (err) {
+      if (err) {
+        return done(err);
+      }
+      ldap.getUser(userx.username, function (err, userobj) {
+        expect(err.message).equal('User data not found');
+        expect(userobj).to.be.undefined;
+        return done();
+      });
+    });
+  });
 });
