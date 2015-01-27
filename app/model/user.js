@@ -294,6 +294,9 @@ userSchema.pre('save', function (next) {
 
 // Hook used to remove the record from LDAP
 userSchema.pre('remove', function (next) {
+  if (!this.inLDAP) {
+    return next();
+  }
   ldap.deleteUser(this.username, next);
 });
 
