@@ -136,10 +136,32 @@ userSchema.path('primaryEmail').validate(function (email){
   return -1 !== this.emailList.indexOf(email);
 }, 'The primaryEmail should be one member of emailList');
 
+// generate an iterative function over a group with a callback function that
+// takes 1 err argument
+var createIteratorOverGroups = function (groups, operation) {
+  var updateGroup = function (groupName, cb) {
+    //efficiently update groups
+    Group.findOneAndUpdate({groupName: groupName}, operation, {
+      lean: true,
+      select: 'groupName',
+    }, function (err, group) {
+      if (err) {
+        return cb(err);
+      }
+      if (_.isEmpty(group)) {
+        return cb(new Error('No such group ' + groupName));
+      }
+      return cb();
+    });
+  };
+
+  return function (callback) {
+    async.each(groups, updateGroup, callback);
+  };
+};
+
 // maintain the groups relations
 userSchema.pre('save', function (next) {
-  var added = [];// groups need to add this user
-  var removed = [];// groups need to delete this user
   var user = this;
   var userRef = {objId: user.id, username: user.username};
 
@@ -149,59 +171,46 @@ userSchema.pre('save', function (next) {
       if (err) {
         return callback(err);
       }
-      added = _.difference(user.groups, oldUser.groups);
-      removed = _.difference(oldUser.groups, user.groups);
-      return callback();
+      var added = _.difference(user.groups, oldUser.groups);
+      var removed = _.difference(oldUser.groups, user.groups);
+      return callback(null, added, removed);
     });
   };
 
-  var commonCallback = function (cb) {
-    return function (err, group) {
-      if (err) {
-        return cb(err);
+
+
+  var addGroups = function (added, removed, callback) {
+    var worker = createIteratorOverGroups(added, {
+      $addToSet: {
+        member: userRef,
       }
-      if (_.isEmpty(group)) {
-        return cb(new Error('No such groups'));
-      }
-      return cb();
-    };
+    });
+    return worker(function (err) {
+      callback(err, removed);
+    });
   };
 
-  var addGroups = function (callback) {
-    async.each(added, function addToGroup(groupName, cb) {
-      // efficiently update groups
-      Group.findOneAndUpdate({groupName: groupName}, {
-        $addToSet: {
-          member: userRef,
-        }
-      },{
-        lean: true,
-        select: 'groupName',
-      }, commonCallback(cb));
-    }, callback);
-  };
-
-  var delGroups = function (callback) {
-    async.each(removed, function deleteFromGroup(groupName, cb) {
-      // efficiently update groups
-      Group.findOneAndUpdate({groupName: groupName}, {
-        $pop: {
-          member: userRef,
-        }
-      },{
-        lean: true,
-        select: 'groupName',
-      }, commonCallback(cb));
-    }, callback);
+  var delGroups = function (removed, callback) {
+    var worker = createIteratorOverGroups(removed, {
+      $pop: {
+        member: userRef,
+      }
+    });
+    return worker(callback);
   };
 
   // real logic starts
-  if (this.isNew) {
-    added = this.groups;
+  if (this.isNew) { // Mongoose new document boolean flag
+    var added = this.groups;
+    addGroups = createIteratorOverGroups(added, {
+      $addToSet: {
+        member: userRef,
+      }
+    });
     return addGroups(next);
   }
 
-  async.series([
+  async.waterfall([
     prepare,
     addGroups,
     delGroups,
@@ -283,9 +292,21 @@ userSchema.pre('save', function (next) {
   });
 });
 
-// Hook to remove the record from LDAP
+// Hook used to remove the record from LDAP
 userSchema.pre('remove', function (next) {
   ldap.deleteUser(this.username, next);
+});
+
+// Hook used to remove user from groups
+userSchema.pre('remove', function (next) {
+  var user = this;
+  var userRef = {objId: user.id, username: user.username};
+  var delGroups = createIteratorOverGroups(user.groups, {
+    $pop: {
+      member: userRef,
+    }
+  });
+  delGroups(next);
 });
 
 // When rendering JSON, omit sensitive attributes from the model
