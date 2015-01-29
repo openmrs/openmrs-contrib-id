@@ -401,10 +401,16 @@ exports.deleteUser = function(id, cb) {
   // lookup DN of user
   exports.getUser(id, function callback(err, user) {
     if (err) return cb(err);
-    system.remove(user.dn, function callback(err) {
-      if (err) return cb(err);
-      cb(); // removed!
-    })
+    user.memberof = [];         // clear group record
+    exports.updateUser(user, function (err) {
+      if (err) {
+        return cb(err);
+      }
+      system.remove(user.dn, function callback(err) {
+        if (err) return cb(err);
+        cb(); // removed!
+      })
+    });
   })
 };
 
