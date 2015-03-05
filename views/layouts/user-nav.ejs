@@ -1,8 +1,11 @@
-<ul id="user-nav">
-  <% var list = navLinks; for (var i = 0; i < list.length; i++) { %>  
-    <% var same = (name == list[i].viewName) ? true : false %>
-    <a<% if (same) { %> class="active"<% } %> href="<%= (same) ? "#" : list[i].url %>">
-      <li><% if (list[i].icon) { %><i class="<%= list[i].icon %>"></i><% } %><%= list[i].name %></li>
-    </a>
-  <% } %>
-</ul>
+<div class="container" style="padding: 0px">
+<div class="col-md-offset-1 col-md-10" style="padding: 0px">
+  <div class="btn-group btn-group-justified btn-group-lg" role="group">
+    <% var list = navLinks; for (var i = 0; i < list.length; i++) { %>
+      <% var same = (name == list[i].viewName) ? true : false %>
+      <a<% if (same) { %> class="btn btn-primary"<% } else {%> class="btn btn-default" <%} %> href="<%= (same) ? "#" : list[i].url %>"  type="button">
+      <%= list[i].name %></a>
+    <% } %>
+  </div>
+</div>
+</div>
