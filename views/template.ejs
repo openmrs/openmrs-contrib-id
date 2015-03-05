@@ -4,11 +4,7 @@
 
 <!-- Optional Paramaters: -->
 <% title = 'OpenMRS ID - Template' /* <title> in the user's browser, defaults to the site name */ %>
-<% sidebar = ['sidebar/id-whatis] /* Array of extra sidebar pages. Relative to the global /views directory. (pass __dirname to easily use paths relative to a module) */ %>
-<% sidebarParams['sidebar/id-whatis'] = /* Extended sidebar options, named with same pathname as the sidebar page */ {
-		className: 'box', /* Extra classes to give this sidebar page */
-		locals: {} /* Extra variabled to pass to this sidebar page */
-} %>
+<% sidebar = [] /* Array of extra sidebar pages. Relative to the global /views directory. (pass __dirname to easily use paths relative to a module) */ %>
 <% showHeadlineAvatar = false /* Show avatar in heading, defaults to true */ %>
 
 <h2>Highest heading level you should use.</h2>
