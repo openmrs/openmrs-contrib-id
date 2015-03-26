@@ -209,6 +209,10 @@ userSchema.pre('save', function (next) {
 
 // sync with LDAP
 userSchema.pre('save', function (next) {
+  // disable ldap for dev
+  if (!process.env.NODE_ENV && !process.env.LDAP) {
+    return next();
+  }
   // aliases
   var uid = this.username;
   var first = this.firstName;
@@ -316,6 +320,11 @@ var findAndSync = function(filter, callback) {
 
   // not found in mongo, have a try in OpenLDAP
   var findLDAP = function (cb) {
+    // disable ldap for dev
+    if (!process.env.NODE_ENV && !process.env.LDAP) {
+      // end the chain
+      return callback();
+    }
     var finder;
     var condition;
     if (filter.username) {// choose finder
