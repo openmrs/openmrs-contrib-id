@@ -52,7 +52,7 @@ if ('production' === process.env.NODE_ENV) {
 // currently we only support to add, no modification
 groupSchema.pre('save', function (next) {
     // disable ldap for dev
-  if (!process.env.NODE_ENV && !process.env.LDAP) {
+  if (ldap.isDisabled) {
     return next();
   }
   if (this.skipLDAP) {
