@@ -99,13 +99,12 @@
 	</div>
 
     <div class="g-recaptcha" data-sitekey="<%- recaptchaPublic %>"></div>
-    <div class="field"> </div>
 
 	<input type="hidden" name="spinner" value="<%=spinner%>">
 	<input type="hidden" name="<%=disguise('timestamp', spinner)%>"
 		value="<%=timestamp%>">
 
-	<div class="field">
+	<div class="field ">
 		<input type="submit" class="btn btn-success" name="<%=disguise('submit',spinner)%>" class="icon-ok" value="Join the Community &#187;"
 			<% if (renderLayout == false) { %> formtarget="_blank"<% } %>>
 	</div>

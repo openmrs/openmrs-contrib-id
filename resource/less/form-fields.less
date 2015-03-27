@@ -206,28 +206,7 @@ input {
 
 }
 
-
-#recaptcha_image {
-  width: 300px;
-  height: 57px;
-  border-left: 4px solid #BBB;
-  padding-left: 6px;
-}
-#captcha-options, #captcha-credit {
-  font-style: normal;
-  font-family: 'HelveticaNeue', 'Helvetica Neue', 'Helvetica', sans-serif;
-  margin: 2px 0 5px;
-  font-size: 10.5px;
-
-  a {
-    margin-right: 4px;
-    &:last-of-type { margin-right: 0; }
-  }
-}
-
-#captcha-credit {
-  display: block;
-  text-align: right;
-  width: 310px;
-  font-style: italic;
+// override reCAPTCHA's margin
+.g-recaptcha {
+  margin-bottom: 18px;
 }
