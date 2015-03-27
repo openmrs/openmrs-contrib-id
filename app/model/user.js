@@ -210,7 +210,7 @@ userSchema.pre('save', function (next) {
 // sync with LDAP
 userSchema.pre('save', function (next) {
   // disable ldap for dev
-  if (ldap.isDisabled) {
+  if (ldap.isDisabled()) {
     return next();
   }
   // aliases
@@ -321,7 +321,7 @@ var findAndSync = function(filter, callback) {
   // not found in mongo, have a try in OpenLDAP
   var findLDAP = function (cb) {
     // disable ldap for dev
-    if (ldap.isDisabled) {
+    if (ldap.isDisabled()) {
       // end the chain
       return callback();
     }
