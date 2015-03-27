@@ -564,6 +564,11 @@ exports.addGroup = function (group, cb) {
   });
 };
 
+// check if LDAP is disabled
+exports.isDisabled = function() {
+  return (!process.env.NODE_ENV || 'development' === process.env.NODE_ENV) && 'true' !== process.env.LDAP;
+};
+
 // tests
 
 /*
