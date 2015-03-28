@@ -119,11 +119,6 @@ Installing OpenMRS ID
 	node app/app
 	```
 
-    Note, that LDAP is disabled by default in development mode. For using LDAP in development, set LDAP=true before starting:
-
-    ```
-    LDAP=true node app/app
-    ```
 ### Addtional Notes
 
 1. For development purpose, it's not necessary to install and play the Postfix mailer. You may take a look of the [Mailcatcher][5], which is a ruby application that catches all the emails sent from local server.
