@@ -51,10 +51,6 @@ if ('production' === process.env.NODE_ENV) {
 // pre hooks used to sync with LDAP,
 // currently we only support to add, no modification
 groupSchema.pre('save', function (next) {
-    // disable ldap for dev
-  if (ldap.isDisabled()) {
-    return next();
-  }
   if (this.skipLDAP) {
     this.skipLDAP = undefined;
     return next();
