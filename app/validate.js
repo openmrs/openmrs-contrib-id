@@ -206,6 +206,7 @@ validate.perform = function (validators, req, res, next) {
       fail: failures,
       failReason: failReason,
     };
+    req.flash('error','Please review all the items and try again');
     return res.redirect(req.url);
   });
 };
