@@ -15,8 +15,7 @@ function validator(req, res, next) {
   var primaryEmail = body.primaryEmail;
   var captchaData = {
     remoteip: req.connection.remoteAddress,
-    challenge: req.body.recaptcha_challenge_field,
-    response: req.body.recaptcha_response_field,
+    response: req.body['g-recaptcha-response'],
   };
 
   var validators = {

@@ -63,10 +63,10 @@ app.get(/^\/signup\/?$|^\/$/i, validate.receive, botproof.generators,
   var viewPath = (renderLayout) ? __dirname + '/../views/signup' : __dirname + '/../views/signup-standalone';
 
   // render the page
+  res.locals.recaptchaPublic = conf.validation.recaptchaPublic;
   res.render(viewPath, {
     // values: values,
     renderLayout: renderLayout, // allows view to see whether or not it has layout
-    bodyAppend: '<script type="text/javascript" src="https://www.google.com/recaptcha/api/challenge?k=' + conf.validation.recaptchaPublic + '"></script>'
   });
 });
 
