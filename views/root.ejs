@@ -3,69 +3,65 @@
 <% headline = 'Welcome to the Dashboard, '+user.displayName+'.' %>
 <% if (user.groups.indexOf('dashboard-administrators') > -1) { sidebar = ['./../views/sidebar/crowd'] } %>
 
-<p><h2>New to the OpenMRS Community?</h2>
-Welcome, we're glad you joined us! If you haven't already, you should complete the following steps to let others know who you are:
-<ol>
-	<li><a href="/mailinglists">Subscribe to a Mailing List</a> and stay connected to the community.</li>
-	<li><a href="https://wiki.openmrs.org/users/editmyprofile.action">Edit your Wiki Profile</a> so we can learn more about you.</li>
-	<li><a href="http://wiki.openmrs.org/spaces/createpersonalspace.action">Create your own Personal Space</a> on the Wiki.</li>
-</ol>
-</p>
+<link href='http://fonts.googleapis.com/css?family=Nunito' rel='stylesheet' type='text/css'>
+
+<div class = "jumbotron">
+We're glad you joined us! First, you should start making connections in the community by letting others know who you are, on the <a href = "#"> Discourse page </a> on OpenMRS Talk. <br>
+  
+<a href="#">
+    <button type="button" class="btn btn-primary btn-lg center-block" style = "margin-top:15px;">Start making connections</button>
+</a>
+
+<hr>
 
 <p class="clear"><h2>Services</h2>
-With your OpenMRS ID, you can log in to use the services below:</p>
+With your OpenMRS ID, you can log in to use the services below: 
 
-<div class="box-container col-lg-6">
-<figure class="box">
-	<div class="logo"><img src="/resource/images/service_logos/confluence.png" alt="OpenMRS Wiki"></div>
-	<h2><a href="https://wiki.openmrs.org">OpenMRS Wiki</a></h2>
-	<a class="sub" href="https://wiki.openmrs.org/users/viewmyprofile.action">View Profile</a>
-</figure>	
+<div class = "jumbotron">
+<ul>
+
+<div class="box-container">
+
+	<li> <h2><a href="#">Modules:</a></h2> </li>
+	
 </div>
 
-<div class="box-container col-lg-6">
-<figure class="box">
-	<div class="logo"><img src="/resource/images/service_logos/jira.png" alt="JIRA"></div>
-	<h2><a href="https://tickets.openmrs.org">JIRA Issue Tracking</a></h2>
-	<a class="sub" href="https://tickets.openmrs.org/secure/ViewProfile.jspa">View Profile</a>
-</figure>	
+<div class="box-container">
+
+	<li> <h2><a href="#"> Wiki:</a> Create your own personal space and your profile</h2> </li>
+		
 </div>
 
-<div class="box-container col-lg-6">
-<figure class="box">
-	<div class="logo"><img src="/resource/images/service_logos/fisheye.png"></div>
-	<h2><a href="https://source.openmrs.org">FishEye + Crucible Source</a></h2>
-	<a class="sub" href="https://source.openmrs.org/profile/">View Profile</a>
-</figure>	
+<div class="box-container">
+
+	<li> <h2><a href="#">Lists:</a> Stay connected to the community </h2> </li>
+		
 </div>
 
-<div class="box-container col-lg-6">
-<figure class="box">
-	<div class="logo"><img src="/resource/images/service_logos/osqa.png" alt="OpenMRS Answers"></div>
-	<h2><a href="https://answers.openmrs.org">OpenMRS Answers</a></h2>
-	<% if (osqaUser) { %>
-	<a class="sub" href="https://answers.openmrs.org/users/<%= user.username %>">View Profile</a>
-	<% } else { %>
-	<a class="sub" href="https://answers.openmrs.org/account/signin/">Start using OpenMRS Answers</a>
-	<% } %>
-</figure>	
+<div class="box-container">
+
+	<li> <h2><a href="#">Ask:</a></h2> </li>
+	
 </div>
 
-<div class="box-container col-lg-6">
-<figure class="box">
-	<div class="logo"><img src="/resource/images/service_logos/bamboo.png" alt="Continuous Integration"></div>
-	<h2><a href="https://ci.openmrs.org">Continuous Integration</a></h2>
-	<a class="sub" href="https://ci.openmrs.org/profile/userProfile.action">View Profile</a>
-</figure>	
+<div class="box-container">
+
+	<li> <h2><a href="#">Talk:</a></h2> </li>
+		
 </div>
 
-<div class="box-container col-lg-6">
-<figure class="box">
-	<div class="logo"><img src="/resource/images/service_logos/other.png" alt="Other Services"></div>
-	<h2>Other…</h2>
-	<a class="sub" href="https://svn.openmrs.org">Subversion</a><br>
-	<a class="sub" href="https://modules.openmrs.org">Module Repository</a>
-</figure>	
+<div class="box-container">
+
+	<li> <h2><a href="#">Issues: </a></h2> </li>
+	
+</div>
+
+<div class="box-container">
+
+	<li> <h2><a href="#">code: </a></h2> </li>
+	
+</div>
+  
 </div>
 
 <!--<p>Don't regard the ID Dashboard as passé just yet! As the OpenMRS Community moves forward, you'll be able to control more and more of your Community Profile from here. Until then, why not <a href="#" class="highlight-banners">head over to another Community Application?</a></p>-->
