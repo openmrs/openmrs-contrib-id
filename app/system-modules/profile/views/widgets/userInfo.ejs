@@ -1,0 +1,51 @@
+<h2><%= user.username %> <small>username</small></h2>
+<form class="form-inline" action="/profile" method="post">
+  <div class="form-group<% if (fail.firstName || fail.lastName ) { %> fail<% } %>">
+    <p><label>Name</label></p>
+    <p>
+      <input type="text" name="firstName" placeholder="Given Name" value="<%= (failed) ? values.firstName :     user.firstName %>">
+      <input type="text" name="lastName" placeholder="Surname" value="<%= (failed) ? values.lastName : user.lastName %>">
+      <span class="failtext"><br>Both a first and last name are required.</span>
+    </p>
+  </div>
+  <input class="btn btn-success" type="submit" value="Save Changes &#187;">
+</form>
+<hr>
+
+<div>
+  <h2>Profile Picture</h2>
+  <p>Profile pictures are managed along with the rest of your profile
+  on the OpenMRS Wiki.<br>
+    <a href="https://wiki.openmrs.org/users/editmyprofilepicture.action" target="_blank">
+      Edit your profile picture in the Wiki &#187
+    </a>
+  </p>
+</div>
+<hr>
+
+<div>
+  <h2>
+    <a href="javascript:void(0)" onclick="passChange()">
+      Need to change your password?
+    </a>
+  </h2>
+  <form id="passform" style="display:none" action="/password" method="post">
+    <div class="form-group">
+      <label for="curr">Current Password</label>
+      <input type="password" id="curr" name="currentpassword" placeholder="Current Password">
+    </div>
+
+    <div class="form-group">
+      <label for="new">New Password</label>
+      <input type="password" id="new" name="newpassword" placeholder="New Password">
+    </div>
+
+    <div class="form-group">
+      <label for="conf">Confirm New Password</label>
+      <input type="password" id="conf" name="confirmpassword" placeholder="Confirm Password">
+    </div>
+
+    <input class="btn btn-success" type="submit" value="Change Password &#187;">
+  </form>
+</div>
+

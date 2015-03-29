@@ -1,121 +1,30 @@
 <% name = 'edit-profile' %>
 <% title = 'OpenMRS ID - Your Profile' %>
-<% headline = user.displayName+"'s Profile" %>
-<% sidebar = ['sidebar/editprofile-avatar'] %>
+<% headline = 'Firstname Lastname\'s Profile' %>
 
 <% style('/resource/stylesheets/profile/profile.css') %>
 
-<form action="/profile" method="post">
+<div id="container">
+  <% include widgets/welcomeBox %>
 
-    <div class="field noedit">
-        <label>Username</label>
-        <p><%= user.username %></p>
+  <div class="col-md-6" id="left-panel">
+    <div class="widget-container">
+      <% include widgets/userInfo %>
     </div>
-
-    <div class="field two-up<% if (fail.firstName || fail.lastName ) {
-        %> fail<% } %>">
-        <label>Name</label>
-        <input type="text" name="firstName" placeholder="Given Name" value="<%= (failed) ? values.firstName : user.firstName %>">
-        <input type="text" name="lastName" placeholder="Surname" value="<%= (failed) ? values.lastName : user.lastName %>">
-        <span class="description">
-            <span class="failtext">Both a first and last name are required.</span>
-            Your name identifies you across the OpenMRS Community.
-        </span>
+    <br>
+    <div class="widget-container">
+      <% include widgets/locations %>
     </div>
+  </div>
 
-    <div class="field">
-        <input class="btn btn-success" type="submit" value="Update Profile &#187;">
+  <div class="col-md-6" id="right-panel">
+    <div class="widget-container">
+      <% include widgets/email %>
     </div>
-
-</form>
-
-<h2>Email Addresses</h2>
-
-<p>
-    OpenMRS Community Applications and Mailing Lists contact you via your
-    email address. Your email address is not shown to the public, but can
-    be optionally shown to other OpenMRS Community members.
-</p>
-<p>
-    Adding multiple email addresses allows you to use them on different 
-    mailing lists, and allows you to reset your account password from multiple
-    email addresses. If you have an <b>@openmrs.org</b> email address, it's a
-    good idea to add an additional email.
-</p>
-
-<div class="row">
-<ul class="email-selector list-group col-md-8">
-    <%
-    var length = emails.length;
-    emails.forEach(function(m) {
-    %>
-    <li class="list-group-item">
-
-        <h3 class="list-group-item-heading">
-            <span class="email-address"><%= m.email %></span>
-            <% if (m.primary) { %>
-                <span class="badge badge-primary">Primary</span>
-            <% } %>
-
-            <% if (m.notVerified) { %>
-                <span class="badge">Needs Verification</span>
-            <% } %>
-        </h3>
-
-        <a class="btn btn-default <% if (m.primary) { %>disabled<% } %>"
-        href="/profile-email/delete/<%= encodeURIComponent(m.email) %>">
-            <span class="text-danger">
-                <span class="glyphicon glyphicon-remove"></span>
-                <% if (!m.primary) { %>
-                    Delete
-                <% } else { %>
-                    Can't Delete Primary Email
-                <% } %>
-            </span>
-        </a>
-
-        
-        <% if (m.notVerified) { %>
-            <a class="btn btn-default"
-            href="/profile-email/resend/<%= m.actionId %>">
-                <span class="glyphicon glyphicon-repeat"></span>
-                Resend Email Verification
-            </a>
-        <% } else { %>
-
-            <% if (!m.primary) { %>
-                <a class="btn btn-default"
-                href="/profile-email/primary/<%= encodeURIComponent(m.email) %>">
-                    <span class="text-primary">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        Make Primary
-                    </span>
-                </a>
-            <% } %>
-
-        <% } %>
-
-    </li>
-    <% }) %>
-
-</ul>
+    <br>
+    <div class="widget-container">
+      <% include widgets/apps %>
+    </div>
+  </div>
 </div>
-<div class="row">
-<ul class="list-group col-md-8">
 
-    <li class="list-group-item add-email-address">
-
-        <form class="form" action="/profile-email/add" method="post">
-            <div class="form-group">
-                <label>Add an Email Address</label>
-                <input class="form-control" type="text" name="newEmail" 
-                placeholder="Email Address">
-            </div>
-
-            <div class="form-group">
-                <input type="submit" class="btn btn-success" value="Add &#187;">
-
-        </form>
-    </li>
-<ul>
-</div>
