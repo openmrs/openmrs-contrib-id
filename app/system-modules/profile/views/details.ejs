@@ -1,0 +1,22 @@
+<div class="panel panel-default" style="padding: 10px">
+  <h3> <%= user.username  %> <small> username </small></h3> 
+<form action="/profile" method="post">
+    <div class="field two-up<% if (fail.firstName || fail.lastName ) {
+        %> fail<% } %>">
+        <p>Edit Name</p>
+        <input type="text" name="firstName" placeholder="Given Name" value="<%= (failed) ? values.firstName : user.firstName %>">
+        <input type="text" name="lastName" placeholder="Surname" value="<%= (failed) ? values.lastName : user.lastName %>">
+    </div>
+    <div class="field">
+        <input class="btn btn-primary" type="submit" value="Update Name &#187;">
+    </div>
+</form>
+  <hr>
+  <strong>Your profile picture</strong>
+  <p>Profile pictures are managed along with your profile on the OpenMRS Wiki. 
+  <br>
+  <a href="https://wiki.openmrs.org/users/editmyprofilepicture.action" target="_blank">Edit your profile picture in the wiki</a>.</p>
+  <hr>
+  <a href="#" id="editPwdLink"> Need to change your password?</a>
+  <% include edit-password %>
+</div>
