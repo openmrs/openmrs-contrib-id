@@ -1,20 +1,14 @@
 <% name = 'signup' %>
 <% title = 'OpenMRS ID - Sign Up' %>
-<% headline = 'Get an OpenMRS ID' %>
-<% sidebar = ['sidebar/id-whatis', 'sidebar/forgotpassword'] %>
+<% headline = 'Sign up for your OpenMRS ID <small> Already have one? <a href="/login"> Sign in. </a> </small>' %>
 
 <% headAppend += '<script src="/signup/resource/md5.js"></script>\n' %>
 <% headAppend += '<script src="/signup/resource/signup-public.js"></script>\n' %>
 <% headAppend += '<script type="text/javascript">var SPINNER="'+spinner+'";</script>\n' %>
 
+<div class="panel panel-default" style="padding: 20px 20px 50px 20px">
 <form action="/signup" method="post" autocomplete="off">
-	<p>
-		Already have an ID? <a href="/login">Log in now</a> to access your
-		account settings.
-	</p>
-
 	<div class="field<% if (fail.username) { %> fail<% } %>">
-		<label>Username</label>
 		<input type="text" name="<%=disguise('username', spinner)%>"
 			placeholder="Username"
 			<% if (values.username) { %>value="<%= values.username %>"
@@ -31,7 +25,6 @@
 	</div>
 
 	<div class="field two-up<% if (fail.firstName || fail.lastName ) { %> fail<% } %>">
-		<label>Name</label>
 		<input type="text" name="<%=disguise('firstName', spinner)%>"
 			placeholder="Given Name"<% if (values.firstName) { %>
 			value="<%= values.firstName %>"<% } else if (values.username) { %>
@@ -51,7 +44,6 @@
 	</div>
 
 	<div class="field<% if (fail.primaryEmail) { %> fail<% } %>">
-		<label>Email</label>
 		<input type="text" name="<%=disguise('primaryEmail', spinner)%>"
 			placeholder="Email Address"
 			<% if (values.primaryEmail) { %>value="<%= values.primaryEmail %>"
@@ -69,7 +61,6 @@
 	</div>
 
 	<div class="field">
-		<label>Country</label>
 		<input type="text" name="<%=disguise('country', spinner)%>"
 			placeholder="Country">
 
@@ -81,8 +72,6 @@
 	</div>
 
 	<div class="field<% if (fail.password) { %> fail<% } %>">
-		<label>Password</label>
-
 		<input type="password" name="<%=disguise('password', spinner)%>"
 			placeholder="Password"
 			<% if (values.username && values.firstName && values.lastName && values.primaryEmail) { %>
@@ -98,10 +87,9 @@
 	</div>
 
 	<div class="field<% if (fail.recaptcha_response_field) { %> fail<% } %>" id="recaptcha_widget">
-		<label>Captcha</label>
 		<input type="text" id="recaptcha_response_field"
 			name="<%=disguise('recaptcha_response_field', spinner)%>"
-			placeholder="Are you human?">
+			placeholder="Captcha: Are you human?">
 
 		<span class="description">
 			<span class="failtext">
@@ -136,3 +124,4 @@
 	</div>
 
 </form>
+</div>
