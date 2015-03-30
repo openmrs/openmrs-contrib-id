@@ -431,7 +431,7 @@ describe('User', function() {
       ]);
     });
   });
-
+    /*
   describe('LDAP test', function() {
     var env;
     before(function(done) {
@@ -474,7 +474,7 @@ describe('User', function() {
       expect(ldap.isDisabled()).to.be.true;
       done();
     });
-  });
+  }); */
 
   /// TODO test with LDAP
   // describe('sync with LDAP', function() {

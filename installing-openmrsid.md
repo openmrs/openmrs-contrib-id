@@ -110,6 +110,10 @@ Installing OpenMRS ID
 	3. Mysql/MongoDB database name and credentials
 	4. Postfix mail sending credentials and port
 	5. reCAPTCHA keys (if you have them—they are required for signup)
+
+	If you don't need LDAP, and don't want to configure it, you may disable LDAP in config.
+
+    Change "ldap.enabled" to ```false```.
  
 	In addition, remove the items in the `user-modules` array. Modules need to be manually downloaded and placed in the `app/user-modules` directory.	
 	
@@ -118,12 +122,6 @@ Installing OpenMRS ID
 	```
 	node app/app
 	```
-
-    Note, that LDAP is disabled by default in development mode. For using LDAP in development, set LDAP=true before starting:
-
-    ```
-    LDAP=true node app/app
-    ```
 ### Addtional Notes
 
 1. For development purpose, it's not necessary to install and play the Postfix mailer. You may take a look of the [Mailcatcher][5], which is a ruby application that catches all the emails sent from local server.

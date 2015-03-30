@@ -21,7 +21,7 @@ module.exports = {
   },
   "ldap": {
     // LDAP Settings
-
+    "enabled": true,
     "server": {
       "uri": "ldap://localhost",
       "baseDn": "ou=systemacct,dc=example",
