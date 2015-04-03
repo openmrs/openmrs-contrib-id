@@ -1,6 +1,6 @@
 <% name = 'login' %>
 <% title = 'OpenMRS ID - Login' %>
-<% headline = 'Sign in <small>Don&#39;t have an OpenMRS ID yet? <a href="/signup">Sign up</a>.</small>' %>
+<% headline = 'Sign In with your OpenMRS ID <small>Don&#39;t have an OpenMRS ID yet? <a href="/signup">Sign up</a>.</small>' %>
 <% sidebar.unshift('sidebar/id-whatis') %>
 
 <div class="panel panel-default">
@@ -9,7 +9,8 @@
       <p><em></em></p>
       <input type="hidden" name="destination" id="redirect-to">
 
-      <div class="field<% if (fail.loginusername) {%> fail<% } %>">
+      <div class="form-group<% if (fail.loginusername) {%> fail<% } %>">
+        <label for="loginusername">Username</label>
         <input type="text" name="loginusername" placeholder="OpenMRS ID" <% if (failed) { %>value="<%= values.loginusername %>"<% } %> autofocus>
         <span class="description failtext">
           <% if (values.loginusername == '') { %>A username must be supplied to log in.<% }
@@ -17,7 +18,8 @@
         </span>
       </div>
 
-      <div class="field<% if (fail.loginpassword) {%> fail<% } %>">
+      <div class="form-group<% if (fail.loginpassword) {%> fail<% } %>">
+        <label for="loginpassword">Password</label>
         <input type="password" name="loginpassword" placeholder="Password">
         <span class="description failtext">
           <% if (values.loginpassword == '') { %>A password must be supplied to log in.<% }
@@ -29,7 +31,7 @@
         <h5><a href="/reset">Forgot your password?</a></h5>
       </div>
 
-      <div class="field">
+      <div class="form-group">
         <input class="btn btn-success" type="submit" value="Sign in">
       </div>
     </form>
