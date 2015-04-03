@@ -12,7 +12,7 @@ app.get('/', function(req, res, next) {
   }
 
   https.get({
-    host: 'answers.openmrs.org',
+    host: 'www.example.com',
     path: '/users/' + req.session.user.uid
   }, function(response) {
     if (response.statusCode === 200) {
