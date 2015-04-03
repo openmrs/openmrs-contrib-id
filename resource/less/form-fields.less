@@ -1,210 +1,210 @@
 @import "typography";
 
-// // Abstract definitions, attached to multiple selectors in the "Content" section
-// // below.
-// #input-appearance {
-//   padding: 6px;
-//   border-radius: 4px;
-//   font-size: 11px;
-//   font-family: @control-type;
-//   -webkit-border-radius: 4px;
-//   -moz-border-radius: 4px;
-//   border: 1px solid #CCC;
-//   background: #F7F7F7;
-//   transition: background 100ms;
-//   transition-property: background, box-shadow;
-//   -webkit-transition: background 100ms;
-//   -webkit-transition-property: background, box-shadow;
-//   position: relative;
-// }
+// Abstract definitions, attached to multiple selectors in the "Content" section
+// below.
+#input-appearance {
+  padding: 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: @control-type;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border: 1px solid #CCC;
+  background: #F7F7F7;
+  transition: background 100ms;
+  transition-property: background, box-shadow;
+  -webkit-transition: background 100ms;
+  -webkit-transition-property: background, box-shadow;
+  position: relative;
+}
 
-// #input-form-fields {
-//   #input-appearance();
+#input-form-fields {
+  #input-appearance();
 
-//   display: inline;
-//   float: left;
-//   margin: 0 0 18px;
-//   width: 178px;
-//   clear: both;
-//   z-index: 20;
+  display: inline;
+  float: left;
+  margin: 0 0 18px;
+  width: 178px;
+  clear: both;
+  z-index: 20;
 
-//   .two-up& {
-//     width: 87px !important;
-//     margin-right: 4px;
-//     float: left !important;
-//     clear: none;
-//   }
+  .two-up& {
+    width: 87px !important;
+    margin-right: 4px;
+    float: left !important;
+    clear: none;
+  }
 
-//   .large& {
-//     width: 374px;
-//   }
-//   .two-up.large& {
-//     width: 178px !important;
-//   }
+  .large& {
+    width: 374px;
+  }
+  .two-up.large& {
+    width: 178px !important;
+  }
 
-//   &:focus {
-//     #inputs-focus();
-//   }
-// }
+  &:focus {
+    #inputs-focus();
+  }
+}
 
-// #inputs-focus {
-//   background: #fff;
-//   border: 1px solid #444;
-//   outline: none;
-//   box-shadow: 0 0 8px #bbb;
-//   -webkit-box-shadow: 0 0 8px #bbb;
-//   -moz-box-shadow: 0 0 8px #bbb;
-// }
+#inputs-focus {
+  background: #fff;
+  border: 1px solid #444;
+  outline: none;
+  box-shadow: 0 0 8px #bbb;
+  -webkit-box-shadow: 0 0 8px #bbb;
+  -moz-box-shadow: 0 0 8px #bbb;
+}
 
-// // Content
-// #main > form {
-//   padding-left: 25px;
-//   margin-bottom: 2em;
-// }
+// Content
+#main > form {
+  padding-left: 25px;
+  margin-bottom: 2em;
+}
 
-// input {
-//   &[type="text"], &[type="password"] {
-//     #input-appearance();
+input {
+  &[type="text"], &[type="password"] {
+    #input-appearance();
 
-//     &:focus {
-//       #inputs-focus();
-//     }
-//   }
-// }
+    &:focus {
+      #inputs-focus();
+    }
+  }
+}
 
-// .field {
-//   display: block;
-//   clear: both;
-//   height: 45px;
-//   position: relative;
+.field {
+  display: block;
+  clear: both;
+  height: 45px;
+  position: relative;
 
-//   textarea {
-//     #input-form-fields();
+  textarea {
+    #input-form-fields();
 
-//     height: 9em;
-//   }
-//   input {
-//     &[type="text"], &[type="password"] {
-//       #input-form-fields();
-//     }
+    height: 9em;
+  }
+  input {
+    &[type="text"], &[type="password"] {
+      #input-form-fields();
+    }
 
-//     &[type="checkbox"] {
-//       padding: 0;
-//     }
+    &[type="checkbox"] {
+      padding: 0;
+    }
 
-//     &[type="submit"] {
-//       display: block;
-//     }
-//   }
+    &[type="submit"] {
+      display: block;
+    }
+  }
 
 
-//   label, .labeltext {
-//     line-height: 27px;
-//     padding-top: 7px;
-//     font: 11px sans-serif;
-//   }
-//   label {
-//     width: 200px;
-//     position: absolute;
-//     left: -206px;
-//     text-align: right;
-//   }
+  label, .labeltext {
+    line-height: 27px;
+    padding-top: 7px;
+    font: 11px sans-serif;
+  }
+  label {
+    width: 200px;
+    position: absolute;
+    left: -206px;
+    text-align: right;
+  }
 
-//   & > .description {
-//     display: inline-block;
-//     background: #FFFBF2;
-//     visibility: hidden;
-//     width: 300px;
-//     position: relative;
-//     z-index: 25;
-//     top: 4px;
-//     margin: 1px 0 0 28px;
-//     color: #444;
-//     font-size: 14px;
+  & > .description {
+    display: inline-block;
+    background: #FFFBF2;
+    visibility: hidden;
+    width: 300px;
+    position: relative;
+    z-index: 25;
+    top: 4px;
+    margin: 1px 0 0 28px;
+    color: #444;
+    font-size: 14px;
 
-//     &:before {
-//       content: "\2014";
-//       position: absolute;
-//       left: -18px;
-//       top: -1px;
-//     }
-//   }
+    &:before {
+      content: "\2014";
+      position: absolute;
+      left: -18px;
+      top: -1px;
+    }
+  }
 
-//   &.two-up .description {
-//     left: -4px;
-//   }
+  &.two-up .description {
+    left: -4px;
+  }
 
-//   &.large .description {
-//     width: 195px;
-//     float: right;
-//   }
-// }
+  &.large .description {
+    width: 195px;
+    float: right;
+  }
+}
 
-// .field.noedit {
-//   height: 37px;
-//   margin-top: -4px;
+.field.noedit {
+  height: 37px;
+  margin-top: -4px;
 
-//   p {
-//     line-height: 27px;
-//     font: 11px 'Lucida Grande', 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
-//     color: #000;
-//     width: 178px;
-//     margin: 6px 0 0 8px;
-//     float: left;
-//     white-space: nowrap;
-//   }
-// }
+  p {
+    line-height: 27px;
+    font: 11px 'Lucida Grande', 'Segoe UI', 'Helvetica', 'Arial', sans-serif;
+    color: #000;
+    width: 178px;
+    margin: 6px 0 0 8px;
+    float: left;
+    white-space: nowrap;
+  }
+}
 
-// .multi-field {
-//   .field {
-//     height: auto;
-//     max-height: 27px;
+.multi-field {
+  .field {
+    height: auto;
+    max-height: 27px;
 
-//     &:last-child {
-//       height: 45px;
+    &:last-child {
+      height: 45px;
 
-//       input {
-//         border-radius: 0 0 4px 4px;
-//         -webkit-border-radius: 0 0 4px 4px;
-//         margin-bottom: 18px;
-//       }
-//     }
+      input {
+        border-radius: 0 0 4px 4px;
+        -webkit-border-radius: 0 0 4px 4px;
+        margin-bottom: 18px;
+      }
+    }
 
-//     &:first-child {
-//       input {
-//         border-top: 1px solid #ccc;
-//         border-radius: 4px 4px 0 0;
-//         -webkit-border-radius: 4px 4px 0 0;
+    &:first-child {
+      input {
+        border-top: 1px solid #ccc;
+        border-radius: 4px 4px 0 0;
+        -webkit-border-radius: 4px 4px 0 0;
 
-//         &:focus {
-//           // height: 13px;
-//         }
-//       }
+        &:focus {
+          // height: 13px;
+        }
+      }
 
-//       &:last-child input {
-//         border-radius: 4px;
-//         -webkit-border-radius: 4px;
-//       }
-//     }
+      &:last-child input {
+        border-radius: 4px;
+        -webkit-border-radius: 4px;
+      }
+    }
 
-//     input {
-//       margin-bottom: 0;
-//       border-top: none;
-//       border-radius: 0;
-//       -webkit-border-radius: 0;
+    input {
+      margin-bottom: 0;
+      border-top: none;
+      border-radius: 0;
+      -webkit-border-radius: 0;
 
-//       &:focus {
-//         border: 1px solid #444;
-//         // height: 12px;
-//       }
-//     }
-//   }
+      &:focus {
+        border: 1px solid #444;
+        // height: 12px;
+      }
+    }
+  }
 
-//   .next {
-//     opacity: 0.5;
-//   }
+  .next {
+    opacity: 0.5;
+  }
 
-// }
+}
 
 // override reCAPTCHA's margin
 .g-recaptcha {
