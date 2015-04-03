@@ -38,3 +38,4 @@ conf-controller.js
 .sass-cache
 resource/stylesheets/*
 *.sqlite
+npm-debug.log
