@@ -1,8 +1,8 @@
 <% title = 'OpenMRS ID - '+user.displayName %>
 <% name = 'root' %>
+<% headline ='Welcome to the OpenMRS Community '+user.displayName %>
 <% if (user.groups.indexOf('dashboard-administrators') > -1) { sidebar = ['./../views/sidebar/crowd'] } %>
 <div class="jumbotron" style ="background:none; border-radius:0; border-bottom-style:solid; text-align:center">
-  <h1 style="font-size:36px">Welcome to the OpenMRS Community</h1>
   <p>We're glad you joined us! First, you should start making connections in the community by letting others know who you are on <a href="http://talk.openmrs.org">OpenMRS Talk</a></p>
   <button type="button" class="btn btn-success">Start making connections</button>
 </div>
@@ -12,7 +12,7 @@
 	<li><a href="http://modules.openmrs.org">Modules: </a> Extend OpenMRS in limitless ways, share your contributions.</li>	
 	<li><a href="https://wiki.openmrs.org/users/editmyprofile.action">Wiki: </a>Create your own personal space, and your profile.</li>	
 	<li><a href="http://talk.openmrs.org">Talk: </a> This is the primary communication medium for the OpenMRS community.</li>
-	<li><a href="#">Issues: </a> Report bugs, Suggest Improvements, Find a way to contribute!</li>
+	<li><a href="https://issues.openmrs.org">Issues: </a> Report bugs, Suggest Improvements, Find a way to contribute!</li>
 <!-- 	<li><a href="#">Code: </a></li> -->
 </ol>
 
