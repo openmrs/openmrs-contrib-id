@@ -36,7 +36,7 @@ Currently, we organize the code this way.
 Also, for any specifc system-module/user-module, it will have alike sub-structure, you may take a deep look yourself.
 
 ### Testing
-The testing files are under `test` folder. If you want to run it, first you should add a `conf.js` under this folder.
+The testing files are under `test` folder. If you want to run it, first you should add a `conf.js` under this folder. Currently it only holds a `mongoURI` attribute to specify the testing database, we advise you use a separte one from the normal database, in order to prevent it from being messed up. However, in the part that testing synchronization with OpenLDAP, we are forced to use the same database as production's. So be careful on that.
 
 And the `Makefile` contains the script for running tests, you may run test easily by `make test`.
 
