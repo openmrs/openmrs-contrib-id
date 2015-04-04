@@ -35,16 +35,6 @@ var userNavLinks = [ // built-in links
     'order': 40,
   },
 
-  {
-    'name': 'Your Password',
-    'url': '/edit/password',
-    'viewName': 'edit-password',
-    'visibleLoggedOut': false,
-    'visibleLoggedIn': true,
-    'requiredGroup': 'dashboard-users',
-    'icon': 'icon-lock',
-    'order': 60,
-  },
 ];
 
 exports.list = userNavLinks;
