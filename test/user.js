@@ -2,10 +2,11 @@
 var _ = require('lodash');
 var expect = require('chai').expect;
 var async = require('async');
+var fs = require('fs');
+var conf = require('./conf');
 
 var User = require('../app/model/user');
 var Group = require('../app/model/group');
-var ldap = require('../app/ldap');
 
 // data for testing purposes
 var VALID_EMAIL1 = 'foo@bar.com';
@@ -58,7 +59,6 @@ var GROUP1 = {
 };
 
 var DUP_ERROR_CODE = 11000;
-
 
 describe('User', function() {
   before(function (done) {
@@ -303,6 +303,8 @@ describe('User', function() {
     });
   });
 
+
+
   /// Some API tests
   describe('finders', function() {
     var userx;
@@ -431,50 +433,6 @@ describe('User', function() {
       ]);
     });
   });
-    /*
-  describe('LDAP test', function() {
-    var env;
-    before(function(done) {
-      // save NODE_ENV value if it was set before
-      if (process.env.NODE_ENV) env = process.env.NODE_ENV;
-      done();
-    });
-    after(function(done) {
-      // restore NODE_ENV value
-      if (env) process.env.NODE_ENV = env;
-      done();
-    });
-    // clear variables before each test
-    beforeEach(function(done) {
-        delete process.env.NODE_ENV;
-        delete process.env.LDAP;
-      done();
-    });
-    it('ldap should be disabled by default', function(done) {
-      expect(ldap.isDisabled()).to.be.true;
-      done()
-    });
-    it('ldap should be enabled for production', function(done) {
-      process.env.NODE_ENV = 'production';
-      expect(ldap.isDisabled()).to.be.false;
-      done();
-    });
-    it('ldap should be enabled for development when variable LDAP set to "true"', function (done) {
-      process.env.LDAP = 'true';
-      expect(ldap.isDisabled()).to.be.false;
-        done();
-    });
-    it('ldap should be disabled for development when variable LDAP set to "false"', function (done) {
-      process.env.LDAP = 'false';
-      expect(ldap.isDisabled()).to.be.true;
-      done();
-    });
-    it('ldap should be disabled for development when variable LDAP set to any value except "true"', function(done) {
-      process.env.LDAP = '123';
-      expect(ldap.isDisabled()).to.be.true;
-      done();
-    });
-  }); */
 
   /// TODO test with LDAP
   // describe('sync with LDAP', function() {

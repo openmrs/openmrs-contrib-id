@@ -566,7 +566,7 @@ exports.addGroup = function (group, cb) {
 
 // check if LDAP is disabled
 exports.isDisabled = function() {
-  return false === conf.ldap.enabled;
+  return false === require('./conf').ldap.enabled;
 };
 
 // tests
