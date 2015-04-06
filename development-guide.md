@@ -26,17 +26,16 @@ Currently, we organize the code this way.
 ----/app/model              where all Mongoose model lies
 ----/app/routes             basic routes files
 ----/app/system-modules     the system modules
-----/app/user-modules       optional function add-ons
+----/app/user-modules       optional add-ons which adds additional functionality
 --/logs                     the log files
---/resoure                  static web resouce
---/test                     all test source files
---/views                    webpage templates
+--/resource                 static resources
+--/test                     tests should reside here.
+--/views                    view templates
 ```
-
-Also, for any specifc system-module/user-module, it will have alike sub-structure, you may take a deep look yourself.
+**Note**: system-modules and user-modules will have a similar structure under its own tree.
 
 ### Testing
-The testing files are under `test` folder. If you want to run it, first you should add a `conf.js` under this folder. Currently it only holds a `mongoURI` attribute to specify the testing database, we advise you use a separte one from the normal database, in order to prevent it from being messed up. However, in the part that testing synchronization with OpenLDAP, we are forced to use the same database as production's. So be careful on that.
+The testing files are under `test` folder. If you want to run it, first you should add a `conf.js` under this folder. Currently it only holds a `mongoURI` attribute to specify the testing database, we advise you use a separate one from the normal database, in order to prevent it from being messed up. However, in the part that testing synchronization with OpenLDAP, we are forced to use the same database as production. So be careful with that. Ultimately, we will change this, so pull requests welcome.
 
 And the `Makefile` contains the script for running tests, you may run test easily by `make test`.
 
@@ -45,15 +44,15 @@ Whatever by the design or due to history, we have some implicit rules.
 
 + Code style, we are following the [Felix's](http://nodeguide.com/style.html). You should follow it in most cases. However, remember it's not like the absolute laws that you cannot violate, it's just a guideline.
 
-+ Global variables, for historical reason, we used a global variable `global.__commonModule` to store the path of `openmrsid-common.js`, which requires other files, and provide common share for few important instance, like the `app` object of Express. 
++ Global variables, for historical reason, we used a global variable `global.__commonModule` to store the path of `openmrsid-common.js`, which requires other files, and provide common share for few important instance, like the `app` object of Express.
 
     However, except from the convenince it brought, it may cause problems for testing and strong coupling. A suggestion is to directly require files in those functional files that might be used in other places. But you may use them in routes files.
 
 + Routes structure, we tend to split different logic of routes into different files. You may refer details in the project.
 
-+ Issue tracking, you'd better open a corresponding issue for a PR, [here](issues.openmrs.org/browse/ID) 
++ Issue tracking, you'd better open a corresponding issue for a PR, [here](issues.openmrs.org/browse/ID)
 
-+ Comments, it's a good habbit to constantly add explanatory comments. When a part of logic is too long, and when some code is complicated, just add few comments. And for some functions that maybe used externally, you may add full [JSDoc](http://en.wikipedia.org/wiki/JSDoc).
++ Comments, it's a good habit to constantly add explanatory comments. When a part of logic is too long, and when some code is complicated, just add few comments. And for some functions that maybe used externally, you may add full [JSDoc](http://en.wikipedia.org/wiki/JSDoc).
 
 ### Helpful Tools
 
