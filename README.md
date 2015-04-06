@@ -3,6 +3,10 @@ OpenMRS ID
 
 User signup and self-service web application, built for [OpenMRS](http://openmrs.org), now running at [id.openmrs.org](http://id.openmrs.org). Integrates with an LDAP server to store user data. Built on [Node](https://github.com/joyent/node) and [Express](https://github.com/visionmedia/express).
 
+##Development
+
+Want to dig your hands in and lend a hand? Please read our [development guide](https://github.com/openmrs/openmrs-contrib-id/blob/master/development-guide.md). 
+
 ##Installation:
 
 See [`installing-openmrsid.md`](https://github.com/openmrs/openmrs-contrib-id/blob/master/installing-openmrsid.md)
