@@ -2,8 +2,6 @@
 var _ = require('lodash');
 var expect = require('chai').expect;
 var async = require('async');
-var fs = require('fs');
-var conf = require('./conf');
 
 var User = require('../app/model/user');
 var Group = require('../app/model/group');
