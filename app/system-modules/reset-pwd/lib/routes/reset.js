@@ -29,6 +29,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
   // case-insensitive
   var resetCredential = req.body.resetCredential.toLowerCase();
   var USER_NOT_FOUND_MSG = 'User data not found';
+  var REQUIRED = 'Username or e-mail address is required to continue.';
 
   var filter = {};
   if (resetCredential.indexOf('@') < 0) {
@@ -36,8 +37,12 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
   } else {
     filter.emailList = resetCredential;
   }
-
-
+  var checkInput = function(callback) {
+    if(resetCredential === '') {
+        req.flash('error',REQUIRED);
+        return res.redirect('/reset');
+    }
+  }
   var findUser = function (callback) {
     User.findByFilter(filter, function (err, user) {
       if (err) {
@@ -75,6 +80,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
   };
 
   async.waterfall([
+    checkInput,
     findUser,
     sendEmails,
   ],
