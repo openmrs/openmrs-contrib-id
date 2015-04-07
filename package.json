@@ -48,7 +48,7 @@
     "type": "git",
     "url": "git://github.com/openmrs/openmrs-contrib-id.git"
   },
-  "author": "elliottwilliams",
+  "author": "elliottwilliams,plypy,robbyoconnor",
   "license": "MPL 2.0",
   "gitHead": "8f60746457151599c4780255d5be72b76dfd87b6",
   "readmeFilename": "README.md"
