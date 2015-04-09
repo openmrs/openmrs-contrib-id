@@ -15,7 +15,7 @@ Here are some important ones,
 + [Async.js][2], As all I/O operations in Node.js all asynchronous, we use the Async.js module to do the asynchronous control flow.
 + [Lo-Dash][5], Node.js utility library.
 + [Formage][6], Mongoose monitoring tools.
-+ [Mocha](http://visionmedia.github.io/mocha/), [Chai](http://chaijs.com/), Packages that used for testing.
++ [Mocha](http://mochajs.org), [Chai](http://chaijs.com/), Packages that used for testing.
 
 ### Project Structure
 Currently, we organize the code this way.
@@ -50,9 +50,12 @@ Whatever by the design or due to history, we have some implicit rules.
 
 + Routes structure, we tend to split different logic of routes into different files. You may refer details in the project.
 
-+ Issue tracking, you'd better open a corresponding issue for a PR, [here](issues.openmrs.org/browse/ID)
++ Please use feature branches and try to keep your PRs to one commit, check out our [development guide][7] for more information on how to do that.
+
++ Issue tracking, you'd better open a corresponding issue for a PR, [here](http://issues.openmrs.org/browse/ID)
 
 + Comments, it's a good habit to constantly add explanatory comments. When a part of logic is too long, and when some code is complicated, just add few comments. And for some functions that maybe used externally, you may add full [JSDoc](http://en.wikipedia.org/wiki/JSDoc).
+
 
 ### Helpful Tools
 
@@ -66,3 +69,4 @@ For keeping a good code style, [JSHint](http://www.jshint.com/) is highly recomm
 [4]: http://sequelizejs.com/
 [5]: http://lodash.com/
 [6]: https://github.com/TheNodeILs/formage
+[7]: http://en.flossmanuals.net/openmrs-developers-guide/development-process/
