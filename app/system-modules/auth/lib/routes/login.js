@@ -35,6 +35,8 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
     if(username === '' || password === '') {
         req.flash('error',REQUIRED);
         return res.redirect('/login');
+    } else {
+      callback();
     }
   };
   var findUser = function (callback) {

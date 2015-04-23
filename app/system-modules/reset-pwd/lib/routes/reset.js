@@ -41,7 +41,9 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
     if(resetCredential === '') {
         req.flash('error',REQUIRED);
         return res.redirect('/reset');
-    }
+    }else {
+     callback();
+   }
   }
   var findUser = function (callback) {
     User.findByFilter(filter, function (err, user) {
