@@ -143,7 +143,6 @@ module.exports = {
 
   // user-configured modules
   "userModules": [
-    "openmrs-contrib-dashboard-groups",
     "openmrs-contrib-globalnavbar",
   ],
 
