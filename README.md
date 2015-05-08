@@ -1,11 +1,11 @@
-OpenMRS ID 
+OpenMRS ID
 =========
 
 User signup and self-service web application, built for [OpenMRS](http://openmrs.org), now running at [id.openmrs.org](http://id.openmrs.org). Integrates with an LDAP server to store user data. Built on [Node](https://github.com/joyent/node) and [Express](https://github.com/visionmedia/express).
 
 ##Development:
 
-Want to dig your hands in and lend a hand? Please read our [development guide](https://github.com/openmrs/openmrs-contrib-id/blob/master/development-guide.md). 
+Want to dig your hands in and lend a hand? Please read our [development guide](https://github.com/openmrs/openmrs-contrib-id/blob/master/development-guide.md).
 
 ##Installation:
 
@@ -14,20 +14,20 @@ See [`installing-openmrsid.md`](https://github.com/openmrs/openmrs-contrib-id/bl
 ##Features:
 
 * Simple user self-service for an OpenLDAP user directory, including:
-	* Signup - supporting email address verification, reCAPTCHA anti-spam forms, and welcome mail 
+	* Signup - supporting email address verification, reCAPTCHA anti-spam forms, and welcome mail
 	* User profile changes - editing first/last name, email, password; adding multiple email addresses
 	* Password resets - reset by username or email address, send to all emails linked to a user
 * Modular system for adding on new functionality
 	* Current modules include Google Groups-based mailing list subscription management, and an embeddable sitewide navigation bar to provide navigation between different community sites
 * Form validation and control
 * Designed with the visual style of [openmrs.org](http://openmrs.org) in mind :)
- 
+
 ##Modules:
 
 A few modules (providing additional functionality) have been created. They can be placed in `app/user-modules` and loaded from `conf.js`.
 
 * [openmrs-contrib-globalnavbar](https://github.com/openmrs/openmrs-contrib-id-globalnavbar)
-* [openmrs-contrib-id-groups](https://github.com/openmrs/openmrs-contrib-id-groups)
+* ~~[openmrs-contrib-id-groups](https://github.com/openmrs/openmrs-contrib-id-groups)~~ *(***We no longer use Google Groups and now use [OpenMRS Talk](http://talk.openmrs.org) in its place -- it is provided solely for historic purposes***)*
 * [openmrs-contrib-id-oauth](https://github.com/elliottwilliams/openmrs-contrib-id-oauth)
 
 ##Why We Built It:
