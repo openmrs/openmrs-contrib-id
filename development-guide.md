@@ -52,7 +52,7 @@ Whatever by the design or due to history, we have some implicit rules.
 
 + Please use feature branches and try to keep your PRs to one commit, check out our [development guide][7] for more information on how to do that.
 
-+ Issue tracking, you'd better open a corresponding issue for a PR, [here](http://issues.openmrs.org/browse/ID)
++ For issue tracking purposes, please open a corresponding issue for a pull request, [here](http://issues.openmrs.org/browse/ID)
 
 + Comments, it's a good habit to constantly add explanatory comments. When a part of logic is too long, and when some code is complicated, just add few comments. And for some functions that maybe used externally, you may add full [JSDoc](http://en.wikipedia.org/wiki/JSDoc).
 
