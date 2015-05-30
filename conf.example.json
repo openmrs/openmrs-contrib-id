@@ -3,6 +3,7 @@
 
     "discourse": {
       "secret": "1234567890abcdef",
+      "nonceURL": "http://talk.openmrs.org/session/sso",
       "returnURL": "http://talk.openmrs.org/session/sso_login?{{QUERY}}"
     },
     "deskcom": {
