@@ -1,5 +1,6 @@
 SSO for OpenMRS ID
 ========
+[![Code Climate](https://codeclimate.com/github/openmrs/openmrs-contrib-id-sso/badges/gpa.svg)](https://codeclimate.com/github/openmrs/openmrs-contrib-id-sso)
 
 Provides single-sign-on endpoints for the [OpenMRS ID Dashboard][1].
 
