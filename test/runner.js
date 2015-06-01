@@ -1,12 +1,12 @@
 /**
  * Programmtically execute mocha tests
- * @type {[type]}
  */
 var fs = require('fs');
 var path = require('path');
 var async = require('async');
 var Mocha = require('mocha');
 var mongoose = require('mongoose');
+var _ = require('lodash');
 
 var conf = require('./conf');
 
@@ -18,7 +18,7 @@ var mocha = new Mocha({
 
 // add testing files
 fs.readdirSync('test').filter(function (file) {
-  return file !== 'runner.js';
+  return _.endsWith(file, '.js') && file !== 'runner.js';
 }).forEach(function (file) {
   var fpath = path.join('test', file);
   mocha.addFile(fpath);

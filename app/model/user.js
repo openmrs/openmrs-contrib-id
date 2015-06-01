@@ -238,7 +238,7 @@ userSchema.pre('save', function (next) {
     return next();
   }
   if (!this.inLDAP) { // not stored in LDAP yet
-    ldap.addUser(uid, first, last, email, pass, function (err) {
+    ldap.addUser(that, function (err) {
       if (err) {
         log.error(uid + ' failed to add record to OpenLDAP');
         return next(err);
@@ -260,14 +260,7 @@ userSchema.pre('save', function (next) {
   };
 
   var updateUser = function (userobj, callback) {
-    // update attributes one by one
-    userobj[conf.user.username] = uid;
-    userobj[conf.user.firstname] = first;
-    userobj[conf.user.lastname] = last;
-    userobj[conf.user.displayname] = disp;
-    userobj[conf.user.email] = email;
-    userobj.memberof = groups;
-    ldap.updateUser(userobj, callback);
+    ldap.updateUser(that, callback);
   };
 
   // due to limitation of LDAP, password shall be dealt individually
