@@ -69,9 +69,3 @@ var EmailVertification = mongoose.model('EmailVertification', emailSchema);
 
 exports = module.exports = EmailVertification;
 exports.categories = categories;
-
-// Formage configuration.
-// EmailVertification.header_lines = [
-//   '<script src="/resource/ace-json-build.js"></script>',
-//   '<script src="/resource/ace-bootstrap.js"></script>'
-// ];

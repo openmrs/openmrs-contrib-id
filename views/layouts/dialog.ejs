@@ -1,7 +1,6 @@
-<% style('/resource/bootstrap/css/bootstrap.min.css') %>
-<% script('/resource/bootstrap/js/bootstrap.min.js') %>
+<% style('/bower_components/bootstrap/dist/css/bootstrap.min.css') %>
+<% script('/bower_components/bootstrap/dist/js/bootstrap.min.js') %>
 
-<% style('/resource/stylesheets/dialog.css') %>
 <% script('/resource/scripts/omrsid.js') %>
 
 
@@ -9,7 +8,7 @@
 
 <% include header/top %>
     <% include login-menu-dialog %>
-<% include header/bottom %>    
+<% include header/bottom %>
 
 <!-- <div class="row" id="headline">
   <div class="container">
@@ -21,10 +20,10 @@
 
 <div id="content" class="container">
   <div id="main">
-  
+
   <%- body %>
   </div>
-  
+
 </div>
 
 <% include page/bottom %>
