@@ -2,19 +2,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><%= title %></title>
-  <link rel="stylesheet" href="/resource/font/font-awesome.css">
-
-  <!-- <link href="/resource/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
-  <link href="/resource/stylesheets/print.css" media="print" rel="stylesheet" type="text/css" /> -->
-  <!--[if IE]>
-      <link href="/stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
-  <![endif]-->
+  <link rel="stylesheet" href="/bower_components/font-awesome/css/font-awesome.min.css">
 
   <% enqueuedStylesheets.forEach(function(style) { %>
   <link rel="stylesheet" href="<%= style.css %>">
   <% }) %>
 
-  <script src="/resource/scripts/jquery.min.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
 
 
   <% enqueuedScripts.forEach(function(s) { %>
@@ -30,10 +24,6 @@
     ga('create', 'UA-16695719-3', 'openmrs.org');
     ga('require', 'displayfeatures');
       ga('send', 'pageview');
-  </script> 
+  </script>
   <%- headAppend %>
-  
-  <!--[if lte IE 7]>
-  <link rel="stylesheet" href="/resource/font/font-awesome-ie7.css">
-  <![endif]-->
 </head>

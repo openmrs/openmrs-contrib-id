@@ -5,9 +5,10 @@ logs/*.pid
 nohup.out
 npm-debug.log
 
-# Node modules #
+# Dependencies #
 ###################
 node_modules
+bower_components
 
 # User-install modules #
 ########################
