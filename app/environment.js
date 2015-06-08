@@ -92,7 +92,6 @@ if ('development' === app.get('env')) {
     pathRoot: path.join(__dirname, '/../resource/')
   }));
 
-  app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
 
 }
 
@@ -106,6 +105,9 @@ if ('production' === app.get('env')) {
     once: true
   }));
 
-  app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
 
 }
+
+app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
+app.use('/bower_components', express.static(path.join(__dirname,
+  '/../bower_components/')));

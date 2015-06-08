@@ -47,27 +47,9 @@ app.get(/^\/signup\/?$|^\/$/i, validate.receive, botproof.generators,
     return next(); // pass onward if a user is signed in
   }
 
-  // parse querystrings for pre-populated data
-  var values = res.locals.validation.values || {};
-  var renderLayout = true;
-  var query = url.parse(req.url, true).query;
-
-  for (var prop in query) {
-    if (/^(firstName|lastName|username|primaryEmail|)$/.test(prop)) {
-      values[prop] = query[prop];
-    }
-  }
-
-  // handle layout query string & determine which view to render
-  renderLayout = (query.layout === 'false') ? false : true;
-  var viewPath = (renderLayout) ? __dirname + '/../views/signup' : __dirname + '/../views/signup-standalone';
-
   // render the page
   res.locals.recaptchaPublic = conf.validation.recaptchaPublic;
-  res.render(viewPath, {
-    // values: values,
-    renderLayout: renderLayout, // allows view to see whether or not it has layout
-  });
+  res.render(path.join(__dirname, '/../views/signup'));
 });
 
 // prevent from getting 404'd if a logged-in user hits /signup
