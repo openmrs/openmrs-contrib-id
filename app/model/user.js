@@ -230,8 +230,11 @@ userSchema.pre('save', function (next) {
   if (!this.inLDAP) { // not stored in LDAP yet
     ldap.addUser(uid, first, last, email, pass, function (err) {
       if (err) {
-        log.error(uid + ' failed to add record to OpenLDAP');
-        return next(err);
+        if (err.code !== 68) {
+          log.error(uid + ' failed to add record to OpenLDAP');
+          return next(err);
+        }
+        log.info(uid + ' already exists in LDAP');
       }
       log.info(uid + ' stored in OpenLDAP');
       that.inLDAP = true;
