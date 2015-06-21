@@ -1,0 +1,28 @@
+{
+  "GlobalNavLinks": [
+  ],
+  "GlobalNavPrefs": [
+    {
+      "key": "customCSS",
+      "placeholder": "body {backgroud: magenta;}",
+      "name": "Custom CSS",
+      "type": "textarea",
+      "value": "",
+      "description": "Include any CSS to be inserted to the navbar."
+    },
+    {
+      "key": "cseId",
+      "placeholder": "012345678901234567890:abcdefghijk",
+      "name": "Google CSE ID",
+      "value": "",
+      "description": "Display a Google Custom Search field in the navbar by providing a CSE ID."
+    },
+    {
+      "key": "csePlaceholder",
+      "placeholder": "Search",
+      "name": "Search Placeholder",
+      "value": "",
+      "description": "Placeholder text displayed in the search field by default."
+    }
+  ]
+}
