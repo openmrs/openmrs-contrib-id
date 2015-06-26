@@ -1,21 +1,18 @@
 var crypto = require('crypto');
 var Common = require(global.__commonModule);
-var app = Common.app;
+// var app = Common.app;
 var log = Common.logger.add('botproof');
 var signupConf = require('../conf.signup.json');
 var async = require('async');
 var _ = require('lodash');
 var dns = require('dns');
-var db = Common.db;
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-db.define('IPWhitelist', {
-  id: {
-    type: db.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  address: db.STRING
+var wlistSchema = new Schema({
+  address: String,
 });
+var wlist = mongoose.model('IPWhitelist', wlistSchema);
 
 var SECRET = crypto.createHash('sha1').update(Math.random().toString())
   .digest('hex');
@@ -49,9 +46,9 @@ function hashField(name, spin) {
 }
 
 // Expose stuff.
-app.locals({
-  disguise: hashField
-});
+// app.locals({
+//   disguise: hashField
+// });
 
 module.exports = {
   // Every method in here is Connect middleware, and is used by chaining it to
@@ -127,6 +124,7 @@ module.exports = {
     var spin = hash.digest('hex');
 
     res.locals.spinner = spin;
+    res.locals.disguise = hashField;
     next();
   },
 
@@ -189,52 +187,53 @@ module.exports = {
     var spams = signupConf.dnsSpamLists;
 
     // check the address with each list
-    async.map(Object.keys(spams), function(list, cb) {
-      dns.lookup(rev + '.' + list, function(err, address) {
-        if (err) {
-          if (err.code === 'ENOTFOUND') {
-            cb(null, false); // address not on list
-          } else {
-            cb(err);
+    async.waterfall([
+      function checkWhitelist(cb) {
+        wlist.findOne({address: ip(req)}, function (err, inst) {
+          if (err) {
+            return next(err);
           }
-
-        } else if (_.contains(spams[list].returnCodes, address)) {
-          // address IS on list and proper return code specified
-
-          db.find('IPWhitelist', {
-            address: ip(req)
-          }, function(err, insts) {
-            if (insts.length) {// address is whitelisted
-              cb(null, false);
-            } else {
-              cb(null, true);
+          return cb(null, inst ? true : false);
+        });
+      },
+      function checkBlacklist(isWhite, cb) {
+        if (isWhite) {
+          return next();
+        }
+        async.map(Object.keys(spams), function(list, cb) {
+          dns.lookup(rev + '.' + list, function(err, address) {
+            if (err) {
+              if (err.code === 'ENOTFOUND') {
+                return cb(null, false); // address not on list
+              }
+              return cb(err);
             }
+            if (_.contains(spams[list].returnCodes, address)) {
+              // address IS on list and proper return code specified
+              return cb(null, true);
+            }
+            return cb(null, false);
           });
 
-        } else {
-          cb(null, false);
-        }
-      });
-
-    }, function callback(err, results) {
-      if (err) {
-        return next(err);
-      }
-
-      if (_.contains(results, true)) { // if this address was indicated as spam
-        log.info('IP address ' + ip(req) + ' flagged as spam');
-        return badRequest(next, "Your IP address, " + ip(req) + ", was " +
-          "flagged as a spam address by our spam-blocking lists. " +
-          "Please open an issue if you believe this is in error.");
-      }
-
-      next(); // not spam!
-    });
+        }, function callback(err, results) {
+          if (err) {
+            return next(err);
+          }
+          if (_.contains(results, true)) {
+            // if this address was indicated as spam
+            log.info('IP address ' + ip(req) + ' flagged as spam');
+            return badRequest(next, "Your IP address, " + ip(req) + ", was " +
+              "flagged as a spam address by our spam-blocking lists. " +
+              "Please open an issue if you believe this is in error.");
+          }
+          next(); // not spam!
+        });
+      },
+    ]);
   }
 };
 
 module.exports.SECRET = SECRET; // used by testing
-
 
 module.exports.generators = [
   module.exports.generateTimestamp,
@@ -247,4 +246,6 @@ parsers.push(module.exports.checkTimestamp);
 if (!signupConf.disableHoneypot) {
   parsers.push(module.exports.checkHoneypot);
 }
-parsers.push(module.exports.spamListLookup);
+if (!signupConf.disableBlacklist) {
+  parsers.push(module.exports.spamListLookup);
+}

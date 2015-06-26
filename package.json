@@ -21,12 +21,10 @@
     "log4js": "^0.6.26",
     "mocha": "~1.16.2",
     "mongoose": "~3.8.12",
-    "mysql": "~2.3.2",
     "nodemailer": "~0.3.44",
     "q": "^1.0.1",
     "recaptcha": "~1.1.0",
     "request": "^2.51.0",
-    "sequelize": "~1.7.9",
     "should": "~2.1.1",
     "supertest": "~0.8.3",
     "xml2js": "~0.1.14"
@@ -39,8 +37,7 @@
     "should": "~2.1.1",
     "mocha": "~1.16.2",
     "chai": "~1.9.1",
-    "express-debug": "~1.1.0",
-    "sqlite3": "^3.0.4"
+    "express-debug": "~1.1.0"
   },
   "scripts": {
     "test": "make test"
