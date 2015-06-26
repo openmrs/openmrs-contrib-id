@@ -22,15 +22,6 @@
 
 <form action="/admin/globalnav/prefs" method="post">
 	<h2>Preferences</h2>
-	<!--<%- partial('param-table', {
-		tableName: 'preferences',
-		columns: [
-			{type: 'name', value: 'Name', name: 'name', editable: false},
-			{type: 'value', value: 'Value', name: 'value'}
-		],
-		data: prefs,
-		canAddRows: false
-	}) %>-->
 	<% for (i in prefs) { %>
 		<div class="field">
 		<label><%=prefs[i].name%></label>
@@ -41,7 +32,7 @@
 		<% } %>
 		<span class="description"><%=prefs[i].description%></span>
 		</div>
-		
+
 	<% } %>
 	<input type="submit" class="btn btn-success" value="Save">
 </form>

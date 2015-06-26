@@ -8,7 +8,7 @@
         <input type="text" class="field" name="q" id="s" placeholder="<%= prefs.csePlaceholder %>">
     </form><% } %>
     <% for (i in links) { %>
-    <a target="_parent"<% if (matches == links[i]) { %> href="" class="yourhere"<% } else { %> href="<%= links[i].url %>"<% } %>><%= links[i].name %></a>
+    <a target="_parent"<% if (matche === links[i].url) { %> href="" class="yourhere"<% } else { %> href="<%= links[i].url %>"<% } %>><%= links[i].name %></a>
     <% } %>
     <a id="globalnav-state-button">[hide]</a>
 </div>
