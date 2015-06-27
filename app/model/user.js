@@ -221,15 +221,9 @@ userSchema.pre('save', function (next) {
 userSchema.pre('save', function (next) {
   // aliases
   var uid = this.username;
-  var first = this.firstName;
-  var last = this.lastName;
-  var disp = this.displayName;
-  var email = this.primaryEmail; // only sync primary email with OpenLDAP
-  var pass = this.password;
-  var groups = this.groups;
   var that = this;
-  if (!_.isEmpty(pass) && 0 !== pass.indexOf('{SSHA}')) {
-    this.password = utils.getSSHA(pass);
+  if (!_.isEmpty(this.password) && 0 !== this.password.indexOf('{SSHA}')) {
+    this.password = utils.getSSHA(this.password);
   }
   if (this.locked) {
     return next();
@@ -265,10 +259,10 @@ userSchema.pre('save', function (next) {
 
   // due to limitation of LDAP, password shall be dealt individually
   var changePassword = function (userobj, callback) {
-    if (userobj[conf.user.password] === pass) { // not changed
+    if (userobj.password === that.password) { // not changed
       return callback();
     }
-    ldap.resetPassword(uid, pass, callback);
+    ldap.resetPassword(uid, that.password, callback);
   };
 
   async.waterfall([
@@ -321,7 +315,7 @@ exports = module.exports = User;
 
 /**
  * Dynamically retrieve data from OpenLDAP
- * Temporary solution for sync
+ * and sync it in Mongo*
  */
 var findAndSync = function(filter, callback) {
 
@@ -345,37 +339,36 @@ var findAndSync = function(filter, callback) {
       finder = ldap.getUser;
       condition = filter.username;
     } else {
-      finder = ldap.getUserByEmail;
-      condition = filter.emailList;
+      return callback(); // ldap.js findByEmail is deprecated, end chain
     }
 
     finder(condition, function (err, userobj) {// find in OpenLDAP
       if (err) {
-        if (err.message === 'User data not found') {// not found, end chain
-          return callback();
-        }
         return cb(err);
       }
-      return cb(null ,userobj);
+      if (!userobj) { // not found, end chain
+        return callback();
+      }
+      return cb(null, userobj);
     });
   };
 
   // store the data retrieved to Mongo
   var syncMongo = function (userobj, cb) {
     var userInfo = {
-      username: userobj[conf.user.username],
-      firstName: userobj[conf.user.firstname],
-      lastName: userobj[conf.user.lastname],
-      displayName: userobj[conf.user.displayname],
-      primaryEmail: userobj[conf.user.email],
-      password: userobj[conf.user.password],
-      emailList: [userobj[conf.user.email]],
+      username: userobj.username,
+      firstName: userobj.firstName,
+      lastName: userobj.lastName,
+      displayName: userobj.displayName,
+      primaryEmail: userobj.primaryEmail,
+      password: userobj.password,
+      emailList: [ userobj.primaryEmail ],
       locked: false,
       createdAt: undefined,
       inLDAP: true,
     };
     var user = new User(userInfo);
-    user.addGroupsAndSave(userobj.memberof, cb);
+    user.addGroupsAndSave(userobj.groups, cb);
   };
 
   async.waterfall([
@@ -410,7 +403,7 @@ User.findByUsername = function (username, callback) {
  */
 User.findByEmail = function (email, callback) {
   email = email.toLowerCase();
-  findAndSync({emailList: email}, callback);
+  findAndSync({emailList: email}, callback); // actually there won't be sync
 };
 
 /**
@@ -425,7 +418,8 @@ User.findByFilter = function (filter, callback) {
 
 
 /**
- * Add specific groups to an user instance, and the user to those groups as well
+ * Add specific groups to an user, and the user to those groups as well.
+ * Note that this could only be used in adding new users.
  * @param {[String]}   groups  groupNames
  * @param {Function} callback  same as the one of <code>Model#save</code>
  */
