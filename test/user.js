@@ -6,6 +6,7 @@ var async = require('async');
 var User = require('../app/model/user');
 var Group = require('../app/model/group');
 var ldap = require('../app/ldap');
+var utils = require('../app/utils');
 var conf = require('../app/conf');
 
 // data for testing purposes
@@ -24,6 +25,7 @@ var VALID_USERNAME2 = 'plypx';
 var INVALID_USERNAME = 'Ply_py'; // contain one underscore
 
 var SIMPLE_STRING = 'string';
+var DOUBLE_STRING = SIMPLE_STRING + SIMPLE_STRING;
 
 var VALID_PASSWORD = 'long_password';
 
@@ -44,9 +46,11 @@ var VALID_INFO1 = {
 var VALID_INFO2 = {
   username: VALID_USERNAME2,
   primaryEmail: VALID_EMAIL2,
+  firstName: DOUBLE_STRING,
+  lastName: DOUBLE_STRING,
   displayEmail: VALID_EMAIL2,
   emailList: [VALID_EMAIL2],
-  password: SIMPLE_STRING,
+  password: DOUBLE_STRING,
   locked: true,
   skipLDAP: true,
 };
@@ -67,6 +71,7 @@ describe('User', function() {
   before(function (done) {
     async.series([
       function (callback) {
+        User.ensureIndexes();
         User.on('index', callback);
       },
       function (callback) {
@@ -465,13 +470,43 @@ describe('sync with LDAP', function() {
     userx.save(done);
   });
 
-  it('should find the record in LDAP with sync on', function(done) {
+  it('should find the record in LDAP when sync is on', function(done) {
     ldap.getUser(userx.username, function (err, userobj) {
       if (err) {
         return done(err);
       }
-      expect(userobj[conf.ldap.user.username]).to.be.equal(userx.username);
+      expect(userobj.username).to.be.equal(userx.username);
+      expect(userobj.primaryEmail).to.be.equal(userx.primaryEmail);
+      expect(userobj.firstName).to.be.equal(userx.firstName);
+      expect(userobj.lastName).to.be.equal(userx.lastName);
+      expect(utils.checkSSHA(VALID_INFO1.password, userobj.password)).to.be.true;
       return done();
+    });
+  });
+
+  it('should sync the modifications as well', function (done) {
+    userx.primaryEmail = VALID_INFO2.primaryEmail;
+    userx.emailList = VALID_INFO2.emailList;
+    userx.firstName = VALID_INFO2.firstName;
+    userx.lastName = VALID_INFO2.lastName;
+    userx.password = VALID_INFO2.password;
+    userx.skipLDAP = undefined;
+    userx.save(function (err, umongo) {
+      if (err) {
+        return done(err);
+      }
+      ldap.getUser(userx.username, function (err, userobj) {
+        if (err) {
+          return done(err);
+        }
+
+        expect(userobj.username).to.be.equal(userx.username);
+        expect(userobj.primaryEmail).to.be.equal(userx.primaryEmail);
+        expect(userobj.firstName).to.be.equal(userx.firstName);
+        expect(userobj.lastName).to.be.equal(userx.lastName);
+        expect(utils.checkSSHA(VALID_INFO2.password, userobj.password)).to.be.true;
+        return done();
+      });
     });
   });
 
@@ -481,8 +516,7 @@ describe('sync with LDAP', function() {
         return done(err);
       }
       ldap.getUser(userx.username, function (err, userobj) {
-        expect(err.message).equal('User data not found');
-        expect(userobj).to.be.undefined;
+        expect(userobj).to.be.null;
         return done();
       });
     });
