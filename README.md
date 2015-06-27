@@ -29,12 +29,11 @@ A few modules (providing additional functionality) have been created. They can b
 
 * [openmrs-contrib-globalnavbar](https://github.com/openmrs/openmrs-contrib-id-globalnavbar)
 * ~~[openmrs-contrib-id-groups](https://github.com/openmrs/openmrs-contrib-id-groups)~~ *(***We no longer use Google Groups and now use [OpenMRS Talk](http://talk.openmrs.org) in its place -- it is provided solely for historic purposes***)*
-* [openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth)
+* [openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth) provides OAuth 2.0-based authorization module for OpenMRS ID
+* [openmrs-contrib-id-sso](https://github.com/openmrs/openmrs-contrib-id-sso) provides single sign on authentication strategies
 
 ##Why We Built It:
 OpenMRS's developer community was in need of unification between the tools hosted at openmrs.org and elsewhere. With contributors needing seaparate accounts to submit code, edit the wiki, and join mailing lists (for example), the amount of user fragmentation between tools kept growing. People new to the OpenMRS community tended to be a little confused, having to manually manage profiles across very visually-disconnected sites. Ultimately, we wanted one ID, everywhere.
-
-With OpenMRS ID, we are able to provide access to a huge variety of software products with one sign-on, and have significantly simplified the steps to get new users involved in our community. We are able to provide a more integrated and simpler experience for our users, and have since established a more-connected community as a result.
 
 ##Server Requirements:
 
