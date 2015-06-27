@@ -29,7 +29,7 @@ A few modules (providing additional functionality) have been created. They can b
 
 * [openmrs-contrib-globalnavbar](https://github.com/openmrs/openmrs-contrib-id-globalnavbar)
 * ~~[openmrs-contrib-id-groups](https://github.com/openmrs/openmrs-contrib-id-groups)~~ *(***We no longer use Google Groups and now use [OpenMRS Talk](http://talk.openmrs.org) in its place -- it is provided solely for historic purposes***)*
-* [openmrs-contrib-id-oauth](https://github.com/elliottwilliams/openmrs-contrib-id-oauth)
+* [openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth)
 
 ##Why We Built It:
 OpenMRS's developer community was in need of unification between the tools hosted at openmrs.org and elsewhere. With contributors needing seaparate accounts to submit code, edit the wiki, and join mailing lists (for example), the amount of user fragmentation between tools kept growing. People new to the OpenMRS community tended to be a little confused, having to manually manage profiles across very visually-disconnected sites. Ultimately, we wanted one ID, everywhere.
