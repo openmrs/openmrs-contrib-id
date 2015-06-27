@@ -33,3 +33,9 @@ Global navigation bar across [OpenMRS](http://openmrs.org) Community. A module o
 	- prepend the body with navbar HTML, with permissions to:
 		- execute scripts
 		- change the URL of the parent page (preferably without JS)
+		
+## How to install
+
+- clone into <code>app/user-modules</code> of dashboard
+- cp lib/db.example.json lib/db.json
+
