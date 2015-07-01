@@ -11,6 +11,7 @@
     "signupFormMaxAgeHours": 12,
     "honeypotFieldName": "country",
     "disableHoneypot": true,
+    "disableBlacklist": false,
 
     "dnsSpamLists": {
         "bl.spamcop.net": {
