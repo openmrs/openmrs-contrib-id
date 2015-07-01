@@ -39,7 +39,6 @@ OpenMRS's developer community was in need of unification between the tools hoste
 
 * Node.js version in the 0.8.x tree (id.openmrs.org runs Node v0.8.26)
 * LDAP directory (tested with OpenLDAP), additionally supporting extensible objects and password policies
-* MySQL database
 * MongoDB database
 * SMTP access
 
