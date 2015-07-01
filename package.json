@@ -4,7 +4,6 @@
   "description": "A self-service management system for the OpenMRS ID single sign on identity.",
   "main": "./app/app.js",
   "dependencies": {
-    "LDAP": "~1.2.0",
     "async": "~0.2.10",
     "bunyan": "^1.3.5",
     "chai": "~1.9.1",
