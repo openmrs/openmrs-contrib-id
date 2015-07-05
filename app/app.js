@@ -34,7 +34,7 @@ global.__apppath = __dirname;
 var siteURLParsed = url.parse(conf.site.url, false, true);
 app.engine('jade', engine);
 app.set('view engine', 'jade');
-app.set('views', path.join(__dirname, '/../views'));
+app.set('views', path.join(__dirname, '/../views-new'));
 app.locals._layoutFile = '/layout.ejs';
 app.set('basepath', siteURLParsed.pathname);
 app.set('port', 3000);
@@ -109,7 +109,7 @@ require('./new-db');
 
 
 app.get('/sample', function (req, res) {
-  res.render('base');
+  res.render('layouts/base');
 });
 
 // fail if no configuration file found

@@ -1,3 +1,6 @@
+include ../mixins/flashes
+include ../mixins/sidebar
+
 doctype html
 html
   head
@@ -18,12 +21,13 @@ html
       ga('require', 'displayfeatures');
       ga('send', 'pageview');
 
-    block headAppend
+    != headAppend
 
   body
     noscript
       h3 JavaScript is required to properly use OpenMRS ID.
 
+    //- header with login-menu
     div#header.clearfix
       div.container
         header.col-md-5.col-md-offset-1
@@ -31,14 +35,42 @@ html
             img#logo(src='/resource/images/logo.png', alt='OpenMRS Community')
       div#login-menu.col-md-5.col-xs-5.col-sm-5
         if connected
-          p.
-            Your OpenMRS ID is the key to participating in our open source community.
-            Use it to access all of the tools and services listed on the links at the top of this page.
+          p
+            | Your OpenMRS ID is the key to participating in our open source community.
+            | Use it to access all of the tools and services listed on the links at the top of this page.
             a(href='http://go.openmrs.org/id') Read more on our Wiki.
           div.col-md-10(style='padding:5px;text-align:right')
             strong= 'Welcome, ' + user.displayName
             br
             a(href='/disconnect') Log Out
           div#col-md-1
-            img(src='https://wiki.openmrs.org/rest/cas/1.0/avatar/server/' +  mailHash + '?s=51'
-                alt='user.displayName')
+            img(src='https://wiki.openmrs.org/rest/cas/1.0/avatar/server/' + mailHash + '?s=51',
+              alt=user.displayName)
+
+    //- user navbar
+    div.container(style='padding:20px')
+      div.col-sm-offset-1.col-md-offset-1.col-sm-3.col-md-10
+        div.btn-group.btn-group-justified(role='group', style='margin:auto;margin-bottom:30px;margin-top:20px')
+
+        each link in navLinks
+          - var same = (name === link.viewName ? true : false)
+          a.btn(class=(same ? 'btn-success' : 'btn-default'),
+                herf=(same ? '#' : list.url), type='button')= list.name
+
+    //-headline
+    div#headline(class=(showHeadlineAvatar ? 'with-avatar' : 'undefined'))
+      div.container
+        h1.col-md-8.col-md-offset-1= headline
+
+    //- TODO flashes could use mixins
+
+    //- sidebar
+    if showSidebar === true
+      div#content.content.container
+        div#main.col-md-10.col-md-offset-1.col-md-10.col-sm-10.col-sm-offset-0.col-xs-10.col-xs-offset-1
+          +sidebar(sidebar.concat(defaultSidebar))
+
+    div.clear
+    != bodyAppend
+
+    div#about!= aboutHTML
