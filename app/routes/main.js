@@ -6,25 +6,9 @@ var app = require(global.__commonModule).app;
 
 // LOGIN-LOGOUT
 app.get('/', function(req, res, next) {
-
-  if (!req.session.user) {
+  if (!req.session.user) { // only shown to users logged in
     return next();
   }
 
-  https.get({
-    host: 'www.example.com',
-    path: '/users/' + req.session.user.uid
-  }, function(response) {
-    if (response.statusCode === 200) {
-      res.locals({
-        osqaUser: true
-      });
-    } else {
-      res.locals({
-        osqaUser: false
-      });
-    }
-
-    res.render('root');
-  });
+  res.render('root');
 });
