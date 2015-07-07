@@ -10,10 +10,10 @@ block defines
   - title = 'Page Title';
   - name = 'View Name Used in Links';
   - headline = 'headline';
-  //- - showHeadlineAvatar = true;
   - showSidebar = true;
   - navLinks = [];
   - sidebar = [];
+  //- - showHeadlineAvatar = true;
 
 doctype html
 html
@@ -25,7 +25,6 @@ html
     link(rel='stylesheet', href='/bower_components/font-awesome/css/font-awesome.min.css')
     link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
     link(rel='stylesheet', href='/resource/stylesheets/style.css')
-
     script(src='/bower_components/jquery/dist/jquery.min.js')
     script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
     script(src='/resource/scripts/omrsid.js')
@@ -69,11 +68,11 @@ html
     div.container(style='padding:20px')
       div.col-sm-offset-1.col-md-offset-1.col-sm-3.col-md-10
         div.btn-group.btn-group-justified(role='group', style='margin:auto;margin-bottom:30px;margin-top:20px')
-
-          each link in navLinks
-            - var same = (name === link.viewName ? true : false);
-            a.btn(class=(same ? 'btn-success' : 'btn-default'),
-                  href=(same ? '#' : link.url), type='button')= link.name
+          if navLinks
+            each link in navLinks
+              - var same = (name === link.viewName ? true : false);
+              a.btn(class=(same ? 'btn-success' : 'btn-default'),
+                    href=(same ? '#' : link.url), type='button')= link.name
 
     //-headline
     div#headline(class=(showHeadlineAvatar ? 'with-avatar' : 'undefined'))

@@ -17,28 +17,6 @@ var log = require('./logger').add('express-middleware');
 var conf = require('./conf');
 
 
-function setTypes(req, res) {
-  // Change undefined variables to default values; keep us from getting "undefined" errors from EJS
-  var current = res.locals() || {};
-  var replace = {};
-
-  replace.title = (current.title) ? current.title : conf.site.title;
-  replace.failed = (current.failed) ? current.failed : false;
-  replace.showHeadlineAvatar = (current.showHeadlineAvatar) ? current.showHeadlineAvatar : true;
-  replace.showSidebar = (current.showSidebar) ? current.showSidebar : true;
-
-  ['sidebar'].forEach(function(prop) {
-    replace[prop] = (current[prop]) ? current[prop] : [];
-  });
-  ['bodyAppend', 'headAppend', 'headline', 'viewName', 'emailUpdated'].forEach(function(prop) {
-    replace[prop] = (current[prop]) ? current[prop] : '';
-  });
-  ['flash', 'fail', 'values', 'failReason', 'navLinks', 'progress', 'sidebarParams', 'validation'].forEach(function(prop) {
-    replace[prop] = (current[prop]) ? current[prop] : {};
-  });
-  res.locals(replace);
-}
-
 exports.openmrsHelper = function(req, res, next) {
   if (req.originalUrl === '/favicon.ico') {
     return next();
@@ -59,7 +37,6 @@ exports.openmrsHelper = function(req, res, next) {
       connected: false
     });
   }
-  setTypes(req, res);
   next();
 };
 
