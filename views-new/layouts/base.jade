@@ -1,5 +1,20 @@
 include ../mixins/flashes
 include ../mixins/sidebar
+//- varialbes should be imported from controller level
+//- user -- user object
+//- connected -- indicate whether a user is logged in
+//- flash -- flash messages
+
+//- variables should be defined in views best
+block defines
+  - title = 'Page Title';
+  - name = 'Page Name';
+  - headline = 'headline';
+  //- - showHeadlineAvatar = true;
+  - showSidebar = true;
+  - navLinks = [];
+  - sidebar = [];
+  - showSidebar = true;
 
 doctype html
 html
@@ -26,8 +41,8 @@ html
       ga('create', 'UA-16695719-3', 'openmrs.org');
       ga('require', 'displayfeatures');
       ga('send', 'pageview');
+    block headAppend
 
-    != headAppend
 
   body
     noscript
@@ -57,7 +72,7 @@ html
         div.btn-group.btn-group-justified(role='group', style='margin:auto;margin-bottom:30px;margin-top:20px')
 
         each link in navLinks
-          - var same = (name === link.viewName ? true : false)
+          - var same = (name === link.viewName ? true : false);
           a.btn(class=(same ? 'btn-success' : 'btn-default'),
                 herf=(same ? '#' : list.url), type='button')= list.name
 
@@ -68,9 +83,10 @@ html
 
     +flashes(flash)
 
+    //- Real content
     div#content.content.container
       div#main.col-md-10.col-md-offset-1.col-md-10.col-sm-10.col-sm-offset-0.col-xs-10.col-xs-offset-1
-        block body
+        block content
 
       //- sidebar
       if showSidebar === true
@@ -81,6 +97,5 @@ html
 
     //- bottom
     div.clear
-    != bodyAppend
 
     div#about!= aboutHTML
