@@ -24,6 +24,7 @@ var MongoStore = require('connect-mongo')(express);
 var mid = require('./express-middleware');
 var connect = require('connect');
 var conf = require('./conf');
+var _ = require('lodash');
 
 var app = express();
 
@@ -36,6 +37,7 @@ app.engine('jade', engine);
 app.set('view engine', 'jade');
 app.set('views', path.join(__dirname, '/../views-new'));
 app.locals._layoutFile = '/layout.ejs';
+app.locals._ = _;
 app.set('basepath', siteURLParsed.pathname);
 app.set('port', 3000);
 app.use(flash());
