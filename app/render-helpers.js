@@ -11,7 +11,6 @@ app.locals({
 
   aboutHTML: conf.aboutHTML,
   siteURL: conf.site.url,
-  conf: conf,
   url: url
 });
 
@@ -77,49 +76,3 @@ var navLinks = function(req, res, next) {
   return next();
 };
 app.use(navLinks);
-
-app.use(function style(req, res, next) {
-  var enqueuedStylesheets = [];
-
-  res.locals.style = function(stylesheet, sort) {
-    enqueuedStylesheets.push({
-      css: stylesheet,
-      sort: sort || 0
-    });
-
-    enqueuedStylesheets = enqueuedStylesheets.sort(function(a, b) {
-      return a.sort - b.sort;
-    });
-
-    log.debug('enqueuedStylesheets', enqueuedStylesheets);
-  };
-
-  res.locals.enqueuedStylesheets = enqueuedStylesheets;
-  next();
-});
-
-app.use(function script(req, res, next) {
-  var enqueuedScripts = [];
-
-  res.locals.script = function(script, opts, sort) {
-    if (typeof opts === 'number') {
-      sort = opts;
-      opts = {};
-    }
-
-    enqueuedScripts.push({
-      script: script,
-      opts: opts || {},
-      sort: sort || 0
-    });
-
-    enqueuedScripts = enqueuedScripts.sort(function(a, b) {
-      return a.sort - b.sort;
-    });
-
-    log.debug('enqueuedScripts', enqueuedScripts);
-  };
-
-  res.locals.enqueuedScripts = enqueuedScripts;
-  next();
-});
