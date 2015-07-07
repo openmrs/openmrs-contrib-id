@@ -1,0 +1,6 @@
+//- flashes object
+mixin flashes(messages)
+  each type, msg in messages
+    div.flash(class= type)
+      div.container
+        aside.col-md-12!= msg
