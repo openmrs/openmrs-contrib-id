@@ -8,13 +8,12 @@ include ../mixins/sidebar
 //- variables should be defined in views best
 block defines
   - title = 'Page Title';
-  - name = 'Page Name';
+  - name = 'View Name Used in Links';
   - headline = 'headline';
   //- - showHeadlineAvatar = true;
   - showSidebar = true;
   - navLinks = [];
   - sidebar = [];
-  - showSidebar = true;
 
 doctype html
 html
@@ -71,10 +70,10 @@ html
       div.col-sm-offset-1.col-md-offset-1.col-sm-3.col-md-10
         div.btn-group.btn-group-justified(role='group', style='margin:auto;margin-bottom:30px;margin-top:20px')
 
-        each link in navLinks
-          - var same = (name === link.viewName ? true : false);
-          a.btn(class=(same ? 'btn-success' : 'btn-default'),
-                herf=(same ? '#' : list.url), type='button')= list.name
+          each link in navLinks
+            - var same = (name === link.viewName ? true : false);
+            a.btn(class=(same ? 'btn-success' : 'btn-default'),
+                  href=(same ? '#' : link.url), type='button')= link.name
 
     //-headline
     div#headline(class=(showHeadlineAvatar ? 'with-avatar' : 'undefined'))

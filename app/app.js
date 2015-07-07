@@ -113,9 +113,6 @@ require('./new-db');
 app.get('/sample', function (req, res) {
   res.render('layouts/base');
 });
-app.get('/404', function (req, res) {
-  res.render('views/404');
-});
 
 // fail if no configuration file found
 try {
@@ -144,7 +141,7 @@ mail.SMTP = conf.email.smtp;
 ROUTES
 ======
 */
-// require('./routes');
+require('./routes');
 
 
 process.on('uncaughtException', function(err) {
