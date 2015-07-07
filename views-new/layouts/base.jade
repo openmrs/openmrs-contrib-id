@@ -41,10 +41,7 @@ html
             img#logo(src='/resource/images/logo.png', alt='OpenMRS Community')
         div#login-menu.col-md-5.col-xs-5.col-sm-5
           if !connected
-            p
-              | Your OpenMRS ID is the key to participating in our open source community.
-              | Use it to access all of the tools and services listed on the links at the top of this page.
-              a(href='http://go.openmrs.org/id') Read more on our Wiki.
+            | <p>Your OpenMRS ID is the key to participating in our open source community. Use it to access all of the tools and services listed on the links at the top of this page. <a href="http://go.openmrs.org/id">Read more on our Wiki.</a> </p>
           else
             div.col-md-10(style='padding:5px;text-align:right')
               strong= 'Welcome, ' + user.displayName
@@ -78,6 +75,7 @@ html
       if showSidebar === true
         //- +sidebar(sidebar.concat(defaultSidebar))
         div#sidebar.col-md-offset-1.col-md-10.col-sm-10.col-sm-offset-0.col-xs-10.col-xs-offset-1
+          +sidebar(sidebar.concat(defaultSidebar))
 
 
     //- bottom
