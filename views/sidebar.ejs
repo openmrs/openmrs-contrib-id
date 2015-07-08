@@ -1,8 +1,0 @@
-<% var className = "sidebarItem", sidebarLocals = {}  %>
-<% if (sidebarParams[sidebar]) {
-	if (sidebarParams[sidebar].className) className += ' '+sidebarParams[sidebar].className;
-	if (sidebarParams[sidebar].locals)  sidebarLocals = sidebarParams[sidebar].locals;
-} %>
-<div class="<%=className%>">
-	<%- partial(sidebar, {sidebarLocals: sidebarLocals}) %>	
-</div>
