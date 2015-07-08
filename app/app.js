@@ -129,9 +129,9 @@ var Common = require('./openmrsid-common');
 mail.SMTP = conf.email.smtp;
 
 /* Load Modules */
-// conf.systemModules.forEach(function(module) {
-//   require('./system-modules/' + module);
-// });
+conf.systemModules.forEach(function(module) {
+  require('./system-modules/' + module);
+});
 // conf.userModules.forEach(function(module) {
 //   require('./user-modules/' + module);
 // });
