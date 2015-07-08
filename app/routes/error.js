@@ -11,7 +11,7 @@ app.use(function(err, req, res, next) {
     // formed. Otherwise, we'd be stuck in an infinite loop.
     res.statusCode = 500;
     if (req.accepts('text/html')) {
-      res.render('views/500');
+      res.render('views/500', {e: err});
     } else if (req.accepts('application/json')) {
       res.json({
         statusCode: res.statusCode,
