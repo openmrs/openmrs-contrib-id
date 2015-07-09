@@ -55,6 +55,30 @@ app.get(/^\/signup\/?$|^\/$/i, validate.receive, botproof.generators,
 // prevent from getting 404'd if a logged-in user hits /signup
 app.get('/signup', mid.forceLogout);
 
+app.get('/testwelcom', function (req, res) {
+  var siteURL = conf.site.url;
+  res.render(path.join(__dirname, '../views/welcome-email'), {
+    username: 'plypy',
+    displayName: 'Ply_py',
+    siteURL: siteURL,
+    imgURL: url.resolve(siteURL, 'resource/images/logo.png'),
+  });
+});
+
+app.get('/testwelcomv', function (req, res) {
+  var siteURL = conf.site.url;
+  res.render(path.join(__dirname, '../views/welcome-verify-email'), {
+    username: 'plypy',
+    displayName: 'Ply_py',
+    siteURL: siteURL,
+    imgURL: url.resolve(siteURL, 'resource/images/logo.png'),
+    verifyURL: url.resolve(siteURL, '/signup/', '123456789'),
+  });
+});
+app.get('/testwelcom', function (req, res) {
+  res
+});
+
 app.post('/signup', mid.forceLogout, botproof.parsers,
   signupMiddleware.includeEmpties,
   signupMiddleware.validator, function(req, res, next) {
@@ -82,7 +106,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     email: email,
     category: verification.categories.signup,
     subject: '[OpenMRS] Welcome to the OpenMRS Community',
-    template: path.join(__dirname, '../views/welcome-verify-email.ejs'),
+    template: path.join(__dirname, '../views/welcome-verify-email.jade'),
     locals: {
       displayName: first + ' ' + last,
       username: id,
