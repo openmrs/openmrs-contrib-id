@@ -10,10 +10,8 @@
     "connect": "~2.3.9",
     "connect-flash": "~0.1.1",
     "connect-mongo": "~0.4.1",
-    "ejs": "~1.0.0",
-    "ejs-locals": "~1.0.2",
-    "express": "~3.13.0",
-    "formage": "^2.7.33",
+    "express": "^4.13.1",
+    "formage": "^3.2.21",
     "jade": "^1.11.0",
     "ldapjs": "^0.7.1",
     "less-middleware": "~1.0.3",
@@ -30,7 +28,7 @@
     "xml2js": "~0.1.14"
   },
   "engine": {
-    "node": "~0.8.26"
+    "node": "~0.10.38"
   },
   "devDependencies": {
     "supertest": "~0.8.2",
