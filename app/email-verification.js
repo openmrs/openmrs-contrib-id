@@ -2,7 +2,7 @@ var crypto = require('crypto');
 var mail = require('nodemailer');
 var fs = require('fs');
 var path = require('path');
-var ejs = require('ejs');
+var jade = require('jade');
 var url = require('url');
 var async = require('async');
 var _ = require('lodash');
@@ -97,7 +97,7 @@ exports.begin = function(settings, callback) {
         url: url,
       });
       var template = data.toString();
-      var rendered = ejs.render(template, {locals: locals});
+      var rendered = jade.renderFile(template, locals);
 
       try {
         mail.send_mail({

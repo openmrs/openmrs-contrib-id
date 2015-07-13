@@ -161,7 +161,7 @@ validate.receive = function (req, res, next) {
   var rsv = rs.validation;
 
   if (rs && rsv && !_.isEmpty(rsv)) {
-    res.locals(rsv); // include the properties from validation
+    _.merge(res.locals, rsv);
     req.session.validation = {};
   }
   next();

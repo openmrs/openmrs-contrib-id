@@ -15,6 +15,7 @@ var crypto = require('crypto');
 var url = require('url');
 var log = require('./logger').add('express-middleware');
 var conf = require('./conf');
+var _ = require('lodash');
 
 
 exports.openmrsHelper = function(req, res, next) {
@@ -27,15 +28,13 @@ exports.openmrsHelper = function(req, res, next) {
     var mailHash = crypto.createHash('md5')
       .update(user.primaryEmail).digest('hex');
 
-    res.locals({
+    _.merge(res.locals, {
       connected: true,
       user: req.session.user,
       mailHash: mailHash
     });
   } else {
-    res.locals({
-      connected: false
-    });
+    res.locals.connected = false;
   }
   next();
 };

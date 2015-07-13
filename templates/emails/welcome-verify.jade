@@ -1,0 +1,25 @@
+//- variables:
+//- siteURL
+//- imgURL
+//- verifyURL
+//- username
+//- diplayName
+extends ../layouts/email
+
+block content
+  <h2>Your OpenMRS ID #{username} is nearly ready!</h2>
+
+  <p>#{displayName},</p>
+
+  <p>Thanks for signing up for an OpenMRS ID, your key to accessing our online tools and services.</p>
+
+  <p>To finish configuring your ID, we need to verify this email address. To verify your address, go to the following page:</p>
+  //- <p><a href="<%= url.resolve(siteURL, '/'+urlBase+'/'+verifyId) %>"><%= url.resolve(siteURL, '/'+urlBase+'/'+verifyId) %></a></p>
+  <p><a href="#{verifyURL}">#{verifyURL}</a></p>
+
+  <p>In case of problems logging in or signing up, please open a help desk ticket at <a href="http://go.openmrs.org/helpdesk">http://go.openmrs.org/helpdesk</a> &mdash; remember to include your contact information so we can assist you.</p>
+
+  <p>If you didn't sign up for an OpenMRS ID, don't worry. This is the only message we will send to this address.</p>
+
+  <p>Thanks and welcome!</p>
+  <p>OpenMRS Community Infrastructure Team</p>

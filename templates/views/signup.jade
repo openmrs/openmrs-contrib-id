@@ -1,4 +1,4 @@
-extends ../../../../templates/layouts/base
+extends ../layouts/base
 
 block defines
   - name = 'signup';
@@ -11,7 +11,6 @@ block defines
   - values = values || {};
 
 block headAppend
-  script(src='/signup/resource/signup-public.js')
   script(type='text/javascript')!= 'var SPINNER = "' + spinner + '";'
 
   script(src='https://www.google.com/recaptcha/api.js')

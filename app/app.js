@@ -15,16 +15,19 @@ var fs = require('fs');
 var url = require('url');
 var path = require('path');
 var express = require('express');
+var expressSession = require('express-session');
 var mail = require('nodemailer');
 var mongoose = require('mongoose');
 var engine = require('jade').__express;
 var lessMiddleware = require('less-middleware');
 var flash = require('connect-flash');
-var MongoStore = require('connect-mongo')(express);
+var MongoStore = require('connect-mongo')(expressSession);
 var mid = require('./express-middleware');
-var connect = require('connect');
 var conf = require('./conf');
 var _ = require('lodash');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var errorHandler = require('errorhandler');
 
 var app = express();
 
@@ -40,16 +43,15 @@ app.locals._ = _;
 app.set('basepath', siteURLParsed.pathname);
 app.set('port', 3000);
 app.use(flash());
-app.use(express.bodyParser()); // should be replaced
-app.use(express.cookieParser());
+app.use(bodyParser.urlencoded());
+app.use(cookieParser());
+
 
 // store express session in MongoDB
 var sessionStore = new MongoStore({
   url: conf.mongo.uri,
-  username: conf.mongo.username,
-  password: conf.mongo.password,
 });
-var session = express.session({
+var session = expressSession({
   store: sessionStore,
   secret: conf.session.secret,
 });
@@ -71,11 +73,7 @@ app.use(mid.openmrsHelper);
 if ('development' === app.get('env')) {
   console.log('Running in development mode');
 
-  app.use(express.errorHandler({
-    showStack: true,
-    dumpExceptions: true
-  }));
-  app.use(connect.logger('dev'));
+  app.use(errorHandler());
 
   var edt = require('express-debug');
   edt(app, {});
@@ -128,9 +126,9 @@ var Common = require('./openmrsid-common');
 mail.SMTP = conf.email.smtp;
 
 /* Load Modules */
-conf.systemModules.forEach(function(module) {
-  require('./system-modules/' + module);
-});
+// conf.systemModules.forEach(function(module) {
+//   require('./system-modules/' + module);
+// });
 // conf.userModules.forEach(function(module) {
 //   require('./user-modules/' + module);
 // });
@@ -140,7 +138,7 @@ conf.systemModules.forEach(function(module) {
 ROUTES
 ======
 */
-require('./routes');
+require('./routes')(app);
 
 
 process.on('uncaughtException', function(err) {

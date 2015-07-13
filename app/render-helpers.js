@@ -1,18 +1,12 @@
-var Common = require(global.__commonModule);
-var app = Common.app;
-var log = Common.logger.add('render-helpers');
-var conf = Common.conf;
-var userNav = Common.userNav;
-var url = require('url');
+var log = require('log4js').getLogger('render-helpers');
+var app = require('./app');
+var conf = require('./conf');
+var userNav = require('./user-nav');
 
 // insert our own GLOBAL variables to be used in rendering
-app.locals({
-  defaultSidebar: conf.defaultSidebar,
-
-  aboutHTML: conf.aboutHTML,
-  siteURL: conf.site.url,
-  url: url
-});
+app.locals.defaultSidebar = conf.defaultSidebar;
+app.locals.aboutHTML = conf.aboutHTML;
+app.siteURL = conf.site.url;
 
 //flash
 app.use(function flash(req, res, next) {

@@ -1,13 +1,13 @@
 var crypto = require('crypto');
-var Common = require(global.__commonModule);
-// var app = Common.app;
-var log = Common.logger.add('botproof');
-var signupConf = require('../conf.signup.json');
 var async = require('async');
 var _ = require('lodash');
 var dns = require('dns');
 var mongoose = require('mongoose');
+var log = require('log4js').getLogger('botproof');
 var Schema = mongoose.Schema;
+
+var conf = require('../../conf');
+var signupConf = conf.signup;
 
 var wlistSchema = new Schema({
   address: String,
@@ -44,7 +44,6 @@ function hashField(name, spin) {
   log.trace('diguised field with name "' + name + '", spinner "' + spin + '"');
   return hash.digest('hex');
 }
-
 
 module.exports = {
   // Every method in here is Connect middleware, and is used by chaining it to

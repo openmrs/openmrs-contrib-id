@@ -19,7 +19,7 @@ var log      = Common.logger.add('express');
 
 var User = require(path.join(global.__apppath, 'model/user'));
 
-app.get(/^\/login\/?$/, mid.forceLogout, validate.receive,
+app.get('/login', mid.forceLogout, validate.receive,
   function(req, res, next) {
     var tmp = path.join(settings.viewPath,'login');
     res.render(tmp);
@@ -80,7 +80,8 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
       log.info('authentication failed for "' + username +
         '" (' + err.loginFail + ')');
       req.flash('error', err.loginFail);
-      res.locals({
+
+      _.merge(res.locals, {
         fail: {
           loginusername: false,
           loginpassword: true
