@@ -1,8 +1,7 @@
-var Common = require(global.__commonModule);
-var app = Common.app;
-var log = Common.logger.add('express');
+var log = require('log4js').getLogger('express');
+
 // Errors
-app.use(function(err, req, res, next) {
+exports = module.exports = function(err, req, res, next) {
   log.error('Caught error: ' + err.name);
   log.error(err.message);
   log.error(err.stack);
@@ -28,6 +27,4 @@ app.use(function(err, req, res, next) {
     // Silently fail and write to log
     log.warn('^^ Headers sent before error encountered');
   }
-
-
-});
+};
