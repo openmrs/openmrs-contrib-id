@@ -20,13 +20,12 @@ var path = require('path');
 var _ = require('lodash');
 var async = require('async');
 
-var Common = require(global.__commonModule);
-var conf = Common.conf;
-var log = Common.logger.add('validation');
-var utils = Common.utils;
+var conf = require('./conf');
+var log = require('log4js').getLogger('validation');
+var utils = require('./utils');
 var Recaptcha = utils.Recaptcha;
 
-var User = require(path.join(global.__apppath, 'model/user'));
+var User = require('./model/user');
 
 var USERNAME_DUP_MSG = 'This username is already taken. Better luck next time';
 

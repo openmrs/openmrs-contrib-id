@@ -1,0 +1,24 @@
+extends ../layouts/base
+
+block defines
+  - title = 'OpenMRS ID - Reset Password';
+  - name = 'reset-public';
+  - headline = 'Forgot your username or password?';
+  - sidebar = ['id-whatis', 'forgot-password'];
+  - fail = fail || {};
+  - failReason = failReason || {};
+  - values = values || {};
+
+block content
+  div.password-reset-form
+    div.panel.panel.default
+      div.panel-body
+        form#reset-form(action='/reset', method='post')
+          p Forgot your password? Enter your username or e-mail address and we will e-mail you instructions to reset it.
+          div.form-group(class={fail: fail.resetCredential})
+
+            label(for='resetCredential') Username or E-mail address
+            input(type='text', name='resetCredential',
+                  placeholder='Username or Email', size='32', autofocus='')
+          div.panel-footer
+            input.btn.btn-success(type='submit', value='Send me the email')

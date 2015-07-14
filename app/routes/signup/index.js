@@ -84,7 +84,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     email: email,
     category: verification.categories.signup,
     subject: '[OpenMRS] Welcome to the OpenMRS Community',
-    template: path.join(emailPath, 'welcome-verify-email.jade');
+    template: path.join(emailPath, 'welcome-verify-email.jade'),
     locals: {
       displayName: first + ' ' + last,
       username: id,
@@ -116,10 +116,6 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
 
     res.redirect('/signup/verify', 303);
   });
-});
-
-app.get('/signup/verify', function(req, res, next) {
-  res.render('signedup');
 });
 
 // verification

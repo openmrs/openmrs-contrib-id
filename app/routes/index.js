@@ -10,8 +10,10 @@ exports = module.exports = function (app) {
     res.redirect('/password');
   });
 
-  //signup
   require('./signup')(app);
+  require('./reset-password')(app);
+  require('./auth')(app);
+  require('./profile')(app);
 
   app.use(require('./404'));
   app.use(require('./error'));

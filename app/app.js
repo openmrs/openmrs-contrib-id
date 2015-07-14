@@ -104,6 +104,7 @@ app.use('/bower_components', express.static(path.join(__dirname,
   '/../bower_components/')));
 
 
+require('./render-helpers');
 require('./new-db');
 
 
@@ -120,8 +121,6 @@ try {
   return;
 }
 
-
-var Common = require('./openmrsid-common');
 
 mail.SMTP = conf.email.smtp;
 
