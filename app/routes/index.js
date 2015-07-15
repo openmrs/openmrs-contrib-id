@@ -14,6 +14,7 @@ exports = module.exports = function (app) {
   require('./reset-password')(app);
   require('./auth')(app);
   require('./profile')(app);
+  require('./admin')(app);
 
   app.use(require('./404'));
   app.use(require('./error'));

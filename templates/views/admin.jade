@@ -1,0 +1,27 @@
+extends ../layouts/base
+
+block defines
+  - name = 'admin';
+  - title = 'OpenMRS ID - Administration';
+  - headline = 'Administration';
+  - pages = pages || [];
+  //- reqURL
+
+block headAppend
+  link(rel='stylesheet', href='/resource/stylesheets/admin/admin.css')
+
+block content
+  h2 Hello!
+  p The admin interface is still (very much) in development.
+
+  <p>For now, look to the sidebar for access to module admin pages. To change global dashboard settings, head to <code>app/conf.js</code> in the app's directory.</p>
+
+  <p>Peace,</p>
+  <p><em>Elliott</em></p>
+
+  append sidebar
+    h2 Administration
+      ul
+        each page in pages
+          a(class={active: page.url === reqURL}, href=page.url)
+            li page.name
