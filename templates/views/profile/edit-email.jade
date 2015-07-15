@@ -14,13 +14,12 @@ mixin email-item(m)
           | Can't Delete Primary Email
 
   if m.notVerified
-    span.divide
-      a(href='/profile-email/resend/' + m.actionId) Resend Email Verification
-  else
-    if (!m.primary)
-      span.divide
-        a(href='/profile-email/primary/' + encodeURIComponent(m.email))
-          span.text-primary Make Primary
+    span.divide= '|'
+    a(href='/profile-email/resend/' + m.actionId) Resend Email Verification
+  else if (!m.primary)
+    span.divide= '|'
+    a(href='/profile-email/primary/' + encodeURIComponent(m.email))
+      span.text-primary Make Primary
 
 .list-group
   .list-group-item
