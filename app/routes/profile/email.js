@@ -10,7 +10,7 @@ var conf = require('../../conf');
 var verification = require('../../email-verification');
 var log = require('log4js').getLogger('express');
 var mid = require('../../express-middleware');
-var User = require('../../model/user');
+var User = require('../../models/user');
 
 
 var profileMid = require('./middleware');

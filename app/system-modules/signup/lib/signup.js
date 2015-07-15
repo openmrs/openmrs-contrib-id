@@ -18,7 +18,7 @@ var verification = Common.verification;
 var nav = Common.userNav;
 var utils = Common.utils;
 
-var User = require(path.join(global.__apppath, 'model/user'));
+var User = require(path.join(global.__apppath, 'models/user'));
 
 /*
 USER-NAV

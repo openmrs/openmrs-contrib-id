@@ -3,8 +3,8 @@ var _ = require('lodash');
 var expect = require('chai').expect;
 var async = require('async');
 
-var User = require('../app/model/user');
-var Group = require('../app/model/group');
+var User = require('../app/models/user');
+var Group = require('../app/models/group');
 var ldap = require('../app/ldap');
 var utils = require('../app/utils');
 var conf = require('../app/conf');

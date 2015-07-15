@@ -4,7 +4,7 @@ var _ = require('lodash');
 var verification = require('../../email-verification');
 var validate = require('../../validate');
 var utils = require('../../utils');
-var User = require('../../model/user');
+var User = require('../../models/user');
 
 var EMAIL_DUP_MSG = 'This email address is already registered. ' +
   'A unique email address must be provided.';

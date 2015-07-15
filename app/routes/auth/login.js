@@ -16,7 +16,7 @@ var utils = require('../../utils');
 
 var log = require('log4js').getLogger('express');
 
-var User = require('../../model/user');
+var User = require('../../models/user');
 
 exports = module.exports = function (app) {
 

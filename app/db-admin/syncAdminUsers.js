@@ -1,9 +1,8 @@
 var async = require('async');
 var q = require('q');
-var Common = require(global.__commonModule);
-var log = Common.logger.add('db-admin');
+var log = require('log4js').getLogger('db-admin');
 var formage = require('formage');
-var utils = Common.utils;
+var utils = require('../utils');
 var _ = require('lodash');
 
 /**

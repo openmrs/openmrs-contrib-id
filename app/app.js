@@ -125,19 +125,23 @@ try {
 mail.SMTP = conf.email.smtp;
 
 /* Load Modules */
-// conf.systemModules.forEach(function(module) {
-//   require('./system-modules/' + module);
-// });
 // conf.userModules.forEach(function(module) {
 //   require('./user-modules/' + module);
 // });
 
 
+
+require('./db-admin')(app);
+
 /*
-ROUTES
-======
+ *ROUTES
+ *======
+ * Things that might need to utilize root shall be put before this line,
+ * or will be overridden by 404
 */
 require('./routes')(app);
+
+
 
 
 process.on('uncaughtException', function(err) {

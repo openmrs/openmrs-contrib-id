@@ -1,5 +1,5 @@
 var path = require('path');
-var Group = require(path.join(global.__apppath, 'model/group'));
+var Group = require('../../models/group');
 
 Group.formage = {
   label: 'Groups',

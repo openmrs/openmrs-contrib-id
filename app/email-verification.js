@@ -10,7 +10,7 @@ var _ = require('lodash');
 var conf = require('./conf');
 var log = require('./logger').add('email-verification');
 
-var emailPath = path.join(global.__apppath,'model/email-verification');
+var emailPath = path.join(global.__apppath,'models/email-verification');
 
 var EmailVerification = require(emailPath);
 

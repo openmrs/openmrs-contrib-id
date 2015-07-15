@@ -46,7 +46,9 @@ var modulePages = [];
 app.get('/admin', mid.restrictTo('dashboard-administrators'),
   function(req, res, next) {
 
-  res.render('views/admin');
+  res.render('views/admin', {
+    // pages:
+  });
 });
 
 

@@ -11,7 +11,7 @@ var verification = require('../../email-verification');
 var validate = require('../../validate');
 var log = require('log4js').getLogger('express');
 var mid = require('../../express-middleware');
-var User = require('../../model/user');
+var User = require('../../models/user');
 
 
 

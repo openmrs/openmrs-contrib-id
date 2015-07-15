@@ -25,7 +25,7 @@ var log = require('log4js').getLogger('validation');
 var utils = require('./utils');
 var Recaptcha = utils.Recaptcha;
 
-var User = require('./model/user');
+var User = require('./models/user');
 
 var USERNAME_DUP_MSG = 'This username is already taken. Better luck next time';
 

@@ -19,7 +19,7 @@ var verification = Common.verification;
 
 var app = Common.app;
 
-var User = require(path.join(global.__apppath, 'model/user'));
+var User = require(path.join(global.__apppath, 'models/user'));
 
 app.get('/profile', mid.forceLogin, validate.receive,
   function(req, res, next) {

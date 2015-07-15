@@ -12,7 +12,7 @@ var log = Common.logger.add('express');
 var verification = Common.verification;
 var app = Common.app;
 
-var User = require(path.join(global.__apppath, 'model/user'));
+var User = require(path.join(global.__apppath, 'models/user'));
 
 var settings = require('../settings');
 var profileMid = require('../middleware');

@@ -14,7 +14,7 @@ var conf = require('../../conf');
 var verification = require('../../email-verification');
 var validate = require('../../validate');
 var mid = require('../../express-middleware');
-var User = require('../../model/user');
+var User = require('../../models/user');
 
 exports = module.exports = function (app) {
 

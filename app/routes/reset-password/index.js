@@ -15,10 +15,7 @@ var verification = require('../../email-verification');
 var utils = require('../../utils');
 var log = require('log4js').getLogger('express');
 
-var User = require('../../model/user');
-
-var User = require(path.join(global.__apppath, 'model/user'));
-var emailPath = path.resolve(__dirname, '../../../templates/emails');
+var User = require('../../models/user');
 
 exports = module.exports = function (app) {
 

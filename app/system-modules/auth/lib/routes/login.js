@@ -17,7 +17,7 @@ var validate = Common.validate;
 var utils    = Common.utils;
 var log      = Common.logger.add('express');
 
-var User = require(path.join(global.__apppath, 'model/user'));
+var User = require(path.join(global.__apppath, 'models/user'));
 
 app.get('/login', mid.forceLogout, validate.receive,
   function(req, res, next) {

@@ -13,7 +13,7 @@ var verification = require('../../email-verification');
 var validate = require('../../validate');
 var nav = require('../../user-nav');
 var utils = require('../../utils');
-var User = require('../../model/user');
+var User = require('../../models/user');
 
 var botproof = require('./botproof');
 var signupMiddleware = require('./middleware');

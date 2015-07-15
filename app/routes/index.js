@@ -18,4 +18,5 @@ exports = module.exports = function (app) {
 
   app.use(require('./404'));
   app.use(require('./error'));
+
 };

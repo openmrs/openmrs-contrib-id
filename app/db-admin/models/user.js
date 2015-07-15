@@ -1,5 +1,4 @@
-var path = require('path');
-var User = require(path.join(global.__apppath, 'model/user'));
+var User = require('../../models/user');
 
 User.formage = {
   label: 'Users',

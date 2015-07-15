@@ -19,7 +19,7 @@ var log = Common.logger.add('express');
 var utils = Common.utils;
 
 
-var User = require(path.join(global.__apppath, 'model/user'));
+var User = require(path.join(global.__apppath, 'models/user'));
 
 app.get('/reset', mid.forceLogout, function(req, res, next) {
   res.render(path.join(settings.viewPath, 'reset-public'));
