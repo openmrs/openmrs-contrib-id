@@ -1,6 +1,7 @@
+'use strict';
 var async = require('async');
 var q = require('q');
-var log = require('log4js').getLogger('db-admin');
+var log = require('log4js').addLogger('db-admin');
 var formage = require('formage');
 var utils = require('../utils');
 var _ = require('lodash');
@@ -23,9 +24,8 @@ function syncFormageUser(user, callback) {
   return FormageUser.findOne({username: user.username}).exec()
   .then(function (formageUser) {
 
-    return (formageUser)
-      ? updatePassword(formageUser, user)
-      : createFormageUser(user);
+    return (formageUser) ? updatePassword(formageUser, user) :
+                          createFormageUser(user);
 
   })
   .then(function (formageUser) {
@@ -34,8 +34,12 @@ function syncFormageUser(user, callback) {
 
     if (formageUser.isModified()) {
       return formageUser.save(function (err, fu) {
-        if (err) deferred.reject(err);
-        else deferred.resolve(fu);
+        if (err) {
+          deferred.reject(err);
+        }
+        else {
+          deferred.resolve(fu);
+        }
       });
 
     } else {
@@ -49,9 +53,7 @@ function syncFormageUser(user, callback) {
 
     log.debug('formage user ' + formageUser.username + ' saved');
 
-    return (callback)
-      ? callback(null, formageUser)
-      : formageUser;
+    return (callback) ? callback(null, formageUser) : formageUser;
 
   }, function (err) {
 

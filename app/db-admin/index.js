@@ -1,3 +1,4 @@
+'use strict';
 var syncAdminUsers = require('./syncAdminUsers');
 var formage = require('formage');
 // var admin = Common.module.admin;

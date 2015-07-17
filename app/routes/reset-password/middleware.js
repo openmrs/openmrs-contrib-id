@@ -1,3 +1,4 @@
+'use strict';
 var validate = require('../../validate');
 
 exports.validator = function (req, res, next) {

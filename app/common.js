@@ -1,3 +1,4 @@
+'use strict';
 // helper files that stores common paths
 
 var path = require('path');

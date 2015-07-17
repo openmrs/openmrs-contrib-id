@@ -1,3 +1,4 @@
+'use strict';
 exports = module.exports = function (app) {
   // homepage
   app.get('/', require('./main'));

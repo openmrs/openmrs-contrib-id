@@ -1,3 +1,4 @@
+'use strict';
 /**
  * The contents of this file are subject to the OpenMRS Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -21,7 +22,7 @@ var _ = require('lodash');
 var async = require('async');
 
 var conf = require('./conf');
-var log = require('log4js').getLogger('validation');
+var log = require('log4js').addLogger('validation');
 var utils = require('./utils');
 var Recaptcha = utils.Recaptcha;
 

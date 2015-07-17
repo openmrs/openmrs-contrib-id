@@ -1,9 +1,10 @@
+'use strict';
 var crypto = require('crypto');
 var async = require('async');
 var _ = require('lodash');
 var dns = require('dns');
 var mongoose = require('mongoose');
-var log = require('log4js').getLogger('botproof');
+var log = require('log4js').addLogger('signup');
 var Schema = mongoose.Schema;
 
 var conf = require('../../conf');

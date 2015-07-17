@@ -1,3 +1,4 @@
+'use strict';
 var crypto = require('crypto');
 var mail = require('nodemailer');
 var fs = require('fs');
@@ -8,7 +9,7 @@ var async = require('async');
 var _ = require('lodash');
 
 var conf = require('./conf');
-var log = require('./logger').add('email-verification');
+var log = require('log4js').addLogger('email-verification');
 
 var emailPath = path.join(global.__apppath,'models/email-verification');
 

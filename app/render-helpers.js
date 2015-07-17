@@ -1,4 +1,5 @@
-var log = require('log4js').getLogger('render-helpers');
+'use strict';
+var log = require('log4js').addLogger('render-helpers');
 var app = require('./app');
 var conf = require('./conf');
 var userNav = require('./user-nav');

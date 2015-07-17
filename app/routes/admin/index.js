@@ -1,3 +1,4 @@
+'use strict';
 var path = require('path');
 var mid = require('../../express-middleware');
 var nav = require('../../user-nav');

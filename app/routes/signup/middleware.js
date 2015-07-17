@@ -1,3 +1,4 @@
+'use strict';
 /**
  * This file contains some middleware for signup, like validation.
  */

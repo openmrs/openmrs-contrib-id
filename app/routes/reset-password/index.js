@@ -1,3 +1,4 @@
+'use strict';
 /**
  * This file handles the password-reset functionalities
  */
@@ -13,7 +14,7 @@ var mid = require('../../express-middleware');
 var validate = require('../../validate');
 var verification = require('../../email-verification');
 var utils = require('../../utils');
-var log = require('log4js').getLogger('express');
+var log = require('log4js').addLogger('express');
 
 var User = require('../../models/user');
 

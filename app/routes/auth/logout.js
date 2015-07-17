@@ -1,7 +1,8 @@
+'use strict';
 /**
  * This is the logout logic for Dashboard
  */
-var log = require('log4js').getLogger('express');
+var log = require('log4js').addLogger('express');
 
 exports = module.exports = function (app) {
 

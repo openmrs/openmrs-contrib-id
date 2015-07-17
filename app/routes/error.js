@@ -1,4 +1,5 @@
-var log = require('log4js').getLogger('express');
+'use strict';
+var log = require('log4js').addLogger('express');
 
 // Errors
 exports = module.exports = function(err, req, res, next) {

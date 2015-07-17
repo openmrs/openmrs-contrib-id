@@ -1,3 +1,4 @@
+'use strict';
 /**
  * This file defines the model of user group
  */

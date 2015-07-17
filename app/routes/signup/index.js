@@ -1,3 +1,4 @@
+'use strict';
 /**
  * This file handles requests related with signup operations
  */
@@ -5,7 +6,7 @@ var url = require('url');
 var path = require('path');
 var async = require('async');
 var _ = require('lodash');
-var log = require('log4js').getLogger('signup');
+var log = require('log4js').addLogger('signup');
 
 var conf = require('../../conf');
 var mid = require('../../express-middleware');

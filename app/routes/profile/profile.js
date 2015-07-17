@@ -1,3 +1,4 @@
+'use strict';
 /**
  * This is the router for /profile. It displays a users profile,
  * and hanldes its editing.
@@ -5,7 +6,7 @@
 var path = require('path');
 var async = require('async');
 var _ = require('lodash');
-var log = require('log4js').getLogger('express');
+var log = require('log4js').addLogger('express');
 
 var profileMid = require('./middleware');
 

@@ -1,3 +1,4 @@
+'use strict';
 /**
  * The contents of this file are subject to the OpenMRS Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -22,14 +23,20 @@ var engine = require('jade').__express;
 var lessMiddleware = require('less-middleware');
 var flash = require('connect-flash');
 var MongoStore = require('connect-mongo')(expressSession);
-var mid = require('./express-middleware');
-var conf = require('./conf');
 var _ = require('lodash');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var errorHandler = require('errorhandler');
 
+// patch log4js
+require('./logger');
+var log4js = require('log4js');
+
+var mid = require('./express-middleware');
+var conf = require('./conf');
+var log = log4js.addLogger('express');
 var app = express();
+
 
 // establish module & global variables
 exports = module.exports = app;
@@ -55,6 +62,7 @@ var session = expressSession({
   store: sessionStore,
   secret: conf.session.secret,
 });
+
 var exceptions = conf.sessionExceptions;
 var sessionHandler = function(req, res, next) {
   function test(reg) {
@@ -77,6 +85,11 @@ if ('development' === app.get('env')) {
 
   var edt = require('express-debug');
   edt(app, {});
+
+  app.use(log4js.connectLogger(log, {
+    level: 'debug',
+    format: ':method :status :url - :response-time ms',
+  }));
 
   app.use('/resource', lessMiddleware('/less', {
     dest: '/stylesheets',

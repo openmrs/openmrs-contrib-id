@@ -1,3 +1,4 @@
+'use strict';
 // 404's
 exports = module.exports = function(req, res, next) {
   res.statusCode = 404;

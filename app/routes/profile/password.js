@@ -1,3 +1,4 @@
+'use strict';
 /**
  * This file handles users' password related request.
  */
@@ -9,7 +10,7 @@ var common = require('../../common');
 var conf = require('../../conf');
 var verification = require('../../email-verification');
 var validate = require('../../validate');
-var log = require('log4js').getLogger('express');
+var log = require('log4js').addLogger('express');
 var mid = require('../../express-middleware');
 var User = require('../../models/user');
 

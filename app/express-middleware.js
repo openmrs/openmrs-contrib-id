@@ -1,3 +1,4 @@
+'use strict';
 /**
  * The contents of this file are subject to the OpenMRS Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -13,7 +14,7 @@
  */
 var crypto = require('crypto');
 var url = require('url');
-var log = require('./logger').add('express-middleware');
+var log = require('log4js').addLogger('express-middleware');
 var conf = require('./conf');
 var _ = require('lodash');
 
@@ -45,13 +46,19 @@ exports.restrictTo = function(role) {
     var fail = function() {
       req.flash('error', 'You are not authorized to access this resource.');
       if (req.session.user) {
-        if (req.originalUrl == '/') res.redirect(url.resolve(conf.site.url, '/disconnect'));
-        else res.redirect('/');
+        if (req.originalUrl === '/') {
+          res.redirect(url.resolve(conf.site.url, '/disconnect'));
+        }
+        else {
+          res.redirect('/');
+        }
       } else res.redirect(url.resolve(conf.site.url, '/login?destination=' + encodeURIComponent(req.originalUrl)));
     };
 
     if (req.session.user) {
-      if (req.session.user.groups.indexOf(role) > -1) next();
+      if (req.session.user.groups.indexOf(role) > -1) {
+        next();
+      }
       else fail();
     } else fail();
   };

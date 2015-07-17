@@ -1,3 +1,4 @@
+'use strict';
 /**
  * This file defines the Schema of OpenMRS-ID
  */
@@ -8,7 +9,7 @@ var _ = require('lodash');
 
 var Schema = mongoose.Schema;
 
-var log = require('../logger').add('user model');
+var log = require('log4js').addLogger('user model');
 var ldap = require('../ldap');
 var utils = require('../utils');
 

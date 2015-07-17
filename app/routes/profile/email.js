@@ -1,3 +1,4 @@
+'use strict';
 /**
  * This file handles all user-email request
  */
@@ -8,7 +9,7 @@ var _ = require('lodash');
 var common = require('../../common');
 var conf = require('../../conf');
 var verification = require('../../email-verification');
-var log = require('log4js').getLogger('express');
+var log = require('log4js').addLogger('express');
 var mid = require('../../express-middleware');
 var User = require('../../models/user');
 

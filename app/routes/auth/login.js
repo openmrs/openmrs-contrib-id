@@ -1,3 +1,4 @@
+'use strict';
 /**
  * This is the login logic for Dashboard
  */
@@ -14,7 +15,7 @@ var validate = require('../../validate');
 var mid = require('../../express-middleware');
 var utils = require('../../utils');
 
-var log = require('log4js').getLogger('express');
+var log = require('log4js').addLogger('express');
 
 var User = require('../../models/user');
 
