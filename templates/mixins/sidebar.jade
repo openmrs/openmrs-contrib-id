@@ -2,23 +2,23 @@
 mixin sidebar(content)
   if _.contains(content, 'needhelp')
     h2 Need help?
-    | <p>If you're having problems accessing or using the OpenMRS Community, please <a href="http://go.openmrs.org/helpdesk">open a support issue in our issue-tracking system</a>. <strong>Make sure to include your contact info</strong> so that we can respond to your request.</p>
+    p If you're having problems accessing or using the OpenMRS Community, please <a href="http://go.openmrs.org/helpdesk">open a support issue in our issue-tracking system</a>. <strong>Make sure to include your contact info</strong> so that we can respond to your request.
 
   if _.contains(content, 'crowd')
     h2 Looking for Crowd?
-    | <p>Atlassian Crowd is still available to administrators, although the ID dashboard has replaced it for end user self-service. It can be accessed at <a href="https://id.openmrs.org/crowd" target="_blank">https://id.openmrs.org/crowd</a>.</p>
+    p Atlassian Crowd is still available to administrators, although the ID dashboard has replaced it for end user self-service. It can be accessed at <a href="https://id.openmrs.org/crowd" target="_blank">https://id.openmrs.org/crowd</a>.
 
   if _.contains(content, 'editprofile-avatar')
     h2 Your profile picture
-    | <p>Profile pictures are managed along with your profile on the OpenMRS Wiki. Head over to Confluence to <a href="https://wiki.openmrs.org/users/viewmyprofile.action" target="_blank">edit your Wiki profile</a> or <a href="https://wiki.openmrs.org/users/editmyprofilepicture.action" target="_blank">change your profile picture</a>.</p>
+    p Profile pictures are managed along with your profile on the OpenMRS Wiki. Head over to Confluence to <a href="https://wiki.openmrs.org/users/viewmyprofile.action" target="_blank">edit your Wiki profile</a> or <a href="https://wiki.openmrs.org/users/editmyprofilepicture.action" target="_blank">change your profile picture</a>.
 
   if _.contains(content, 'forgot-password')
     h2
       a(href='/reset') Forgot your password?
-    | <p>If you forgot your password, you can <a href="/reset">request to have it reset</a>. We'll send you a confirmation email with the details.</p>
+    p If you forgot your password, you can <a href="/reset">request to have it reset</a>. We'll send you a confirmation email with the details.
 
   if _.contains(content, 'id-whatis')
     h2 What is OpenMRS ID?
-    | <p>OpenMRS ID is your key to participating in our open source community. You can use it for most of our tools and services, including those listed in the links at the top of this page. <a href="http://go.openmrs.org/id"><strong>Read more on our wiki.</strong></a></p>
+    p OpenMRS ID is your key to participating in our open source community. You can use it for most of our tools and services, including those listed in the links at the top of this page. <a href="http://go.openmrs.org/id"><strong>Read more on our wiki.</strong></a>
 
   //- Add more items with the syntax above
