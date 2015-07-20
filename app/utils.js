@@ -25,7 +25,7 @@ exports.checkSSHA = function (cleartext, hashed) {
   if (0 !== hashed.indexOf('{SSHA}')) {
     return false;
   }
-  var hash = new Buffer(hashed.substr(6),'base64');
+  var hash = new Buffer(hashed.substr(6), 'base64');
   var salt = hash.toString('binary', 20);
   var newHash = exports.getSSHA(cleartext, salt);
   return newHash === hashed;
@@ -47,6 +47,18 @@ exports.isEmailValid = function (email) {
   }
   return true;
 };
+
+// encode a string into base64
+exports.encode64 = function (str) {
+  var tmp = new Buffer(str);
+  return tmp.toString('base64');
+};
+
+// decode a base64 string
+exports.decode64 = function (str) {
+  var tmp = new Buffer(str, 'base64');
+  return tmp.toString('utf8');
+}
 
 // new Recaptcha validator
 var Recaptcha = exports.Recaptcha = function(secret) {
