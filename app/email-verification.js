@@ -1,6 +1,6 @@
 'use strict';
 var crypto = require('crypto');
-var mail = require('nodemailer');
+var nodemailer = require('nodemailer');
 var fs = require('fs');
 var path = require('path');
 var jade = require('jade');
@@ -15,7 +15,8 @@ var log = require('log4js').addLogger('email-verification');
 
 var EmailVerification = require('./models/email-verification');
 
-mail.SMTP = conf.email.smtp;
+// update nodemailer
+var transporter = nodemailer.createTransport(conf.email.smtp);
 
 var simpleCallback = function (err) {
   if (err) {
@@ -83,8 +84,8 @@ exports.begin = function(settings, callback) {
     var rendered = jade.renderFile(templatePath, locals);
 
     try {
-      mail.send_mail({
-        sender: "'OpenMRS ID Dashboard' <id-noreply@openmrs.org>",
+      transporter.sendMail({
+        from: "'OpenMRS ID Dashboard' <id-noreply@openmrs.org>",
         to: addr,
         subject: subject,
         html: rendered

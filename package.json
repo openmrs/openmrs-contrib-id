@@ -24,7 +24,7 @@
     "mocha": "~1.16.2",
     "mongoose": "~3.8.12",
     "node-uuid": "^1.4.3",
-    "nodemailer": "~0.3.44",
+    "nodemailer": "^1.4.0",
     "q": "^1.0.1",
     "request": "^2.51.0",
     "should": "~2.1.1",
