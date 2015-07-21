@@ -17,7 +17,6 @@ var url = require('url');
 var path = require('path');
 var express = require('express');
 var expressSession = require('express-session');
-var mail = require('nodemailer');
 var mongoose = require('mongoose');
 var engine = require('jade').__express;
 var lessMiddleware = require('less-middleware');
@@ -28,19 +27,24 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var errorHandler = require('errorhandler');
 
+global.__apppath = __dirname;
+var app = express();
+exports = module.exports = app;
+
 // patch log4js
 require('./logger');
 var log4js = require('log4js');
 
+// connect to mongo
+require('./new-db');
+
+// additional scripts for migrating data
+// require('./scripts/0.0.1');
+
+
 var mid = require('./express-middleware');
 var conf = require('./conf');
 var log = log4js.addLogger('express');
-var app = express();
-
-
-// establish module & global variables
-exports = module.exports = app;
-global.__apppath = __dirname;
 
 var siteURLParsed = url.parse(conf.site.url, false, true);
 app.engine('jade', engine);
@@ -118,7 +122,6 @@ app.use('/bower_components', express.static(path.join(__dirname,
 
 
 require('./render-helpers');
-require('./new-db');
 
 
 app.get('/sample', function (req, res) {
@@ -135,7 +138,6 @@ try {
 }
 
 
-mail.SMTP = conf.email.smtp;
 
 /* Load Modules */
 // conf.userModules.forEach(function(module) {
