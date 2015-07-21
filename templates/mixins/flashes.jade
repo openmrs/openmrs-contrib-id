@@ -1,7 +1,8 @@
 //- flashes object
-mixin flashes(messages)
-  - messages = messages || {};
-  each type, msg in messages
-    div.flash(class= type)
-      div.container
-        aside.col-md-12!= msg
+mixin flashes(flash)
+  - flash = flash || {};
+  each messages, type in flash
+    each msg in messages
+      div.flash(class= type)
+        div.container
+          aside.col-md-12!= msg
