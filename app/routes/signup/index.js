@@ -81,18 +81,15 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     locked: true,
   });
   var verificationOptions = {
-    urlBase: 'signup',
-    email: email,
-    category: verification.categories.signup,
+    addr: email,
     subject: '[OpenMRS] Welcome to the OpenMRS Community',
-    template: path.join(emailPath, 'welcome-verify-email.jade'),
+    templatePath: path.join(emailPath, 'welcome-verify.jade'),
+    username: id,
+    category: 'signup',
+    callback: '/signup',
     locals: {
       displayName: first + ' ' + last,
       username: id,
-      userCredentials: {
-        id: id,
-        email: email
-      }
     },
     timeout: 0
   };
@@ -115,15 +112,22 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     '<p>We\'ve sent an email to <strong>' + email +
     '</strong> with instructions to complete the signup process.</p>');
 
-    res.redirect('/signup/verify', 303);
+    res.redirect(303, '/signup/verify');
   });
+});
+
+app.get('/signup/verify', function (req, res) {
+  res.render('views/signedup');
 });
 
 // verification
 app.get('/signup/:id', function(req, res, next) {
-  var INVALID_MSG = 'The requested signup verification does not exist.';
+  var id = utils.decode64(req.params.id);
+  var INVALID_MSG = 'The requested signup verification does not exist, ' +
+                    'it might be expired.';
+
   var findUsernameByVerifyID = function(callback) {
-    verification.check(req.params.id, function (err, valid, locals) {
+    verification.check(id, function (err, valid, locals) {
       if (err) {
         return callback(err);
       }
@@ -155,7 +159,7 @@ app.get('/signup/:id', function(req, res, next) {
       return next(err);
     }
     // we don't have to wait clear
-    verification.clear(req.params.id);
+    verification.clear(id);
     log.debug(user.username + ': account enabled');
     req.flash('success', 'Your account was successfully created. Welcome!');
 
@@ -165,27 +169,49 @@ app.get('/signup/:id', function(req, res, next) {
 });
 
 // AJAX, check whether or not user exists
-app.get('/checkuser/*', function(req, res, next) {
+app.get('/checkuser/:id', function (req, res) {
   if (!req.xhr) {
-    return res.redirect('/signup');
+    return res.redirect('/');
   }
-  var username = req.params[0];
+  var username = req.params.id;
   var isValid = conf.ldap.user.usernameRegex.test(username);
 
   if (!isValid) {
-    return res.end(JSON.stringify({illegal: true}));
+    return res.json({illegal: true});
   }
 
   User.findByUsername(username, function chkUser(err, user) {
     if (err) {
-      return next(err);
+      log.error('error in checkuser');
+      log.error(err);
+      return;
     }
     if (user) {
-      return res.end(JSON.stringify({ exists: true}));
+      return res.json({ exists: true});
     }
-    return res.end(JSON.stringify({ exists: false}));
+    return res.json({ exists: false});
   });
 });
 
-};
+app.get('/checkemail/:email', function (req, res) {
+  if (!req.xhr) {
+    return res.redirect('/');
+  }
+  validate.chkEmailInvalidOrDup(req.params.email, function (err, errState) {
+    if (err) {
+      log.error('error in checkemail');
+      log.error(err);
+      return;
+    }
+    if (true === errState) {
+      return res.json({illegal: true});
+    }
+    if (errState) {
+      return res.json({exists: true});
+    }
+    return res.json({exists: false});
+  });
+});
 
+
+};

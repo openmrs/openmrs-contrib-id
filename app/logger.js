@@ -16,11 +16,10 @@ var path = require('path');
 
 var log4js = require('log4js');
 var conf = require('./conf');
-var app = require('./app');
 
-if (app.get('env') === 'development') {
+if (process.env.NODE_ENV === 'development') {
   log4js.setGlobalLogLevel('debug');
-} else if (app.get('env') === 'production') {
+} else if (process.env.NODE_ENV === 'production') {
   log4js.setGlobalLogLevel('info');
 }
 

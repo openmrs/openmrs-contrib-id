@@ -6,19 +6,15 @@ mixin email-item(m)
       small Needs Verification
 
   if (!m.primary)
-    a(href='/profile-email/delete/' + encodeURIComponent(m.email))
-      span.text-danger
-        if (!m.primary)
-          | Delete
-        else
-          | Can't Delete Primary Email
+    a(href='/profile/email/delete/' + encodeURIComponent(m.email))
+      span.text-danger Delete
 
   if m.notVerified
     span.divide= '|'
-    a(href='/profile-email/resend/' + m.actionId) Resend Email Verification
+    a(href='/profile/email/resend/' + m.id) Resend Email Verification
   else if (!m.primary)
     span.divide= '|'
-    a(href='/profile-email/primary/' + encodeURIComponent(m.email))
+    a(href='/profile/email/primary/' + encodeURIComponent(m.email))
       span.text-primary Make Primary
 
 .list-group
@@ -40,7 +36,7 @@ mixin email-item(m)
           li Subscribe different email addresses to different mailing lists
           li Reset your password from multiple email addresses
 
-    form#addEmail.form-horizontal(action='/profile-email/add', method='post')
+    form#addEmail.form-horizontal(action='/profile/email', method='post')
       .form-group
         label.control-label.col-sm-4(for='newEmail') New Email
         .col-sm-8

@@ -65,19 +65,20 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
     var username = user.username;
     var emails = user.emailList;
 
+    var emailPath = path.join(__dirname, '../../../templates/emails');
     var sendEmail = function (address, cb) {
       verification.begin({
-        urlBase: 'reset',
-        email: address,
-        category: verification.categories.resetPwd,
+        addr: address,
+        username: username,
+        category: 'new password',
+        callback: '/reset',
         subject: '[OpenMRS] Password Reset for ' + username,
-        template: path.join(emailPath, 'password-reset.jade'),
+        templatePath: path.join(emailPath, 'password-reset.jade'),
         locals: {
           username: username,
           displayName: user.displayName,
           allEmails: emails,
         },
-        timeout: conf.ldap.user.passwordResetTimeout
       }, cb);
     };
     async.each(emails, sendEmail, callback);
@@ -102,8 +103,8 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 app.get('/reset/:id', mid.forceLogout, validate.receive,
   function(req, res, next) {
 
-  var resetId = req.params.id;
-  verification.check(resetId, function(err, valid, locals) {
+    var id = utils.decode64(id);
+  verification.check(id, function(err, valid, locals) {
     if (err) {
       return next(err);
     }
@@ -122,7 +123,9 @@ app.get('/reset/:id', mid.forceLogout, validate.receive,
 app.post('/reset/:id', mid.forceLogout, resetMid.validator,
   function(req, res, next) {
 
-  verification.check(req.params.id, function(err, valid, locals) {
+
+  var id = utils.decode64(req.params.id);
+  verification.check(id, function(err, valid, locals) {
     if (err) {
       return next(err);
     }

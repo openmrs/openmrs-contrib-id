@@ -13,13 +13,12 @@ var EMAIL_DUP_MSG = 'This email address is already registered. ' +
 exports.emailValidator = function (req, res, next) {
   req.body.newEmail = req.body.newEmail.toLowerCase();
   var email = req.body.newEmail;
-  var category = verification.categories.newEmail;
 
   var findDuplicateInVerification = function (validateError, callback) {
     if (validateError) {
       return callback(null, validateError);
     }
-    verification.search(email, category, function (err, instances) {
+    verification.search(email, 'new email', function (err, instances) {
       if (err) {
         return callback(err);
       }

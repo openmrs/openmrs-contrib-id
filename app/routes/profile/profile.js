@@ -16,6 +16,7 @@ var verification = require('../../email-verification');
 var validate = require('../../validate');
 var mid = require('../../express-middleware');
 var User = require('../../models/user');
+var utils = require('../../utils');
 
 exports = module.exports = function (app) {
 
@@ -41,15 +42,15 @@ app.get('/profile', mid.forceLogin, validate.receive,
 
   // unverified emails
   var findNewEmail = function (callback) {
-    var category = verification.categories.newEmail;
+    var category = 'new email';
     verification.search(username, category, callback);
   };
 
-  var addToList = function (verifications, callback) {
-    _.forEach(verifications, function (verification) {
+  var addToList = function (insts, callback) {
+    _.forEach(insts, function (inst) {
       var item = {
-        email: verification.email,
-        actionId: verification.actionId,
+        email: inst.addr,
+        id: utils.encode64(inst.uuid),
         notVerified: true,
       };
       allEmails.push(item);

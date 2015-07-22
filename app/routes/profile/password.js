@@ -21,7 +21,6 @@ var profileMid = require('./middleware');
 exports = module.exports = function (app) {
 
 
-/// Deprecated
 app.post('/password', mid.forceLogin, profileMid.passwordValidator,
   function(req, res, next) {
 
@@ -53,7 +52,7 @@ app.post('/password', mid.forceLogin, profileMid.passwordValidator,
 
     req.flash('success', 'Password changed.');
     req.session.user = user;
-    res.redirect('/');
+    res.redirect('/profile');
   });
 });
 

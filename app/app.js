@@ -123,10 +123,18 @@ app.use('/bower_components', express.static(path.join(__dirname,
 
 require('./render-helpers');
 
+/// DEBUG
 
-app.get('/sample', function (req, res) {
-  res.render('layouts/base');
-});
+// app.get('/sample', function (req, res) {
+//   res.render('layouts/base');
+// });
+
+// app.get('/flash/:msg', function (req, res) {
+//   req.flash('info', req.params.msg);
+//   res.redirect('/sample');
+// });
+
+/// DEBUG
 
 // fail if no configuration file found
 try {

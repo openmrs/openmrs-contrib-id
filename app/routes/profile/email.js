@@ -12,33 +12,33 @@ var verification = require('../../email-verification');
 var log = require('log4js').addLogger('express');
 var mid = require('../../express-middleware');
 var User = require('../../models/user');
+var utils = require('../../utils');
 
 
 var profileMid = require('./middleware');
 
-var NOT_FOUND_MSG = 'Verification record not found';
-
 exports = module.exports = function (app) {
 
 
-app.get('/profile-email/verify/:id', function(req, res, next) {
-  // check for valid profile-email verification ID
+app.get('/profile/email/verify/:id', function(req, res, next) {
+  // check for valid email verification ID
 
   var newEmail = '';
   var newUser = {};
-  var verifyId = req.params.id;
+  var id = utils.decode64(req.params.id);
 
   var checkVerification = function (callback) {
-    verification.check(req.params.id, function (err, valid, locals) {
+    verification.check(id, function (err, valid, locals) {
       if (!valid) {
         req.flash('error', 'Profile email address verification not found.');
-        return callback(new Error(NOT_FOUND_MSG));
+        return res.redirect('/');
       }
       newEmail = locals.mail;
       return callback(null, locals.username);
     });
   };
 
+  // could use findOneAndUpdate
   var findUser = function (username, callback) {
     User.findByUsername(username, callback);
   };
@@ -56,7 +56,7 @@ app.get('/profile-email/verify/:id', function(req, res, next) {
   };
 
   var clearRecord = function (callback) {
-    verification.clear(verifyId, callback);
+    verification.clear(id, callback);
   };
 
   async.waterfall([
@@ -67,12 +67,10 @@ app.get('/profile-email/verify/:id', function(req, res, next) {
   ],
   function (err) {
     if (err) {
-      if (err.message === NOT_FOUND_MSG) {
-        return res.redirect('/');
-      }
       return next(err);
     }
     req.flash('success', 'Email address verified. Thanks!');
+    // TODO
     if (req.session.user) {
       req.session.user = newUser;
       return res.redirect('/profile');
@@ -81,39 +79,21 @@ app.get('/profile-email/verify/:id', function(req, res, next) {
   });
 });
 
-app.get('/profile-email/resend/:actionId', mid.forceLogin,
+app.get('/profile/email/resend/:id', mid.forceLogin,
   function(req, res, next) {
 
+  var id = utils.decode64(req.params.id);
   // check for valid id
-  verification.resend(req.params.actionId, function(err, email) {
+  verification.resend(id, function(err) {
     if (err) {
       return next(err);
     }
-    req.flash('success', 'Email verification has been re-sent to "' +
-      email + '".');
+    req.flash('success', 'Email verification has been resent.');
     res.redirect('/profile');
   });
 });
 
-app.get('/profile-email/cancel/:actionId', function(req, res, next) {
-  verification.getByActionId(req.params.actionId, function(err, inst) {
-    if (err) {
-      return next(err);
-    }
-
-    var verifyId = inst.verifyId; // get verification ID
-    verification.clear(verifyId, function(err) {
-      if (err) {
-        return next(err);
-      }
-      req.flash('success', 'Email verification for "' + inst.email +
-        '" cancelled.');
-      res.redirect('/profile');
-    });
-  });
-});
-
-app.post('/profile-email/add', mid.forceLogin, profileMid.emailValidator,
+app.post('/profile/email', mid.forceLogin, profileMid.emailValidator,
   function (req, res, next) {
 
   var user = req.session.user;
@@ -124,12 +104,12 @@ app.post('/profile-email/add', mid.forceLogin, profileMid.emailValidator,
 
   // create verification instance
   verification.begin({
-    urlBase: 'profile-email/verify',
-    email: mail,
-    category: verification.categories.newEmail,
-    associatedId: user.username,
+    callback: 'profile/email/verify',
+    addr: mail,
+    category: 'new email',
+    username: user.username,
     subject: '[OpenMRS] Email address verification',
-    template: path.join(common.templatePath, 'emails/email-verify.jade'),
+    templatePath: path.join(common.templatePath, 'emails/email-verify.jade'),
     locals: {
       displayName: user.displayName,
       username: user.username,
@@ -144,10 +124,9 @@ app.post('/profile-email/add', mid.forceLogin, profileMid.emailValidator,
   });
 });
 
-app.get('/profile-email/delete/:email', mid.forceLogin, function (req, res, next) {
+app.get('/profile/email/delete/:email', mid.forceLogin, function (req, res, next) {
   var user = req.session.user;
   var email = req.params.email;
-  var category = verification.categories.newEmail;
 
   // primaryEmail can't be deleted
   if (email === user.primaryEmail) {
@@ -181,11 +160,11 @@ app.get('/profile-email/delete/:email', mid.forceLogin, function (req, res, next
     return ;
   }
 
-  // vnot verified
+  // not verified
   log.debug('deleting verification for new email');
   var MSG = 'Email to delete not found'; // remove verifications
   var findVerification = function (callback) {
-    verification.search(email, category, function (err, instances) {
+    verification.search(email, 'new email', function (err, instances) {
       if (err) {
         return callback(err);
       }
@@ -200,7 +179,7 @@ app.get('/profile-email/delete/:email', mid.forceLogin, function (req, res, next
   };
 
   var deleteVerification = function (instance, callback) {
-    verification.clear(instance.verifyId, callback);
+    verification.clear(instance.uuid, callback);
   };
 
   if (-1 === _.indexOf(user.emailList, email)) {
@@ -221,9 +200,14 @@ app.get('/profile-email/delete/:email', mid.forceLogin, function (req, res, next
   }
 });
 
-app.get('/profile-email/primary/:email', mid.forceLogin, function (req, res, next) {
+app.get('/profile/email/primary/:email', mid.forceLogin, function (req, res, next) {
   var email = req.params.email;
   var user = req.session.user;
+
+  if (!_.contains(user.emailList, email)) {
+    req.flash('error', 'You can only set your own email primary');
+    return res.redirect('/profile');
+  }
 
   var findUser = function (callback) {
     User.findByUsername(user.username, callback);
