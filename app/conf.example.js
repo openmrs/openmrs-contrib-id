@@ -68,15 +68,8 @@ module.exports = {
       "objectClass": "groupOfNames"
     }
   },
-  "db": {
-    "dbname": "id_dashboard",
-    "username": "db_user",
-    "password": "secret",
-    "dialect": "mysql", // can be 'mysql' or 'sqlite'
-    "storage": "./database.sqlite" // only needed for sqlite
-  },
   "mongo": {
-    "uri": "mongodb://localhost/id_dashboard",
+    "uri": "mongodb://mongo_user:secret@localhost/id_dashboard",
     "username": "mongo_user",
     "password": "secret",
     "commonExpireTime": "2d"
@@ -89,19 +82,13 @@ module.exports = {
     "__comment2": "how long until session terminates (24hr)",
     "duration": 86400000
   },
-  "groups": {
-    "__comment2": "Google Groups settings",
-
-    // hourly
-    "syncInterval": 3600000
-  },
   "logger": {
     // Log settings
 
     "relativePath": "/../logs/openmrsid.log"
   },
   "validation": {
-    "__comment": "Validation settings",
+    // validation settings
     "recaptchaPublic": "public_key",
     "recaptchaPrivate": "private_key",
     "allowPlusInEmail": false,
@@ -111,8 +98,6 @@ module.exports = {
 
     "validation": {
       "emailRegex": /^[A-Za-z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-      "forceUniquePrimaryEmail": true,
-      "forceUniqueSecondaryEmail": true
     },
     "smtp": {
       "host": "localhost",
@@ -125,32 +110,49 @@ module.exports = {
 
   // EJS Plugs
   "defaultSidebar": [
-    "sidebar/needhelp"
+    "needhelp"
   ],
 
   // displays at bottom of sidebar
   "aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v" + require("../package").version,
 
-  // system modules
-  "systemModules": [
-    "admin",
-    "signup",
-    "auth",
-    "profile",
-    "reset-pwd",
-    "db-admin",
-  ],
-
   // user-configured modules
   "userModules": [
-    "openmrs-contrib-globalnavbar",
+    // "openmrs-contrib-globalnavbar",
   ],
 
   // a exceptionlists of session middlware, use regular expressions
   "sessionExceptions": [
     /^\/globalnav($|\/.*$)/,
     /^\/resource\/.*$/,
+    /^\/panel($|\/.*$)/, // session will contradict with formage's
   ],
+
+  "signup": {
+    "signupFieldNames": [
+        "username",
+        "firstName",
+        "lastName",
+        "primaryEmail",
+        "password",
+        "timestamp"
+    ],
+    "requiredSubmitTimeSec": 5,
+    "signupFormMaxAgeHours": 12,
+    "honeypotFieldName": "country",
+    "disableHoneypot": true,
+    "disableBlacklist": false,
+
+    "dnsSpamLists": {
+        "bl.spamcop.net": {
+            "returnCodes": ["127.0.0.2"]
+        },
+        "zen.spamhaus.org": {
+            "returnCodes": ["127.0.0.2", "127.0.0.3", "127.0.0.4", "127.0.0.5",
+                            "127.0.0.6", "127.0.0.7"]
+        }
+    }
+  }
 };
 
 // expose shorthand method used by view renderers
