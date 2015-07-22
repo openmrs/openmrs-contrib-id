@@ -10,6 +10,9 @@ var _ = require('lodash');
 
 var conf = require('./conf');
 
+// patch log4js
+require('../app/logger');
+
 
 var mocha = new Mocha({
   ui: 'bdd',
