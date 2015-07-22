@@ -54,7 +54,7 @@ app.locals._ = _;
 app.set('basepath', siteURLParsed.pathname);
 app.set('port', 3000);
 app.use(flash());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 
 
@@ -65,6 +65,8 @@ var sessionStore = new MongoStore({
 var session = expressSession({
   store: sessionStore,
   secret: conf.session.secret,
+  resave: false,
+  saveUninitialized: false,
 });
 
 var exceptions = conf.sessionExceptions;
@@ -154,7 +156,6 @@ try {
 
 
 
-require('./db-admin')(app);
 
 /*
  *ROUTES
@@ -165,6 +166,11 @@ require('./db-admin')(app);
 require('./routes')(app);
 
 
+require('./db-admin')(app);
+
+// this two shall be put at the end
+app.use(require('./routes/404'));
+app.use(require('./routes/error'));
 
 
 process.on('uncaughtException', function(err) {
