@@ -17,7 +17,8 @@ app/user-modules
 # Conf Files #
 ##############
 app/conf.js
-test/conf.js
+tests/conf.js
+
 
 # Local Dev Resources #
 #######################
