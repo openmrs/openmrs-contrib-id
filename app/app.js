@@ -55,6 +55,7 @@ app.set('basepath', siteURLParsed.pathname);
 app.set('port', 3000);
 app.use(flash());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 app.use(cookieParser());
 
 
