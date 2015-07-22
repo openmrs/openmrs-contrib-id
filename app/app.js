@@ -151,9 +151,9 @@ try {
 
 
 /* Load Modules */
-// conf.userModules.forEach(function(module) {
-//   require('./user-modules/' + module);
-// });
+conf.userModules.forEach(function(module) {
+  require('./user-modules/' + module);
+});
 
 
 
