@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Programmtically execute mocha tests
  */
@@ -19,13 +20,22 @@ var mocha = new Mocha({
   reporter: 'list',
 });
 
-// add testing files
-fs.readdirSync('test').filter(function (file) {
-  return _.endsWith(file, '.js') && file !== 'runner.js';
-}).forEach(function (file) {
-  var fpath = path.join('test', file);
-  mocha.addFile(fpath);
-});
+// recursivly add a folder for testing
+var addFolder = function (folder) {
+  fs.readdirSync(folder).forEach(function (file) {
+    var p = path.join(folder, file);
+    if (fs.statSync(p).isDirectory()) {
+      return addFolder(p);
+    }
+    if (p === 'tests/runner.js' || !_.endsWith(file, '.js')) {
+      return;
+    }
+    mocha.addFile(p);
+  });
+};
+
+
+addFolder('tests');
 
 // some preparation
 async.series([

@@ -1,3 +1,4 @@
+'use strict';
 /*jshint expr: true*/
 var crypto = require('crypto');
 var expect = require('chai').expect;

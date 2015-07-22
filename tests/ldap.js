@@ -1,3 +1,4 @@
+'use strict';
 /*jshint expr: true*/
 var _ = require('lodash');
 var expect = require('chai').expect;
