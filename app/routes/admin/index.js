@@ -18,49 +18,30 @@ nav.add({
   order: 100
 });
 
-// add a link to the admin sidebar
-
-// middleware, restricts to admin group, adds user-nav, css, and sidebar to any page
-// var addSidebar = function(req, res, next) {
-//   var sidebar = res.locals.sidebar || [], // get current sidebar and params
-//     params = res.locals.sidebarParams || {},
-
-//   // merge admin-sidebar with current
-//   res.locals.sidebar = sidebar.concat(__dirname + '/../views/sidebar-admin');
-//   params[__dirname + '/../views/sidebar-admin'] = {
-//     className: 'box',
-//     locals: {
-//       pages: modulePages,
-//       reqUrl: req.url
-//     }
-//   };
-//   res.locals.sidebarParams = params;
-
-//   next();
-// };
-
 
 exports = module.exports = function (app) {
 
-var modulePages = [];
+var pages = [];
+var admin = app.admin = {
+  addPage: function (name, url) {
+    pages.push({name: name, url: url});
+  },
+  adminHelpers: [
+    mid.restrictTo('dashboard-administrators'),
+    function prependSidebar(req, res, next) {
+      res.locals.pages = pages;
+      res.locals.reqURL = req.url;
+      return next();
+    },
+  ]
+};
 
-app.get('/admin', mid.restrictTo('dashboard-administrators'),
+app.get('/admin', admin.adminHelpers,
   function(req, res, next) {
 
-  res.render('views/admin', {
-    // pages:
-  });
+  res.render('views/admin');
 });
+app.admin.addPage('Welcome', '/admin');
 
 
 };
-
-
-exports.addModulePage = function(name, url) {
-  modulePages.push({
-    name: name,
-    url: url
-  });
-};
-
-// exports.addModulePage('Welcome', '/admin'); // add this page to the list

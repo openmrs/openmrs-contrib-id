@@ -10,24 +10,19 @@ var mid = require('../express-middleware');
 exports = module.exports = function (app) {
 
 
-// app.use('/panel', mid.restrictTo('dashboard-administrators'));
-
 var registry = formage.init(app, models, {
   title: 'OpenMRS ID Management',
   root: '/panel',
   default_section: 'OpenMRS ID',
-  // username: conf.mongo.username,
-  // password: conf.mongo.password,
-  // admin_users_gui: false,
-  // no_users: false
+  username: conf.mongo.username,
+  password: conf.mongo.password,
+  admin_users_gui: false,
+  no_users: false
 });
 
-// syncAdminUsers(registry.models.formage_users_.model, models.user);
+syncAdminUsers(registry.models.formage_users_.model, models.user);
+
+app.admin.addPage('Data Management (Formage)', '/panel');
 
 
 };
-
-
-
-// admin.addModulePage('Data Management (Formage)', '/panel');
-

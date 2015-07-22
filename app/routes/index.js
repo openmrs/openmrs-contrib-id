@@ -16,8 +16,4 @@ exports = module.exports = function (app) {
   require('./auth')(app);
   require('./profile')(app);
   require('./admin')(app);
-
-  app.use(require('./404'));
-  app.use(require('./error'));
-
 };

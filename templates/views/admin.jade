@@ -5,6 +5,8 @@ block defines
   - title = 'OpenMRS ID - Administration';
   - headline = 'Administration';
   - pages = pages || [];
+  - showSidebar = true;
+  - sidebar = [];
   //- reqURL
 
 block headAppend
@@ -19,9 +21,11 @@ block content
   p Peace,
   p <em>Elliott</em>
 
-  append sidebar
+prepend sidebar
+  div.sidebarItem.box
     h2 Administration
       ul
         each page in pages
+          - console.log(reqURL, page.url);
           a(class={active: page.url === reqURL}, href=page.url)
-            li page.name
+            li= page.name
