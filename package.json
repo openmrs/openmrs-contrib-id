@@ -41,7 +41,7 @@
     "express-debug": "~1.1.0"
   },
   "scripts": {
-    "test": "make test"
+    "test": "node tests/runner"
   },
   "repository": {
     "type": "git",
