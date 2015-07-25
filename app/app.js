@@ -90,6 +90,7 @@ if ('development' === app.get('env')) {
 
   app.use(errorHandler());
 
+  _.EDT_hidden = true;
   var edt = require('express-debug');
   edt(app, {});
 
