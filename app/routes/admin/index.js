@@ -26,22 +26,19 @@ var admin = app.admin = {
   addPage: function (name, url) {
     pages.push({name: name, url: url});
   },
-  adminHelpers: [
-    mid.restrictTo('dashboard-administrators'),
-    function prependSidebar(req, res, next) {
-      res.locals.pages = pages;
-      res.locals.reqURL = req.url;
-      return next();
-    },
-  ]
 };
 
-app.get('/admin', admin.adminHelpers,
-  function(req, res, next) {
 
+app.use(/^\/admin($|\/.*$)/, mid.restrictTo('dashboard-administrators'));
+app.get(/^\/admin($|\/.*$)/, function prependSidebar (req, res, next) {
+  res.locals.pages = pages;
+  res.locals.reqURL = req.url;
+  return next();
+});
+app.get('/admin', function(req, res, next) {
   res.render('views/admin');
 });
-app.admin.addPage('Welcome', '/admin');
+admin.addPage('Welcome', '/admin');
 
 
 };
