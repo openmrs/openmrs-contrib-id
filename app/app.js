@@ -144,19 +144,11 @@ require('./render-helpers');
 try {
   fs.readFileSync(__dirname + '/conf.js');
 } catch (e) {
-  console.log('ERROR: Configuration file not found at (' +
-    __dirname + '/conf.js)! Exiting…');
+  console.log('ERROR: while openning configuration file at (' + __dirname +
+    '/conf.js)! Exiting…');
+  console.error(e);
   return;
 }
-
-
-
-/* Load Modules */
-conf.userModules.forEach(function(module) {
-  require('./user-modules/' + module);
-});
-
-
 
 
 /*
@@ -166,6 +158,11 @@ conf.userModules.forEach(function(module) {
  * or will be overridden by 404
 */
 require('./routes')(app);
+
+/* Load Modules */
+conf.userModules.forEach(function(module) {
+  require('./user-modules/' + module)(app);
+});
 
 
 require('./db-admin')(app);
