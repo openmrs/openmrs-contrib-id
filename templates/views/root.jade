@@ -1,7 +1,7 @@
 extends ../layouts/base
 
 block defines
-  - title = 'OpenMRS ID - ' + user.diplayName;
+  - title = 'OpenMRS ID - ' + user.displayName;
   - name = 'root';
   - headline = 'Welcome to the OpenMRS Community ' + user.displayName;
   - if (_.contains(user.groups, 'dashboard-administrators')) {
