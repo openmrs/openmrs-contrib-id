@@ -23,7 +23,6 @@
     "url": "https://github.com/elliottwilliams/openmrs-contrib-id-sso/issues"
   },
   "dependencies": {
-    "discourse-sso": "~1.0.0",
-    "underscore": "~1.6.0"
+    "discourse-sso": "~1.0.0"
   }
 }
