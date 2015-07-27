@@ -1,0 +1,6 @@
+-/logs
+-*.sqlite
+-*.sh
+-conf.example.js
+-/node_modules
+-/bower_components
