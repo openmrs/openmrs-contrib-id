@@ -307,6 +307,8 @@ userSchema.options.toJSON = {
     delete ret.locked;
     delete ret.inLDAP;
     delete ret.skipLDAP;
+    delete ret.createdAt;
+    delete ret.groups;
   }
 };
 
