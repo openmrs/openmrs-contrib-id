@@ -310,6 +310,8 @@ describe('User', function() {
       expect(json).to.not.have.property('skipLDAP');
       expect(json).to.not.have.property('createdAt');
       expect(json).to.not.have.property('groups');
+      expect(json).to.not.have.property('_id');
+      expect(json).to.not.have.property('__v');
       done();
     });
   });
