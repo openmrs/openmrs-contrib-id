@@ -143,6 +143,7 @@ describe('botproof', function () {
   });
 
   describe('spamListLookup', function() {
+    this.timeout(10000); // this query may take a while
     it('should block a known bad address', function(done) {
       var app = express();
       app.enable('trust proxy'); // so we can fake ip addresses
