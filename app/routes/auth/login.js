@@ -29,13 +29,13 @@ app.get('/login', mid.forceLogout, validate.receive,
 );
 
 app.post('/login', mid.stripNewlines, function(req, res, next) {
-  var username = req.body.loginusername;
-  var password = req.body.loginpassword;
+  var username = req.body.loginusername || '';
+  var password = req.body.loginpassword || '';
   var REQUIRED = 'Username and password are required to continue';
   var redirect = req.body.destination || '/';
   var checkInput = function (callback) {
     if(username === '' || password === '') {
-        req.flash('error',REQUIRED);
+        req.flash('error', REQUIRED);
         return res.redirect('/login');
     } else {
       callback();
