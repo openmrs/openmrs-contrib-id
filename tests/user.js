@@ -70,6 +70,7 @@ var DUP_ERROR_CODE = 11000;
 
 describe('User', function() {
   before(function (done) {
+    var flag = false;
     async.series([
       function (callback) {
         User.ensureIndexes();
@@ -80,6 +81,10 @@ describe('User', function() {
       },
     ],
     function (err) {
+      if (flag) {
+        return;
+      }
+      flag = true;
       done(err);
     });
   });
