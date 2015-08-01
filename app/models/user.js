@@ -308,8 +308,6 @@ userSchema.options.toJSON = {
     delete ret.inLDAP;
     delete ret.skipLDAP;
     delete ret.createdAt;
-    delete ret.groups;
-    delete ret._id;
     delete ret.__v;
   }
 };
