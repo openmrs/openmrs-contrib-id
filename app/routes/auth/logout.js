@@ -17,8 +17,9 @@ app.get('/disconnect', function(req, res, next) {
     req.session.destroy();
   }
   // redirect to a predefined destination or to home
-  if (req.params.destination) {
-    res.redirect(req.params.destination);
+  var destination = req.query.destination;
+  if (destination) {
+    res.redirect(decodeURIComponent(destination));
   } else {
     res.redirect('/');
   }
