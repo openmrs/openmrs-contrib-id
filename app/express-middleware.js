@@ -47,47 +47,40 @@ exports.restrictTo = function(role) {
       req.flash('error', 'You are not authorized to access this resource.');
       if (req.session.user) {
         if (req.originalUrl === '/') {
-          res.redirect(url.resolve(conf.site.url, '/disconnect'));
+          return res.redirect(url.resolve(conf.site.url, '/disconnect'));
         }
-        else {
-          res.redirect('/');
-        }
-      } else res.redirect(url.resolve(conf.site.url, '/login?destination=' + encodeURIComponent(req.originalUrl)));
+        return res.redirect('/');
+      }
+      return res.redirect(url.resolve(conf.site.url, '/login?destination=' +
+                                      encodeURIComponent(req.originalUrl)));
+
     };
 
-    if (req.session.user) {
-      if (req.session.user.groups.indexOf(role) > -1) {
-        next();
-      }
-      else fail();
-    } else fail();
+    if (req.session.user && _.contains(req.session.user.groups, role)) {
+      return next();
+    }
+    return fail();
   };
 };
 
 exports.forceLogin = function(req, res, next) {
-  if (req.session.user) next();
-  else {
-    log.info('anonymous user: denied access to login-only ' + req.originalUrl);
-    req.flash('error', 'You must be logged in to access ' + req.originalUrl);
-    res.redirect(url.resolve(conf.site.url, '/login?destination=' + encodeURIComponent(req.originalUrl)));
+  if (req.session.user) {
+    return next();
   }
+  log.info('anonymous user: denied access to login-only ' + req.originalUrl);
+  req.flash('error', 'You must be logged in to access ' + req.originalUrl);
+  res.redirect(url.resolve(conf.site.url, '/login?destination=' +
+                            encodeURIComponent(req.originalUrl)));
 };
 
 exports.forceLogout = function(req, res, next) {
-  if (req.session.user) {
-    log.info(req.session.user.username + ': denied access to anonymous-only ' + req.originalUrl);
-    req.flash('error', 'You must be logged out to access ' + req.originalUrl);
-    res.redirect('/');
-  } else next();
-};
-
-// set a secondaryemail field to an array, prevents a lot of validation bugs
-exports.secToArray = function(req, res, next) {
-  if (req.body && req.body.secondaryemail) {
-    var secmail = req.body.secondaryemail;
-    req.body.secondaryemail = (typeof secmail == 'string') ? [secmail] : secmail;
+  if (!req.session.user) {
+    return next();
   }
-  next();
+  log.info(req.session.user.username + ': denied access to anonymous-only ' +
+          req.originalUrl);
+  req.flash('error', 'You must be logged out to access ' + req.originalUrl);
+  return res.redirect('/');
 };
 
 exports.stripNewlines = function(req, res, next) {
@@ -111,10 +104,13 @@ exports.parseParamTable = function(req, res, next) {
       ind = parseInt(split[1]),
       type = split[2];
 
-    if (!req.body[a]) continue; // skip if this link is blank
+    if (!req.body[a]) {
+      continue; // skip if this link is blank
+    }
 
     if (!generatedList[ind]) {
-      generatedList[ind] = {}; // create if it doesn't exist (first item of this link)
+      // create if it doesn't exist (first item of this link)
+      generatedList[ind] = {};
       generatedList[ind].id = ind;
     }
 
