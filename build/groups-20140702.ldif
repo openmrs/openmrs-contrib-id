@@ -1,0 +1,323 @@
+dn: cn=bamboo-admin,ou=groups,dc=openmrs,dc=org
+description: Bamboo system administrators
+objectClass: groupOfNames
+cn: bamboo-admin
+member: 
+
+dn: cn=bamboo-maven,ou=groups,dc=openmrs,dc=org
+description: Bamboo Maven test team
+objectClass: groupOfNames
+cn: bamboo-maven
+member: 
+
+dn: cn=bamboo-user,ou=groups,dc=openmrs,dc=org
+description: Bamboo general users
+objectClass: groupOfNames
+cn: bamboo-user
+member: 
+
+dn: cn=confluence-administrators,ou=groups,dc=openmrs,dc=org
+description: Confluence Administrators
+objectClass: groupOfNames
+cn: confluence-administrators
+member: 
+
+dn: cn=confluence-bot,ou=groups,dc=openmrs,dc=org
+description: Automatic functions within Confluence.
+objectClass: groupOfNames
+cn: confluence-bot
+member: 
+
+dn: cn=confluence-hackathon,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: confluence-hackathon
+member: 
+
+dn: cn=confluence-omrs-leadership,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: confluence-omrs-leadership
+member: 
+
+dn: cn=confluence-users,ou=groups,dc=openmrs,dc=org
+description: Confluence Users
+objectClass: groupOfNames
+cn: confluence-users
+member: 
+
+dn: cn=crowd-administrators,ou=groups,dc=openmrs,dc=org
+description: Administrators of the Crowd directory
+objectClass: groupOfNames
+cn: crowd-administrators
+member: 
+
+dn: cn=fisheye-admin,ou=groups,dc=openmrs,dc=org
+description: Fisheye and Crucible system administrators
+objectClass: groupOfNames
+cn: fisheye-admin
+member: 
+
+dn: cn=ga-admin,ou=groups,dc=openmrs,dc=org
+description: Google Apps Administrators
+objectClass: groupOfNames
+cn: ga-admin
+member: 
+
+dn: cn=ga-user,ou=groups,dc=openmrs,dc=org
+description: Placeholder Group - Unused
+objectClass: groupOfNames
+cn: ga-user
+member: 
+
+dn: cn=jira-administrators,ou=groups,dc=openmrs,dc=org
+description: JIRA system administrators
+objectClass: groupOfNames
+cn: jira-administrators
+member: 
+
+dn: cn=jira-bulk-change,ou=groups,dc=openmrs,dc=org
+description: JIRA users with the ability to bulk change issues for which they 
+ have permissions.
+objectClass: groupOfNames
+cn: jira-bulk-change
+member: 
+
+dn: cn=jira-chg-admin,ou=groups,dc=openmrs,dc=org
+description: Admins for the JIRA Change Management project
+objectClass: groupOfNames
+cn: jira-chg-admin
+member: 
+
+dn: cn=jira-chg-approver,ou=groups,dc=openmrs,dc=org
+description: Approvers for Change Management process in JIRA
+objectClass: groupOfNames
+cn: jira-chg-approver
+member: 
+
+dn: cn=jira-chg-requester,ou=groups,dc=openmrs,dc=org
+description: Can create new issues in Change Management in JIRA
+objectClass: groupOfNames
+cn: jira-chg-requester
+member: 
+
+dn: cn=jira-developers,ou=groups,dc=openmrs,dc=org
+description: Not Used - JIRA requirement
+objectClass: groupOfNames
+cn: jira-developers
+member: 
+
+dn: cn=jira-icm-admin,ou=groups,dc=openmrs,dc=org
+description: Admins for the JIRA Incident Management project
+objectClass: groupOfNames
+cn: jira-icm-admin
+member: 
+
+dn: cn=jira-icm-assignee,ou=groups,dc=openmrs,dc=org
+description: Can be assigned Incidents in JIRA Incident Management
+objectClass: groupOfNames
+cn: jira-icm-assignee
+member: 
+
+dn: cn=jira-icm-reporter,ou=groups,dc=openmrs,dc=org
+description: Can report incidents in JIRA incident management
+objectClass: groupOfNames
+cn: jira-icm-reporter
+member: 
+
+dn: cn=jira-trunk-admin,ou=groups,dc=openmrs,dc=org
+description: Admins for the JIRA OpenMRS trunk project
+objectClass: groupOfNames
+cn: jira-trunk-admin
+member: 
+
+dn: cn=jira-trunk-approver,ou=groups,dc=openmrs,dc=org
+description: Approvers for OpenMRS trunk tickets in JIRA
+objectClass: groupOfNames
+cn: jira-trunk-approver
+member: 
+
+dn: cn=jira-trunk-developer,ou=groups,dc=openmrs,dc=org
+description: Can work on OpenMRS Trunk tickets in JIRA
+objectClass: groupOfNames
+cn: jira-trunk-developer
+member: 
+
+dn: cn=jira-users,ou=groups,dc=openmrs,dc=org
+description: General JIRA users
+objectClass: groupOfNames
+cn: jira-users
+member: 
+
+dn: cn=leadership,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: leadership
+member: 
+description: DEPRECATED - use omrs-leadership
+
+dn: cn=modrepo-users,ou=groups,dc=openmrs,dc=org
+description: OpenMRS Module Repository Users
+objectClass: groupOfNames
+cn: modrepo-users
+member: 
+
+dn: cn=nexus-admin,ou=groups,dc=openmrs,dc=org
+description: Nexus Administrators
+objectClass: groupOfNames
+cn: nexus-admin
+member: 
+
+dn: cn=omrs-leadership,ou=groups,dc=openmrs,dc=org
+description: OpenMRS Leadership Team
+objectClass: groupOfNames
+cn: omrs-leadership
+member: 
+
+dn: cn=omrs-releasemgr,ou=groups,dc=openmrs,dc=org
+description: Current OpenMRS Release Managers
+objectClass: groupOfNames
+cn: omrs-releasemgr
+member: 
+
+dn: cn=omrs-soc-mentors,ou=groups,dc=openmrs,dc=org
+description: Summer of Code Mentors
+objectClass: groupOfNames
+cn: omrs-soc-mentors
+member: 
+
+dn: cn=svn-admin,ou=groups,dc=openmrs,dc=org
+description: Subversion Administrators
+objectClass: groupOfNames
+cn: svn-admin
+member: 
+
+dn: cn=svn-committers-partial,ou=groups,dc=openmrs,dc=org
+description: Partial committers in the Subversion repository.
+objectClass: groupOfNames
+cn: svn-committers-partial
+member: 
+
+dn: cn=svn-taggers,ou=groups,dc=openmrs,dc=org
+description: Subversion Taggers
+objectClass: groupOfNames
+cn: svn-taggers
+member: 
+
+dn: cn=trunk-admin,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: trunk-admin
+member: 
+
+dn: cn=trunk-developers,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: trunk-developers
+member: 
+
+dn: cn=osqa-superuser,ou=groups,dc=openmrs,dc=org
+description: OSQA Administrator
+objectClass: groupOfNames
+cn: osqa-superuser
+member: 
+
+dn: cn=dashboard-users,ou=groups,dc=openmrs,dc=org
+description: OpenMRS ID Dashboard Users
+objectClass: groupOfNames
+cn: dashboard-users
+member: 
+
+dn: cn=osqa-users,ou=groups,dc=openmrs,dc=org
+description: OSQA Users
+objectClass: groupOfNames
+cn: osqa-users
+member: 
+
+dn: cn=osqa-staff,ou=groups,dc=openmrs,dc=org
+description: OSQA Moderators
+objectClass: groupOfNames
+cn: osqa-staff
+member: 
+
+dn: cn=dashboard-administrators,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: dashboard-administrators
+member: 
+description: OpenMRS ID Administrators
+
+dn: cn=ga-group-dev,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: ga-group-dev
+member: 
+description: Developer Mailing List
+
+dn: cn=ga-group-implementers,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: ga-group-implementers
+member: 
+description: Implementers Mailing List
+
+dn: cn=ga-group-users,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: ga-group-users
+member: 
+description: Users Mailing List
+
+dn: cn=ga-group-svn,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: ga-group-svn
+member: 
+description: SVN Commits Mailing List
+
+dn: cn=ga-group-security,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: ga-group-security
+member: 
+description: Security Mailing List
+
+dn: cn=ga-group-status,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: ga-group-status
+member: 
+description: Infrastructure Status Mailing List
+
+dn: cn=test-group,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: test-group
+member: 
+
+dn: cn=omrs-im11-attendees,ou=groups,dc=openmrs,dc=org
+description: OMRS11 Attendees
+objectClass: groupOfNames
+cn: omrs-im11-attendees
+member: 
+
+dn: cn=svn-committers,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: svn-committers
+member: 
+
+dn: cn=omrs-board,ou=groups,dc=openmrs,dc=org
+description: OpenMRS1 Ltd Board of Directors
+objectClass: groupOfNames
+cn: omrs-board
+member: 
+
+dn: cn=omrs-interns-2013-summer,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: omrs-interns-2013-summer
+member: 
+
+dn: cn=omrs-guides,ou=groups,dc=openmrs,dc=org
+description: OpenMRS Guides
+objectClass: groupOfNames
+cn: omrs-guides
+member: 
+
+dn: cn=talk-users,ou=groups,dc=openmrs,dc=org
+description: OpenMRS Talk Users
+objectClass: groupOfNames
+cn: talk-users
+member: 
+
+dn: cn=modulus-administrators,ou=groups,dc=openmrs,dc=org
+objectClass: groupOfNames
+cn: modulus-administrators
+member: 
+
