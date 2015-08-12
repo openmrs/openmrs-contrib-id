@@ -25,6 +25,7 @@ test/conf.js
 .ldaprc
 *.todo
 *~
+TAGS
 
 # OS generated files #
 ######################
@@ -40,4 +41,4 @@ conf-controller.js
 .sass-cache
 resource/stylesheets/*
 *.sqlite
-app/user-modules/
+
