@@ -7,5 +7,6 @@ block defines
 block content
   h2 Internal Error
 
-  p That's embarrasing, the server is experiencing an error, please refresh and try again. If you encounter this again, and believe this is a bug, please open a issue <a href='http://help.openmrs.org'>here</a>.
-  p(style='white-space: pre-line; font: 13px monospace;')= e.stack
+  p That's embarrasing, the server is experiencing an error, please refresh and try again. If you encounter this again, and believe this is a bug, please open a issue <a href='http://help.openmrs.org'>here</a>, and include this issue referrence number: <strong>#{trackId}</strong>.
+  if (e)
+    p(style='white-space: pre-line; font: 13px monospace;')= e.stack
