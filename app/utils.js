@@ -58,7 +58,23 @@ exports.encode64 = function (str) {
 exports.decode64 = function (str) {
   var tmp = new Buffer(str, 'base64');
   return tmp.toString('utf8');
-}
+};
+
+// URL safe Base64 functions
+exports.urlEncode64 = function (str) {
+  str = exports.encode64(str);
+  return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+};
+
+exports.urlDecode64 = function (str) {
+  str = str.replace(/-/g, '+').replace(/_/g, '/');
+  var r = str.length % 4;
+  while (r % 4) {
+    ++r;
+    str += '=';
+  }
+  return exports.decode64(str);
+};
 
 // new Recaptcha validator
 var Recaptcha = exports.Recaptcha = function(secret) {

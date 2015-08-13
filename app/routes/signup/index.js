@@ -122,7 +122,7 @@ app.get('/signup/verify', function (req, res) {
 
 // verification
 app.get('/signup/:id', function(req, res, next) {
-  var id = utils.decode64(req.params.id);
+  var id = utils.urlDecode64(req.params.id);
   var INVALID_MSG = 'The requested signup verification does not exist, ' +
                     'it might be expired.';
 

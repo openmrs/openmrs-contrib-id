@@ -74,7 +74,7 @@ exports.begin = function(settings, callback) {
   }
 
   function sendMail(uuid, cb) {
-    uuid = utils.encode64(uuid);
+    uuid = utils.urlEncode64(uuid);
     _.merge(locals, {
       addr: addr,
       siteURL: conf.site.url,

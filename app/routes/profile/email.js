@@ -25,7 +25,7 @@ app.get('/profile/email/verify/:id', function(req, res, next) {
 
   var newEmail = '';
   var newUser = {};
-  var id = utils.decode64(req.params.id);
+  var id = utils.urlDecode64(req.params.id);
 
   var checkVerification = function (callback) {
     verification.check(id, function (err, valid, locals) {
@@ -82,7 +82,7 @@ app.get('/profile/email/verify/:id', function(req, res, next) {
 app.get('/profile/email/resend/:id', mid.forceLogin,
   function(req, res, next) {
 
-  var id = utils.decode64(req.params.id);
+  var id = utils.urlDecode64(req.params.id);
   // check for valid id
   verification.resend(id, function(err) {
     if (err) {

@@ -11,3 +11,14 @@ describe('SSHA generator and checker', function() {
     expect(utils.checkSSHA(str, hashed)).to.be.true;
   });
 });
+
+describe('URL safe base64 helpers', function () {
+  it('should work cooperatively', function () {
+    for (var i = 3*7; i < 3*8; ++i) { // test different length
+      var str = crypto.randomBytes(i).toString('ascii');
+      var hashed = utils.urlEncode64(str);
+      expect(str === utils.urlDecode64(hashed));
+      expect(hashed === encodeURIComponent(hashed));
+    }
+  });
+});

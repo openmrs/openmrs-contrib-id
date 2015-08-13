@@ -103,7 +103,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 app.get('/reset/:id', mid.forceLogout, validate.receive,
   function(req, res, next) {
 
-    var id = utils.decode64(id);
+  var id = utils.urlDecode64(id);
   verification.check(id, function(err, valid, locals) {
     if (err) {
       return next(err);
@@ -124,7 +124,7 @@ app.post('/reset/:id', mid.forceLogout, resetMid.validator,
   function(req, res, next) {
 
 
-  var id = utils.decode64(req.params.id);
+  var id = utils.urlDecode64(req.params.id);
   verification.check(id, function(err, valid, locals) {
     if (err) {
       return next(err);

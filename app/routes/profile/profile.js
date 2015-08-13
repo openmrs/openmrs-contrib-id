@@ -50,7 +50,7 @@ app.get('/profile', mid.forceLogin, validate.receive,
     _.forEach(insts, function (inst) {
       var item = {
         email: inst.addr,
-        id: utils.encode64(inst.uuid),
+        id: utils.urlEncode64(inst.uuid),
         notVerified: true,
       };
       allEmails.push(item);
