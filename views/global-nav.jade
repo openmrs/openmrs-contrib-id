@@ -1,0 +1,13 @@
+if prefs.customCSS
+  style= prefs.customCSS
+
+div#globalnav
+  if (prefs.cseId)
+    form(method='get', action='https://www.google.com/cse')
+      input(type='hidden', name='cx', value= prefs.cseId)
+      input(type='hidden', name='ie', value='UTF-8')
+      input#s.field(type='text', name='q', placeholder=prefs.csePlaceholder)
+  each link in links
+    a(target='_parent', class={yourhere: matche === link.url},
+      href= link.match?'':link.url)= link.name
+  a#globalnav-state-button [hide]
