@@ -1,6 +1,7 @@
 OpenMRS ID
 =========
 [![Code Climate](https://codeclimate.com/github/openmrs/openmrs-contrib-id/badges/gpa.svg)](https://codeclimate.com/github/openmrs/openmrs-contrib-id)
+[![Build Status](https://travis-ci.org/openmrs/openmrs-contrib-id.svg)](https://travis-ci.org/openmrs/openmrs-contrib-id)
 
 [![Build Status](https://travis-ci.org/openmrs/openmrs-contrib-id.svg)](https://travis-ci.org/openmrs/openmrs-contrib-id)
 
