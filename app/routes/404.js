@@ -1,12 +1,11 @@
-var app = require(global.__commonModule).app;
+'use strict';
 // 404's
-app.use(function(req, res, next) {
-  if (req.header('Accept') && req.header('Accept').indexOf('text/html') > -1) {
+exports = module.exports = function(req, res, next) {
+  res.statusCode = 404;
+  if (req.accepts('text/html')) {
     // send an HTML error page
-    res.statusCode = 404;
-    res.render('404');
+    res.render('views/404');
   } else {
-    res.statusCode = 404;
     res.end('The requested resource was not found.');
   }
-});
+};

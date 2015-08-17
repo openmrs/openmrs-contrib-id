@@ -1,17 +1,17 @@
-var Common = require(global.__commonModule);
-var app = Common.app;
-var log = Common.logger.add('express');
+'use strict';
+var log = require('log4js').addLogger('express');
+
 // Errors
-app.use(function(err, req, res, next) {
+exports = module.exports = function(err, req, res, next) {
   log.error('Caught error: ' + err.name);
+  log.error(err.message);
+  log.error(err.stack);
   if (!res.headersSent) {
     // ONLY try to send an error response if the response is still being
     // formed. Otherwise, we'd be stuck in an infinite loop.
-    res.statusCode = err.statusCode || 500;
+    res.statusCode = 500;
     if (req.accepts('text/html')) {
-      res.render('error', {
-        e: err
-      });
+      res.render('views/500', {e: err});
     } else if (req.accepts('application/json')) {
       res.json({
         statusCode: res.statusCode,
@@ -28,6 +28,4 @@ app.use(function(err, req, res, next) {
     // Silently fail and write to log
     log.warn('^^ Headers sent before error encountered');
   }
-
-
-});
+};

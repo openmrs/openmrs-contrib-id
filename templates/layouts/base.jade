@@ -1,0 +1,98 @@
+include ../mixins/flashes
+include ../mixins/sidebar
+//- varialbes should be imported from controller level
+//- user -- user object
+//- connected -- indicate whether a user is logged in
+//- flash -- flash messages
+
+//- variables should be defined in views best
+block defines
+  - title = 'Page Title';
+  - name = 'View Name Used in Links';
+  - headline = 'headline';
+  - showSidebar = true;
+  - sidebar = [];
+  //- - showHeadlineAvatar = true;
+
+doctype html
+html
+  head
+    block head
+      meta(http-equiv='Content-Type', content='text/html;', charset='utf-8')
+      meta(name='viewport', content='width=device-width, initial-scale=1')
+      title= title || 'Title'
+
+      link(rel='stylesheet', href='/bower_components/font-awesome/css/font-awesome.min.css')
+      link(rel='stylesheet', href='/bower_components/bootstrap/dist/css/bootstrap.min.css')
+      link(rel='stylesheet', href='/resource/stylesheets/style.css')
+      script(src='/bower_components/jquery/dist/jquery.min.js')
+      script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
+      script(src='/resource/scripts/omrsid.js')
+      script#globalnav-script(src='/globalnav/js/app-optimized.js')
+
+      script.
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-16695719-3', 'openmrs.org');
+        ga('require', 'displayfeatures');
+        ga('send', 'pageview');
+
+
+  body
+    noscript
+      h3 JavaScript is required to properly use OpenMRS ID.
+
+    //- header with login-menu
+    div#header.clearfix
+      div.container
+        header.col-md-5.col-md-offset-1
+          a(href='/')
+            img#logo(src='/resource/images/logo.png', alt='OpenMRS Community')
+        div#login-menu.col-md-5.col-xs-5.col-sm-5
+          if !connected
+            | <p>Your OpenMRS ID is the key to participating in our open source community. Use it to access all of the tools and services listed on the links at the top of this page. <a href="http://go.openmrs.org/id">Read more on our Wiki.</a> </p>
+          else
+            div.col-md-10(style='padding:5px;text-align:right')
+              strong= 'Welcome, ' + user.displayName
+              br
+              a(href='/disconnect') Log Out
+            div.col-md-1
+              img(src='https://wiki.openmrs.org/rest/cas/1.0/avatar/server/' + mailHash + '?s=51',
+                alt=user.displayName)
+
+    //- user navbar
+    div.container(style='padding:20px')
+      div.col-sm-offset-1.col-md-offset-1.col-sm-3.col-md-10
+        div.btn-group.btn-group-justified(role='group', style='margin:auto;margin-bottom:30px;margin-top:20px')
+          if navLinks
+            each link in navLinks
+              - var same = (name === link.viewName ? true : false);
+              a.btn(class=(same ? 'btn-success' : 'btn-default'),
+                    href=(same ? '#' : link.url), type='button')= link.name
+
+    //-headline
+    div#headline(class=(showHeadlineAvatar ? 'with-avatar' : 'undefined'))
+      div.container
+        h1.col-md-8.col-md-offset-1!= headline
+
+    +flashes(flash)
+
+    //- Real content
+    div#content.content.container
+      div#main.col-md-10.col-md-offset-1.col-sm-10.col-sm-offset-0.col-xs-10.col-xs-offset-1
+        block content
+
+      //- sidebar
+      if showSidebar === true
+        div#sidebar.col-md-offset-1.col-md-10.col-sm-10.col-sm-offset-0.col-xs-10.col-xs-offset-1
+          block sidebar
+            +sidebar(sidebar.concat(defaultSidebar))
+
+
+    //- bottom
+    div.clear
+
+    div#about!= aboutHTML

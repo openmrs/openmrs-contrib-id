@@ -1,0 +1,24 @@
+//- variables:
+//- siteURL
+//- imgURL
+//- verifyURL
+//- username
+//- diplayName
+extends ../layouts/email
+
+block content
+  h2 Your OpenMRS ID #{username} is nearly ready!
+
+  p #{displayName},
+
+  p Thanks for signing up for an OpenMRS ID, your key to accessing our online tools and services.
+
+  p To finish configuring your ID, we need to verify this email address. To verify your address, go to the following page:
+  p <a href="#{verifyURL}">#{verifyURL}</a>
+
+  p In case of problems logging in or signing up, please open a help desk ticket at <a href="http://go.openmrs.org/helpdesk">http://go.openmrs.org/helpdesk</a> &mdash; remember to include your contact information so we can assist you.
+
+  p If you didn't sign up for an OpenMRS ID, don't worry. This is the only message we will send to this address.
+
+  p Thanks and welcome!
+  p OpenMRS Community Infrastructure Team

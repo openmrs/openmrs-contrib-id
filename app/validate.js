@@ -1,3 +1,4 @@
+'use strict';
 /**
  * The contents of this file are subject to the OpenMRS Public License
  * Version 1.1 (the "License"); you may not use this file except in
@@ -20,13 +21,12 @@ var path = require('path');
 var _ = require('lodash');
 var async = require('async');
 
-var Common = require(global.__commonModule);
-var conf = Common.conf;
-var log = Common.logger.add('validation');
-var utils = Common.utils;
+var conf = require('./conf');
+var log = require('log4js').addLogger('validation');
+var utils = require('./utils');
 var Recaptcha = utils.Recaptcha;
 
-var User = require(path.join(global.__apppath, 'model/user'));
+var User = require('./models/user');
 
 var USERNAME_DUP_MSG = 'This username is already taken. Better luck next time';
 
@@ -161,7 +161,7 @@ validate.receive = function (req, res, next) {
   var rsv = rs.validation;
 
   if (rs && rsv && !_.isEmpty(rsv)) {
-    res.locals(rsv); // include the properties from validation
+    _.merge(res.locals, rsv);
     req.session.validation = {};
   }
   next();

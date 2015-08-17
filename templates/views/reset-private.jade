@@ -1,0 +1,34 @@
+extends ../layouts/base
+
+block defines
+  - title = 'OpenMRS ID - Reset Password';
+  - name = 'reset-public';
+  - headline = 'Reset Your Password';
+  - sidebar = ['id-whatis', 'forgot-password'];
+  - fail = fail || {};
+  - failReason = failReason || {};
+  - values = values || {};
+
+block content
+  .panel.panel-default
+    form(action='#', method='post')
+      .panel-body
+        p Enter a new password for <strong>#{username}</strong> in the field below.
+
+      div.form-group(class={fail: fail.newPassword})
+        label(for='newPassword') New Password
+        br
+        input(type='password', name='newPassword', placeholder='New Password', size='32', autofocus='')
+        span.description
+          span.failtext Please enter a valid password.
+          | Passwords must be at least 8 characters in length.
+
+      div.form-group(class={fail: confirmPassword})
+        label(for='confirmPassword') Confirm New Password
+        br
+        input(type='password', name='confirmPassword', placeholder='Confirm Password', size='32')
+        span.description
+          span.failtext Passwords did not match.
+          | Check for typos!
+      div.panel-footer
+        input.btn.btn-success(type='submit', value='Reset Password »')

@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Some utility tools
  */
@@ -24,7 +25,7 @@ exports.checkSSHA = function (cleartext, hashed) {
   if (0 !== hashed.indexOf('{SSHA}')) {
     return false;
   }
-  var hash = new Buffer(hashed.substr(6),'base64');
+  var hash = new Buffer(hashed.substr(6), 'base64');
   var salt = hash.toString('binary', 20);
   var newHash = exports.getSSHA(cleartext, salt);
   return newHash === hashed;
@@ -45,6 +46,34 @@ exports.isEmailValid = function (email) {
     return false;
   }
   return true;
+};
+
+// encode a string into base64
+exports.encode64 = function (str) {
+  var tmp = new Buffer(str);
+  return tmp.toString('base64');
+};
+
+// decode a base64 string
+exports.decode64 = function (str) {
+  var tmp = new Buffer(str, 'base64');
+  return tmp.toString('utf8');
+};
+
+// URL safe Base64 functions
+exports.urlEncode64 = function (str) {
+  str = exports.encode64(str);
+  return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+};
+
+exports.urlDecode64 = function (str) {
+  str = str.replace(/-/g, '+').replace(/_/g, '/');
+  var r = str.length % 4;
+  while (r % 4) {
+    ++r;
+    str += '=';
+  }
+  return exports.decode64(str);
 };
 
 // new Recaptcha validator
