@@ -1,8 +1,9 @@
-var Common = require(global.__commonModule)
+'use strict';
 
-Common.module.sso = require('./lib/sso')
+exports = module.exports = function (app) {
+  // Load strategies
+  require('./lib/discourse')(app);
+  require('./lib/deskcom')(app);
+  require('./lib/atlas')(app);
+};
 
-// Load strategies
-require('./lib/discourse')
-require('./lib/deskcom')
-require('./lib/atlas')

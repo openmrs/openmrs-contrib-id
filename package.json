@@ -4,7 +4,7 @@
   "description": "sso authentication strategies for openmrs id",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha tests"
   },
   "repository": {
     "type": "git",
@@ -23,7 +23,6 @@
     "url": "https://github.com/elliottwilliams/openmrs-contrib-id-sso/issues"
   },
   "dependencies": {
-    "discourse-sso": "~1.0.0",
-    "underscore": "~1.6.0"
+    "discourse-sso": "~1.0.0"
   }
 }
