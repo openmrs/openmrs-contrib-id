@@ -1,0 +1,271 @@
+{
+    "objList": [
+        {
+            "description": "Bamboo system administrators",
+            "groupName": "bamboo-admin",
+            "member": []
+        },
+        {
+            "description": "Bamboo Maven test team",
+            "groupName": "bamboo-maven",
+            "member": []
+        },
+        {
+            "description": "Bamboo general users",
+            "groupName": "bamboo-user",
+            "member": []
+        },
+        {
+            "description": "Confluence Administrators",
+            "groupName": "confluence-administrators",
+            "member": []
+        },
+        {
+            "description": "Automatic functions within Confluence.",
+            "groupName": "confluence-bot",
+            "member": []
+        },
+        {
+            "groupName": "confluence-hackathon",
+            "member": []
+        },
+        {
+            "groupName": "confluence-omrs-leadership",
+            "member": []
+        },
+        {
+            "description": "Confluence Users",
+            "groupName": "confluence-users",
+            "member": []
+        },
+        {
+            "description": "Administrators of the Crowd directory",
+            "groupName": "crowd-administrators",
+            "member": []
+        },
+        {
+            "description": "Fisheye and Crucible system administrators",
+            "groupName": "fisheye-admin",
+            "member": []
+        },
+        {
+            "description": "Google Apps Administrators",
+            "groupName": "ga-admin",
+            "member": []
+        },
+        {
+            "description": "Placeholder Group - Unused",
+            "groupName": "ga-user",
+            "member": []
+        },
+        {
+            "description": "JIRA system administrators",
+            "groupName": "jira-administrators",
+            "member": []
+        },
+        {
+            "description": "JIRA users with the ability to bulk change issues for which they",
+            "groupName": "jira-bulk-change",
+            "member": []
+        },
+        {
+            "description": "Admins for the JIRA Change Management project",
+            "groupName": "jira-chg-admin",
+            "member": []
+        },
+        {
+            "description": "Approvers for Change Management process in JIRA",
+            "groupName": "jira-chg-approver",
+            "member": []
+        },
+        {
+            "description": "Can create new issues in Change Management in JIRA",
+            "groupName": "jira-chg-requester",
+            "member": []
+        },
+        {
+            "description": "Not Used - JIRA requirement",
+            "groupName": "jira-developers",
+            "member": []
+        },
+        {
+            "description": "Admins for the JIRA Incident Management project",
+            "groupName": "jira-icm-admin",
+            "member": []
+        },
+        {
+            "description": "Can be assigned Incidents in JIRA Incident Management",
+            "groupName": "jira-icm-assignee",
+            "member": []
+        },
+        {
+            "description": "Can report incidents in JIRA incident management",
+            "groupName": "jira-icm-reporter",
+            "member": []
+        },
+        {
+            "description": "Admins for the JIRA OpenMRS trunk project",
+            "groupName": "jira-trunk-admin",
+            "member": []
+        },
+        {
+            "description": "Approvers for OpenMRS trunk tickets in JIRA",
+            "groupName": "jira-trunk-approver",
+            "member": []
+        },
+        {
+            "description": "Can work on OpenMRS Trunk tickets in JIRA",
+            "groupName": "jira-trunk-developer",
+            "member": []
+        },
+        {
+            "description": "General JIRA users",
+            "groupName": "jira-users",
+            "member": []
+        },
+        {
+            "groupName": "leadership",
+            "description": "DEPRECATED - use omrs-leadership",
+            "member": []
+        },
+        {
+            "description": "OpenMRS Module Repository Users",
+            "groupName": "modrepo-users",
+            "member": []
+        },
+        {
+            "description": "Nexus Administrators",
+            "groupName": "nexus-admin",
+            "member": []
+        },
+        {
+            "description": "OpenMRS Leadership Team",
+            "groupName": "omrs-leadership",
+            "member": []
+        },
+        {
+            "description": "Current OpenMRS Release Managers",
+            "groupName": "omrs-releasemgr",
+            "member": []
+        },
+        {
+            "description": "Summer of Code Mentors",
+            "groupName": "omrs-soc-mentors",
+            "member": []
+        },
+        {
+            "description": "Subversion Administrators",
+            "groupName": "svn-admin",
+            "member": []
+        },
+        {
+            "description": "Partial committers in the Subversion repository.",
+            "groupName": "svn-committers-partial",
+            "member": []
+        },
+        {
+            "description": "Subversion Taggers",
+            "groupName": "svn-taggers",
+            "member": []
+        },
+        {
+            "groupName": "trunk-admin",
+            "member": []
+        },
+        {
+            "groupName": "trunk-developers",
+            "member": []
+        },
+        {
+            "description": "OSQA Administrator",
+            "groupName": "osqa-superuser",
+            "member": []
+        },
+        {
+            "description": "OpenMRS ID Dashboard Users",
+            "groupName": "dashboard-users",
+            "member": []
+        },
+        {
+            "description": "OSQA Users",
+            "groupName": "osqa-users",
+            "member": []
+        },
+        {
+            "description": "OSQA Moderators",
+            "groupName": "osqa-staff",
+            "member": []
+        },
+        {
+            "groupName": "dashboard-administrators",
+            "description": "OpenMRS ID Administrators",
+            "member": []
+        },
+        {
+            "groupName": "ga-group-dev",
+            "description": "Developer Mailing List",
+            "member": []
+        },
+        {
+            "groupName": "ga-group-implementers",
+            "description": "Implementers Mailing List",
+            "member": []
+        },
+        {
+            "groupName": "ga-group-users",
+            "description": "Users Mailing List",
+            "member": []
+        },
+        {
+            "groupName": "ga-group-svn",
+            "description": "SVN Commits Mailing List",
+            "member": []
+        },
+        {
+            "groupName": "ga-group-security",
+            "description": "Security Mailing List",
+            "member": []
+        },
+        {
+            "groupName": "ga-group-status",
+            "description": "Infrastructure Status Mailing List",
+            "member": []
+        },
+        {
+            "groupName": "test-group",
+            "member": []
+        },
+        {
+            "description": "OMRS11 Attendees",
+            "groupName": "omrs-im11-attendees",
+            "member": []
+        },
+        {
+            "groupName": "svn-committers",
+            "member": []
+        },
+        {
+            "description": "OpenMRS1 Ltd Board of Directors",
+            "groupName": "omrs-board",
+            "member": []
+        },
+        {
+            "groupName": "omrs-interns-2013-summer",
+            "member": []
+        },
+        {
+            "description": "OpenMRS Guides",
+            "groupName": "omrs-guides",
+            "member": []
+        },
+        {
+            "description": "OpenMRS Talk Users",
+            "groupName": "talk-users",
+            "member": []
+        },
+        {
+            "groupName": "modulus-administrators",
+            "member": []
+        }
+    ]
+}
