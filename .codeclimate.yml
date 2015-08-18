@@ -1,0 +1,13 @@
+---
+languages:
+  JavaScript: true
+ratings:
+  paths:
+  - "app/**"
+  - "resources/**"
+  - "templates/**"
+exclude_paths:
+  - "tests/**/*"
+  - "app/conf.*"
+  - "build/"
+  - "app/user-modules/*/**"
