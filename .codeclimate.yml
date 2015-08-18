@@ -1,0 +1,18 @@
+---
+engines:
+  eslint:
+    enabled: true
+  csslint:
+    enabled: true
+  fixme:
+    enabled: true
+ratings:
+  paths:
+  - "app/**"
+  - "resources/**"
+  - "templates/**"
+exclude_paths:
+  - tests/**/*
+  - app/conf.*
+  - build/
+  - app/user-modules/*/** #needed primarily locally.
