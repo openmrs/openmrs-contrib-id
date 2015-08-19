@@ -9,10 +9,9 @@ As you may know, a Node.js application depends heavily on the modules it uses, y
 Here are some important ones,
 
 + [Express.js][0], The framework we are using.
-    Currently, we are using the Express3, as we oringally used Express2, and some functions were lost durying the migration. We used some packages to replace the missing functionalities. Like, [EJS-locals](https://github.com/RandomEtc/ejs-locals), [connect-flash](https://github.com/jaredhanson/connect-flash).
+    Currently, we are using the Express4.
 + [Mongoose][3], The mongodb object modeling tool.
-+ [Sequelize.js][4], Package for easily communicating with MySQL.
-+ [Async.js][2], As all I/O operations in Node.js all asynchronous, we use the Async.js module to do the asynchronous control flow.
++ [Async.js][2], As all I/O operations in Node.js all asynchronous, we use the Async.js module to control the asynchronous workflow.
 + [Lo-Dash][5], Node.js utility library.
 + [Formage][6], Mongoose monitoring tools.
 + [Mocha](http://mochajs.org), [Chai](http://chaijs.com/), Packages that used for testing.
@@ -21,32 +20,33 @@ Here are some important ones,
 Currently, we organize the code this way.
 
 ```
-/.                          where all documentation and script lies
+/.                          where all documentation and scripts lie
 --/app                      all basic funtional source files
-----/app/model              where all Mongoose model lies
-----/app/routes             basic routes files
-----/app/system-modules     the system modules
+----/app/models             where all Mongoose model lies
+----/app/routes             where the routers are defined
 ----/app/user-modules       optional add-ons which adds additional functionality
+--/templates                view templates
 --/logs                     the log files
 --/resource                 static resources
 --/test                     tests should reside here.
---/views                    view templates
 ```
-**Note**: system-modules and user-modules will have a similar structure under its own tree.
+**Note** 
++ You'd better use corresponding structure between `app/routes` and `templates/views`. 
++ For modules, you may refer to existing modules, like [openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth).
 
 ### Testing
-The testing files are under `test` folder. If you want to run it, first you should add a `conf.js` under this folder. Currently it only holds a `mongoURI` attribute to specify the testing database, we advise you use a separate one from the normal database, in order to prevent it from being messed up. However, in the part that testing synchronization with OpenLDAP, we are forced to use the same database as production. So be careful with that. Ultimately, we will change this, so pull requests welcome.
+The testing files are under `tests` folder. If you want to run it, first you should add a `conf.js` under this folder. Currently it only holds a `mongoURI` attribute to specify the testing database, we advise you to use a different one from the normal database, in order to prevent it from being messed up. However, in the part that testing synchronization with OpenLDAP, we are using the same database as production. So be careful with that. If you have any ideas how to improve this, please make a PR.
 
-And the `Makefile` contains the script for running tests, you may run test easily by `make test`.
+To run the test, type `npm test` which would call `tests/runner`.
+
+*Caveat*: You may have noticed that some tests requires `app/logger`. We did a patch for `log4js`, which adds a `addLogger` method to it. In order to require modules that used `log4js`, you need to require the source to make the patch available.
 
 ### Development Rules
 Whatever by the design or due to history, we have some implicit rules.
 
 + Code style, we are following the [Felix's](http://nodeguide.com/style.html). You should follow it in most cases. However, remember it's not like the absolute laws that you cannot violate, it's just a guideline.
 
-+ Global variables, for historical reason, we used a global variable `global.__commonModule` to store the path of `openmrsid-common.js`, which requires other files, and provide common share for few important instance, like the `app` object of Express.
-
-    However, except from the convenince it brought, it may cause problems for testing and strong coupling. A suggestion is to directly require files in those functional files that might be used in other places. But you may use them in routes files.
++ Globals are bad and other stuff that would create strong coupling.
 
 + Routes structure, we tend to split different logic of routes into different files. You may refer details in the project.
 
@@ -59,14 +59,13 @@ Whatever by the design or due to history, we have some implicit rules.
 
 ### Helpful Tools
 
-For keeping a good code style, [JSHint](http://www.jshint.com/) is highly recommended, also if you want to auto beautify the code, you may use [JS-beautify](https://github.com/beautify-web/js-beautify).
+For keeping a good code style and prevent possible pitfalls, [JSHint](http://www.jshint.com/) is highly recommended.
 
 
 [0]: http://expressjs.com/
 [1]: http://nodejs.org/
 [2]: https://github.com/caolan/async
 [3]: http://mongoosejs.com/
-[4]: http://sequelizejs.com/
 [5]: http://lodash.com/
 [6]: https://github.com/TheNodeILs/formage
 [7]: http://en.flossmanuals.net/openmrs-developers-guide/development-process/

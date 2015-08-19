@@ -4,7 +4,7 @@ OpenMRS ID
 [![Build Status](https://travis-ci.org/openmrs/openmrs-contrib-id.svg)](https://travis-ci.org/openmrs/openmrs-contrib-id)
 
 
-User signup and self-service web application, built for [OpenMRS](http://openmrs.org), now running at [id.openmrs.org](http://id.openmrs.org). Integrates with an LDAP server to store user data. Built on [Node](https://github.com/joyent/node) and [Express](https://github.com/visionmedia/express).
+User signup and self-service web application, built for [OpenMRS](http://openmrs.org), now running at [id.openmrs.org](http://id.openmrs.org). Integrates with an LDAP server and MongoDB to store user data. Built on [Node](https://github.com/joyent/node) and [Express](https://github.com/strongloop/express/).
 
 ##Development:
 
@@ -20,8 +20,7 @@ See [`installing-openmrsid.md`](https://github.com/openmrs/openmrs-contrib-id/bl
 	* Signup - supporting email address verification, reCAPTCHA anti-spam forms, and welcome mail
 	* User profile changes - editing first/last name, email, password; adding multiple email addresses
 	* Password resets - reset by username or email address, send to all emails linked to a user
-* Modular system for adding on new functionality
-	* Current modules include Google Groups-based mailing list subscription management, and an embeddable sitewide navigation bar to provide navigation between different community sites
+* Modular system for adding on new functionality, see (Modules)[https://github.com/openmrs/openmrs-contrib-id#modules] section
 * Form validation and control
 * Designed with the visual style of [openmrs.org](http://openmrs.org) in mind :)
 
@@ -31,7 +30,7 @@ A few modules (providing additional functionality) have been created. They can b
 
 * [openmrs-contrib-globalnavbar](https://github.com/openmrs/openmrs-contrib-id-globalnavbar)
 * ~~[openmrs-contrib-id-groups](https://github.com/openmrs/openmrs-contrib-id-groups)~~ *(***We no longer use Google Groups and now use [OpenMRS Talk](http://talk.openmrs.org) in its place -- it is provided solely for historic purposes***)*
-* [openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth) provides OAuth 2.0-based authorization module for OpenMRS ID
+* [openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth) provides OAuth2.0-based authorization module for OpenMRS ID
 * [openmrs-contrib-id-sso](https://github.com/openmrs/openmrs-contrib-id-sso) provides single sign on authentication strategies
 
 ##Why We Built It:
@@ -39,10 +38,10 @@ OpenMRS's developer community was in need of unification between the tools hoste
 
 ##Server Requirements:
 
-* Node.js version in the 0.8.x tree (id.openmrs.org runs Node v0.8.26)
+* Node.js version in the 0.12.x tree
 * LDAP directory (tested with OpenLDAP), additionally supporting extensible objects and password policies
 * MongoDB database
 * SMTP access
 
 ##License:
-Licensed under the [OpenMRS Public License](http://license.openmrs.org) version 1.1
+Licensed under the [MPL 2.0](http://license.openmrs.org)
