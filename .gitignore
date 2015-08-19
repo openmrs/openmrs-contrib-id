@@ -18,6 +18,7 @@ app/user-modules
 ##############
 app/conf.js
 tests/conf.js
+scripts/add-admin.json
 
 
 # Local Dev Resources #
