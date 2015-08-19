@@ -14,12 +14,9 @@
  */
 
 var ldap = require('ldapjs');
-var log = require('bunyan').createLogger({
-  name: 'test',
-  // level: 'debug',
-});
 var async = require('async');
 var _ = require('lodash');
+var log = require('log4js').addLogger('ldap');
 
 var conf = require('./conf');
 var serverAttr = conf.ldap.server;
@@ -482,9 +479,8 @@ exports.lockoutUser = function (username, cb) {
 
 /**
  * Unlock a user
- * @param  {[type]}   username [description]
- * @param  {Function} cb       [description]
- * @return {[type]}            [description]
+ * @param  {string}   username
+ * @param  {Function} cb       cb(err)
  */
 exports.enableUser = function (username, cb) {
   // find the user
@@ -518,4 +514,28 @@ exports.enableUser = function (username, cb) {
     search,
     modify,
   ], cb);
+};
+
+
+/**
+ * Add a group into LDAP
+ * @param {object}   options    {groupName: ... , description: ... }
+ * @param {Function} callback   callback(err)
+ */
+exports.addGroup = function (options, callback) {
+  if (_.isEmpty(options.groupName)) {
+    throw new Error('missing groupName');
+  }
+  log.info('adding group ' + options.groupName + ' to LDAP');
+  var entry = {
+    cn: options.groupName,
+    objectClass: groupAttr.objectClass,
+    member: [''],
+  };
+  if (!_.isEmpty(options.description)) {
+    entry.description = options.description;
+  }
+
+  var dn = groupAttr.rdn + '=' + options.groupName + ',' + groupAttr.baseDn;
+  client.add(dn, entry, callback);
 };
