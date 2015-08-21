@@ -2,7 +2,7 @@
   "name": "openmrsid",
   "description": "A self-service management system for the OpenMRS ID single sign on identity",
   "version": "2.1.0",
-  "license": "MPL 2.0",
+  "license": "MPL 2.0 HD",
   "homepage": "https://github.com/openmrs/openmrs-contrib-id",
   "main": "./app/app.js",
   "authors": [

@@ -44,4 +44,5 @@ OpenMRS's developer community was in need of unification between the tools hoste
 * SMTP access
 
 ##License:
-Licensed under the [MPL 2.0](http://license.openmrs.org)
+Licensed under the [MPL 2.0 HD](http://license.openmrs.org)
+
