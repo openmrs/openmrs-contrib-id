@@ -31,18 +31,21 @@ app.get('/login', mid.forceLogout, validate.receive,
 app.post('/login', mid.stripNewlines, function(req, res, next) {
   var username = req.body.loginusername || '';
   var password = req.body.loginpassword || '';
-  var REQUIRED = 'Username and password are required to continue';
   var redirect = req.body.destination || '/';
+
   var checkInput = function (callback) {
-    if(username === '' || password === '') {
-        req.flash('error', REQUIRED);
-        return res.redirect('/login');
-    } else {
-      callback();
+    if (utils.isUsernameValid(username)) {
+      return callback(null, {username: username});
     }
+    if (utils.isEmailValid(username)) {
+      return callback(null, {email: username});
+    }
+    var invalid = 'Please use a valid username or email to sign in';
+    return callback({loginFail: invalid});
   };
-  var findUser = function (callback) {
-    User.findByUsername(username, function (err, user) {
+
+  var findUser = function (input, callback) {
+    var commonCallback = function (err, user) {
       if (err) {
         return callback(err);
       }
@@ -50,8 +53,17 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
         return callback({loginFail: 'This user does not exist'});
       }
       return callback(null, user);
-    });
+    };
+    if (input.username) {
+      return User.findByUsername(input.username, commonCallback);
+    }
+    if (input.email) {
+      return User.findByEmail(input.email, commonCallback);
+    }
+    // should never got here
+    return callback(new Error('Weird control flow'));
   };
+
   var checkLocked = function (user, callback) {
     if (user.locked) {
       return callback({loginFail: 'You must verify your email address before logging in. ' +
@@ -59,6 +71,7 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
     }
     return callback(null, user);
   };
+
   var checkPassword = function (user, callback) {
     if (_.isEmpty(user.password)) {
       return callback({loginFail: 'Your password should be reset first'});
@@ -68,6 +81,7 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
     }
     return callback(null, user);
   };
+
   async.waterfall([
     checkInput,
     findUser,

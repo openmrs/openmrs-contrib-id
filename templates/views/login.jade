@@ -20,7 +20,8 @@ block content
         div.form-group(class={fail: fail.loginusername})
           label(for='loginusername') Username
 
-          input(type='text', name='loginusername', placeholder='OpenMRS ID')
+          input(type='text', name='loginusername',
+                placeholder='OpenMRS ID/Email')
           span.description.failtext
             if values.loginusername === ''
               | A username must be supplied to log in.
