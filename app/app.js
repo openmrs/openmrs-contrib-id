@@ -38,9 +38,6 @@ var log4js = require('log4js');
 // connect to mongo
 require('./new-db');
 
-// additional scripts for migrating data
-// require('./scripts/0.0.1');
-
 
 var mid = require('./express-middleware');
 var conf = require('./conf');
