@@ -6,7 +6,7 @@ services:
 
 node_js:
   - "0.12"
-
+  - "4.0.0"
 install:
   - ./build/install-openldap.sh
   - cp -v build/conf.app.js app/conf.js
