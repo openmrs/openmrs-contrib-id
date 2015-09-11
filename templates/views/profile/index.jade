@@ -11,18 +11,37 @@ block defines
 
 append head
   link(rel='stylesheet', href='/resource/stylesheets/profile/profile.css')
+  script(type='text/javascript').
+    $(document).ready( function() {
+      // deal with the welcome-message
+      if (Cookies.get('welcome-later')) {
+        $('#welcome-message').hide();
+      }
+
+      $('#done').click(function () {
+        $.ajax('/profile/welcome');
+      });
+
+      $('#later').click(function () {
+        Cookies.set('welcome-later', true, {expires: 1, path: ''});
+        $('#welcome-message').hide();
+      });
+    });
+
 
 block content
-  .col-md-12.welcome-message
-    .col-md-5
-      h2 Welcome to the OpenMRS Community!
-      p We're so glad you've joined us. Here are two easy ways to get started and let others know who you are.
-    .col-md-7
-      ol
-        li <a href="#">Edit your Wiki Profile</a> so we can learn more about you.
-        li <a href="#">Create your own Personal Space</a> on the Wiki.
-      input.btn.btn-success(type='submit', value="Thanks, I've done these")
-      input.btn.btn-success(type='submit', value='Remind me later')
+  if (!user.extra || !user.extra.__welcomed)
+    .col-md-12.welcome-message#welcome-message
+      .col-md-5
+        h2 Welcome to the OpenMRS Community!
+        p We're so glad you've joined us. Here are two easy ways to get started and let others know who you are.
+      .col-md-7
+        ol
+          //- TODO update the links
+          li <a href="#">Edit your Wiki Profile</a> so we can learn more about you.
+          li <a href="#">Create your own Personal Space</a> on the Wiki.
+        input#done.btn.btn-success(type='submit', value="Thanks, I've done these")
+        input#later.btn.btn-success(type='submit', value='Remind me later')
   .row
     .col-md-6
       include edit-basic-details

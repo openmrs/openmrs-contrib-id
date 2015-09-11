@@ -101,5 +101,37 @@ app.post('/profile', mid.forceLogin, profileMid.profileValidator,
   });
 });
 
+// AJAX
+// handle the welcome message
+app.get('/profile/welcome', mid.forceLogin, function (req, res, next) {
+  if (!req.xhr) {
+    return;
+  }
+  var username = req.session.user.username;
+  var findUser = function (callback) {
+    User.findByUsername(username, callback);
+  };
+  var updateUser = function (user, callback) {
+    if (_.isEmpty(user.extra)) {
+      user.extra = {};
+    }
+    user.extra.__welcomed = true;
+    user.save(callback);
+  };
+  async.waterfall([
+    findUser,
+    updateUser,
+  ], function (err, user) {
+    if (err) {
+      log.error('caught error in /profile/welcome');
+      log.error(err);
+      return;
+    }
+    req.session.user = user;
+    return res.json({success: true});
+  });
+});
+
+
 
 };

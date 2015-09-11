@@ -1,8 +1,11 @@
 'use strict';
 var log = require('log4js').addLogger('express');
+var uuid = require('node-uuid');
 
 // Errors
 exports = module.exports = function(err, req, res, next) {
+  var trackId = uuid.v4();
+  log.error('ID: ' + trackId);
   log.error('Caught error: ' + err.name);
   log.error(err.message);
   log.error(err.stack);
@@ -11,7 +14,13 @@ exports = module.exports = function(err, req, res, next) {
     // formed. Otherwise, we'd be stuck in an infinite loop.
     res.statusCode = 500;
     if (req.accepts('text/html')) {
-      res.render('views/500', {e: err});
+      var locals = {
+        trackId: trackId,
+      };
+      if ('development' === process.env.NODE_ENV) {
+        locals.e = err;
+      }
+      res.render('views/500', locals);
     } else if (req.accepts('application/json')) {
       res.json({
         statusCode: res.statusCode,

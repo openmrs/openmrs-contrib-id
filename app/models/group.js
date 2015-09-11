@@ -59,12 +59,13 @@ groupSchema.pre('save', function (next) {
   if (this.inLDAP) {
     return next();
   }
+  var that = this;
   var group = {groupName: this.groupName, description: this.description};
   ldap.addGroup(group, function (err) {
     if (err) {
       return next(err);
     }
-    this.inLDAP = true;
+    that.inLDAP = true;
     return next();
   });
 });
