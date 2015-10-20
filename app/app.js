@@ -144,7 +144,6 @@ try {
   console.log('ERROR: while openning configuration file at (' + __dirname +
     '/conf.js)! Exiting…');
   console.error(e);
-  return;
 }
 
 
