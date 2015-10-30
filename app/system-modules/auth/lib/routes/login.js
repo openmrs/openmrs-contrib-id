@@ -45,13 +45,13 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
   };
   var checkLocked = function (user, callback) {
     if (user.locked) {
-      return callback({loginFail: 'Please first verificate your email'});
+      return callback({loginFail: 'You must first verify your e-mail.'});
     }
     return callback(null, user);
   };
   var checkPassword = function (user, callback) {
     if (_.isEmpty(user.password)) {
-      return callback({loginFail: 'Your password should be reset first'});
+      return callback({loginFail: 'Your password must be reset first'});
     }
     if (!utils.checkSSHA(password, user.password)) {
       return callback({loginFail: 'Wrong password'});
