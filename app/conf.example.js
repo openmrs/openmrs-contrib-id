@@ -108,7 +108,6 @@ module.exports = {
     }
   },
 
-  // EJS Plugs
   "defaultSidebar": [
     "needhelp"
   ],
