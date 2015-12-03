@@ -106,7 +106,7 @@ if ('development' === app.get('env')) {
 
 if ('production' === app.get('env')) {
   console.log('Running in production mode');
-  app.use(express.errorHandler());
+  app.use(errorHandler());
 
   app.use('/resource', lessMiddleware('/less', {
     dest: '/stylesheets',
