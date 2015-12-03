@@ -140,7 +140,7 @@ module.exports = {
     "signupFormMaxAgeHours": 12,
     "honeypotFieldName": "country",
     "disableHoneypot": true,
-    "disableBlacklist": false,
+    "disableBlacklist": true, // disable blacklist by default.
 
     "dnsSpamLists": {
         "bl.spamcop.net": {
