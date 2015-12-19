@@ -135,3 +135,25 @@ Given to the reason above, we added a field, `conf.signup.disableBlacklist` ,in 
 # Update User Modules
 
 Do `git pull --rebase origin master` on each user module and also backup and delete `node_modules` and then run `npm install`
+
+# Changes in modules for 2.1
+
+## openmrs-contrib-id-sso
+
+In `conf.json` add the following entry to conf.json:
+
+2.1 automatically creates the discourse account after accounts are validated.
+
+Add “nonceURL” below the entry for the “secret.”
+
+The remainder of `conf.json` is be the same.
+
+Below line 5 in add the following:
+
+``` json
+"nonceURL": "http://talk.openmrs.org/session/sso",
+```
+
+## Global Nav Bar
+
+To be written later.
