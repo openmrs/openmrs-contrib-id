@@ -62,7 +62,7 @@ block content
             = failReason.username
           else
             | Please enter a valid username.
-        | Your username can only contain letters and numbers (0-9, A-Z, a-z).
+        | Your username must start with a letter (A-Z, a-z), may contain any letters and numbers (A-Z, a-z, 0-9) and between 3 and 18 characters.
 
     div.field.two-up(class={fail: fail.firstName || fail.lastName})
       label Name
