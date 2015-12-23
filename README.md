@@ -20,7 +20,7 @@ See [`installing-openmrsid.md`](https://github.com/openmrs/openmrs-contrib-id/bl
 	* Signup - supporting email address verification, reCAPTCHA anti-spam forms, and welcome mail
 	* User profile changes - editing first/last name, email, password; adding multiple email addresses
 	* Password resets - reset by username or email address, send to all emails linked to a user
-* Modular system for adding on new functionality, see (Modules)[https://github.com/openmrs/openmrs-contrib-id#modules] section
+* Modular system for adding new functionality, see (Modules)[https://github.com/openmrs/openmrs-contrib-id#modules] section
 * Form validation and control
 * Designed with the visual style of [openmrs.org](http://openmrs.org) in mind :)
 
