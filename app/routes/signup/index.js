@@ -21,20 +21,6 @@ var signupMiddleware = require('./middleware');
 var emailPath = path.resolve(__dirname, '../../../templates/emails');
 
 /*
-USER-NAV
-========
-*/
-nav.add({
-  name: 'Sign Up',
-  url: '/signup',
-  viewName: 'signup',
-  visibleLoggedOut: true,
-  visibleLoggedIn: false,
-  icon: 'icon-asterisk',
-  order: 20
-});
-
-/*
 ROUTES
 ======
 */
