@@ -4,16 +4,15 @@ block defines
   - title = 'OpenMRS ID - Reset Password';
   - name = 'reset-public';
   - headline = 'Reset Your Password';
-  - sidebar = ['id-whatis', 'forgot-password'];
+  - sidebar = ['id-whatis'];
   - fail = fail || {};
   - failReason = failReason || {};
   - values = values || {};
 
 block content
-  .panel.panel-default
+  .panel
     form(action='#', method='post')
-      .panel-body
-        p Enter a new password for <strong>#{username}</strong> in the field below.
+        h2 Enter a new password for <strong>#{username}</strong> in the field below.
 
       div.form-group(class={fail: fail.newPassword})
         label(for='newPassword') New Password
@@ -30,5 +29,4 @@ block content
         span.description
           span.failtext Passwords did not match.
           | Check for typos!
-      div.panel-footer
-        input.btn.btn-success(type='submit', value='Reset Password »')
+      input.btn.btn-success(type='submit', value='Reset Password »')

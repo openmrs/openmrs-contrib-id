@@ -3,8 +3,7 @@ extends ../../layouts/base
 block defines
   - title = 'OpenMRS ID - Your Profile';
   - name = 'edit-profile';
-  - headline = user.displayName + '\'s Profile';
-  - sidebar = ['editprofile-avatar'];
+  - showNavbar = true;
   - fail = fail || {};
   - failReason = failReason || {};
   - values = values || {};
@@ -19,7 +18,9 @@ append head
       }
 
       $('#done').click(function () {
-        $.ajax('/profile/welcome');
+        $.ajax('/profile/welcome', function() {
+          $('#welcome-message').hide();
+        });
       });
 
       $('#later').click(function () {
@@ -40,11 +41,13 @@ block content
           //- TODO update the links
           li <a href="#">Edit your Wiki Profile</a> so we can learn more about you.
           li <a href="#">Create your own Personal Space</a> on the Wiki.
-        input#done.btn.btn-success(type='submit', value="Thanks, I've done these")
-        input#later.btn.btn-success(type='submit', value='Remind me later')
-  .row
-    .col-md-6
-      include edit-basic-details
+        .row
+          input#done.btn.btn-default(type='submit', value="Thanks, I've done these")
+        .row
+          input#later.btn.btn-default(type='submit', value='Remind me later')
 
-    .col-md-6
-      include edit-email
+  .col-md-6.left
+    include edit-basic-details
+
+  .col-md-6.right
+    include edit-email

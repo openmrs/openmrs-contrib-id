@@ -1,9 +1,4 @@
-/* recaptcha settings */
-var RecaptchaOptions = {
-    theme : 'custom',
-    custom_theme_widget: 'recaptcha_widget'
-};
-
+'use strict';
 /* login redirect-to */
 function getParameterByName(name)
 {
@@ -11,10 +6,12 @@ function getParameterByName(name)
   var regexS = "[\\?&]" + name + "=([^&#]*)";
   var regex = new RegExp(regexS);
   var results = regex.exec(window.location.href);
-  if(results == null)
+  if(results === null) {
     return "";
-  else
+  }
+  else {
     return decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
 }
 
 $().ready(function(){
@@ -167,7 +164,7 @@ $().ready(function(){
 
 
     /* FIELD DESCRIPTIONS */
-    $('.field input, .field textarea').focusin(function(){
+    $('input, textarea').focusin(function(){
         $('.description').css('visibility', 'hidden');
         $(this).siblings('.description').css('visibility', 'visible');
     });
@@ -262,7 +259,7 @@ $().ready(function(){
     $('#addEmail').hide();
     $('#addEmailToggle').on('click',function(e) {
       e.preventDefault();
-      $('#addEmail').toggle();
+      $('#addEmail').slideToggle();
       $('#addEmail input[name=newEmail]').focus();
     });
 

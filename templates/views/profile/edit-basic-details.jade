@@ -1,34 +1,28 @@
-.list-group
-  .list-group-item
-    h1 #{user.username} <small>username</small>
+.panel
+  h1 #{user.username} <small>username</small>
 
-    form(action='/profile', method='post')
-      div.form-group(class={fail : (fail.firstName || fail.lastName)})
-        label Name
-        .row
-          .col-md-6
-            input.form-control(type='text', name='firstName',
-              placeholder='Given Name', value=(failed) ? values.firstName : user.firstName)
-
-          .col-md-6
-            input.form-control(type='text', name='lastName',
-              placeholder='Surname', value=(failed) ? values.lastName : user.lastName)
-
-        span.help-block.description
-          span.failtext Both a first and last name are required.
-          | Your name identifies you across the OpenMRS Community.
-
+  form(action='/profile', method='post')
+    div.form-group(class={fail : (fail.firstName || fail.lastName)})
+      label Name
       .row
-        .col-md-12
-          input.btn.btn-success.pull-right(type='submit', value='Update Profile »')
+        .col-md-6.left
+          input(type='text', name='firstName',
+            placeholder='Given Name', value=(failed) ? values.firstName : user.firstName)
+
+        .col-md-6.right
+          input(type='text', name='lastName',
+            placeholder='Surname', value=(failed) ? values.lastName : user.lastName)
+
+      span.help-block
+        span.failtext Both a first and last name are required.
+        | Your name identifies you across the OpenMRS Community.
+
+    .row
+      .col-md-12(style="padding:0")
+        input.btn.btn-success(type='submit', pvalue='Update Profile »')
 
 
-    hr
+  hr
 
-    h2 Your profile picture
-    p Profile pictures are managed along with your profile on the OpenMRS Wiki. Head over to Confluence to <a href="https://wiki.openmrs.org/users/viewmyprofile.action" target="_blank">edit your Wiki profile</a> or <a href="https://wiki.openmrs.org/users/editmyprofilepicture.action" target="_blank">change your profile picture</a>.
-
-    hr
-
-    h2 <a href="#" id="editPasswordToggle">Need to change your password?</a>
-    include edit-password
+  h2 <a href="#" id="editPasswordToggle">Need to change your password?</a>
+  include edit-password

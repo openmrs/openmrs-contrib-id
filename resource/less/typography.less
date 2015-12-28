@@ -1,4 +1,5 @@
 @import url(//fonts.googleapis.com/css?family=Open+Sans:400,700,600|Crimson+Text:400,400italic,700);
+@import "colors";
 
 @display-type:  'Open Sans', 'Helvetica', 'Arial', sans-serif;
 @body-type:     'Crimson Text', 'Baskerville', 'Palatino', 'Georgia', serif;
@@ -10,22 +11,20 @@ body {
   color: #555555;
 }
 
+.square-border {
+  border: solid 1px @border-color;
+  border-radius: 1px;
+}
+
 a:not(.btn) {
   &:link, &:visited {
     color: #b38936;
-    text-decoration: none;
+      text-decoration: none;
   }
   &:hover {
     color: #4d4129;
     text-decoration: underline;
   }
-}
-
-.placeholder, .hint {
-  color: #ccc;
-}
-.status {
-  font: 10px @control-type; 
 }
 
 b, strong {
@@ -57,6 +56,13 @@ h2 {
   }
 }
 
+input {
+  padding: 5px 15px;
+  width: 100%;
+  .square-border;
+}
+
+
 // Button types
 input[type="submit"], button, a.btn {
   font-family: @control-type;
@@ -68,11 +74,59 @@ button i[class^="icon-"] {
   margin-left: -3px;
   pointer-events: none;
 }
+
 a:link i[class^="icon-"]  {
   text-decoration: none !important;
 }
 
+.description {
+  margin-left: 10px;
+  vertical-align: bottom;
+}
+
+.left {
+  margin: 0;
+  padding: 0 3px 0 0;
+}
+.right {
+  margin: 0;
+  padding: 0 0 0 3px;
+  float: right;
+}
+
+
 // Bootstrap overrides
+.panel {
+  .square-border;
+  padding: 25px;
+}
+
+.row {
+  margin: 0 0 15px;
+}
+
+.btn {
+  .square-border;
+  color: black;
+  background-color: transparent;
+
+  a {
+    text-decoration: none;
+  }
+
+  &.btn-success {
+    background-color: #b38936;
+    color: white;
+    &:hover, &:active, &:focus {
+      border-color: transparent;
+      background-color: #b36a36;
+      transition: background-color 0.1s;
+    }
+  }
+}
+
 .badge, .label {
   font-family: @control-type;
 }
+
+
