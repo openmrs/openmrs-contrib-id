@@ -22,7 +22,7 @@ var User = require('../../models/user');
 exports = module.exports = function (app) {
 
 
-app.get('/login', mid.forceLogout, validate.receive,
+app.get('/login', mid.forceLogout,
   function(req, res, next) {
     res.render('views/login');
   }

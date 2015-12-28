@@ -7,8 +7,6 @@ var path = require('path');
 var async = require('async');
 var _ = require('lodash');
 
-var resetMid = require('./middleware');
-
 var conf = require('../../conf');
 var mid = require('../../express-middleware');
 var validate = require('../../validate');
@@ -100,7 +98,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
   });
 });
 
-app.get('/reset/:id', mid.forceLogout, validate.receive,
+app.get('/reset/:id', mid.forceLogout,
   function(req, res, next) {
 
   var id = utils.urlDecode64(req.params.id);
@@ -120,29 +118,52 @@ app.get('/reset/:id', mid.forceLogout, validate.receive,
   });
 });
 
-app.post('/reset/:id', mid.forceLogout, resetMid.validator,
+app.post('/reset/:id', mid.forceLogout,
   function(req, res, next) {
 
 
   var id = utils.urlDecode64(req.params.id);
-  verification.check(id, function(err, valid, locals) {
-    if (err) {
-      return next(err);
-    }
-    if (!valid) {
-      req.flash('error',
-        'The requested password reset has expired or does not exist.');
-      return res.redirect('/');
-    }
+  var npass = req.body.newPassword;
+  var cpass = req.body.confirmPassword;
 
-    var password = req.body.newPassword;
-    var username = locals.username;
 
+  var validation = function (callback) {
+    var validators = {
+      newPassword: validate.chkLength.bind(null, npass, 8),
+      confirmPassword: validate.chkDiff.bind(null, npass, cpass),
+    };
+
+    validate.perform(validators, function (err, failures) {
+      if (err) {
+        return callback(err);
+      }
+      if (_.isEmpty(failures)) {
+        return callback();
+      }
+      res.json({fail: failures});
+    });
+  };
+
+  var chkVerification = function (callback) {
+    verification.check(id, function(err, valid, locals) {
+      if (err) {
+        return next(err);
+      }
+      if (!valid) {
+        req.flash('error',
+          'The requested password reset has expired or does not exist.');
+        return res.redirect('/');
+      }
+      return callback(null, locals.username);
+    });
+  };
+
+  var update = function (username, callback) {
     User.findByUsername(username, function (err, user) {
       if (err) {
         return next(err);
       }
-      user.password=password;
+      user.password = npass;
 
       user.save(function (err) {
         if (err) {
@@ -155,8 +176,14 @@ app.post('/reset/:id', mid.forceLogout, resetMid.validator,
           'You may now log in across the OpenMRS Community.');
         res.redirect('/');
       });
-    });
-  });
+    })
+  };
+
+  async.waterfall([
+    validation,
+    chkVerification,
+    update,
+  ]);
 });
 
 

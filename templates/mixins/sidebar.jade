@@ -12,11 +12,6 @@ mixin sidebar(content)
     h2 Your profile picture
     p Profile pictures are managed along with your profile on the OpenMRS Wiki. Head over to Confluence to <a href="https://wiki.openmrs.org/users/viewmyprofile.action" target="_blank">edit your Wiki profile</a> or <a href="https://wiki.openmrs.org/users/editmyprofilepicture.action" target="_blank">change your profile picture</a>.
 
-  if _.contains(content, 'forgot-password')
-    h2
-      a(href='/reset') Forgot your password?
-    p If you forgot your password, you can <a href="/reset">request to have it reset</a>. We'll send you a confirmation email with the details.
-
   if _.contains(content, 'id-whatis')
     h2 What is OpenMRS ID?
     p OpenMRS ID is your key to participating in our open source community. You can use it for most of our tools and services, including those listed in the links at the top of this page. <a href="http://go.openmrs.org/id"><strong>Read more on our wiki.</strong></a>

@@ -13,9 +13,8 @@ var log = require('log4js').addLogger('express');
 var mid = require('../../express-middleware');
 var User = require('../../models/user');
 var utils = require('../../utils');
+var validate = require('../../validate');
 
-
-var profileMid = require('./middleware');
 
 exports = module.exports = function (app) {
 
@@ -93,35 +92,76 @@ app.get('/profile/email/resend/:id', mid.forceLogin,
   });
 });
 
-app.post('/profile/email', mid.forceLogin, profileMid.emailValidator,
+
+// AJAX
+// add new email
+app.post('/profile/email', mid.forceLogin,
   function (req, res, next) {
 
+
   var user = req.session.user;
-  var mail = req.body.newEmail;
+  var email = req.body.newEmail;
 
-  log.debug(user.username + ': email address ' +
-      mail + ' will be verified');
-
-  // create verification instance
-  verification.begin({
-    callback: 'profile/email/verify',
-    addr: mail,
-    category: 'new email',
-    username: user.username,
-    subject: '[OpenMRS] Email address verification',
-    templatePath: path.join(common.templatePath, 'emails/email-verify.jade'),
-    locals: {
-      displayName: user.displayName,
-      username: user.username,
-      mail: mail,
+  var findDuplicateInVerification = function (validateError, callback) {
+    if (validateError) {
+      return callback(null, validateError);
     }
-  },
-  function(err) {
+    verification.search(email, 'new email', function (err, instances) {
+      if (err) {
+        return callback(err);
+      }
+      if (instances.length > 0) {
+        return callback(null, 'Already used');
+      }
+      return callback(null);
+    });
+  };
+
+
+  var validation = function (callback) {
+    async.waterfall([
+      validate.chkEmailInvalidOrDup.bind(null, email),
+      findDuplicateInVerification,
+    ], function (err, validateError) {
+      if (err) {
+        return next(err);
+      }
+      if (validateError) {
+        return res.json({fail: {email: validateError}});
+      }
+      return callback();
+    });
+  };
+
+  var sendVerification = function (callback) {
+    log.debug(user.username + ': email address ' + email + ' will be verified');
+    // create verification instance
+    verification.begin({
+      callback: 'profile/email/verify',
+      addr: email,
+      category: 'new email',
+      username: user.username,
+      subject: '[OpenMRS] Email address verification',
+      templatePath: path.join(common.templatePath, 'emails/email-verify.jade'),
+      locals: {
+        displayName: user.displayName,
+        username: user.username,
+        mail: email,
+      }
+    }, callback);
+  };
+
+  async.series([
+    validation,
+    sendVerification,
+  ], function (err) {
     if (err) {
       return next(err);
     }
-    return res.redirect('/profile');
+    return res.json({success: true});
   });
+
+
 });
 
 app.get('/profile/email/delete/:email', mid.forceLogin, function (req, res, next) {

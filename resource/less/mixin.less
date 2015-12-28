@@ -1,0 +1,85 @@
+@import "colors";
+
+.nodisp {
+  display: none;
+}
+
+.square-border {
+  border: solid 1px @border-color;
+  border-radius: 1px;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+
+input {
+  box-shadow: none;
+  padding: 5px 10px;
+  width: 100%;
+  background-color: #fff;
+
+  font-size: 16px;
+  line-height: 22px;
+
+  .square-border;
+}
+
+.left {
+  margin: 0;
+  padding: 0 5px 0 0;
+}
+.right {
+  margin: 0;
+  padding: 0 0 0 5px;
+  float: right;
+}
+
+
+// Bootstrap overrides
+.panel {
+  .square-border;
+  padding: 25px;
+}
+
+.row-item {
+  &:before, &:after {
+    display: table;
+    content: " ";
+  }
+  &:after {
+    clear: both;
+  }
+  margin: 0 0 15px;
+
+  &.thin, &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.btn {
+  .square-border;
+  color: black;
+  background-color: transparent;
+
+  a {
+    text-decoration: none;
+  }
+
+  &.btn-success {
+    background-color: @omrs-orange;
+    color: white;
+    &:hover, &:active, &:focus {
+      border-color: transparent;
+      background-color: @omrs-orange + #101010;
+      transition: background-color 0.1s;
+    }
+  }
+}
+
+.badge, .label {
+  font-family: @control-type;
+}
+
+
