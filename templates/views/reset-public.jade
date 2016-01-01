@@ -16,9 +16,9 @@ block content
     div.panel.panel-default
       div.panel-body
         form#reset-form(action='/reset', method='post')
-          div.row Forgot your password? Enter your username or e-mail address and we will e-mail you instructions to reset it.
-          div.row(class={fail: fail.resetCredential})
+          div.row-item Forgot your password? Enter your username or e-mail address and we will e-mail you instructions to reset it.
+          div.row-item(class={fail: fail.resetCredential})
             input.col-md-5(type='text', name='resetCredential',
                   placeholder='Username or Email', size='32', autofocus='')
-          div.row
+          div.row-item
             input.btn.btn-success.col-md-3(type='submit', value='Send me the email')

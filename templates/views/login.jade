@@ -17,13 +17,13 @@ block content
 
       input#redirect-to(type='hidden', name='destination')
 
-      div.row(class={fail: fail.loginusername},)
+      div.row-item(class={fail: fail.loginusername},)
         input.col-md-5(type='text', name='loginusername',
               placeholder='OpenMRS ID/Email')
         span.description.failtext.
           A username must be supplied to log in.
 
-      div.row(class={fail: fail.loginpassword})
+      div.row-item(class={fail: fail.loginpassword})
         input.col-md-5(type='password', name='loginpassword', placeholder='Password')
         span.description.failtext
           if (values.loginpassword === '')
@@ -31,9 +31,9 @@ block content
           else
             | If you have forgotten your password, you can <a href="/reset">reset it here</a>
 
-      div.row(style="margin-bottom:0")
+      div.row-item(style="margin-bottom:0")
         h5
           a(href='/reset') Forgot your password?
 
-      div.row
+      div.row-item
         input.btn.btn-success.col-md-3(type='submit', value='Sign in')

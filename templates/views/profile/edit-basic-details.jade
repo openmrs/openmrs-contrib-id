@@ -4,7 +4,7 @@
   form(action='/profile', method='post')
     div.form-group(class={fail : (fail.firstName || fail.lastName)})
       label Name
-      .row
+      .row-item
         .col-md-6.left
           input(type='text', name='firstName',
             placeholder='Given Name', value=(failed) ? values.firstName : user.firstName)
@@ -17,7 +17,7 @@
         span.failtext Both a first and last name are required.
         | Your name identifies you across the OpenMRS Community.
 
-    .row
+    .row-item
       .col-md-12(style="padding:0")
         input.btn.btn-success(type='submit', pvalue='Update Profile »')
 

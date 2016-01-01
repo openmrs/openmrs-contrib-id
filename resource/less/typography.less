@@ -11,9 +11,17 @@ body {
   color: #555555;
 }
 
+.nodisp {
+  display: none;
+}
+
 .square-border {
   border: solid 1px @border-color;
   border-radius: 1px;
+}
+
+.no-padding {
+  padding: 0;
 }
 
 a:not(.btn) {
@@ -79,18 +87,15 @@ a:link i[class^="icon-"]  {
   text-decoration: none !important;
 }
 
-.description {
-  margin-left: 10px;
-  vertical-align: bottom;
-}
+
 
 .left {
   margin: 0;
-  padding: 0 3px 0 0;
+  padding: 0 5px 0 0;
 }
 .right {
   margin: 0;
-  padding: 0 0 0 3px;
+  padding: 0 0 0 5px;
   float: right;
 }
 
@@ -101,7 +106,14 @@ a:link i[class^="icon-"]  {
   padding: 25px;
 }
 
-.row {
+.row-item {
+  &:before, &:after {
+    display: table;
+    content: " ";
+  }
+  &:after {
+    clear: both;
+  }
   margin: 0 0 15px;
 }
 

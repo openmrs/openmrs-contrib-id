@@ -16,9 +16,6 @@ function getParameterByName(name)
 
 $().ready(function(){
 
-    /* focus on a failed input field */
-    if ($('.field.fail')) $('.field.fail:first').children('input').focus();
-
     /* "MORE" BANNER */
     var moreExpanded = $('#header ul#more').outerHeight(true),
         moreOriginal = $('#header li#moreContainer').outerHeight(true),
@@ -161,57 +158,6 @@ $().ready(function(){
     };
     $('.popover').centerPopover(); // center once at DOM startup
 
-
-
-    /* FIELD DESCRIPTIONS */
-    $('input, textarea').focusin(function(){
-        $('.description').css('visibility', 'hidden');
-        $(this).siblings('.description').css('visibility', 'visible');
-    });
-
-    $('.field.noedit p').click(function(){
-        $(this).siblings('.description').css('visibility', 'visible');
-    }).mouseout(function(){
-        $(this).siblings('.description').css('visibility', 'hidden');
-    });
-
-    // Show description of page draws with an input focused (autofocused)
-    if ($('.field input:focus').siblings('.description').css('visibility') != 'visible')
-        $('.field input:focus').siblings('.description').css('visibility', 'visible');
-
-    // Check for valid usernames on signup
-    var searchTimeout = {}, origUserText = $('.field input[placeholder=Username]').siblings('span').html();
-    $('.field input[placeholder=Username]').keyup(function(){
-        var userInput = this, userVal = $(this).val();
-        clearTimeout(searchTimeout);
-        if (userVal) {
-            searchTimeout = setTimeout(function(){
-                $.ajax({
-                    url: '/checkuser/'+userVal,
-                    error: function(){},
-                    success: function(data) {
-                        data = $.parseJSON(data);
-                        if (data.illegal) {
-                            $(userInput).parent().addClass('fail').children('span.description').html('Illegal username specified. Usernames can contain numbers and letters.');
-                        }
-                        else {
-                            if (!data.exists) {
-                                if ($(userInput).parent().hasClass('fail')) $(userInput).parent().removeClass('fail');
-                                $(userInput).parent().addClass('valid').children('span.description').html('<span class="validtext">"'+userVal+'" is available!</span>');
-                            }
-                            if (data.exists) {
-                                $(userInput).parent().addClass('fail').children('span.description').html('<span class="failtext">"'+userVal+'" is already taken.</span>');
-                            }
-                        }
-                    }
-                });
-            }, 1000);
-        }
-        else $(this).siblings('span').html(origUserText);
-    });
-
-    /* LOGIN FORM REDIRECT-TO */
-    $('#redirect-to').attr('value', getParameterByName('destination'));
 
     /* NEXT... FIELD (secondary email addresses) */
     var duplicate = function(){

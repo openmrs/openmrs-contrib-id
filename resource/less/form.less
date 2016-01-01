@@ -1,0 +1,58 @@
+form {
+  .description {
+    float: left;
+    margin-top: 5px;
+    margin-left: 10px;
+    visibility: hidden;
+    opacity: 0;
+    transition: all .4s ease-out;
+    &.show {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+}
+
+form.validate {
+
+  .input-wrapper {
+    position: relative;
+
+    padding: 0;
+
+    &.left {
+      padding-right: 3px;
+    }
+
+    &.right {
+      padding-left: 3px;
+    }
+
+    label.error {
+      position: absolute;
+      top: 1px;
+      right: 10px;
+
+      margin-right: 10px;
+      padding: 5px 0 5px 15px;
+
+      color: red;
+      background: #fff;
+      background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), #fff 10px);
+      background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff 10px);
+
+      cursor: text;
+      display: block;
+      visibility: hidden;
+      opacity: 0;
+      transform: translate(20px, 0);
+      transition: all .4s ease-out;
+
+      &.show {
+        visibility: visible;
+        opacity:  1;
+        transform: translate(0, 0);
+      }
+    }
+  }
+}
