@@ -8,6 +8,7 @@ var fs = require('fs');
 var conf = require('./app/conf');
 
 gulp.task('scripts', function () {
+  // generate consts.js
   var fd = fs.openSync(path.join(__dirname, 'resource/scripts/consts.js'), 'w');
   fs.writeSync(fd, 'usernameRegex = ' + conf.user.usernameRegex + ';\n');
   fs.writeSync(fd, 'emailRegex = ' + conf.email.validation.emailRegex + ';\n');
@@ -15,9 +16,10 @@ gulp.task('scripts', function () {
 
   return gulp.src([
     'resource/scripts/consts.js',
-    'resource/scripts/signup.js',
-    'resource/scripts/form.js',
     'resource/scripts/jquery-addon.js',
+    'resource/scripts/form.js',
+    'resource/scripts/signup.js',
+    'resource/scripts/profile.js',
     'bower_components/cryptojslib/rollups/md5.js'])
     .pipe(concat('min.js'))
     .pipe(uglify())

@@ -16,34 +16,6 @@ function getParameterByName(name)
 
 $().ready(function(){
 
-    /* "MORE" BANNER */
-    var moreExpanded = $('#header ul#more').outerHeight(true),
-        moreOriginal = $('#header li#moreContainer').outerHeight(true),
-        moreOpened = false;
-
-    $('#header li#moreContainer').click(function(event){
-        event.stopPropagation();
-        if (moreOpened==false) {
-            $(this).css('height', moreExpanded).addClass('on');
-            moreOpened = true;
-        }
-        else if (moreOpened==true) {
-            $(this).attr('style', '').removeClass('on');
-            moreOpened = false;
-        }
-    });
-    $('#header ul#more a').click(function(event){
-        event.stopPropagation();
-        document.location = $(this).attr('href');
-    });
-    /* close when clicked outside */
-    $('html').click(function(){
-        if (moreOpened==true) {
-            $('#header li#moreContainer').attr('style', '').removeClass('on');
-            moreOpened = false;
-        }
-    });
-
 
 
     /* POPOVERS */
@@ -200,20 +172,5 @@ $().ready(function(){
             .dataset.content = $(this).html();
 
     })
-
-    /* toggle Add Email form */
-    $('#addEmail').hide();
-    $('#addEmailToggle').on('click',function(e) {
-      e.preventDefault();
-      $('#addEmail').slideToggle();
-      $('#addEmail input[name=newEmail]').focus();
-    });
-
-    /* toggle Edit Password form */
-    $('#editPassword').hide();
-    $('#editPasswordToggle').on('click',function(e) {
-      e.preventDefault();
-      $('#editPassword').slideToggle();
-    });
 
 });

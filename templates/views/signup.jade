@@ -6,38 +6,32 @@ block defines
   - headline = 'Sign up for OpenMRS ID <small>Already have one? <a href="/login"> Sign in.</a></small>';
   - showSidebar = true;
   - sidebar = ['id-whatis'];
-  - fail = fail || {};
-  - failReason = failReason || {};
-  - values = values || {};
 
 append head
-  //- script(src='https://www.google.com/recaptcha/api.js')
-  script(src='/resource/scripts/min.js')
+  script(src='https://www.google.com/recaptcha/api.js')
 
 block content
   div.panel
     form.validate.signup#form-signup(action='/signup', method='post',
         autocomplete='off')
 
-      div.row-item.form-group(class=(fail.username?'fail':undefined))
+      div.row-item.form-group
         div.input-wrapper.col-md-5
           input.required#username(type='text',
                 name=disguise('username', spinner),
                 placeholder='Username',
-                value=(values.username || undefined)
                 )
           label.error Required
 
         span.description
           | Only lowercase letters and numbers are allowed. (0-9, a-z).
 
-      div.row-item.form-group(class={fail: fail.firstName || fail.lastName})
+      div.row-item.form-group
         div.col-md-5.no-padding
           div.input-wrapper.col-md-6.left
             input.required#fisrtName(type='text',
                   name=disguise('firstName', spinner),
                   placeholder='Given Name',
-                  value=(values.firstName || undefined)
                   )
             label.error Required
 
@@ -45,15 +39,13 @@ block content
             input.required#lastName(type='text',
                   name=disguise('lastName', spinner),
                   placeholder='Surname',
-                  value=(values.lastName || undefined)
                   )
             label.error Required
 
-      div.row-item.form-group(class={fail: fail.primaryEmail})
+      div.row-item.form-group
         div.input-wrapper.col-md-5
           input.required#email(type='text', name=disguise('primaryEmail', spinner),
                 placeholder='Email Address',
-                value=(values.primaryEmail || undefined)
                 )
           label.error Required
 
@@ -63,7 +55,7 @@ block content
               placeholder='Country')
 
 
-      div.row-item.form-group(class={fail: fail.password})
+      div.row-item.form-group
         div.input-wrapper.col-md-5
 
           input.required#password(type='password', name=disguise('password', spinner),
@@ -72,11 +64,14 @@ block content
         span.description
           | Passwords must be at least 8 characters long.
 
-      //- div.row-item.form-group.g-recaptcha(data-sitekey=recaptchaPublic)
+      div.row-item.form-group
+        div.g-recaptcha#recaptcha(data-sitekey=recaptchaPublic)
 
       input(type='hidden', name='spinner', value=spinner)
       input(type='hidden', name=disguise('timestamp', spinner),
             value=timestamp)
 
       div.row-item.form-group
-        input.btn.btn-success.col-md-3(type='submit', value='Join the Community » ')
+        div.input-wrapper.col-md-5
+          input.btn.btn-success.col-md-7#submit(type='submit', value='Join the Community » ')
+          label.error Mind CAPTCHA!

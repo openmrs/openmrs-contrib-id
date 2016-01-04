@@ -17,8 +17,8 @@ var userNavLinks = [ // built-in links
 
   {
     'name': 'Your Profile',
-    'url': '/edit/profile',
-    'viewName': 'edit-profile',
+    'url': '/profile',
+    'viewName': 'profile',
     'visibleLoggedOut': false,
     'visibleLoggedIn': true,
     'requiredGroup': 'dashboard-users',

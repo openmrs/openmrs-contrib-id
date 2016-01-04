@@ -32,11 +32,11 @@ mixin email-item(m)
   if (1 === emails.length)
     p Adding multiple email addresses to your account is recommended, especially if your openmrs.org email address is your primary email address. This allows you to reset your password from multiple email addresses
 
-  form#addEmail.form-horizontal(action='/profile/email', method='post')
-    .form-group
-      label.control-label.col-sm-4(for='newEmail') New Email
-      .col-sm-8
-        input(type='text', name='newEmail')
-    .row-item
-      .col-md-12(style="padding:0")
-        input.btn.btn-success.pull-right(type='submit', value='Add »')
+  form#addEmail.validate(action='/profile/email', method='post')
+    .form-group.row-item
+      .input-wrapper
+        input#email.required(type='text', name='newEmail',
+            placeholder='New Email')
+        label.error
+    .form-group.row-item
+      input.btn.btn-success.pull-right(type='submit', value='Add »')

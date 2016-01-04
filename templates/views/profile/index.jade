@@ -2,32 +2,11 @@ extends ../../layouts/base
 
 block defines
   - title = 'OpenMRS ID - Your Profile';
-  - name = 'edit-profile';
+  - name = 'profile';
   - showNavbar = true;
-  - fail = fail || {};
-  - failReason = failReason || {};
-  - values = values || {};
 
 append head
   link(rel='stylesheet', href='/resource/stylesheets/profile/profile.css')
-  script(type='text/javascript').
-    $(document).ready( function() {
-      // deal with the welcome-message
-      if (Cookies.get('welcome-later')) {
-        $('#welcome-message').hide();
-      }
-
-      $('#done').click(function () {
-        $.ajax('/profile/welcome', function() {
-          $('#welcome-message').hide();
-        });
-      });
-
-      $('#later').click(function () {
-        Cookies.set('welcome-later', true, {expires: 1, path: ''});
-        $('#welcome-message').hide();
-      });
-    });
 
 
 block content
@@ -42,9 +21,9 @@ block content
           li <a href="#">Edit your Wiki Profile</a> so we can learn more about you.
           li <a href="#">Create your own Personal Space</a> on the Wiki.
         .row-item
-          input#done.btn.btn-default(type='submit', value="Thanks, I've done these")
+          input#done.btn.btn-success(type='submit', value="Thanks, I've done these")
         .row-item
-          input#later.btn.btn-default(type='submit', value='Remind me later')
+          input#later.btn.btn-success(type='submit', value='Remind me later')
 
   .col-md-6.left
     include edit-basic-details

@@ -1,25 +1,25 @@
 .panel
   h1 #{user.username} <small>username</small>
 
-  form(action='/profile', method='post')
-    div.form-group(class={fail : (fail.firstName || fail.lastName)})
+  form.validate(action='/profile', method='post')
+    div.form-group
       label Name
       .row-item
-        .col-md-6.left
-          input(type='text', name='firstName',
-            placeholder='Given Name', value=(failed) ? values.firstName : user.firstName)
+        .col-md-6.input-wrapper.left
+          input.required#firstName(type='text', name='firstName',
+            placeholder='Given Name', value=user.firstName)
+          label.error Required
 
-        .col-md-6.right
-          input(type='text', name='lastName',
-            placeholder='Surname', value=(failed) ? values.lastName : user.lastName)
+        .col-md-6.input-wrapper.right
+          input.required#lastName(type='text', name='lastName',
+            placeholder='Surname', value=user.lastName)
+          label.error Required
 
-      span.help-block
-        span.failtext Both a first and last name are required.
-        | Your name identifies you across the OpenMRS Community.
+        span.description
+          | Your name identifies you across the OpenMRS Community.
 
     .row-item
-      .col-md-12(style="padding:0")
-        input.btn.btn-success(type='submit', pvalue='Update Profile »')
+      input.btn.btn-success(type='submit', value='Update Profile »')
 
 
   hr

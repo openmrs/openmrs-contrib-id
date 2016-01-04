@@ -8,7 +8,6 @@ var async = require('async');
 var _ = require('lodash');
 var log = require('log4js').addLogger('express');
 
-var profileMid = require('./middleware');
 
 var common = require('../../common');
 var conf = require('../../conf');
@@ -21,7 +20,7 @@ var utils = require('../../utils');
 exports = module.exports = function (app) {
 
 
-app.get('/profile', mid.forceLogin, validate.receive,
+app.get('/profile', mid.forceLogin,
   function(req, res, next) {
 
   // check if any emails being verified
@@ -71,10 +70,22 @@ app.get('/profile', mid.forceLogin, validate.receive,
 });
 
 // handle basical profile change, firstName and lastName only currently
-app.post('/profile', mid.forceLogin, profileMid.profileValidator,
+app.post('/profile', mid.forceLogin,
   function(req, res, next) {
 
   var username = req.session.user.username;
+
+  var validation = function (callback) {
+    validate.perform({
+      firstName: validate.chkEmpty.bind(null, req.body.firstName),
+      lastName: validate.chkEmpty.bind(null, req.body.lastName),
+    }, function (err, validateError) {
+      if (_.isEmpty(validateError)) {
+        return callback();
+      }
+      return res.json({fail: validateError});
+    });
+  };
 
   var findUser = function (callback) {
     User.findByUsername(username, callback);
@@ -88,6 +99,7 @@ app.post('/profile', mid.forceLogin, profileMid.profileValidator,
   };
 
   async.waterfall([
+    validation,
     findUser,
     updateUser,
   ],

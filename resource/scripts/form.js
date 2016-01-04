@@ -1,5 +1,59 @@
 'use strict';
-// handle all the validations
+/**
+ *
+ * This file describes the behaviors of forms and its related validations*
+ * along with form.less.
+ * It's designed to be general-purposed.
+ *
+ * Typical form shall have such structures below.
+ * form
+ *   div.form-group
+ *     input
+ *     *.description
+ * The description would only be shown when input that belongs
+ * to the same .form-group is focused.
+ * The input and .description doesn't needs to be siblins necessarily.
+ *
+ *
+ * As for form with validations, they are like this way,
+ * form.validation
+ *   div.form-group
+ *     div.input-wrapper
+ *       input#name
+ *       label.error
+ *     *.description
+ *
+ * label.error shall be shown only when certain invalid fields
+ * are found after validation, and they'll contain the error messages.
+ * You can bind validators with certain inputs by
+ *   $('input#name').data({
+ *     validate: function () { }
+ *   });
+ * All such validators shall be sync and returns the error message
+ * or nothing if correct.
+ *
+ * You can also bind a validate & submit function to the form itself,
+ * it could be async and should be defined this way,
+ *   $('form.validate#name').data({
+ *     vns: function(callback) { }
+ *   });
+ * The callback accepts callback(err) and err shall be an object contains
+ * all the error messages.
+ * E.G.
+ *   err = {
+ *     username: 'Too short.',
+ *     lastName: 'Forgot?',
+ *   };
+ * And the corresponding label.error of input#username and input#lastname
+ * would be set accordingly.
+ * The vns function would be used to replace the default submit() behaviors,
+ * and if no vns provided submit would be called after validation is passed.
+ *
+ *
+ *       Ply_py     me@plypy.com
+ *
+ */
+
 
 
 $(document).ready(function () {
@@ -26,6 +80,8 @@ $(document).ready(function () {
       .closest('.input-wrapper').find('input').focus();
   });
 
+
+  // common sync field validations
   // bind all kinds of sync validation with
   // $(element).data({validate: function})
   $('form.validate input#username').data({
@@ -52,7 +108,7 @@ $(document).ready(function () {
       if (pass.length < 8) {
         return 'Too short';
       }
-      if (pass.length > 19) {
+      if (pass.length > 32) {
         return 'Too long';
       }
     }
@@ -61,7 +117,7 @@ $(document).ready(function () {
   $('form.validate input#email').data({
     validate: function  () {
       var email = $('form.validate input#email').val();
-      if (email.length > 19) {
+      if (email.length > 64) {
         return 'Too long';
       }
       if (!emailRegex.test(email)) {
@@ -70,12 +126,6 @@ $(document).ready(function () {
     }
   });
 
-  // async validation and submit
-  $('form#form-signup').data({
-    vns: function (callback) {
-      //TODO
-    }
-  });
 
   $('form#form-login').data({
     vns: function (callback) {
@@ -87,13 +137,12 @@ $(document).ready(function () {
   // perform validations
   $('form.validate')
     .submit( function(event) {
-      event.preventDefault();
 
       var valid = true;
+      var form = $(this);
       function showError(jElement, msg) {
-        valid = false;
-        var label = jElement.closest('.form-group').find('label.error');
-        if (!msg) {
+        var label = jElement.closest('.input-wrapper').find('label.error');
+        if (!msg || 'string' !== typeof msg) {
           msg = '×';
         }
         label.html(msg);
@@ -101,31 +150,46 @@ $(document).ready(function () {
       }
 
       // perform all sync validation
-      $(this).find('input').each(function (idx, element) {
-        element = $(element);
+      form.find('input').each(function (idx, input) {
+        input = $(input);
 
-        var validate = element.data('validate');
+        if (input.hasClass('required') && input.val() === '') {
+          valid = false;
+          showError(input, 'Forgot?');
+          return ;
+        }
+
+        var validate = input.data('validate');
         if (!validate) {
           return ;
         }
         var err = validate();
         if (err) {
-          showError(element, err);
+          valid = false;
+          showError(input, err);
         }
       });
 
+
       if (!valid) {
+        event.preventDefault();
         return;
       }
 
       // perform async form validation and submit
-      var vns = $(this).data('vns');
+      var vns = form.data('vns');
       if (!vns) {
-        $(this).submit();
+        form.submit();
+        return;
       }
-
-
-
-
+      event.preventDefault();
+      vns(function (err, data) {
+        if (!err) {
+          return ;
+        }
+        for (var name in err) {
+          showError($('#' + name), err[name]);
+        }
+      });
     });
 });

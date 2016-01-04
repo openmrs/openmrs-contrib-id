@@ -1,6 +1,12 @@
 'use strict';
 
+
 $(document).ready(function() {
+  if ($('#uname').html() !== 'signup') {
+    return;
+  }
+
+
   var SPINNER = $('input[name=spinner]').val();
   var disguise = function scrambleFields(name, spin) {
       var text = name + SPINNER;
@@ -9,6 +15,39 @@ $(document).ready(function() {
   };
 
   $('input#country').closest('.form-group').hide();
+
+  // form level validation
+  $('form#form-signup').data({
+    vns: function (callback) {
+      // check recaptcha first
+      if (grecaptcha.getResponse() === "") {
+        setTimeout(function () {
+          $('form#form-signup').find('input#submit')
+            .closest('.form-group').find('label.error')
+            .removeClass('show');
+        }, 2000);
+
+        return callback({submit: 'Mind Captcha!'});
+      }
+      $.post('/signup', $('form#form-signup').serialize())
+        .done(function (data) {
+          if (data.success) {
+            window.location.href = '/signup/verify';
+            return;
+          }
+          if (data.fail) {
+            if (data.fail.primaryEmail) {
+              data.fail.email = data.fail.primaryEmail;
+              delete data.fail.primaryEmail;
+            }
+            return callback(data.fail);
+          }
+        })
+        .fail(function () {
+          // body...
+        });
+    }
+  });
 
   //focus
   if ($('#uname').val() === 'signup') {
@@ -39,8 +78,6 @@ $(document).ready(function() {
 
 
 
-    /* LOGIN FORM REDIRECT-TO */
-    $('#redirect-to').attr('value', getParameterByName('destination'));
 
     // var searchTimeout = {}, origUserText = $('.field input[placeholder=Username]').siblings('span').html();
     // $('.field input[placeholder=Username]').keyup(function(){

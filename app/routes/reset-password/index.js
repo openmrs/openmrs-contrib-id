@@ -100,7 +100,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
   });
 });
 
-app.get('/reset/:id', mid.forceLogout, validate.receive,
+app.get('/reset/:id', mid.forceLogout,
   function(req, res, next) {
 
   var id = utils.urlDecode64(req.params.id);
