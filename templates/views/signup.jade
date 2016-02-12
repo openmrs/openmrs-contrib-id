@@ -12,7 +12,7 @@ append head
 
 block content
   div.panel
-    form.validate.signup#form-signup(action='/signup', method='post',
+    form.validate#form-signup(action='/signup', method='post',
         autocomplete='off')
 
       div.row-item.form-group
@@ -72,6 +72,6 @@ block content
             value=timestamp)
 
       div.row-item.form-group
-        div.input-wrapper.col-md-5
-          input.btn.btn-success.col-md-7#submit(type='submit', value='Join the Community » ')
+        div.input-wrapper.col-md-3
+          input.btn.btn-success#submit(type='submit', value='Join the Community » ')
           label.error Mind CAPTCHA!

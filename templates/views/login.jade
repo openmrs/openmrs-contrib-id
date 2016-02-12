@@ -6,32 +6,25 @@ block defines
   - headline = 'Sign In with your OpenMRS ID <small>Don\'t have an OpenMRS ID yet? <a href="/signup">Sign up</a>.</small>';
   - sidebar = ['id-whatis'];
   - showSidebar = true;
-  - fail = fail || {};
-  - values = values || {};
 
 
 block content
   div.panel
-    form(action='/login', method='post')
-      p <em></em>
-
+    form.validate#login-form(action='/login', method='post')
       input#redirect-to(type='hidden', name='destination')
 
-      div.row-item(class={fail: fail.loginusername},)
-        input.col-md-5(type='text', name='loginusername',
-              placeholder='OpenMRS ID/Email')
-        span.description.failtext.
-          A username must be supplied to log in.
+      .row-item.form-group
+        .input-wrapper.col-md-5
+          input(type='text', name='loginusername',
+                placeholder='OpenMRS ID/Email')
+          label.error Forgot?
 
-      div.row-item(class={fail: fail.loginpassword})
-        input.col-md-5(type='password', name='loginpassword', placeholder='Password')
-        span.description.failtext
-          if (values.loginpassword === '')
-            | A password must be supplied to log in.
-          else
-            | If you have forgotten your password, you can <a href="/reset">reset it here</a>
+      .row-item.form-group.thin
+        .input-wrapper.col-md-5
+          input(type='password', name='loginpassword', placeholder='Password')
+          label.error Forgot?
 
-      div.row-item(style="margin-bottom:0")
+      .row-item.thin
         h5
           a(href='/reset') Forgot your password?
 

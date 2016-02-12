@@ -20,6 +20,8 @@ gulp.task('scripts', function () {
     'resource/scripts/form.js',
     'resource/scripts/signup.js',
     'resource/scripts/profile.js',
+    'resource/scripts/reset-public.js',
+    'resource/scripts/reset-private.js',
     'bower_components/cryptojslib/rollups/md5.js'])
     .pipe(concat('min.js'))
     .pipe(uglify())

@@ -2,7 +2,7 @@
 
 $(document).ready(function () {
   if ($('#uname').html() !== 'profile') {
-    return;
+    return ;
   }
 
   // deal with the welcome-message
@@ -26,7 +26,7 @@ $(document).ready(function () {
   $('#addEmailToggle').on('click',function(e) {
     e.preventDefault();
     $('#addEmail').slideToggle();
-    $('#addEmail input[name=newEmail]').focus();
+    $('input#email').focus();
   });
 
   /* toggle Edit Password form */
@@ -34,21 +34,13 @@ $(document).ready(function () {
   $('#editPasswordToggle').on('click',function(e) {
     e.preventDefault();
     $('#editPassword').slideToggle();
+    $('#input#currentpassword').focus();
   });
 
 
   // validations
 
-  $('#editPassword input#currentpassword').data({
-    validate: function () {
-      var pass = $('#editPassword input#currentpassword').val();
-      if (pass.length < 8) {
-        return 'Too short';
-      }
-    }
-  });
-
-  $('#editPassword input#newpassword').data({
+  $('input#newpassword').data({
     validate: function () {
       var pass = $('#editPassword input#newpassword').val();
       if (pass.length < 8) {
@@ -57,7 +49,7 @@ $(document).ready(function () {
     }
   });
 
-  $('#editPassword input#confirmpassword').data({
+  $('input#confirmpassword').data({
     validate: function () {
       var pass = $('#editPassword input#newpassword').val();
       var cpass = $('#editPassword input#confirmpassword').val();
@@ -84,9 +76,9 @@ $(document).ready(function () {
     }
   });
 
-  $('#addMail.validate').data({
+  $('#addEmail.validate').data({
     vns: function (callback) {
-      $.post('/profile/email', $('#addMail').serialize())
+      $.post('/profile/email', $('#addEmail').serialize())
         .done(function (data) {
           if (data.success) {
             return window.location.reload();

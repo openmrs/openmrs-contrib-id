@@ -29,6 +29,7 @@ var Recaptcha = utils.Recaptcha;
 var User = require('./models/user');
 
 var EMAIL_PLUS_MSG = 'No \'+\' allowed';
+var WRONG_PASSWORD_MSG = 'Wrong password';
 
 
 var validate = {};
@@ -102,7 +103,7 @@ validate.chkEmailInvalidOrDup = function (email, callback) {
 
 validate.chkPassword = function (password, passhash, callback) {
   if (!utils.checkSSHA(password, passhash)) {
-    return callback(null, 'Wrong');
+    return callback(null, WRONG_PASSWORD_MSG);
   }
   return callback(null, false);
 };

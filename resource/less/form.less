@@ -1,3 +1,5 @@
+@import "mixin";
+
 form {
   .description {
     float: left;
@@ -16,9 +18,11 @@ form {
 form.validate {
 
   .input-wrapper {
+
     position: relative;
 
     padding: 0;
+
 
     &.left {
       padding-right: 3px;
@@ -31,12 +35,13 @@ form.validate {
     label.error {
       position: absolute;
       top: 1px;
-      right: 10px;
+      right: 1px;
 
-      margin-right: 10px;
-      padding: 5px 0 5px 15px;
+      padding: 0 10px;
+      line-height: 32px;
+      text-align: center;
 
-      color: red;
+      color: #f00;
       background: #fff;
       background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0), #fff 10px);
       background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff 10px);

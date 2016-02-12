@@ -11,23 +11,11 @@ body {
   color: #555555;
 }
 
-.nodisp {
-  display: none;
-}
-
-.square-border {
-  border: solid 1px @border-color;
-  border-radius: 1px;
-}
-
-.no-padding {
-  padding: 0;
-}
 
 a:not(.btn) {
   &:link, &:visited {
     color: #b38936;
-      text-decoration: none;
+    text-decoration: none;
   }
   &:hover {
     color: #4d4129;
@@ -64,11 +52,6 @@ h2 {
   }
 }
 
-input {
-  padding: 5px 15px;
-  width: 100%;
-  .square-border;
-}
 
 
 // Button types
@@ -87,58 +70,5 @@ a:link i[class^="icon-"]  {
   text-decoration: none !important;
 }
 
-
-
-.left {
-  margin: 0;
-  padding: 0 5px 0 0;
-}
-.right {
-  margin: 0;
-  padding: 0 0 0 5px;
-  float: right;
-}
-
-
-// Bootstrap overrides
-.panel {
-  .square-border;
-  padding: 25px;
-}
-
-.row-item {
-  &:before, &:after {
-    display: table;
-    content: " ";
-  }
-  &:after {
-    clear: both;
-  }
-  margin: 0 0 15px;
-}
-
-.btn {
-  .square-border;
-  color: black;
-  background-color: transparent;
-
-  a {
-    text-decoration: none;
-  }
-
-  &.btn-success {
-    background-color: #b38936;
-    color: white;
-    &:hover, &:active, &:focus {
-      border-color: transparent;
-      background-color: #b36a36;
-      transition: background-color 0.1s;
-    }
-  }
-}
-
-.badge, .label {
-  font-family: @control-type;
-}
 
 

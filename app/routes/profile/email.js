@@ -127,7 +127,7 @@ app.post('/profile/email', mid.forceLogin,
         return next(err);
       }
       if (validateError) {
-        return res.json({fail: validateError});
+        return res.json({fail: {email: validateError}});
       }
       return callback();
     });
