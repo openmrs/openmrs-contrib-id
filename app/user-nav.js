@@ -16,19 +16,9 @@ var userNavLinks = [ // built-in links
   },
 
   {
-    'name': 'Password Reset',
-    'url': '/reset',
-    'viewName': 'reset-public',
-    'visibleLoggedOut': true,
-    'visibleLoggedIn': false,
-    'icon': 'icon-unlock',
-    'order': 30,
-  },
-
-  {
     'name': 'Your Profile',
-    'url': '/edit/profile',
-    'viewName': 'edit-profile',
+    'url': '/profile',
+    'viewName': 'profile',
     'visibleLoggedOut': false,
     'visibleLoggedIn': true,
     'requiredGroup': 'dashboard-users',

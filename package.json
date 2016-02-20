@@ -30,11 +30,14 @@
     "node": "~0.10.38"
   },
   "devDependencies": {
-    "supertest": "~0.8.2",
-    "should": "~2.1.1",
-    "mocha": "~1.16.2",
     "chai": "~1.9.1",
-    "express-debug": "~1.1.0"
+    "express-debug": "~1.1.0",
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-uglify": "^1.5.1",
+    "mocha": "~1.16.2",
+    "should": "~2.1.1",
+    "supertest": "~0.8.2"
   },
   "scripts": {
     "test": "node tests/runner"

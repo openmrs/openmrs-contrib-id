@@ -1,9 +1,4 @@
-/* recaptcha settings */
-var RecaptchaOptions = {
-    theme : 'custom',
-    custom_theme_widget: 'recaptcha_widget'
-};
-
+'use strict';
 /* login redirect-to */
 function getParameterByName(name)
 {
@@ -11,44 +6,15 @@ function getParameterByName(name)
   var regexS = "[\\?&]" + name + "=([^&#]*)";
   var regex = new RegExp(regexS);
   var results = regex.exec(window.location.href);
-  if(results == null)
+  if(results === null) {
     return "";
-  else
+  }
+  else {
     return decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
 }
 
 $().ready(function(){
-
-    /* focus on a failed input field */
-    if ($('.field.fail')) $('.field.fail:first').children('input').focus();
-
-    /* "MORE" BANNER */
-    var moreExpanded = $('#header ul#more').outerHeight(true),
-        moreOriginal = $('#header li#moreContainer').outerHeight(true),
-        moreOpened = false;
-
-    $('#header li#moreContainer').click(function(event){
-        event.stopPropagation();
-        if (moreOpened==false) {
-            $(this).css('height', moreExpanded).addClass('on');
-            moreOpened = true;
-        }
-        else if (moreOpened==true) {
-            $(this).attr('style', '').removeClass('on');
-            moreOpened = false;
-        }
-    });
-    $('#header ul#more a').click(function(event){
-        event.stopPropagation();
-        document.location = $(this).attr('href');
-    });
-    /* close when clicked outside */
-    $('html').click(function(){
-        if (moreOpened==true) {
-            $('#header li#moreContainer').attr('style', '').removeClass('on');
-            moreOpened = false;
-        }
-    });
 
 
 
@@ -165,57 +131,6 @@ $().ready(function(){
     $('.popover').centerPopover(); // center once at DOM startup
 
 
-
-    /* FIELD DESCRIPTIONS */
-    $('.field input, .field textarea').focusin(function(){
-        $('.description').css('visibility', 'hidden');
-        $(this).siblings('.description').css('visibility', 'visible');
-    });
-
-    $('.field.noedit p').click(function(){
-        $(this).siblings('.description').css('visibility', 'visible');
-    }).mouseout(function(){
-        $(this).siblings('.description').css('visibility', 'hidden');
-    });
-
-    // Show description of page draws with an input focused (autofocused)
-    if ($('.field input:focus').siblings('.description').css('visibility') != 'visible')
-        $('.field input:focus').siblings('.description').css('visibility', 'visible');
-
-    // Check for valid usernames on signup
-    var searchTimeout = {}, origUserText = $('.field input[placeholder=Username]').siblings('span').html();
-    $('.field input[placeholder=Username]').keyup(function(){
-        var userInput = this, userVal = $(this).val();
-        clearTimeout(searchTimeout);
-        if (userVal) {
-            searchTimeout = setTimeout(function(){
-                $.ajax({
-                    url: '/checkuser/'+userVal,
-                    error: function(){},
-                    success: function(data) {
-                        data = $.parseJSON(data);
-                        if (data.illegal) {
-                            $(userInput).parent().addClass('fail').children('span.description').html('Illegal username specified. Usernames can contain numbers and letters.');
-                        }
-                        else {
-                            if (!data.exists) {
-                                if ($(userInput).parent().hasClass('fail')) $(userInput).parent().removeClass('fail');
-                                $(userInput).parent().addClass('valid').children('span.description').html('<span class="validtext">"'+userVal+'" is available!</span>');
-                            }
-                            if (data.exists) {
-                                $(userInput).parent().addClass('fail').children('span.description').html('<span class="failtext">"'+userVal+'" is already taken.</span>');
-                            }
-                        }
-                    }
-                });
-            }, 1000);
-        }
-        else $(this).siblings('span').html(origUserText);
-    });
-
-    /* LOGIN FORM REDIRECT-TO */
-    $('#redirect-to').attr('value', getParameterByName('destination'));
-
     /* NEXT... FIELD (secondary email addresses) */
     var duplicate = function(){
         var toClone = $(this).prev().clone(true);
@@ -257,20 +172,5 @@ $().ready(function(){
             .dataset.content = $(this).html();
 
     })
-
-    /* toggle Add Email form */
-    $('#addEmail').hide();
-    $('#addEmailToggle').on('click',function(e) {
-      e.preventDefault();
-      $('#addEmail').toggle();
-      $('#addEmail input[name=newEmail]').focus();
-    });
-
-    /* toggle Edit Password form */
-    $('#editPassword').hide();
-    $('#editPasswordToggle').on('click',function(e) {
-      e.preventDefault();
-      $('#editPassword').slideToggle();
-    });
 
 });

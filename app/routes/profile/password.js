@@ -16,16 +16,22 @@ var User = require('../../models/user');
 
 
 
-var profileMid = require('./middleware');
-
 exports = module.exports = function (app) {
 
 
-app.post('/password', mid.forceLogin, profileMid.passwordValidator,
+// AJAX
+app.post('/password', mid.forceLogin,
   function(req, res, next) {
+
+  if (!req.xhr) {
+    return next();
+  }
+
 
   var updUser = req.session.user;
 
+  // Look up the user's canonical record to read the password. (it's not stored
+  // on req.session.user for security purposes.)
   var findUser = function (callback) {
     User.findByUsername(updUser.username, function (err, user) {
       if (err) {
@@ -37,6 +43,28 @@ app.post('/password', mid.forceLogin, profileMid.passwordValidator,
       return callback(null, user);
     });
   };
+
+  var validation = function (user, callback) {
+    var passhash = user.password;
+    var currentpassword = req.body.currentpassword;
+    var newpassword = req.body.newpassword;
+    var confirmpassword = req.body.confirmpassword;
+    var validators = {
+      currentpassword: validate.chkPassword.bind(null,currentpassword,passhash),
+      newpassword: validate.chkLength.bind(null,newpassword,8),
+      confirmpassword: validate.chkDiff.bind(null,newpassword, confirmpassword),
+    };
+
+    validate.perform(validators, function (err, validateError) {
+      if (!_.isEmpty(validateError)) {
+        return res.json({fail: validateError});
+      }
+      return callback(null, user);
+    });
+
+  };
+
+
   var changePassword = function (user, callback) {
     user.password = req.body.newpassword;
     user.save(callback);
@@ -44,15 +72,15 @@ app.post('/password', mid.forceLogin, profileMid.passwordValidator,
 
   async.waterfall([
     findUser,
+    validation,
     changePassword,
   ],
   function (err, user) {
     log.trace('password change no errors');
     log.info(updUser.username + ': password updated');
 
-    req.flash('success', 'Password changed.');
     req.session.user = user;
-    res.redirect('/profile');
+    return res.json({success: true});
   });
 });
 

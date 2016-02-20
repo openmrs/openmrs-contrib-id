@@ -126,14 +126,18 @@ require('./render-helpers');
 
 /// DEBUG
 
-// app.get('/sample', function (req, res) {
-//   res.render('layouts/base');
-// });
+if (process.env.NODE_ENV === 'development') {
 
-// app.get('/flash/:msg', function (req, res) {
-//   req.flash('info', req.params.msg);
-//   res.redirect('/sample');
-// });
+  app.get('/debug/view/:viewName', function (req, res) {
+    res.render('views/' + req.params.viewName);
+  });
+
+
+  // app.get('/flash/:msg', function (req, res) {
+  //   req.flash('info', req.params.msg);
+  //   res.redirect('/sample');
+  // });
+}
 
 /// DEBUG
 

@@ -3,10 +3,11 @@ extends ../layouts/base
 block defines
   - title = 'OpenMRS ID - ' + user.displayName;
   - name = 'root';
-  - headline = 'Welcome to the OpenMRS Community ' + user.displayName;
+  - headline = 'Welcome to the OpenMRS Community!';
   - if (_.contains(user.groups, 'dashboard-administrators')) {
   -   sidebar = ['crowd'];
   - }
+  - showNavbar = true;
 
 block content
   div.jumbotron(style='background:none; border-radius:0; border-bottom-style:solid; text-align:center')

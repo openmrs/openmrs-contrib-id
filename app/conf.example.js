@@ -45,7 +45,7 @@ module.exports = {
                 "inetOrgPerson",
                 "extensibleObject"
             ],
-          "usernameRegex": /^[a-zA-Z][.]?[a-zA-Z0-9]{2,18}$/,
+          "usernameRegex": /^[a-z][.]?[a-z0-9]{2,18}$/,
             "defaultGroups": [
                 "bamboo-user",
                 "confluence-users",

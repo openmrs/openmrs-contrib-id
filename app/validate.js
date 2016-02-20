@@ -28,15 +28,9 @@ var Recaptcha = utils.Recaptcha;
 
 var User = require('./models/user');
 
-var USERNAME_DUP_MSG = 'This username is already taken. Better luck next time';
+var EMAIL_PLUS_MSG = 'No \'+\' allowed';
+var WRONG_PASSWORD_MSG = 'Wrong password';
 
-var EMAIL_DUP_MSG = 'This email address is already registered. ' +
-  'A unique email address must be provided.';
-
-var EMAIL_PLUS_MSG = 'Due to incompatibilities with the Google Apps APIs, ' +
-  'email addresses cannot contain "+".';
-
-var WRONG_PWD_MSG = 'Wrong password, please check';
 
 var validate = {};
 
@@ -68,7 +62,7 @@ validate.chkUsernameInvalidOrDup = function (username, callback) {
     }
     if (user) {
       // duplicate
-      return callback(null, USERNAME_DUP_MSG);
+      return callback(null, 'Already used');
     }
     return callback(null, false);
   });
@@ -100,7 +94,7 @@ validate.chkEmailInvalidOrDup = function (email, callback) {
       }
       if (user) {
         // duplicate
-        return callback(null, EMAIL_DUP_MSG);
+        return callback(null, 'Already used');
       }
       return callback(null, false);
     });
@@ -109,7 +103,7 @@ validate.chkEmailInvalidOrDup = function (email, callback) {
 
 validate.chkPassword = function (password, passhash, callback) {
   if (!utils.checkSSHA(password, passhash)) {
-    return callback(null, WRONG_PWD_MSG);
+    return callback(null, WRONG_PASSWORD_MSG);
   }
   return callback(null, false);
 };
@@ -121,6 +115,7 @@ validate.chkEmpty = function (str, callback) {
   return callback(null, false);
 };
 
+//TODO Add maxlength limitation
 validate.chkLength = function(str, minLen, callback) {
   if (_.isEmpty(str) || str.length < minLen) {
     // avoid undefined error
@@ -154,60 +149,30 @@ validate.chkRecaptcha = function(captchaData, callback) {
   });
 };
 
-// check for validation records (presumably coming from a failed POST that we're
-// being redirected from). if any are found, move them to the render variables
-validate.receive = function (req, res, next) {
-  var rs = req.session;
-  var rsv = rs.validation;
-
-  if (rs && rsv && !_.isEmpty(rsv)) {
-    _.merge(res.locals, rsv);
-    req.session.validation = {};
-  }
-  next();
-};
-
-//
-validate.perform = function (validators, req, res, next) {
+validate.perform = function (validators, callback) {
   async.parallel(validators, function (err, results) {
     var failed = false;
-    var values = {};
     var failures = {};
-    var failReason = {};
-    // values should be cached to reuse
-    var cacheList = ['username', 'firstName', 'lastName', 'primaryEmail'];
 
     if (err) {
-      return next(err);
+      return callback(err);
     }
 
     // store the values
     _.forIn(results, function (value, key) {
       if (!value) {// valid
-        if (-1 !== _.indexOf(cacheList, key)) {
-          values[key] = req.body[key];
-        }
         return;
       }
       failed = true;
       failures[key] = value;
-      if (_.isString(value)) {
-        failReason[key] = value;
-      }
     });
 
     if (!failed) { // if all valid, pass the requests to next handler
       log.debug('successed for validation');
-      return next();
+      return callback();
     }
 
-    req.session.validation = {
-      values: values,
-      fail: failures,
-      failReason: failReason,
-    };
-    req.flash('error','Please review all the items and try again');
-    return res.redirect(req.url);
+    return callback(null, failures);
   });
 };
 

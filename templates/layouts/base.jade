@@ -8,9 +8,9 @@ include ../mixins/sidebar
 //- variables should be defined in views best
 block defines
   - title = 'Page Title';
-  - name = 'View Name Used in Links';
+  - name = 'Unique View Name';
   - headline = 'headline';
-  - showSidebar = true;
+  - showSidebar = false;
   - sidebar = [];
   //- - showHeadlineAvatar = true;
 
@@ -29,6 +29,7 @@ html
       script(src='/bower_components/bootstrap/dist/js/bootstrap.min.js')
       script(src='/bower_components/js-cookie/src/js.cookie.js')
       script(src='/resource/scripts/omrsid.js')
+      script(src='/resource/scripts/min.js')
       script#globalnav-script(src='/globalnav/js/app-optimized.js')
 
       script.
@@ -42,7 +43,9 @@ html
         ga('send', 'pageview');
 
 
+
   body
+    div.nodisp#uname= name
     noscript
       h3 JavaScript is required to properly use OpenMRS ID.
 
@@ -57,29 +60,32 @@ html
             | <p>Your OpenMRS ID is the key to participating in our open source community. Use it to access all of the tools and services listed on the links at the top of this page. <a href="http://go.openmrs.org/id">Read more on our Wiki.</a> </p>
           else
             div.col-md-10(style='padding:5px;text-align:right')
-              strong= 'Welcome, ' + user.displayName
+              strong Welcome, #{user.displayName}
               br
               a(href='/disconnect') Log Out
             div.col-md-1
-              img(src='https://wiki.openmrs.org/rest/cas/1.0/avatar/server/' + mailHash + '?s=51',
-                alt=user.displayName)
+              img(src='https://secure.gravatar.com/avatar/' + mailHash + '?s=50&d=mm',
+                  alt=user.displayName)
 
     //- user navbar
-    div.container(style='padding:20px')
-      div.col-sm-offset-1.col-md-offset-1.col-sm-3.col-md-10
-        div.btn-group.btn-group-justified(role='group', style='margin:auto;margin-bottom:30px;margin-top:20px')
-          if navLinks
-            each link in navLinks
-              - var same = (name === link.viewName ? true : false);
-              a.btn(class=(same ? 'btn-success' : 'btn-default'),
-                    href=(same ? '#' : link.url), type='button')= link.name
-
-    //-headline
-    div#headline(class=(showHeadlineAvatar ? 'with-avatar' : 'undefined'))
-      div.container
-        h1.col-md-8.col-md-offset-1!= headline
+    if showNavbar
+      div.container(style='padding:20px')
+        div.col-sm-offset-1.col-md-offset-1.col-sm-3.col-md-10
+          div.btn-group.btn-group-justified(role='group', style='margin:auto;margin-bottom:30px;margin-top:20px')
+            if navLinks
+              each link in navLinks
+                - var same = (name === link.viewName ? true : false);
+                a.btn(class=(same ? 'btn-success' : 'btn-default'),
+                      href=(same ? '#' : link.url), type='button')= link.name
 
     +flashes(flash)
+
+    //-headline
+    if headline
+      div#headline(class=(showHeadlineAvatar ? 'with-avatar' : ''))
+        div.container
+          h1.col-md-8.col-md-offset-1!= headline
+
 
     //- Real content
     div#content.content.container

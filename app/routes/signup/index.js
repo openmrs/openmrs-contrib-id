@@ -17,22 +17,7 @@ var utils = require('../../utils');
 var User = require('../../models/user');
 
 var botproof = require('./botproof');
-var signupMiddleware = require('./middleware');
 var emailPath = path.resolve(__dirname, '../../../templates/emails');
-
-/*
-USER-NAV
-========
-*/
-nav.add({
-  name: 'Sign Up',
-  url: '/signup',
-  viewName: 'signup',
-  visibleLoggedOut: true,
-  visibleLoggedIn: false,
-  icon: 'icon-asterisk',
-  order: 20
-});
 
 /*
 ROUTES
@@ -43,7 +28,7 @@ exports = module.exports = function (app) {
 
 
 // get signup from /signup or from / and handle accordingly
-app.get(/^\/signup\/?$|^\/$/i, validate.receive, botproof.generators,
+app.get(/^\/signup\/?$|^\/$/i, botproof.generators,
   function(req, res, next) {
 
   if (req.session.user) {
@@ -58,61 +43,93 @@ app.get(/^\/signup\/?$|^\/$/i, validate.receive, botproof.generators,
 // prevent from getting 404'd if a logged-in user hits /signup
 app.get('/signup', mid.forceLogout);
 
-app.post('/signup', mid.forceLogout, botproof.parsers,
-  signupMiddleware.includeEmpties,
-  signupMiddleware.validator, function(req, res, next) {
+app.post('/signup', function (req, res, next) {
+  console.log(JSON.stringify(req.session));
+  console.log(JSON.stringify(req.body));
+  return next();
+});
 
+app.post('/signup', mid.forceLogout, botproof.parsers,
+  function(req, res, next) {
+
+  if (!req.xhr) {
+    return req.redirect('/');
+  }
   var id = req.body.username;
   var first = req.body.firstName;
   var last = req.body.lastName;
   var email = req.body.primaryEmail;
   var pass = req.body.password;
-
-  id = id.toLowerCase();
-
-  var newUser = new User({
-    username: id,
-    firstName: first,
-    lastName: last,
-    displayName: first + ' ' + last,
-    primaryEmail: email,
-    emailList: [email],
-    password: pass,
-    locked: true,
-  });
-  var verificationOptions = {
-    addr: email,
-    subject: '[OpenMRS] Welcome to the OpenMRS Community',
-    templatePath: path.join(emailPath, 'welcome-verify.jade'),
-    username: id,
-    category: 'signup',
-    callback: '/signup',
-    locals: {
-      displayName: first + ' ' + last,
-      username: id,
-    },
-    timeout: 0
+  var captchaData = {
+    response: req.body['g-recaptcha-response'],
   };
 
-  function sendVerificationEmail(callback) {
+  // only lowercase
+  id = id.toLowerCase();
+
+  // perform validation
+  var validation = function (callback) {
+    var validators = {
+      username: validate.chkUsernameInvalidOrDup.bind(null, id),
+      primaryEmail: validate.chkEmailInvalidOrDup.bind(null, email),
+      firstName: validate.chkEmpty.bind(null, first),
+      lastName: validate.chkEmpty.bind(null, last),
+      password: validate.chkLength.bind(null, pass, 8),
+      recaptcha_response_field: validate.chkRecaptcha.bind(null, captchaData),
+    };
+    validate.perform(validators, function (err, failures) {
+      if (err) {
+        return callback(err);
+      }
+      if (_.isEmpty(failures)) {
+        return callback();
+      }
+      res.json({fail: failures});
+    });
+  };
+
+  var saveUser = function (callback) {
+    var newUser = new User({
+      username: id,
+      firstName: first,
+      lastName: last,
+      displayName: first + ' ' + last,
+      primaryEmail: email,
+      emailList: [email],
+      password: pass,
+      locked: true,
+    });
+    newUser.save(callback);
+  };
+
+  var sendVerificationEmail = function (callback) {
+    var verificationOptions = {
+      addr: email,
+      subject: '[OpenMRS] Welcome to the OpenMRS Community',
+      templatePath: path.join(emailPath, 'welcome-verify.jade'),
+      username: id,
+      category: 'signup',
+      callback: '/signup',
+      locals: {
+        displayName: first + ' ' + last,
+        username: id,
+      },
+      timeout: 0
+    };
     log.debug('Sending signup email verification');
     verification.begin(verificationOptions, callback);
-  }
+  };
+
   async.series([
-    newUser.save.bind(newUser),
+    validation,
+    saveUser,
     sendVerificationEmail,
   ],
   function (err) {
     if (err) {
       return next(err);
     }
-    req.flash('success', '<p>Thanks and welcome to the OpenMRS Community!</p>' +
-    '<p>Before you can use your OpenMRS ID across our services, ' +
-    'we need to verify your email address.</p>' +
-    '<p>We\'ve sent an email to <strong>' + email +
-    '</strong> with instructions to complete the signup process.</p>');
-
-    res.redirect(303, '/signup/verify');
+    res.json({success: true});
   });
 });
 
