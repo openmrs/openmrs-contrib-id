@@ -7,6 +7,8 @@ var path = require('path');
 var fs = require('fs');
 var conf = require('./app/conf');
 
+gulp.task('default',['scripts']);
+
 gulp.task('scripts', function () {
   // generate consts.js
   var fd = fs.openSync(path.join(__dirname, 'resource/scripts/consts.js'), 'w');
