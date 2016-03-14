@@ -40,7 +40,8 @@
     "supertest": "~0.8.2"
   },
   "scripts": {
-    "test": "node tests/runner"
+    "test": "node tests/runner",
+    "start": "node app/app"
   },
   "repository": {
     "type": "git",

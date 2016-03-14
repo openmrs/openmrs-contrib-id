@@ -53,7 +53,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
   function(req, res, next) {
 
   if (!req.xhr) {
-    return req.redirect('/');
+    return res.redirect('/');
   }
   var id = req.body.username;
   var first = req.body.firstName;
