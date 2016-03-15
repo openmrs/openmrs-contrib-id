@@ -20,7 +20,7 @@
     "less-middleware": "~1.0.3",
     "lodash": "^3.9.3",
     "log4js": "^0.6.26",
-    "mongoose": "~3.8.12",
+    "mongoose": "^4.4.7",
     "node-uuid": "^1.4.3",
     "nodemailer": "^1.4.0",
     "q": "^1.0.1",
