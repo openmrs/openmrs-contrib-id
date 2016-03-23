@@ -1,0 +1,18 @@
+version: "2"
+services:
+  mongodb:
+    image: frodenas/mongodb:2.6
+    environment:
+      - MONGODB_USERNAME=openmrsid
+      - MONGODB_PASSWORD=secret
+      - MONGODB_DBNAME=openmrsid
+    ports:
+      - 0.0.0.0:27018:27017
+
+    volumes:
+      - ./docker/data/mongo:/data
+  mailcatcher:
+    image: robbyoconnor/mailcatcher
+    ports:
+      - 1080:1080
+      - 1025:1025
