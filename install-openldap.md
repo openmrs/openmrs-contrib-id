@@ -1,15 +1,23 @@
 Configuring OpenLDAP for OpenMRS ID
 =====
+# Vagrant Box
 
-##Script install
+I set up a vagrant box which basically does everything below. It is now included – simply type:
+
+      ``` shell
+      $ vagrant up
+      ```
+and ldap will be ready to use. This guide is pretty much deprecated now.
+
+
+## Script install
 **Caveat**: This script will set naive passwords for LDAP. You'd better use this for development only, or change the password later.
 
 You can use [build/install-openldap.sh](https://github.com/openmrs/openmrs-contrib-id/blob/master/build/install-openldap.sh) to install and configure OpenLDAP. Basically, it will perform the commands listed in "Manually install" section.
 
 The script will use [build/slapd.conf](https://github.com/openmrs/openmrs-contrib-id/blob/master/build/slapd.conf), which specifies root user as `cn=admin,dc=openmrs,dc=org` with password `secret`, to configure OpenLDAP and set the password of system user `uid=omrsid,ou=system,dc=openmrs,dc=org` as `secret`. You may check the script for further details.
 
-
-##Manually install
+## Manually install
 
 Purpose of this document: To document how to configure [OpenLDAP][4] for a development environment of [OpenMRS ID][5]. OpenMRS ID requires other components (nodejs environment, a postfix server to connect to), but OpenLDAP is easily the most complicated to configure.
 
@@ -31,7 +39,7 @@ You will also need to create a directory to store the LDAP database. Use `/var/l
     sudo mkdir -p /var/lib/ldap
     sudo chown openldap:openldap /var/lib/ldap
 
-Next you need to load the LDAP directory structure into place. I've packaged it into two LDIF files, placed under `build` as `openmrs_ldap_base.ldif` and `groups-20140702.ldif`. Download both files, shut down slapd (`service slapd stop`), and run
+Next you need to load the LDAP directory structure into place. I've packaged it into two LDIF files, placed under `build` as `openmrs_ldap_base.ldif` and `groups-201tom40702.ldif`. Download both files, shut down slapd (`service slapd stop`), and run
 
     sudo slapadd -l openmrs_ldap_base.ldif
     sudo slapadd -l groups-20140702.ldif
@@ -41,8 +49,6 @@ For each of the above commands, a successful import will look like this:
     #################### 100.00% eta   none elapsed            none fast! 
     
     
-Running
------
 
 Okay! At this point you should be able to run slapd. If `service slapd start` fails, run `sudo slapd -d 1 -f /etc/ldap/slapd.conf`, which will run slapd in the foreground. Usually there's a line or path in the config file that's wrong. It's also worth checking that your data directory (/var/lib/ldap in my config) is owned by openldap:openldap
 

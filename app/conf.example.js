@@ -16,21 +16,21 @@
 module.exports = {
     "site": {
         // use full url, like http://localhost:3000/
-        "url": "https://id.openmrs.org/",
+        "url": "http://localhost:3000",
         "title": "OpenMRS ID"
     },
     "ldap": {
         // LDAP Settings
 
         "server": {
-            "uri": "ldap://localhost",
-            "baseDn": "ou=systemacct,dc=example",
+            "uri": "ldap://localhost:1389",
+            "baseDn": "ou=system,dc=openmrs,dc=org",
             "rdn": "uid",
-            "loginUser": "system_acct",
+            "loginUser": "omrsid",
             "password": "secret"
         },
         "user": {
-            "baseDn": "ou=users,dc=example",
+            "baseDn": "ou=users,dc=openmrs,dc=org",
             "rdn": "uid",
 
             // corresponds with form input names
@@ -45,7 +45,7 @@ module.exports = {
                 "inetOrgPerson",
                 "extensibleObject"
             ],
-          "usernameRegex": /^[a-z][.]?[a-z0-9]{2,18}$/,
+            "usernameRegex": /^[a-zA-Z0-9]+[.]?[a-zA-Z0-9]+$/,
             "defaultGroups": [
                 "bamboo-user",
                 "confluence-users",
@@ -56,21 +56,22 @@ module.exports = {
                 "jira-trunk-developer",
                 "jira-users",
                 "modrepo-users",
-                "osqa-users"
+                "osqa-users",
+                "talk-users"
             ],
-            "passwordResetPolicy": "cn=reset,ou=policy,dc=example",
+            "passwordResetPolicy": "cn=reset,ou=policy,dc=openmrs,dc=org",
             "passwordResetTimeout": 7200000
         },
         "group": {
-            "baseDn": "ou=groups,dc=example",
+            "baseDn": "ou=groups,dc=openmrs,dc=org",
             "member": "member",
             "rdn": "cn",
             "objectClass": "groupOfNames"
         }
     },
     "mongo": {
-        "uri": "mongodb://mongo_user:secret@localhost/id_dashboard",
-        "username": "mongo_user",
+        "uri": "mongodb://openmrsid:secret@localhost:27018/openmrsid",
+        "username": "openmrsid",
         "password": "secret",
         "commonExpireTime": "2d"
     },
@@ -101,7 +102,7 @@ module.exports = {
         },
         "smtp": {
             "host": "localhost",
-            "port": 25,
+            "port": 1025,
             "use_authentication": false,
             "user": "postfix_user",
             "pass": "secret"

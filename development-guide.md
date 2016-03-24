@@ -3,6 +3,34 @@ Development Instructions of Dashboard
 
 Dashboard is a typical [Node.js][1] web application that utilizes [Express.js][0] framework.
 
+### Running this
+
+#### Install dependencies
+
+``` shell
+$ npm install
+```
+
+#### Start the services (OpenLDAP (Vagrant), MongoDB and mailcatcher(Docker))
+
+``` shell
+$ npm run bootstrap
+```
+
+#### Add groups to MongoDB
+If this is the first time you are running this, you need to add the groups to mongo. Simply run the following helper script:
+
+``` shell
+$ node build/store.js
+```
+
+#### Run the development server
+
+``` shell
+$ npm start
+```
+
+
 ### Key Packages
 As you may know, a Node.js application depends heavily on the modules it uses, you may take a took in `package.json`.
 
@@ -30,8 +58,8 @@ Currently, we organize the code this way.
 --/resource                 static resources
 --/test                     tests should reside here.
 ```
-**Note** 
-+ You'd better use corresponding structure between `app/routes` and `templates/views`. 
+**Note**
++ You'd better use corresponding structure between `app/routes` and `templates/views`.
 + For modules, you may refer to existing modules, like [openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth).
 
 ### Testing
