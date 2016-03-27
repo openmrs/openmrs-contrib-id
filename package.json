@@ -1,55 +1,57 @@
 {
-  "name": "openmrsid",
-  "version": "2.1.0",
-  "description": "A self-service management system for the OpenMRS ID single sign on identity.",
-  "main": "./app/app.js",
-  "dependencies": {
-    "async": "~0.2.10",
-    "body-parser": "^1.13.2",
-    "bunyan": "^1.3.5",
-    "connect": "~2.3.9",
-    "connect-flash": "~0.1.1",
-    "connect-mongo": "^0.8.1",
-    "cookie-parser": "^1.3.5",
-    "errorhandler": "^1.4.1",
-    "express": "^4.13.1",
-    "express-session": "^1.11.3",
-    "formage": "^3.2.21",
-    "jade": "^1.11.0",
-    "ldapjs": "^0.7.1",
-    "less-middleware": "~1.0.3",
-    "lodash": "^3.9.3",
-    "log4js": "^0.6.26",
-    "mongoose": "~3.8.12",
-    "node-uuid": "^1.4.3",
-    "nodemailer": "^1.4.0",
-    "q": "^1.0.1",
-    "request": "^2.51.0"
-  },
-  "engine": {
-    "node": "~0.10.38"
-  },
-  "devDependencies": {
-    "chai": "~1.9.1",
-    "express-debug": "~1.1.0",
-    "gulp": "^3.9.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-uglify": "^1.5.1",
-    "mocha": "~1.16.2",
-    "should": "~2.1.1",
-    "supertest": "~0.8.2"
-  },
-  "scripts": {
-    "test": "node tests/runner",
-    "start": "node app/app",
-    "bootstrap": "vagrant up ; docker-compose up -d"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/openmrs/openmrs-contrib-id.git"
-  },
-  "author": "elliottwilliams,plypy,robbyoconnor",
-  "license": "MPL 2.0 HD",
-  "gitHead": "8f60746457151599c4780255d5be72b76dfd87b6",
-  "readmeFilename": "README.md"
+    "name": "openmrsid",
+    "version": "2.1.0",
+    "description": "A self-service management system for the OpenMRS ID single sign on identity.",
+    "main": "./app/app.js",
+    "dependencies": {
+        "async": "~0.2.10",
+        "body-parser": "^1.13.2",
+        "bunyan": "^1.3.5",
+        "connect": "~2.3.9",
+        "connect-flash": "~0.1.1",
+        "connect-mongo": "^0.8.1",
+        "cookie-parser": "^1.3.5",
+        "errorhandler": "^1.4.1",
+        "express": "^4.13.1",
+        "express-session": "^1.11.3",
+        "formage": "^3.2.21",
+        "jade": "^1.11.0",
+        "ldapjs": "^0.7.1",
+        "less-middleware": "~1.0.3",
+        "lodash": "^3.9.3",
+        "log4js": "^0.6.26",
+        "mongoose": "~3.8.12",
+        "node-uuid": "^1.4.3",
+        "nodemailer": "^1.4.0",
+        "q": "^1.0.1",
+        "request": "^2.51.0"
+    },
+    "engine": {
+        "node": "~0.10.38"
+    },
+    "devDependencies": {
+        "chai": "~1.9.1",
+        "express-debug": "~1.1.0",
+        "gulp": "^3.9.0",
+        "gulp-concat": "^2.6.0",
+        "gulp-uglify": "^1.5.1",
+        "mocha": "~1.16.2",
+        "should": "~2.1.1",
+        "supertest": "~0.8.2"
+    },
+    "scripts": {
+        "test": "node tests/runner",
+        "start": "node app/app",
+        "bootstrap": "vagrant up ; docker-compose up -d"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/openmrs/openmrs-contrib-id.git"
+    },
+    "author": "elliottwilliams,plypy,robbyoconnor",
+    "license": "MPL-2.0",
+    "bugs": {
+        "url": "https://issues.openmrs.org/browse/ID"
+    },
+    "readmeFilename": "README.md"
 }
