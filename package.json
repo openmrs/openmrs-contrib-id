@@ -41,7 +41,8 @@
   },
   "scripts": {
     "test": "node tests/runner",
-    "start": "node app/app"
+    "start": "node app/app",
+    "bootstrap": "vagrant up ; docker-compose up -d"
   },
   "repository": {
     "type": "git",
