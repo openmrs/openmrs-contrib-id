@@ -39,6 +39,7 @@ Thumbs.db
 # Project generated files #
 ###########################
 resource/scripts/min.js
+resource/scripts/consts.js
 
 # Testing files #
 #################
