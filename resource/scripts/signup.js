@@ -27,7 +27,7 @@ $(document).ready(function() {
             .removeClass('show');
         }, 2000);
 
-        return callback({submit: 'Mind Captcha!'});
+        return callback({submit: 'Please complete Captcha!'});
       }
       $.post('/signup', $('form#form-signup').serialize())
         .done(function (data) {

@@ -94,7 +94,7 @@ $(document).ready(function () {
         return 'Too long';
       }
       if (/[0-9]/.test(user[0]) ) {
-        return 'Start with letter';
+        return 'Must Start with letter';
       }
       if (!usernameRegex.test(user)) {
         return 'Only (a-z, 0-9) are allowed';
@@ -155,7 +155,7 @@ $(document).ready(function () {
 
         if (input.hasClass('required') && input.val() === '') {
           valid = false;
-          showError(input, 'Forgot?');
+          showError(input, 'Required');
           return ;
         }
 
