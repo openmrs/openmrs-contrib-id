@@ -101,11 +101,11 @@ module.exports = {
             "emailRegex": /^[A-Za-z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
         },
         "smtp": {
-            "host": process.env.MAIL_HOST || "localhost",
-            "port": process.env.MAIL_PORT || 1025,
-            "use_authentication": process.env.AUTH || false,
-            "user": process.env.MAIL_USER || "postfix_user",
-            "pass": process.env.MAIL_PASS || "secret"
+            "host": "localhost",
+            "port": 1025,
+            "use_authentication": false,
+            "user": "postfix_user",
+            "pass": "secret"
         }
     },
 

@@ -2,17 +2,34 @@ version: "2"
 services:
   mongodb:
     image: frodenas/mongodb:2.6
-    environment:
-      - MONGODB_USERNAME=openmrsid
-      - MONGODB_PASSWORD=secret
-      - MONGODB_DBNAME=openmrsid
     ports:
       - "0.0.0.0:27018:27017"
-
+    environment:
+      MONGODB_USERNAME: "openmrsid"
+      MONGODB_PASSWORD: "secret"
+      MONGODB_DBNAME: "openmrsid"
     volumes:
-      - ./docker/data/mongo:/data
+      - /docker/mongo:/data
+    command: "--nojournal --smallfiles"
+    restart: unless-stopped
   mailcatcher:
     image: robbyoconnor/mailcatcher
     ports:
-      - "1080:1080"
-      - "1025:1025"
+      - "0.0.0.0:1080:1080"
+      - "0.0.0.0:1025:1025"
+    restart: unless-stopped
+  web:
+    build:
+      context: .
+    depends_on:
+      - mongodb
+      - mailcatcher
+    environment:
+      RECAPTCHA_PUBLIC: "6LdE8xsTAAAAANv1Z-9a443m4HNlVhb7IjYy3dVW"
+      RECAPTCHA_PRIVATE: "6LdE8xsTAAAAAOj6zkHqOgxTAs-55jTLVdBuvbiz"
+      LDAP_URI: "ldap://192.168.33.10:389"
+      MAIL_HOST: "mailcatcher"
+      MAIL_PORT: "1025"
+    ports:
+      - "0.0.0.0:3000:3000"
+    restart: unless-stopped
