@@ -30,7 +30,7 @@ var User = require('./models/user');
 
 var EMAIL_PLUS_MSG = 'No \'+\' allowed';
 var WRONG_PASSWORD_MSG = 'Wrong password';
-
+var ALREADY_USED_MSG = 'Already Used.';
 
 var validate = {};
 
@@ -62,7 +62,7 @@ validate.chkUsernameInvalidOrDup = function (username, callback) {
     }
     if (user) {
       // duplicate
-      return callback(null, 'Already used');
+      return callback(null, ALREADY_USED_MSG);
     }
     return callback(null, false);
   });
@@ -94,7 +94,7 @@ validate.chkEmailInvalidOrDup = function (email, callback) {
       }
       if (user) {
         // duplicate
-        return callback(null, 'Already used');
+        return callback(null, ALREADY_USED_MSG);
       }
       return callback(null, false);
     });
