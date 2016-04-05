@@ -50,7 +50,8 @@ $(document).ready(function() {
           })
           .fail(function (error) {
             var trackId = error.responseJSON.trackId;
-            alert('Internal Server Error. ID: ' + trackId);
+            $('#err').modal('show');
+            $('#errText').html('<h2>Internal Server Error. ID: ' + trackId + '</h2>');
           });
     }
   });
