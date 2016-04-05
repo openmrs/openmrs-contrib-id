@@ -22,16 +22,12 @@ exports = module.exports = function(err, req, res, next) {
       }
       res.render('views/500', locals);
     } else if (req.accepts('application/json')) {
-      res.json({
-        statusCode: res.statusCode,
+      res.status(res.statusCode).json({
+        trackId: trackId,
         error: err
-      }, {
-        'Content-Type': 'application/json'
       });
     } else {
-      res.send("Error: " + err.message + "\n\n" + err.stack, {
-        'Content-Type': 'text/plain'
-      });
+      res.status(res.statusCode).send("Error: " + err.message + "\n\n" + err.stack);
     }
   } else {
     // Silently fail and write to log
