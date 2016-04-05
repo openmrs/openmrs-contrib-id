@@ -70,7 +70,7 @@ module.exports = {
         }
     },
     "mongo": {
-        "uri": "mongodb://openmrsid:secret@mongodb:27017/openmrsid",
+        "uri": process.env.MONGO_URI || "mongodb://openmrsid:secret@localhost:27018/openmrsid",
         "username": "openmrsid",
         "password": "secret",
         "commonExpireTime": "2d"
