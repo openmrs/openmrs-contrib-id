@@ -12,8 +12,7 @@ append head
 
 block content
   div.panel
-    form.validate#form-signup(action='/signup', method='post',
-        autocomplete='off')
+    form.validate#form-signup(autocomplete='off')
 
       div.row-item.form-group
         div.input-wrapper.col-md-5
@@ -75,3 +74,13 @@ block content
         div.input-wrapper.col-md-3
           input.btn.btn-success#submit(type='submit', value='Join the Community » ')
           label.error Please complete the captcha!
+  div#err.modal.fade(tabindex=-1 role='dialog' aria-labelledby="mySmallModalLabel")
+    div.modal-dialog.modal-sm
+      div.modal-content
+        div.modal-header
+            h3.modal-title Error
+        div.modal-body
+            div#errText
+        div.modal-footer
+            button.btn.btn-default(type="button" data-dismiss="modal") Close
+
