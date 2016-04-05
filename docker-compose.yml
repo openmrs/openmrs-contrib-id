@@ -30,6 +30,7 @@ services:
       LDAP_URI: "ldap://192.168.33.10:389"
       MAIL_HOST: "mailcatcher"
       MAIL_PORT: "1025"
+      MONGO_URI: "mongodb://openmrsid:secret@mongodb:27017/openmrsid" 
     ports:
       - "0.0.0.0:3000:3000"
     restart: unless-stopped
