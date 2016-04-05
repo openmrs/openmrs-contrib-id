@@ -40,6 +40,7 @@
         "supertest": "~0.8.2"
     },
     "scripts": {
+        "postinstall": "bower install --config.interactive=false; gulp",
         "test": "node tests/runner",
         "start": "node app/app",
         "bootstrap": "vagrant up --provision ;  docker-compose up -d"
