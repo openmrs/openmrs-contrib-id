@@ -6,7 +6,6 @@ $(document).ready(function() {
     return;
   }
 
-
   var SPINNER = $('input[name=spinner]').val();
   var disguise = function scrambleFields(name, spin) {
       var text = name + SPINNER;
@@ -29,23 +28,31 @@ $(document).ready(function() {
 
         return callback({submit: 'Please complete Captcha!'});
       }
-      $.post('/signup', $('form#form-signup').serialize())
-        .done(function (data) {
-          if (data.success) {
-            window.location.href = '/signup/verify';
-            return;
-          }
-          if (data.fail) {
-            if (data.fail.primaryEmail) {
-              data.fail.email = data.fail.primaryEmail;
-              delete data.fail.primaryEmail;
-            }
-            return callback(data.fail);
-          }
+        $.ajax({
+          url: '/signup',
+          headers: {Accept: 'application/json'},
+          data: $('form#form-signup').serialize(),
+          dataType: 'json',
+          method: 'POST'
         })
-        .fail(function () {
-          // body...
-        });
+          .done(function (data) {
+            if (data.success) {
+              window.location.href = '/signup/verify';
+              return;
+            }
+            if (data.fail) {
+              if (data.fail.primaryEmail) {
+                data.fail.email = data.fail.primaryEmail;
+                delete data.fail.primaryEmail;
+              }
+              return callback(data.fail);
+            }
+          })
+          .fail(function (error) {
+            var trackId = error.responseJSON.trackId;
+            $('#err').modal();
+            $('#errText').html('<h2>Internal Server Error. ID: ' + trackId + '</h2>');
+          });
     }
   });
 
