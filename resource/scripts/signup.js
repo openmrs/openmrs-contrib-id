@@ -51,7 +51,9 @@ $(document).ready(function() {
           .fail(function (error) {
             var trackId = error.responseJSON.trackId;
             $('#err').modal();
-            $('#errText').html('<h2>Internal Server Error. ID: ' + trackId + '</h2>');
+            var html = '<h2>Oops...something went wrong.<br><br>Tracking Code: ' + trackId + '</h2>';
+            html += '<br>Please <a href="https://help.openmrs.org/customer/portal/emails/new">contact the Help Desk</a> and include the above code, the e-mail address used and your OpenMRS ID.';
+            $('#errText').html(html);
           });
     }
   });

@@ -74,13 +74,13 @@ block content
         div.input-wrapper.col-md-3
           input.btn.btn-success#submit(type='submit', value='Join the Community » ')
           label.error Please complete the captcha!
+
   div#err.modal.fade(tabindex=-1 role='dialog' aria-labelledby="mySmallModalLabel")
-    div.modal-dialog.modal-sm
+    div.modal-dialog.modal-md
       div.modal-content
         div.modal-header
-            h3.modal-title Error
+            h3.modal-title An Error has occurred
         div.modal-body
             div#errText
         div.modal-footer
-            button.btn.btn-default(type="button" data-dismiss="modal") Close
-
+            button.btn.btn-success(type="button" data-dismiss="modal") Close
