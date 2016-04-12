@@ -1,5 +1,10 @@
 version: "2"
 services:
+  web:
+    build:
+      context: .
+      ports:
+        - "3000:3000"
   mongodb:
     image: frodenas/mongodb:2.6
     environment:

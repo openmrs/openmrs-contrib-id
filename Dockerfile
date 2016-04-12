@@ -1,38 +1,38 @@
-FROM node:5
+FROM mhart/alpine-node:5
 
+RUN addgroup dashboard && adduser -s /bin/bash -D -G dashboard dashboard \
+&& apk add --update openssl
 
-# workaround for this: https://github.com/npm/npm/issues/9863
-RUN  useradd --user-group --create-home --shell /bin/false node
-RUN rm -rf /usr/local/lib/node_modules/npm \
- && git clone https://github.com/DIREKTSPEED-LTD/npm /usr/local/lib/node_modules/npm \
- && rm -rf /usr/local/lib/node_modules/npm/.git \
- && rm -f  /usr/bin/npm \
- && ln -s -f /usr/local/bin/npm /usr/bin/npm \
- && cd /usr/local/lib/node_modules/npm \
- && npm install -g gulp bower
+ENV GOSU_VERSION 1.7
+RUN set -x \
+    && apk add --no-cache --virtual .gosu-deps \
+        dpkg \
+        gnupg \
+    && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
+    && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
+    && export GNUPGHOME="$(mktemp -d)" \
+    && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+    && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+    && rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
+    && chmod +x /usr/local/bin/gosu \
+    && gosu nobody true \
+    && apk del .gosu-deps
 
-ENV HOME=/home/node
+ENV HOME=/home/dashboard
+WORKDIR $HOME/id
 
-WORKDIR $HOME/app
-
-COPY package.json bower.json gulpfile.js $HOME/app/
-RUN chown -R node:node $HOME/*
-
-
-USER root
 RUN wget https://github.com/jwilder/dockerize/releases/download/v0.2.0/dockerize-linux-amd64-v0.2.0.tar.gz \
 && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v0.2.0.tar.gz \
 && rm -fr dockerize-linux-amd64-v0.2.0.tar.gz
 
-COPY . $HOME/app
-RUN chown -R node:node $HOME/*
-USER node
-
+COPY . $HOME/id
 COPY app/conf.example.js app/conf.js
-RUN npm install && \
-    bower install && \
-    gulp
+RUN chown -R dashboard:dashboard $HOME/* \
+&& npm install -g gulp bower \
+&& gosu dashboard npm install \
+&& gosu dashboard bower install  \
+&& gosu dashboard gulp
 
 EXPOSE 3000
 
-CMD dockerize -wait tcp://mongodb:27017 npm start
+CMD ["gosu", "dashboard", "dockerize", "-wait", "tcp://mongodb:27017", "npm", "start"]

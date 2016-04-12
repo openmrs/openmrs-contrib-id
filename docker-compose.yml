@@ -13,7 +13,8 @@ services:
     command: "--nojournal --smallfiles"
     restart: unless-stopped
   mailcatcher:
-    image: robbyoconnor/mailcatcher
+    image: jeanberu/mailcatcher
+    restart: unless-stopped
     ports:
       - "0.0.0.0:1080:1080"
       - "0.0.0.0:1025:1025"
