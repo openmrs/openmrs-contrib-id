@@ -71,8 +71,9 @@ mixin param-table(settings)
                 input(type='text', class= col.type, placeholder= col.value,
                   name= i+'-'+col.name, value= row[col.name])
               else
-                input(type='hidden', class= col.type, placeholder= col.value,
-                  name= i+'-'+col.name, value= row[col.name])= row[col.name]
+                input(type='hidden', class= col.type,placeholder= col.value,
+                name= i+'-'+col.name, value= row[col.name])
+                = row[col.name]
     if (settings.canAddRows)
       span.labeltext.hint(style= {float: right})
         | Rows will be added automatically.
