@@ -3,7 +3,7 @@ var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var fs = require('fs');
 var path = require('path');
-var jade = require('jade');
+var pug = require('pug');
 var url = require('url');
 var async = require('async');
 var _ = require('lodash');
@@ -81,7 +81,7 @@ exports.begin = function(settings, callback) {
       imgURL: url.resolve(conf.site.url, '/resource/images/logo.png'),
       verifyURL: url.resolve(conf.site.url, path.join(callbackPath, uuid)),
     });
-    var rendered = jade.renderFile(templatePath, locals);
+    var rendered = pug.renderFile(templatePath, locals);
 
     try {
       transporter.sendMail({

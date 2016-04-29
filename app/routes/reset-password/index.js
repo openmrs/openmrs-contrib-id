@@ -71,7 +71,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
         category: 'new password',
         callback: '/reset',
         subject: '[OpenMRS] Password Reset for ' + username,
-        templatePath: path.join(emailPath, 'password-reset.jade'),
+        templatePath: path.join(emailPath, 'password-reset.pug'),
         locals: {
           username: username,
           displayName: user.displayName,

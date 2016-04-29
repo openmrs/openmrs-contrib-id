@@ -142,7 +142,7 @@ app.post('/profile/email', mid.forceLogin,
       category: 'new email',
       username: user.username,
       subject: '[OpenMRS] Email address verification',
-      templatePath: path.join(common.templatePath, 'emails/email-verify.jade'),
+      templatePath: path.join(common.templatePath, 'emails/email-verify.pug'),
       locals: {
         displayName: user.displayName,
         username: user.username,

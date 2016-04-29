@@ -106,7 +106,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     var verificationOptions = {
       addr: email,
       subject: '[OpenMRS] Welcome to the OpenMRS Community',
-      templatePath: path.join(emailPath, 'welcome-verify.jade'),
+      templatePath: path.join(emailPath, 'welcome-verify.pug'),
       username: id,
       category: 'signup',
       callback: '/signup',
