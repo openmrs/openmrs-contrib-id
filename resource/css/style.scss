@@ -38,7 +38,7 @@ $concealTime: 100ms;
 	top: 0;
 	left: 0;
 	z-index: 1337;
-	
+
     @include transition(height $concealTime ease-in);
 }
 
@@ -59,7 +59,7 @@ $concealTime: 100ms;
     font-family: sans-serif;
     text-align: left;
     text-decoration: none;
-    
+
     @include transition(height $concealTime ease-in,
         padding-top $concealTime ease-in);
 
@@ -74,7 +74,7 @@ $concealTime: 100ms;
 
         // Site links.
         &:link {
-            text-decoration: none;            
+            text-decoration: none;
         }
 
         &:hover, &.yourhere, &:active, &:focus {
@@ -128,7 +128,7 @@ $concealTime: 100ms;
         background: url('/globalnav/img/search-white.png') no-repeat 10px 3px #444;
         box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
         @include transition(all 100ms ease 0s);
-        
+
         font: 10px sans-serif;
         text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
 

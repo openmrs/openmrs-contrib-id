@@ -27,16 +27,17 @@ block content
     })
     input.btn.btn-success(type='submit', value='Save')
 
-  form(action='/admin/globalnav/prefs', method='post')
+  form(action='/admin/globalnav/prefs', method='post').form-horizontal
     h2 Preferences
     each pref in prefs
-      div.field
-        label= pref.name
+      div.form-group
         if ('textarea' === pref.type)
-          textarea(name= pref.key, placeholder= pref.placeholder)
-            = pref.value
+          label= pref.name
+          textarea(name= pref.key, placeholder= pref.placeholder).form-control
+                = pref.value
         else
+          label= pref.name
           input(type= pref.type, name= pref.key, placeholder= pref.placeholder,
-            value= pref.value || '')
+            value= pref.value || '').form-control
         span.description= pref.description
     input.btn.btn-success(type='submit', value='Save')
