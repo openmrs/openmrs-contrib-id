@@ -6,12 +6,10 @@ services:
 
 node_js:
   - "0.12"
-  - "4.0.0"
-  - "4.2.6"
-  - "5.5.0"
-matrix:
-  allow_failures:
-    - node_js: 5.5.0
+  - "4"
+  - "4"
+  - "5"
+
 install:
   - ./build/install-openldap.sh
   - cp -v build/conf.app.js app/conf.js
@@ -22,6 +20,7 @@ install:
 branches:
   only:
     - master
+    - gsoc-2016
 
 notifications:
   email: false
