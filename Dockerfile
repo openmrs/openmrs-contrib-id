@@ -29,9 +29,7 @@ COPY . $HOME/id
 COPY app/conf.example.js app/conf.js
 RUN chown -R dashboard:dashboard $HOME/* \
 && npm install -g gulp bower \
-&& gosu dashboard npm install \
-&& gosu dashboard bower install  \
-&& gosu dashboard gulp
+&& gosu dashboard npm install
 
 EXPOSE 3000
 
