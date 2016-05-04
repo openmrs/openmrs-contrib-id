@@ -1,7 +1,7 @@
 FROM mhart/alpine-node:5
 
-RUN addgroup dashboard && adduser -s /bin/bash -D -G dashboard dashboard \
-&& apk add --update openssl
+RUN apk add --update bash openssl git perl \
+&& addgroup dashboard && adduser -s /bin/bash -D -G dashboard dashboard
 
 ENV GOSU_VERSION 1.7
 RUN set -x \
@@ -20,17 +20,21 @@ RUN set -x \
 
 ENV HOME=/home/dashboard
 WORKDIR $HOME/id
-
+ENV MODULES_DIR="app/user-modules"
 RUN wget https://github.com/jwilder/dockerize/releases/download/v0.2.0/dockerize-linux-amd64-v0.2.0.tar.gz \
 && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-v0.2.0.tar.gz \
 && rm -fr dockerize-linux-amd64-v0.2.0.tar.gz
 
 COPY . $HOME/id
 COPY app/conf.example.js app/conf.js
-RUN chown -R dashboard:dashboard $HOME/* \
-&& npm install -g gulp bower \
-&& gosu dashboard npm install
-
+RUN npm install bower gulp -g \
+&& gosu dashboard git submodule init \
+&& gosu dashboard git submodule update \
+&& chown -R dashboard:dashboard $HOME/* \
+&& gosu dashboard git submodule foreach npm install \
+&& gosu dashboard npm install \
+&& gosu dashboard cp -a $MODULES_DIR/openmrs-contrib-id-globalnavbar/lib/db.example.json $MODULES_DIR/openmrs-contrib-id-globalnavbar/lib/db.json
+# && gosu dashboard cp -a $MODULES_DIR/openmrs-contrib-id-sso/conf.example.json $MODULES_DIR/openmrs-contrib-id-sso/conf.json
 EXPOSE 3000
 
 CMD ["gosu", "dashboard", "dockerize", "-wait", "tcp://mongodb:27017", "npm", "start"]
