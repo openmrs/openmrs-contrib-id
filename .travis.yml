@@ -14,6 +14,9 @@ install:
   - ./build/install-openldap.sh
   - cp -v build/conf.app.js app/conf.js
   - cp -v build/conf.test.js tests/conf.js
+  - git submodule init
+  - git submodule update
+  - git submodule foreach npm install
   - npm install
   - node build/store.js
 
