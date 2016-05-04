@@ -33,8 +33,8 @@ RUN npm install bower gulp -g \
 && chown -R dashboard:dashboard $HOME/* \
 && gosu dashboard git submodule foreach npm install \
 && gosu dashboard npm install \
-&& gosu dashboard cp -a $MODULES_DIR/openmrs-contrib-id-globalnavbar/lib/db.example.json $MODULES_DIR/openmrs-contrib-id-globalnavbar/lib/db.json
-# && gosu dashboard cp -a $MODULES_DIR/openmrs-contrib-id-sso/conf.example.json $MODULES_DIR/openmrs-contrib-id-sso/conf.json
+&& gosu dashboard cp -a $MODULES_DIR/openmrs-contrib-id-globalnavbar/lib/db.example.json $MODULES_DIR/openmrs-contrib-id-globalnavbar/lib/db.json \
+&& gosu dashboard cp -a $MODULES_DIR/openmrs-contrib-id-sso/conf.example.js $MODULES_DIR/openmrs-contrib-id-sso/conf.js
 EXPOSE 3000
 
 CMD ["gosu", "dashboard", "dockerize", "-wait", "tcp://mongodb:27017", "npm", "start"]
