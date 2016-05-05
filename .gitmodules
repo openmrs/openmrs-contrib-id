@@ -1,3 +1,0 @@
-[submodule "resource/js/reqwest"]
-	path = resource/js/reqwest
-	url = https://github.com/ded/reqwest.git
