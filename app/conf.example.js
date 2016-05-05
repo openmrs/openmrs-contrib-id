@@ -16,7 +16,7 @@
 module.exports = {
     "site": {
         // use full url, like http://localhost:3000/
-        "url": "http://localhost:3000",
+        "url": process.env.SITE_URL || "http://localhost:3000",
         "title": "OpenMRS ID"
     },
     "ldap": {
@@ -26,8 +26,8 @@ module.exports = {
             "uri": process.env.LDAP_URI || "ldap://localhost:1389",
             "baseDn": "ou=system,dc=openmrs,dc=org",
             "rdn": "uid",
-            "loginUser": "omrsid",
-            "password": "secret"
+            "loginUser": process.env.LDAP_USER || "omrsid",
+            "password": process.env.LDAP_PASSWORD || "secret"
         },
         "user": {
             "baseDn": "ou=users,dc=openmrs,dc=org",
@@ -71,15 +71,15 @@ module.exports = {
     },
     "mongo": {
         "uri": process.env.MONGO_URI || "mongodb://openmrsid:secret@localhost:27018/openmrsid",
-        "username": "openmrsid",
-        "password": "secret",
+        "username": process.env.MONGO_USER || "openmrsid",
+        "password": process.env.MONGO_PASSWORD || "secret",
         "commonExpireTime": "2d"
     },
     "session": {
         "__comment3": "session storage DB",
 
         "__comment1": "session secret, used to secure session data",
-        "secret": "secret",
+        "secret": process.env.SESSION_SECRET || "secret",
         "__comment2": "how long until session terminates (24hr)",
         "duration": 86400000
     },
@@ -118,8 +118,8 @@ module.exports = {
 
     // user-configured modules
     "userModules": [
-      "openmrs-contrib-id-globalnavbar",
-      "openmrs-contrib-id-oauth",
+        "openmrs-contrib-id-globalnavbar",
+        "openmrs-contrib-id-oauth",
     ],
 
     // a exceptionlists of session middlware, use regular expressions
