@@ -3,16 +3,12 @@ services:
   web:
     build:
       context: .
-      ports:
-        - "3000:3000"
+    container_name: "id_dashboard"
+    restart: always
+    links:
+      - mongodb
   mongodb:
     image: frodenas/mongodb:2.6
-    environment:
-      - MONGODB_USERNAME=openmrsid
-      - MONGODB_PASSWORD=changemetosomethingsecure
-      - MONGODB_DBNAME=openmrsid
-    ports:
-      - "127.0.0.1:27018:27017"
-
-    volumes:
-      - ./docker/data/mongo:/data
+    container_name: "id_dashboard_mongo"
+    command: "--smallfiles"
+    restart: always
