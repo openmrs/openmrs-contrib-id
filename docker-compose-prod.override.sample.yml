@@ -1,0 +1,31 @@
+version: "2"
+services:
+  mongodb:
+    ports:
+      - "127.0.0.1:27018:27017"
+    environment:
+      MONGODB_USERNAME: "openmrsid"
+      MONGODB_PASSWORD: "secret"
+      MONGODB_DBNAME: "openmrsid"
+    volumes:
+      - "/docker/mongo:/data"
+  web:
+    environment:
+      RECAPTCHA_PUBLIC: "foo"
+      RECAPTCHA_PRIVATE: ""
+      LDAP_URI: "ldap://ip:389"
+      MAIL_HOST: ""
+      MAIL_PORT: ""
+      MONGO_URI: "mongodb://openmrsid:secret@mongodb:27017/openmrsid"
+      DISCOURSE_SECRET: ""
+      DISCOURSE_NONCE_URL: "http://talk.openmrs.org/session/sso"
+      DISCOURSE_RETURN_URL: "http://talk.openmrs.org/session/sso_login?{{QUERY}}"
+      DESKCOM_API_KEY: "api key from desk.com"
+      DESKCOM_SITE_KEY: "site key"
+      DESKCOM_RETURN_URL: "https://help.openmrs.org/customer/authentication/multipass/callback?multipass={{MULTIPASS}}&signature={{SIGNATURE}}"
+      ATLAS_API_KEY: "1234567890abcdef"
+      ATLAS_SITE_KEY: "localhost"
+      ATLAS_RETURN_URL: "http://localhost/openmrs-contrib-atlas/public/auth/multipass/callback?multipass={{MULTIPASS}}&signature={{SIGNATURE}}"
+    ports:
+      - "127.0.0.1:3000:3000"
+    restart: unless-stopped
