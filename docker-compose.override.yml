@@ -8,7 +8,14 @@ services:
       MONGODB_PASSWORD: "secret"
       MONGODB_DBNAME: "openmrsid"
     volumes:
-      - /docker/mongo:/data
+      - "/docker/mongo:/data"
+    restart: unless-stopped
+    command: "--nojournal --smallfiles"
+  mailcatcher:
+    restart: unless-stopped
+    ports:
+      - "0.0.0.0:1080:1080"
+      - "0.0.0.0:1025:1025"
   web:
     environment:
       RECAPTCHA_PUBLIC: "6LdE8xsTAAAAANv1Z-9a443m4HNlVhb7IjYy3dVW"
@@ -27,5 +34,5 @@ services:
       ATLAS_SITE_KEY: "localhost"
       ATLAS_RETURN_URL: "http://localhost/openmrs-contrib-atlas/public/auth/multipass/callback?multipass={{MULTIPASS}}&signature={{SIGNATURE}}"
     ports:
-      - "127.0.0.1:3000:3000"
+      - "0.0.0.0:3000:3000"
     restart: unless-stopped

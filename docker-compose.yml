@@ -3,16 +3,9 @@ services:
   mongodb:
     image: frodenas/mongodb:2.6
     container_name: "id_dashboard_mongo"
-    command: "--nojournal --smallfiles"
-    restart: unless-stopped
   mailcatcher:
     image: jeanberu/mailcatcher
-    restart: unless-stopped
     container_name: "id_dashboard_mailcatcher"
-    ports:
-      - "0.0.0.0:1080:1080"
-      - "0.0.0.0:1025:1025"
-    restart: unless-stopped
   web:
     build:
       context: .
@@ -20,6 +13,3 @@ services:
       - mongodb
       - mailcatcher
     container_name: "id_dashboard"
-    ports:
-      - "0.0.0.0:3000:3000"
-    restart: unless-stopped
