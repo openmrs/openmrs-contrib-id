@@ -86,7 +86,7 @@ module.exports = {
     "logger": {
         // Log settings
 
-        "relativePath": "/../logs/openmrsid.log"
+        "relativePath": "../logs/openmrsid.log"
     },
     "validation": {
         // validation settings
