@@ -1,7 +1,5 @@
 @import 'bourbon/bourbon';
 @import 'cleanslate';
-
-
 // THE NAVBAR
 // by elliottwilliams
 //
@@ -16,29 +14,25 @@
 //
 // To build:
 //   # sass -t compressed style.scss:style.css
-
 // 0. Variables and mixins.
 $lipSize: 5px; // Amount below the navbar that still qualifies as hovering over it.
 $hoverDuration: 1000ms;
-$revealFunction: cubic-bezier(.69,.46,.38,1.53);
+$revealFunction: cubic-bezier(.69, .46, .38, 1.53);
 $revealTime: 200ms;
 $concealTime: 100ms;
-
 // 1. The container ("lip") of the navbar.
 #globalnav-container {
-	width: 100%;
-	height: 27px;
+    width: 100%;
+    height: 27px;
     margin: -27px 0 0; // -27px offsets the navbar from the global margin in boot.js
     padding: 0;
     border: 0;
-
-	display: block !important;
-	overflow: hidden;
-	position: relative;
-	top: 0;
-	left: 0;
-	z-index: 1337;
-
+    display: block !important;
+    overflow: hidden;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 1337;
     @include transition(height $concealTime ease-in);
 }
 
@@ -48,21 +42,16 @@ $concealTime: 100ms;
     width: 100%;
     margin: 0 0 1px;
     padding: 3px 0 0 3px;
-
     // background: #4a4a4a url('/globalnav/img/omrs-navbar.png') 7px 2px no-repeat;
     background: #4a4a4a;
     box-shadow: inset 0 -2px 3px #333;
     border: none;
     outline: 1px solid #000;
     overflow: hidden;
-
     font-family: sans-serif;
     text-align: left;
     text-decoration: none;
-
-    @include transition(height $concealTime ease-in,
-        padding-top $concealTime ease-in);
-
+    @include transition(height $concealTime ease-in, padding-top $concealTime ease-in);
     // 2.1. Links, buttons, everything.
     a {
         margin: 1px 10px;
@@ -71,13 +60,14 @@ $concealTime: 100ms;
         color: #fff;
         font-size: 11px;
         text-decoration: none;
-
         // Site links.
         &:link {
             text-decoration: none;
         }
-
-        &:hover, &.yourhere, &:active, &:focus {
+        &:hover,
+        &.yourhere,
+        &:active,
+        &:focus {
             padding: 1px 6px 1px 6px;
             margin: 0 4px;
             border-radius: 9px;
@@ -85,22 +75,19 @@ $concealTime: 100ms;
             color: #4d4129;
             text-decoration: none;
         }
-
-        &.yourhere, &:active {
+        &.yourhere,
+        &:active {
             box-shadow: inset 0 1px 1px #999;
         }
-
         &:focus {
             outline: none;
         }
-
         // State button.
         &#globalnav-state-button {
             color: #ccc;
             visibility: hidden;
             background: none;
             box-shadow: none;
-
             &:hover {
                 background: none;
                 color: #fff;
@@ -108,14 +95,12 @@ $concealTime: 100ms;
             }
         }
     }
-
     // 2.2. Search bar
     form {
         margin: 0;
         display: inline;
         float: right;
     }
-
     #{$all-text-inputs} {
         width: 150px;
         height: 8px;
@@ -123,15 +108,12 @@ $concealTime: 100ms;
         margin-right: 40px;
         border: 0 none;
         border-radius: 20px;
-
         color: #fff;
         background: url('/globalnav/img/search-white.png') no-repeat 10px 3px #444;
         box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2) inset;
         @include transition(all 100ms ease 0s);
-
         font: 10px sans-serif;
         text-shadow: 0 2px 2px rgba(0, 0, 0, 0.3);
-
         &:focus {
             color: #6a6f75;
             background: url('/globalnav/img/search-dark.png') no-repeat 10px 3px #fcfcfc;
@@ -139,7 +121,6 @@ $concealTime: 100ms;
             text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
         }
     }
-
     // Stuff that displays when the navbar is hovered over.
     &:hover {
         #globalnav-state-button {
@@ -148,19 +129,15 @@ $concealTime: 100ms;
     }
 }
 
-
 // 3. Hidden styles
 #globalnav-container.navbar-hidden {
     height: 3px + $lipSize;
     margin-bottom: -$lipSize;
-
     #globalnav {
         height: 3px;
         padding-top: 0px;
-
         a {
             visibility: hidden;
-
             &.yourhere {
                 padding: 10px 6px;
                 border-radius: 0;
@@ -175,15 +152,12 @@ $concealTime: 100ms;
 }
 
 // 4. Hover Styles and Animation
-
 #globalnav-container:hover {
     @include transition(height $revealTime $revealFunction);
-
     #globalnav {
         @include transition(height $revealTime $revealFunction,
-                padding-top $revealTime $revealFunction);
+        padding-top $revealTime $revealFunction);
     }
-
     &.navbar-hidden {
         #globalnav {
             background-color: lighten(#4a4a4a, 20%);
@@ -194,6 +168,12 @@ $concealTime: 100ms;
 }
 
 @include keyframes(peek) {
-    0%   { height: 3px; padding-top: 0; }
-    100% { height: 6px; padding-top: 1px; }
+    0% {
+        height: 3px;
+        padding-top: 0;
+    }
+    100% {
+        height: 6px;
+        padding-top: 1px;
+    }
 }
