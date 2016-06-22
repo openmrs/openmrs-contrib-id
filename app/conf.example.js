@@ -48,15 +48,8 @@ module.exports = {
             "usernameRegex": /^[a-zA-Z0-9]+[.]?[a-zA-Z0-9]+$/,
             "defaultGroups": [
                 "bamboo-user",
-                "confluence-users",
                 "dashboard-users",
-                "jira-chg-requester",
-                "jira-icm-assignee",
-                "jira-icm-reporter",
-                "jira-trunk-developer",
-                "jira-users",
                 "modrepo-users",
-                "osqa-users",
                 "talk-users"
             ],
             "passwordResetPolicy": "cn=reset,ou=policy,dc=openmrs,dc=org",
