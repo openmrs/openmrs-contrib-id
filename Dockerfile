@@ -7,18 +7,16 @@ RUN apk add --update bash openssl git perl python build-base \
 
 ENV HOME=/home/dashboard
 WORKDIR $HOME/id
-ENV MODULES_DIR="app/user-modules"
 
 COPY . $HOME/id
 COPY app/conf.example.js app/conf.js
 RUN npm install bower gulp -g \
-&& gosu dashboard git submodule init \
-&& gosu dashboard git submodule update \
 && chown -R dashboard:dashboard $HOME/* \
+&& gosu dashboard git submodule update \
 && gosu dashboard git submodule foreach npm install \
 && gosu dashboard npm install \
-&& gosu dashboard cp -a $MODULES_DIR/openmrs-contrib-id-globalnavbar/lib/db.example.json $MODULES_DIR/openmrs-contrib-id-globalnavbar/lib/db.json \
-&& gosu dashboard cp -a $MODULES_DIR/openmrs-contrib-id-sso/conf.example.js $MODULES_DIR/openmrs-contrib-id-sso/conf.js \
+&& gosu dashboard cp -a app/user-modules/openmrs-contrib-id-globalnavbar/lib/db.example.json app/user-modules/openmrs-contrib-id-globalnavbar/lib/db.json \
+&& gosu dashboard cp -a app/user-modules/openmrs-contrib-id-sso/conf.example.js app/user-modules/openmrs-contrib-id-sso/conf.js \
 && apk del python git build-base
 EXPOSE 3000
 
