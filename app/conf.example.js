@@ -113,6 +113,7 @@ module.exports = {
     "userModules": [
         "openmrs-contrib-id-globalnavbar",
         "openmrs-contrib-id-oauth",
+        "openmrs-contrib-id-sso",
     ],
 
     // a exceptionlists of session middlware, use regular expressions
