@@ -83,8 +83,8 @@ module.exports = {
     },
     "validation": {
         // validation settings
-        "recaptchaPublic": process.env.RECAPTCHA_PUBLIC || "public_key",
-        "recaptchaPrivate": process.env.RECAPTCHA_PRIVATE || "private_key",
+        "recaptchaPublic": process.env.RECAPTCHA_PUBLIC || "6LdE8xsTAAAAANv1Z-9a443m4HNlVhb7IjYy3dVW",
+        "recaptchaPrivate": process.env.RECAPTCHA_PRIVATE || "6LdE8xsTAAAAAOj6zkHqOgxTAs-55jTLVdBuvbiz",
         "allowPlusInEmail": false,
     },
     "email": {
