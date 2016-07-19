@@ -20,5 +20,5 @@ module.exports = {
             "returnURL": process.env.ATLAS_RETURN_URL,
         },
 
-    };
+    },
 };
