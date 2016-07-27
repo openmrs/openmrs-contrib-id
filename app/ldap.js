@@ -70,9 +70,10 @@ var searchRaw = function (username, attributes, cb) {
   if (!_.isArray(attributes)) {
     attributes = [attributes];
   }
-  var base = 'uid=' + username + ',' + userAttr.baseDn;
+  var getAll = username === '*';
+  var base = getAll ? userAttr.baseDn : 'uid=' + username + ',' + userAttr.baseDn;
   var options = {
-    scope: 'base',
+    scope: getAll ? 'sub': 'base',
     attributes: attributes,
   };
 
@@ -80,9 +81,9 @@ var searchRaw = function (username, attributes, cb) {
     if (err) {
       return cb(err);
     }
-    var ret;
+    var ret = [];
     res.on('searchEntry', function (entry) {
-      ret = entry.object;
+      ret.push(entry.object);
     });
     res.on('error', function(err) {
       if (err.code === 32) { // not found, no such dn
@@ -93,9 +94,30 @@ var searchRaw = function (username, attributes, cb) {
     });
     res.on('end', function(result) {
       log.debug('ldap search ended with status: ' + result.status);
-      return cb(null, ret);
+      if (!ret.length) {
+        return cb(null, null);
+      }
+      else if (ret.length === 1) {
+        return cb(null, ret[0]);
+      }
+      else {
+        return cb(null, _.filter(ret, function(item) {
+          return item.uid;
+        }));
+      }
     });
   });
+};
+
+var convertUser = function(old) {
+  var user = {};
+  user.username = old[userAttr.username];
+  user.password = old[userAttr.password];
+  user.firstName = old[userAttr.firstname];
+  user.lastName = old[userAttr.lastname];
+  user.displayName = old[userAttr.displayname];
+  user.primaryEmail = old[userAttr.email];
+  return user;
 };
 
 // Helper function that searches the user records in LDAP.
@@ -117,16 +139,16 @@ var searchUser = function (username, cb) {
     if (_.isEmpty(old)) {
       return cb(null, null);
     }
-    // transform
-    var user = {};
-    user.username = old[userAttr.username];
-    user.password = old[userAttr.password];
-    user.firstName = old[userAttr.firstname];
-    user.lastName = old[userAttr.lastname];
-    user.displayName = old[userAttr.displayname];
-    user.primaryEmail = old[userAttr.email];
-
-    return cb(null, user);
+    else if (_.isArray(old)) {
+      async.map(old, function (el, callback) {
+        callback(null, convertUser(el));
+      }, function(err, users) {
+        return cb(null, users)
+      })
+    }
+    else {
+      return cb(null, convertUser(old));
+    }
   });
 };
 
@@ -207,6 +229,21 @@ exports.getUser = function (username, cb) {
     }
     user.groups = groups;
     return cb(null, user);
+  });
+};
+
+/**
+ * Get users list from LDAP
+ * @param {Function} cb cb(err, users)
+ */
+exports.getAllUsers = function(cb) {
+  return searchUser('*', function(err, users) {
+    if (users && !_.isArray(users)) {
+      return cb(err, [users]);
+    }
+    else {
+      return cb(err, users);
+    }
   });
 };
 

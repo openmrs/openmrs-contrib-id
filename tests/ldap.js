@@ -369,5 +369,28 @@ describe('ldap', function() {
       });
     });
   });
-});
 
+  describe('#usersList', function() {
+    before(function (done) {
+      ldap.addUser(VALID_USER, function (err) {
+        if (err) {
+          return done(err);
+        }
+        else {
+          return done();
+        }
+      })
+    });
+    after(function (done) {
+      ldap.deleteUser(VALID_USER.username, done);
+    });
+    it('should return a list with one user', function (done) {
+      ldap.getAllUsers(function(err, users) {
+        expect(err).to.not.exist;
+        expect(users).to.exist;
+        expect(users.length).to.equal(1);
+        return done();
+      });
+    });
+  });
+});
