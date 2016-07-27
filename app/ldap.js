@@ -83,9 +83,7 @@ var searchRaw = function (username, attributes, cb) {
     }
     var ret = [];
     res.on('searchEntry', function (entry) {
-      if (entry.object.uid) {
-        ret.push(entry.object);
-      }
+      ret.push(entry.object);
     });
     res.on('error', function(err) {
       if (err.code === 32) { // not found, no such dn
@@ -103,7 +101,9 @@ var searchRaw = function (username, attributes, cb) {
         return cb(null, ret[0]);
       }
       else {
-        return cb(null, ret);
+        return cb(null, _.filter(ret, function(item) {
+          return item.uid;
+        }));
       }
     });
   });
