@@ -576,7 +576,3 @@ exports.addGroup = function (options, callback) {
   var dn = groupAttr.rdn + '=' + options.groupName + ',' + groupAttr.baseDn;
   client.add(dn, entry, callback);
 };
-
-exports.getAllUsers(function(err, users) {
-  console.log(users)
-})
