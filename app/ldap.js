@@ -237,7 +237,14 @@ exports.getUser = function (username, cb) {
  * @param {Function} cb cb(err, users)
  */
 exports.getAllUsers = function(cb) {
-  return searchUser('*', cb);
+  return searchUser('*', function(err, users) {
+    if (users && !_.isArray(users)) {
+      return cb(err, [users]);
+    }
+    else {
+      return cb(err, users);
+    }
+  });
 };
 
 
@@ -569,3 +576,7 @@ exports.addGroup = function (options, callback) {
   var dn = groupAttr.rdn + '=' + options.groupName + ',' + groupAttr.baseDn;
   client.add(dn, entry, callback);
 };
+
+exports.getAllUsers(function(err, users) {
+  console.log(users)
+})

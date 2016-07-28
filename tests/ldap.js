@@ -369,5 +369,33 @@ describe('ldap', function() {
       });
     });
   });
+  
+  describe('#usersList', function() {
+    before(function (done) {
+      return done();
+    });
+    after(function (done) {
+      ldap.deleteUser(VALID_USER.username, done);
+    });
+    it('should return a list with one more user than before', function (done) {
+      ldap.getAllUsers(function(err, prevUsers) {
+        expect(err).to.not.exist;
+        var prevCount = prevUsers ? prevUsers.length : 0 ;
+        ldap.addUser(VALID_USER, function (err) {
+          if (err) {
+            return done(err);
+          }
+          else {
+            ldap.getAllUsers(function(err, users) {
+              expect(err).to.not.exist;
+              expect(users).to.exist;
+              expect(users.length - prevCount).to.equal(1);
+              return done();
+            });
+          }
+        });
+      });
+    });
+  });
 });
 
