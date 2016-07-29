@@ -372,28 +372,24 @@ describe('ldap', function() {
   
   describe('#usersList', function() {
     before(function (done) {
-      return done();
+      ldap.addUser(VALID_USER, function (err) {
+        if (err) {
+          return done(err);
+        }
+        else {
+          return done();
+        }
+      })
     });
     after(function (done) {
       ldap.deleteUser(VALID_USER.username, done);
     });
-    it('should return a list with one more user than before', function (done) {
-      ldap.getAllUsers(function(err, prevUsers) {
+    it('should return a list with one user', function (done) {
+      ldap.getAllUsers(function(err, users) {
         expect(err).to.not.exist;
-        var prevCount = prevUsers ? prevUsers.length : 0 ;
-        ldap.addUser(VALID_USER, function (err) {
-          if (err) {
-            return done(err);
-          }
-          else {
-            ldap.getAllUsers(function(err, users) {
-              expect(err).to.not.exist;
-              expect(users).to.exist;
-              expect(users.length - prevCount).to.equal(1);
-              return done();
-            });
-          }
-        });
+        expect(users).to.exist;
+        expect(users.length).to.equal(1);
+        return done();
       });
     });
   });
