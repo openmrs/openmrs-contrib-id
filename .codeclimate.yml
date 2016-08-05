@@ -1,13 +1,28 @@
 ---
-languages:
-  JavaScript: true
+engines:
+  duplication:
+    enabled: true
+    checks:
+      Similar code:
+        enabled: false
+    config:
+      languages:
+      - javascript
+  eslint:
+    enabled: true
+    checks:
+      comma-dangle:
+        enabled: false
+      global-require:
+        enabled: false
+  fixme:
+    enabled: true
 ratings:
   paths:
-  - "app/**"
-  - "resources/**"
-  - "templates/**"
+  - "**.js"
+  - "**.jsx"
 exclude_paths:
-  - "tests/**/*"
-  - "app/conf.*"
-  - "build/"
-  - "app/user-modules/*/**"
+- tests/**/*
+- app/conf.*
+- build/
+- app/user-modules/*/**/*
