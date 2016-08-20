@@ -239,11 +239,21 @@ exports.getUser = function (username, cb) {
 exports.getAllUsers = function(cb) {
   return searchUser('*', function(err, users) {
     if (users && !_.isArray(users)) {
-      return cb(err, [users]);
+      user = [users];
     }
-    else {
-      return cb(err, users);
-    }
+    async.map(users, function (user, callback) {
+      if (user.username) {
+        searchGroups(user.username, function(err, groups) {
+          user.groups = groups;
+          callback(null, user);
+        });
+      }
+      else {
+        callback();
+      }
+    }, function(err, results) {
+      cb(err, _.reject(results, function(el) {return !el}));
+    });
   });
 };
 
