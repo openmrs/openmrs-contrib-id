@@ -9,8 +9,6 @@ Vagrant.configure(VERSION) do |config|
 
   config.vm.network 'private_network', ip: '192.168.33.10'
 
-  config.vm.network 'public_network'
-
   config.vm.synced_folder 'build', '/vagrant_files'
 
   config.vm.provider 'virtualbox' do |vb|
