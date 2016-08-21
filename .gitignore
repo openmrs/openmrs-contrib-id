@@ -49,6 +49,9 @@ conf-controller.js
 resource/stylesheets/*
 *.sqlite
 
+# Production secrets
+docker-compose-prod.override.yml
+.env
 
 ### Vagrant ###
 .vagrant/
@@ -68,4 +71,3 @@ cscope.files
 cscope.out
 cscope.in.out
 cscope.po.out
-docker-compose-prod.override.yml
