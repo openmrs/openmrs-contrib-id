@@ -389,6 +389,10 @@ describe('ldap', function() {
         expect(err).to.not.exist;
         expect(users).to.exist;
         expect(users.length).to.equal(1);
+        async.map(users, function (user, callback) {
+          expect(user.groups).to.exist;
+        });
+
         return done();
       });
     });
