@@ -388,7 +388,7 @@ describe('ldap', function() {
       ldap.getAllUsers(function(err, users) {
         expect(err).to.not.exist;
         expect(users).to.exist;
-        expect(users.length).to.equal(1);
+        expect(users.length).to.to.be.at.least(1);
         async.map(users, function (user, callback) {
           expect(user.groups).to.exist;
         });
