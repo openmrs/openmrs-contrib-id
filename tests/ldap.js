@@ -384,7 +384,7 @@ describe('ldap', function() {
     after(function (done) {
       ldap.deleteUser(VALID_USER.username, done);
     });
-    it('should return a list with one user', function (done) {
+    it('should return a list of users', function (done) {
       ldap.getAllUsers(function(err, users) {
         expect(err).to.not.exist;
         expect(users).to.exist;
