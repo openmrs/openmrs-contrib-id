@@ -39,7 +39,7 @@ OpenMRS's developer community was in need of unification between the tools hoste
 
 ##Server Requirements:
 
-* Node.js version 4.2.x; it is known to work with 0.12+ as well.
+* Node.js version <=5; it is known to work with 0.12+ as well.
 * LDAP directory (tested with OpenLDAP), additionally supporting extensible objects and password policies
 * MongoDB database
 * SMTP access
