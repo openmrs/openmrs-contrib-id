@@ -31,7 +31,7 @@ it listens on port `1389` on on `**127.0.0.1**`.
 
 It listens on port `**27018**` on `**127.0.0.1**`. The current example config should be useable for development purposes, but do not use it for production purposes.
 
-3. Install Node. For development environments, I use [nvm][1]. Install the latest from the Node 0.12.x tree:
+3. Install Node. For development environments, I use [nvm][1]. Install the latest from the Node 5.x branch (**It does not work with Node 6**, we test against 0.12.x, 4.x and 5.x on travis-ci):
 
      ```
      curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.26.0/install.sh | bash
