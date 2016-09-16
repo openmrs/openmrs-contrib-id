@@ -2,7 +2,6 @@ exec { 'apt-update':
   command => '/usr/bin/sudo /usr/bin/apt-get update',
   before  => [Package['slapd'],
               Package['ldap-utils']]
-
 }
 
 package {'slapd':
@@ -78,7 +77,6 @@ file { '/var/lib/ldap':
   require => [Package['slapd'],
               Package['ldap-utils'],
               Exec['add schema']]
-}
 
 exec { 'Set the password':
   path    => ['/usr/sbin','/usr/bin'],
