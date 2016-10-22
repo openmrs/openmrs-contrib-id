@@ -54,6 +54,7 @@ var userSchema = new Schema({
     unique: true,
     required: true,
     lowercase: true,
+    trim: true,
   }, // unique username
 
   firstName: {

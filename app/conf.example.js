@@ -45,7 +45,7 @@ module.exports = {
                 "inetOrgPerson",
                 "extensibleObject"
             ],
-            "usernameRegex": /^[a-zA-Z0-9]+[.]?[a-zA-Z0-9]+$/,
+            "usernameRegex": /^\s*[a-zA-Z][.]?[a-zA-Z0-9]{2,18}\s*$/,
             "defaultGroups": [
                 "bamboo-user",
                 "dashboard-users",

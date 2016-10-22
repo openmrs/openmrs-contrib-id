@@ -14,7 +14,7 @@ var conf = require('../app/conf');
 var VALID_EMAIL1 = 'foo@bar.com';
 var VALID_EMAIL2 = 'no@mistake.com';
 var VALID_EMAIL3 = 'hello@world.com';
-
+var VALID_EMAIL4 = 'foo@baz.com'
 var ORPHAN_EMAIL = 'im@lonely.com';
 
 var INVALID_EMAIL = 'badatgoogle.com';
@@ -22,6 +22,7 @@ var INVALID_EMAIL = 'badatgoogle.com';
 
 var VALID_USERNAME1 = 'Plypy';
 var VALID_USERNAME2 = 'plypx';
+var VALID_USERNAME3 = ' usernamewithspaces '
 
 var INVALID_USERNAME = 'Ply_py'; // contain one underscore
 
@@ -53,6 +54,21 @@ var VALID_INFO2 = {
   emailList: [VALID_EMAIL2],
   password: DOUBLE_STRING,
   locked: true,
+  skipLDAP: true,
+};
+
+
+var VALID_INFO3 = {
+  username: VALID_USERNAME3,
+  firstName: SIMPLE_STRING,
+  lastName: SIMPLE_STRING,
+  displayName: SIMPLE_STRING,
+  primaryEmail: VALID_EMAIL4,
+  displayEmail: VALID_EMAIL4,
+  emailList: [VALID_EMAIL4],
+  password: VALID_PASSWORD,
+  groups: [],
+  locked: false,
   skipLDAP: true,
 };
 
@@ -107,7 +123,7 @@ describe('User', function() {
   it('should store the valid users well', function(done) {
     var user1 = new User(VALID_INFO1);
     var user2 = new User(VALID_INFO2);
-
+    var user3 = new User(VALID_INFO3);
     async.parallel([
       function (callback) {
         user1.save(callback);
@@ -115,13 +131,16 @@ describe('User', function() {
       function (callback) {
         user2.save(callback);
       },
+      function (callback) {
+        user3.save(callback);
+      }
     ],
     function (err) {
       expect(err).to.be.null;
 
       User.find({}, function (err, users) {
         expect(err).to.be.null;
-        expect(users).to.have.length(2);
+        expect(users).to.have.length(3);
         done();
       });
     });
