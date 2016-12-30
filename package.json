@@ -14,7 +14,7 @@
     "errorhandler": "^1.4.1",
     "express": "^4.13.1",
     "express-session": "^1.11.3",
-    "formage": "robbyoconnor/formage#fix-lodash",
+    "formage": "~2.8.1",
     "ldapjs": "^1.0.0",
     "less-middleware": "~1.0.3",
     "lodash": "^3.9.3",
