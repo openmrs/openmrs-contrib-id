@@ -23,7 +23,6 @@ install:
 branches:
   only:
     - master
-    - gsoc-2016
 
 notifications:
   email: false
