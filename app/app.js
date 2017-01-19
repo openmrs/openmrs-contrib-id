@@ -165,7 +165,7 @@ conf.userModules.forEach(function(module) {
 });
 
 
-require('./db-admin')(app);
+require('./db-admin')(app, express);
 
 // this two shall be put at the end
 app.use(require('./routes/404'));
