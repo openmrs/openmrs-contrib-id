@@ -1,8 +1,9 @@
 version: "2"
 services:
   mongodb:
-    image: frodenas/mongodb:2.6
+    image: mongo:2.6
     container_name: "id_dashboard_mongo"
+    command: mongod --smallfiles
   mailcatcher:
     image: jeanberu/mailcatcher
     container_name: "id_dashboard_mailcatcher"

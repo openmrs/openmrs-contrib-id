@@ -14,8 +14,6 @@ exports = module.exports = function (app, express) {
       title: 'OpenMRS ID Management',
       root: '/panel',
       default_section: 'OpenMRS ID',
-      username: conf.mongo.username,
-      password: conf.mongo.password,
       admin_users_gui: false,
       no_users: false
     });
