@@ -18,7 +18,7 @@ var EmailVerification = require('./models/email-verification');
 // update nodemailer
 var transporter = nodemailer.createTransport(conf.email.smtp);
 
-var simpleCallback = function (err) {
+var simpleCallback = err => {
   if (err) {
     log.error(err);
   }
@@ -35,7 +35,7 @@ var simpleCallback = function (err) {
  *   locals,        extra locals for rendering or other additional infos
  * },callback)      receives errors
  */
-exports.begin = function(settings, callback) {
+exports.begin = (settings, callback) => {
   // parse arguments
   var addr = settings.addr;
   var subject = settings.subject;
@@ -64,7 +64,7 @@ exports.begin = function(settings, callback) {
     var verification = new EmailVerification(veriInfo);
     log.trace('verification prepared for DB entry');
 
-    verification.save(function (err) {
+    verification.save(err => {
       if (err) {
         return cb(err);
       }
@@ -89,7 +89,7 @@ exports.begin = function(settings, callback) {
         to: addr,
         subject: subject,
         html: rendered
-      }, function(e, success) {
+      }, (e, success) => {
         if (e) {
           return cb(e);
         }
@@ -109,9 +109,9 @@ exports.begin = function(settings, callback) {
 
 // re-send verification email
 // callback return error and the address sent to
-exports.resend = function(uuid, callback) {
+exports.resend = (uuid, callback) => {
   // get the verification instance
-  EmailVerification.findOne({uuid: uuid}, function (err, verification) {
+  EmailVerification.findOne({uuid: uuid}, (err, verification) => {
     if (err) {
       return callback(err);
     }
@@ -129,12 +129,12 @@ exports.resend = function(uuid, callback) {
 
 // verifies a validation request, callback returns error,
 // boolean on whether request is valid, and any locals
-exports.check = function(uuid, callback) {
+exports.check = (uuid, callback) => {
   if (!_.isFunction(callback)) {
     throw new Error('callback must be a function');
   }
 
-  EmailVerification.findOne({uuid: uuid}, function (err, verification) {
+  EmailVerification.findOne({uuid: uuid}, (err, verification) => {
     if (err) {
       return callback(err);
     }
@@ -149,7 +149,7 @@ exports.check = function(uuid, callback) {
 };
 
 // drops a verification (called on completion)
-exports.clear = function(uuid, callback) {
+exports.clear = (uuid, callback) => {
   if (!callback) {
     callback = simpleCallback;
   }
@@ -158,7 +158,7 @@ exports.clear = function(uuid, callback) {
 
 // helper functions to search for a verification,
 // based on username or email address
-exports.search = function(credential, category, callback) {
+exports.search = (credential, category, callback) => {
   // determine whether credential is email, username, or verifyId
   var terms;
   if (conf.user.usernameRegex.test(credential)) {

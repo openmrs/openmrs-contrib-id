@@ -22,18 +22,14 @@ var User;
 function syncFormageUser(user, callback) {
 
   return FormageUser.findOne({username: user.username}).exec()
-  .then(function (formageUser) {
-
-    return (formageUser) ? updatePassword(formageUser, user) :
-                          createFormageUser(user);
-
-  })
-  .then(function (formageUser) {
+  .then(formageUser => (formageUser) ? updatePassword(formageUser, user) :
+                        createFormageUser(user))
+  .then(formageUser => {
 
     var deferred = q.defer();
 
     if (formageUser.isModified()) {
-      return formageUser.save(function (err, fu) {
+      return formageUser.save((err, fu) => {
         if (err) {
           deferred.reject(err);
         }
@@ -49,13 +45,13 @@ function syncFormageUser(user, callback) {
     return deferred.promise;
 
   })
-  .then(function (formageUser) {
+  .then(formageUser => {
 
     log.debug('formage user ' + formageUser.username + ' saved');
 
     return (callback) ? callback(null, formageUser) : formageUser;
 
-  }, function (err) {
+  }, err => {
 
     callback(err);
 
@@ -135,11 +131,11 @@ module.exports = function init(_FormageUser_, _User_) {
   var deferred = q.defer();
 
   User.find({groups: 'dashboard-administrators'}).exec()
-  .then(function (users) {
+  .then(users => {
 
     log.debug('found ' + users.length + ' dashboard administrator(s)');
 
-    async.each(users, syncFormageUser, function (err) {
+    async.each(users, syncFormageUser, err => {
 
       if (err) {
         onError(err);

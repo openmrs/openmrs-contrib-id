@@ -7,7 +7,7 @@ var conf = require('../conf');
 var mid = require('../express-middleware');
 
 
-exports = module.exports = function (app, express) {
+exports = module.exports = (app, express) => {
 
 
     var registry = formage.init(app, express, models, {

@@ -1,5 +1,5 @@
 'use strict';
-(function($) {
+(($ => {
     $.fn.invisible = function() {
         return this.each(function() {
             $(this).css("visibility", "hidden");
@@ -10,4 +10,4 @@
             $(this).css("visibility", "visible");
         });
     };
-}(jQuery));
+})(jQuery));

@@ -9,7 +9,7 @@ var conf = require('./app/conf');
 
 gulp.task('default',['scripts']);
 
-gulp.task('scripts', function () {
+gulp.task('scripts', () => {
   // generate consts.js
   var fd = fs.openSync(path.join(__dirname, 'resource/scripts/consts.js'), 'w');
   fs.writeSync(fd, 'usernameRegex = ' + conf.user.usernameRegex + ';\n');

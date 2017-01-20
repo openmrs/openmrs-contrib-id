@@ -24,12 +24,12 @@ ROUTES
 ======
 */
 
-exports = module.exports = function (app) {
+exports = module.exports = app => {
 
 
 // get signup from /signup or from / and handle accordingly
 app.get(/^\/signup\/?$|^\/$/i, botproof.generators,
-  function(req, res, next) {
+  (req, res, next) => {
 
   if (req.session.user) {
     return next(); // pass onward if a user is signed in
@@ -43,14 +43,14 @@ app.get(/^\/signup\/?$|^\/$/i, botproof.generators,
 // prevent from getting 404'd if a logged-in user hits /signup
 app.get('/signup', mid.forceLogout);
 
-app.post('/signup', function (req, res, next) {
+app.post('/signup', (req, res, next) => {
   console.log(JSON.stringify(req.session));
   console.log(JSON.stringify(req.body));
   return next();
 });
 
 app.post('/signup', mid.forceLogout, botproof.parsers,
-  function(req, res, next) {
+  (req, res, next) => {
 
   if (!req.xhr) {
     return res.redirect('/');
@@ -68,7 +68,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
   id = id.toLowerCase();
 
   // perform validation
-  var validation = function (callback) {
+  var validation = callback => {
     var validators = {
       username: validate.chkUsernameInvalidOrDup.bind(null, id),
       primaryEmail: validate.chkEmailInvalidOrDup.bind(null, email),
@@ -77,7 +77,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
       password: validate.chkLength.bind(null, pass, 8),
       recaptcha_response_field: validate.chkRecaptcha.bind(null, captchaData),
     };
-    validate.perform(validators, function (err, failures) {
+    validate.perform(validators, (err, failures) => {
       if (err) {
         return callback(err);
       }
@@ -88,7 +88,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     });
   };
 
-  var saveUser = function (callback) {
+  var saveUser = callback => {
     var newUser = new User({
       username: id,
       firstName: first,
@@ -102,7 +102,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     newUser.save(callback);
   };
 
-  var sendVerificationEmail = function (callback) {
+  var sendVerificationEmail = callback => {
     var verificationOptions = {
       addr: email,
       subject: '[OpenMRS] Welcome to the OpenMRS Community',
@@ -125,7 +125,7 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
     saveUser,
     sendVerificationEmail,
   ],
-  function (err) {
+  err => {
     if (err) {
       return next(err);
     }
@@ -133,18 +133,18 @@ app.post('/signup', mid.forceLogout, botproof.parsers,
   });
 });
 
-app.get('/signup/verify', function (req, res) {
+app.get('/signup/verify', (req, res) => {
   res.render('views/signedup');
 });
 
 // verification
-app.get('/signup/:id', function(req, res, next) {
+app.get('/signup/:id', (req, res, next) => {
   var id = utils.urlDecode64(req.params.id);
   var INVALID_MSG = 'The requested signup verification does not exist, ' +
                     'it might be expired.';
 
-  var findUsernameByVerifyID = function(callback) {
-    verification.check(id, function (err, valid, locals) {
+  var findUsernameByVerifyID = callback => {
+    verification.check(id, (err, valid, locals) => {
       if (err) {
         return callback(err);
       }
@@ -156,7 +156,7 @@ app.get('/signup/:id', function(req, res, next) {
   };
 
   // clear locked and expiration flag
-  var updateUser = function (user, callback) {
+  var updateUser = (user, callback) => {
     user.locked = false;
     user.createdAt = undefined;
     user.addGroupsAndSave(conf.user.defaultGroups, callback);
@@ -167,7 +167,7 @@ app.get('/signup/:id', function(req, res, next) {
     User.findByUsername.bind(User),
     updateUser,
   ],
-  function (err, user) {
+  (err, user) => {
     if (err) {
       if (err.failMessage) {
         req.flash('error', err.failMessage);
@@ -186,7 +186,7 @@ app.get('/signup/:id', function(req, res, next) {
 });
 
 // AJAX, check whether or not user exists
-app.get('/checkuser/:id', function (req, res) {
+app.get('/checkuser/:id', (req, res) => {
   if (!req.xhr) {
     return res.redirect('/');
   }
@@ -210,11 +210,11 @@ app.get('/checkuser/:id', function (req, res) {
   });
 });
 
-app.get('/checkemail/:email', function (req, res) {
+app.get('/checkemail/:email', (req, res) => {
   if (!req.xhr) {
     return res.redirect('/');
   }
-  validate.chkEmailInvalidOrDup(req.params.email, function (err, errState) {
+  validate.chkEmailInvalidOrDup(req.params.email, (err, errState) => {
     if (err) {
       log.error('error in checkemail');
       log.error(err);

@@ -4,14 +4,12 @@
  */
 var log = require('log4js').addLogger('express');
 
-exports = module.exports = function (app) {
+exports = module.exports = app => {
 
 
-app.get('/logout', function (req, res) {
-  return res.redirect('/disconnect');
-});
+app.get('/logout', (req, res) => res.redirect('/disconnect'));
 
-app.get('/disconnect', function(req, res, next) {
+app.get('/disconnect', (req, res, next) => {
   if (req.session.user) {
     log.info(req.session.user.username + ': disconnecting');
     req.session.destroy();

@@ -1,13 +1,13 @@
 'use strict';
-exports = module.exports = function (app) {
+exports = module.exports = app => {
   // homepage
   app.get('/', require('./main'));
 
   // Legacy Redirects
-  app.get('/edit/profile', function(req, res) {
+  app.get('/edit/profile', (req, res) => {
     res.redirect('/profile');
   });
-  app.get('/edit/password', function(req, res) {
+  app.get('/edit/password', (req, res) => {
     res.redirect('/password');
   });
 

@@ -46,7 +46,7 @@ var client = ldap.createClient({
 // Convert a normal user object into proper ldap form **with out groups**
 // and check the types of the user's attributes,
 // throw out an error if anything is wrong.
-var checkAndConvert = function (user) {
+var checkAndConvert = user => {
   var invalid = (!_.isString(user.username) || !_.isString(user.password) ||
     !_.isString(user.firstName) || !_.isString(user.lastName) ||
     !_.isString(user.displayName || !_.isString(user.primaryEmail)));
@@ -66,7 +66,7 @@ var checkAndConvert = function (user) {
 };
 
 // get the raw LDAP entry
-var searchRaw = function (username, attributes, cb) {
+var searchRaw = (username, attributes, cb) => {
   if (!_.isArray(attributes)) {
     attributes = [attributes];
   }
@@ -77,22 +77,22 @@ var searchRaw = function (username, attributes, cb) {
     attributes: attributes,
   };
 
-  client.search(base, options, function (err, res) {
+  client.search(base, options, (err, res) => {
     if (err) {
       return cb(err);
     }
     var ret = [];
-    res.on('searchEntry', function (entry) {
+    res.on('searchEntry', entry => {
       ret.push(entry.object);
     });
-    res.on('error', function(err) {
+    res.on('error', err => {
       if (err.code === 32) { // not found, no such dn
         return cb(null, null);
       }
       log.error('error: ' + err.message);
       return cb(err);
     });
-    res.on('end', function(result) {
+    res.on('end', result => {
       log.debug('ldap search ended with status: ' + result.status);
       if (!ret.length) {
         return cb(null, null);
@@ -101,15 +101,13 @@ var searchRaw = function (username, attributes, cb) {
         return cb(null, ret[0]);
       }
       else {
-        return cb(null, _.filter(ret, function(item) {
-          return item.uid;
-        }));
+        return cb(null, _.filter(ret, item => item.uid));
       }
     });
   });
 };
 
-var convertUser = function(old) {
+var convertUser = old => {
   var user = {};
   user.username = old[userAttr.username];
   user.password = old[userAttr.password];
@@ -121,7 +119,7 @@ var convertUser = function(old) {
 };
 
 // Helper function that searches the user records in LDAP.
-var searchUser = function (username, cb) {
+var searchUser = (username, cb) => {
   var attributes = [
     userAttr.username,
     userAttr.firstname,
@@ -132,7 +130,7 @@ var searchUser = function (username, cb) {
     // userAttr.secondaryemail,     // we don't use this in LDAP
     // 'objectClass',               // it's useless outside LDAP
   ];
-  searchRaw(username, attributes, function (err, old) {
+  searchRaw(username, attributes, (err, old) => {
     if (err) {
       return cb(err);
     }
@@ -140,11 +138,9 @@ var searchUser = function (username, cb) {
       return cb(null, null);
     }
     else if (_.isArray(old)) {
-      async.map(old, function (el, callback) {
+      async.map(old, (el, callback) => {
         callback(null, convertUser(el));
-      }, function(err, users) {
-        return cb(null, users)
-      })
+      }, (err, users) => cb(null, users))
     }
     else {
       return cb(null, convertUser(old));
@@ -153,7 +149,7 @@ var searchUser = function (username, cb) {
 };
 
 // Helper function that gets the groups that the user belongs to
-var searchGroups = function (username, cb) {
+var searchGroups = (username, cb) => {
   var base = groupAttr.baseDn;
   var options = {
     filter: '(' + groupAttr.member + '=' + userAttr.rdn + '=' + username +
@@ -162,19 +158,19 @@ var searchGroups = function (username, cb) {
     attributes: [ groupAttr.rdn ],
   };
 
-  client.search(base, options, function (err, res) {
+  client.search(base, options, (err, res) => {
     if (err) {
       return cb(err);
     }
     var groups = [];
-    res.on('searchEntry', function (entry) {
+    res.on('searchEntry', entry => {
       groups.push(entry.object[groupAttr.rdn]);
     });
-    res.on('error', function (err) {
+    res.on('error', err => {
       log.error(err);
       return cb(err);
     });
-    res.on('end', function (result) {
+    res.on('end', result => {
       log.debug('ldap search ended with status: ' + result.status);
       return cb(null, groups);
     });
@@ -189,14 +185,14 @@ var searchGroups = function (username, cb) {
  * @param  {string}   pass      User's password in cleartext (maybe unsafe)
  * @param  {Function} cb        cb(err)
  */
-exports.authenticate = function (username, pass, cb) {
+exports.authenticate = (username, pass, cb) => {
   log.debug(username + ': will authenticate');
   // client used for authenticating users specially
   var userClient = ldap.createClient({
     url: url,
   });
   var userdn = userAttr.rdn + '=' + username + ',' + userAttr.baseDn;
-  userClient.bind(userdn, pass, function (err) {
+  userClient.bind(userdn, pass, err => {
     userClient.unbind();
     return cb(err);
   });
@@ -208,7 +204,7 @@ exports.authenticate = function (username, pass, cb) {
  * @param  {string}   username  User's username
  * @param  {Function} cb        cb(err, user)
  */
-exports.getUser = function (username, cb) {
+exports.getUser = (username, cb) => {
   log.debug('check validity of username ' + username);
   if (!userAttr.usernameRegex.test(username)) {
     return cb(new Error('Illegal username specified'));
@@ -217,7 +213,7 @@ exports.getUser = function (username, cb) {
   async.parallel([
     searchUser.bind(null, username),
     searchGroups.bind(null, username),
-  ], function (err, results) {
+  ], (err, results) => {
     if (err) {
       return cb(err);
     }
@@ -236,31 +232,29 @@ exports.getUser = function (username, cb) {
  * Get users list from LDAP
  * @param {Function} cb cb(err, users)
  */
-exports.getAllUsers = function(cb) {
-  return searchUser('*', function(err, users) {
-    if (users && !_.isArray(users)) {
-      user = [users];
+exports.getAllUsers = cb => searchUser('*', (err, users) => {
+  if (users && !_.isArray(users)) {
+    user = [users];
+  }
+  async.map(users, (user, callback) => {
+    if (user.username) {
+      searchGroups(user.username, (err, groups) => {
+        user.groups = groups;
+        callback(null, user);
+      });
     }
-    async.map(users, function (user, callback) {
-      if (user.username) {
-        searchGroups(user.username, function(err, groups) {
-          user.groups = groups;
-          callback(null, user);
-        });
-      }
-      else {
-        callback();
-      }
-    }, function(err, results) {
-      cb(err, _.reject(results, function(el) {return !el}));
-    });
+    else {
+      callback();
+    }
+  }, (err, results) => {
+    cb(err, _.reject(results, el => !el));
   });
-};
+});
 
 
 // Get the changes used for updating a user
 // Note that the username and password couldn't be changed this way
-var getChanges = function (newUser, oldUser) {
+var getChanges = (newUser, oldUser) => {
   var ret = [];
   var attrs = ['firstName', 'lastName', 'displayName', 'primaryEmail',];
   var ldapNames = [userAttr.firstname, userAttr.lastname, userAttr.displayname,
@@ -291,13 +285,13 @@ var getChanges = function (newUser, oldUser) {
  * @param  {Object}   user valid user object
  * @param  {Function} cb   cb(err, newUser)
  */
-exports.updateUser = function (user, cb) {
+exports.updateUser = (user, cb) => {
   // first check the validity
   checkAndConvert(user);
   var userDn = userAttr.rdn + '=' + user.username + ',' + userAttr.baseDn;
 
   // get the differences
-  var diff = function (oldUser, next)  {
+  var diff = (oldUser, next) => {
     var oldGroups = oldUser.groups;
     var added = _.difference(user.groups, oldGroups);
     var removed = _.difference(oldGroups, user.groups);
@@ -305,11 +299,11 @@ exports.updateUser = function (user, cb) {
     return next(null, changes, added, removed);
   };
 
-  var updateU = function (changes, added, removed, next) {
+  var updateU = (changes, added, removed, next) => {
     if (_.isEmpty(changes)) {
       return next(null, added, removed);
     }
-    client.modify(userDn, changes, function (err) {
+    client.modify(userDn, changes, err => {
       if (err) {
         return next(err);
       }
@@ -318,14 +312,14 @@ exports.updateUser = function (user, cb) {
   };
 
   // update the groups
-  var operateOnGroups = function (groups, change, callback) {
-    async.each(groups, function (group, next) {
+  var operateOnGroups = (groups, change, callback) => {
+    async.each(groups, (group, next) => {
       var groupDn = groupAttr.rdn + '=' + group + ',' + groupAttr.baseDn;
       client.modify(groupDn, change, next);
     }, callback);
   };
 
-  var updateG = function (added, removed, next) {
+  var updateG = (added, removed, next) => {
     // add
     var addChange = {
       operation: 'add',
@@ -349,7 +343,7 @@ exports.updateUser = function (user, cb) {
     diff,
     updateU,
     updateG,
-  ], function (err) {
+  ], err => {
     if (err) {
       return cb(err);
     }
@@ -366,7 +360,7 @@ exports.updateUser = function (user, cb) {
  *                        is invalid.
  * @param {Function} cb   cb(err, newUser), newUser with groups
  */
-exports.addUser = function (user, cb) {
+exports.addUser = (user, cb) => {
   var userobj = checkAndConvert(user);
   if (!userAttr.usernameRegex.test(user.username)) {
     return cb(new Error('Illegal username specified'));
@@ -378,10 +372,8 @@ exports.addUser = function (user, cb) {
   var dn = userAttr.rdn + '=' + user.username + ',' + userAttr.baseDn;
 
   async.waterfall([
-    function (next) {
-      client.add(dn, userobj, function (err) {
-        return next(err);
-      });
+    next => {
+      client.add(dn, userobj, err => next(err));
     },
     exports.updateUser.bind(null, user),
   ], cb);
@@ -392,7 +384,7 @@ exports.addUser = function (user, cb) {
  * @param  {string}   username a valid username
  * @param  {Function} cb       cb(err)
  */
-exports.deleteUser = function (username, cb) {
+exports.deleteUser = (username, cb) => {
   async.waterfall([
     exports.getUser.bind(null, username),
     function check(user, next) {
@@ -420,14 +412,14 @@ exports.deleteUser = function (username, cb) {
  * @param  {string}   username A valid username
  * @param  {Function} cb       cb(err)
  */
-exports.resetPassword = function (username, newPass, cb) {
+exports.resetPassword = (username, newPass, cb) => {
   if (!userAttr.usernameRegex.test(username)) {
     return cb(new Error('Illegal username specified'));
   }
 
   // first check the existence
-  var search = function (next) {
-    searchRaw(username, 'pwdPolicySubentry', function (err, user) {
+  var search = next => {
+    searchRaw(username, 'pwdPolicySubentry', (err, user) => {
       if (err) {
         return next(err);
       }
@@ -435,7 +427,7 @@ exports.resetPassword = function (username, newPass, cb) {
     });
   };
 
-  var modifyPolicy = function (entry, next) {
+  var modifyPolicy = (entry, next) => {
     var change = {
       modification: {
         pwdPolicySubentry: userAttr.passwordResetPolicy,
@@ -449,7 +441,7 @@ exports.resetPassword = function (username, newPass, cb) {
       change.operation = 'add';
     }
 
-    client.modify(entry.dn, change, function (err) {
+    client.modify(entry.dn, change, err => {
       if (err) {
         return next(err);
       }
@@ -457,7 +449,7 @@ exports.resetPassword = function (username, newPass, cb) {
     });
   };
 
-  var update = function (userdn, next) {
+  var update = (userdn, next) => {
     var changes = [
       {
         operation: 'replace',
@@ -473,9 +465,7 @@ exports.resetPassword = function (username, newPass, cb) {
       },
     ];
 
-    client.modify(userdn, changes, function (err) {
-      return next(err);
-    });
+    client.modify(userdn, changes, err => next(err));
   };
 
   async.waterfall([
@@ -490,10 +480,10 @@ exports.resetPassword = function (username, newPass, cb) {
  * @param  {string}   username valid username
  * @param  {Function} cb       cb(err)
  */
-exports.lockoutUser = function (username, cb) {
+exports.lockoutUser = (username, cb) => {
   // find the user
-  var search = function (next) {
-    searchRaw(username, 'pwdAccountLockedTime', function (err, user) {
+  var search = next => {
+    searchRaw(username, 'pwdAccountLockedTime', (err, user) => {
       if (err) {
         return next(err);
       }
@@ -501,7 +491,7 @@ exports.lockoutUser = function (username, cb) {
     });
   };
 
-  var modify = function (userobj, next) {
+  var modify = (userobj, next) => {
     if (userobj.pwdAccountLockedTime) {
       log.debug(username + ' is already locked');
       return cb();
@@ -513,9 +503,7 @@ exports.lockoutUser = function (username, cb) {
         pwdAccountLockedTime: '000001010000Z', // lock user permanently
       },
     };
-    client.modify(userdn, change, function (err) {
-      return next(err);
-    });
+    client.modify(userdn, change, err => next(err));
   };
 
   async.waterfall([
@@ -529,10 +517,10 @@ exports.lockoutUser = function (username, cb) {
  * @param  {string}   username
  * @param  {Function} cb       cb(err)
  */
-exports.enableUser = function (username, cb) {
+exports.enableUser = (username, cb) => {
   // find the user
-  var search = function (next) {
-    searchRaw(username, 'pwdAccountLockedTime', function (err, user) {
+  var search = next => {
+    searchRaw(username, 'pwdAccountLockedTime', (err, user) => {
       if (err) {
         return next(err);
       }
@@ -540,7 +528,7 @@ exports.enableUser = function (username, cb) {
     });
   };
 
-  var modify = function (userobj, next) {
+  var modify = (userobj, next) => {
     if (_.isEmpty(userobj.pwdAccountLockedTime)) {
       log.debug(username + ' is not locked');
       return cb();
@@ -552,9 +540,7 @@ exports.enableUser = function (username, cb) {
         pwdAccountLockedTime: [],
       },
     };
-    client.modify(userdn, change, function (err) {
-      return next(err);
-    });
+    client.modify(userdn, change, err => next(err));
   };
 
   async.waterfall([
@@ -569,7 +555,7 @@ exports.enableUser = function (username, cb) {
  * @param {object}   options    {groupName: ... , description: ... }
  * @param {Function} callback   callback(err)
  */
-exports.addGroup = function (options, callback) {
+exports.addGroup = (options, callback) => {
   if (_.isEmpty(options.groupName)) {
     throw new Error('missing groupName');
   }

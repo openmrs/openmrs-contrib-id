@@ -30,7 +30,7 @@ var userNavLinks = [ // built-in links
 
 exports.list = userNavLinks;
 
-exports.add = function(props) {
+exports.add = props => {
   userNavLinks.push(props); // that's all there is to it
   return props;
 };

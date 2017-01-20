@@ -32,7 +32,7 @@ var logFile = log4js.appenders.file(
   path.join(__dirname, conf.logger.relativePath)
 );
 
-log4js.addLogger = function (name) {
+log4js.addLogger = name => {
   if (!set.has(name)) {
     set.add(name);
     log4js.addAppender(logFile, name);

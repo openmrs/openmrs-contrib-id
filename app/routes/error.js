@@ -3,7 +3,7 @@ var log = require('log4js').addLogger('express');
 var uuid = require('node-uuid');
 
 // Errors
-exports = module.exports = function(err, req, res, next) {
+exports = module.exports = (err, req, res, next) => {
   var trackId = uuid.v4();
   log.error('ID: ' + trackId);
   log.error('Caught error: ' + err.name);

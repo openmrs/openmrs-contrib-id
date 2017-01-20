@@ -18,7 +18,7 @@ app.use(function flash(req, res, next) {
 });
 
 //navLinks
-var navLinks = function(req, res, next) {
+var navLinks = (req, res, next) => {
   // Uses login state and privileges to generate the links to
   // include in the user navigation bar
 
@@ -38,7 +38,7 @@ var navLinks = function(req, res, next) {
   }
 
   // Build list of links to display
-  list.forEach(function(link) {
+  list.forEach(link => {
     // determine if session has access to page
 
     // not logged in
@@ -65,9 +65,7 @@ var navLinks = function(req, res, next) {
   });
 
   // Sort list by order specified
-  links.sort(function(a, b) {
-    return a.order - b.order;
-  });
+  links.sort((a, b) => a.order - b.order);
   return next();
 };
 app.use(navLinks);

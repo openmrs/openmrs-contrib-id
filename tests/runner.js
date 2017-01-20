@@ -21,8 +21,8 @@ var mocha = new Mocha({
 });
 
 // recursivly add a folder for testing
-var addFolder = function (folder) {
-  fs.readdirSync(folder).forEach(function (file) {
+var addFolder = folder => {
+  fs.readdirSync(folder).forEach(file => {
     var p = path.join(folder, file);
     if (fs.statSync(p).isDirectory()) {
       return addFolder(p);
@@ -39,17 +39,16 @@ addFolder('tests');
 
 // some preparation
 async.series([
-  function (callback) {
+  callback => {
     mongoose.connect(conf.mongoURI, callback);
   },
 ],
-// tun tests
-function (err) {
+err => {
   if (err) {
     console.error(err);
     process.exit();
   }
-  mocha.run(function (failures) {
+  mocha.run(failures => {
     process.exit(failures);
   });
 });

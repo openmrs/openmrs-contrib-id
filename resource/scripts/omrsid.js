@@ -14,7 +14,7 @@ function getParameterByName(name)
   }
 }
 
-$().ready(function(){
+$().ready(() => {
 
 
 
@@ -49,7 +49,7 @@ $().ready(function(){
     };
 
     // show popover when trigger clicked
-    $('[data-popid].popover-trigger').click(function(event) {
+    $('[data-popid].popover-trigger').click(event => {
         event.preventDefault();
         event.stopPropagation();
 
@@ -60,7 +60,7 @@ $().ready(function(){
         var popoverElem = $('[data-popid='+popId+'].popover');
 
         // close any other open popovers
-        $('.popover.visible').each(function(i, p) {
+        $('.popover.visible').each((i, p) => {
             if ($(p).attr('data-popid') !== popId)
                 popover.close(p);
         });
@@ -74,7 +74,7 @@ $().ready(function(){
     });
 
     // hide popover when clicked outside
-    $('html').click(function(event) {
+    $('html').click(event => {
         // if click comes from inside or is a visible popover, DO NOT close (!)
         if ($('.popover.visible').find(event.target).length > 0 ||
             $('.popover.visible').is(event.target)) {
@@ -82,14 +82,14 @@ $().ready(function(){
         }
 
         // else, remove visible popovers
-        $('.popover').each(function(i, p){
+        $('.popover').each((i, p) => {
             popover.close(p);
         });
     });
 
     // center popover
     $.fn.centerPopover = function() {
-        this.each(function(i, element){
+        this.each((i, element) => {
             element = $(element);
 
             // get popover ID from trigger, used to identify other elements of _this_ popover
@@ -125,7 +125,7 @@ $().ready(function(){
         return this; // jquery chaining
     }
     // re-center as window resizes
-    window.onresize = function(){
+    window.onresize = () => {
         $('.popover').centerPopover();
     };
     $('.popover').centerPopover(); // center once at DOM startup

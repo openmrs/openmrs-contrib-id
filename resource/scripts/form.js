@@ -56,7 +56,7 @@
 
 
 
-$(document).ready(function () {
+$(document).ready(() => {
   // only show descriptions when focus on input
   $('form input').focusin(function () {
     $(this).closest('.form-group').find('.description').addClass('show');
@@ -150,7 +150,7 @@ $(document).ready(function () {
       }
 
       // perform all sync validation
-      form.find('input').each(function (idx, input) {
+      form.find('input').each((idx, input) => {
         input = $(input);
 
         if (input.hasClass('required') && input.val() === '') {
@@ -183,7 +183,7 @@ $(document).ready(function () {
         return;
       }
       event.preventDefault();
-      vns(function (err, data) {
+      vns((err, data) => {
         if (!err) {
           return ;
         }

@@ -9,7 +9,7 @@ var request = require('request');
 var qs = require('querystring');
 
 // password hashing
-exports.getSSHA = function (cleartext, salt) {
+exports.getSSHA = (cleartext, salt) => {
   if (_.isUndefined(salt)) {
     salt = new Buffer(crypto.randomBytes(20)).toString('base64');
   }
@@ -21,7 +21,7 @@ exports.getSSHA = function (cleartext, salt) {
   return ret;
 };
 
-exports.checkSSHA = function (cleartext, hashed) {
+exports.checkSSHA = (cleartext, hashed) => {
   if (0 !== hashed.indexOf('{SSHA}')) {
     return false;
   }
@@ -31,7 +31,7 @@ exports.checkSSHA = function (cleartext, hashed) {
   return newHash === hashed;
 };
 
-exports.isUsernameValid = function (username) {
+exports.isUsernameValid = username => {
   var usernameRegex = conf.user.usernameRegex;
   if (_.isEmpty(username) || !usernameRegex.test(username)) {
     // ensure it not empty first, avoid auto-cast for (null) or (undefined)
@@ -40,7 +40,7 @@ exports.isUsernameValid = function (username) {
   return true;
 };
 
-exports.isEmailValid = function (email) {
+exports.isEmailValid = email => {
   var emailRegex = conf.email.validation.emailRegex;
   if (_.isEmpty(email) || !emailRegex.test(email)) {
     return false;
@@ -49,24 +49,24 @@ exports.isEmailValid = function (email) {
 };
 
 // encode a string into base64
-exports.encode64 = function (str) {
+exports.encode64 = str => {
   var tmp = new Buffer(str);
   return tmp.toString('base64');
 };
 
 // decode a base64 string
-exports.decode64 = function (str) {
+exports.decode64 = str => {
   var tmp = new Buffer(str, 'base64');
   return tmp.toString('utf8');
 };
 
 // URL safe Base64 functions
-exports.urlEncode64 = function (str) {
+exports.urlEncode64 = str => {
   str = exports.encode64(str);
   return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 };
 
-exports.urlDecode64 = function (str) {
+exports.urlDecode64 = str => {
   str = str.replace(/-/g, '+').replace(/_/g, '/');
   var r = str.length % 4;
   while (r % 4) {
@@ -101,7 +101,7 @@ Recaptcha.prototype.verify = function(data, callback) {
   query = qs.stringify(query);
 
   var verifyUrl = baseUrl + '?' + query;
-  request.get(verifyUrl, function (err, response, body) {
+  request.get(verifyUrl, (err, response, body) => {
     if (err) {
       return callback(err);
     }

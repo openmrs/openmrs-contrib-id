@@ -16,18 +16,18 @@ var utils = require('../../utils');
 var validate = require('../../validate');
 
 
-exports = module.exports = function (app) {
+exports = module.exports = app => {
 
 
-app.get('/profile/email/verify/:id', function(req, res, next) {
+app.get('/profile/email/verify/:id', (req, res, next) => {
   // check for valid email verification ID
 
   var newEmail = '';
   var newUser = {};
   var id = utils.urlDecode64(req.params.id);
 
-  var checkVerification = function (callback) {
-    verification.check(id, function (err, valid, locals) {
+  var checkVerification = callback => {
+    verification.check(id, (err, valid, locals) => {
       if (!valid) {
         req.flash('error', 'Profile email address verification not found.');
         return res.redirect('/');
@@ -38,14 +38,14 @@ app.get('/profile/email/verify/:id', function(req, res, next) {
   };
 
   // could use findOneAndUpdate
-  var findUser = function (username, callback) {
+  var findUser = (username, callback) => {
     User.findByUsername(username, callback);
   };
 
-  var updateUser = function (user, callback) {
+  var updateUser = (user, callback) => {
     user.emailList.push(newEmail);
     newUser = user;
-    user.save(function (err, user) {
+    user.save((err, user) => {
       if (err) {
         return callback(err);
       }
@@ -54,7 +54,7 @@ app.get('/profile/email/verify/:id', function(req, res, next) {
     });
   };
 
-  var clearRecord = function (callback) {
+  var clearRecord = callback => {
     verification.clear(id, callback);
   };
 
@@ -64,7 +64,7 @@ app.get('/profile/email/verify/:id', function(req, res, next) {
     updateUser,
     clearRecord,
   ],
-  function (err) {
+  err => {
     if (err) {
       return next(err);
     }
@@ -79,11 +79,11 @@ app.get('/profile/email/verify/:id', function(req, res, next) {
 });
 
 app.get('/profile/email/resend/:id', mid.forceLogin,
-  function(req, res, next) {
+  (req, res, next) => {
 
   var id = utils.urlDecode64(req.params.id);
   // check for valid id
-  verification.resend(id, function(err) {
+  verification.resend(id, err => {
     if (err) {
       return next(err);
     }
@@ -96,17 +96,17 @@ app.get('/profile/email/resend/:id', mid.forceLogin,
 // AJAX
 // add new email
 app.post('/profile/email', mid.forceLogin,
-  function (req, res, next) {
+  (req, res, next) => {
 
 
   var user = req.session.user;
   var email = req.body.newEmail;
 
-  var findDuplicateInVerification = function (validateError, callback) {
+  var findDuplicateInVerification = (validateError, callback) => {
     if (validateError) {
       return callback(null, validateError);
     }
-    verification.search(email, 'new email', function (err, instances) {
+    verification.search(email, 'new email', (err, instances) => {
       if (err) {
         return callback(err);
       }
@@ -118,11 +118,11 @@ app.post('/profile/email', mid.forceLogin,
   };
 
 
-  var validation = function (callback) {
+  var validation = callback => {
     async.waterfall([
       validate.chkEmailInvalidOrDup.bind(null, email),
       findDuplicateInVerification,
-    ], function (err, validateError) {
+    ], (err, validateError) => {
       if (err) {
         return next(err);
       }
@@ -133,7 +133,7 @@ app.post('/profile/email', mid.forceLogin,
     });
   };
 
-  var sendVerification = function (callback) {
+  var sendVerification = callback => {
     log.debug(user.username + ': email address ' + email + ' will be verified');
     // create verification instance
     verification.begin({
@@ -154,7 +154,7 @@ app.post('/profile/email', mid.forceLogin,
   async.series([
     validation,
     sendVerification,
-  ], function (err) {
+  ], err => {
     if (err) {
       return next(err);
     }
@@ -164,7 +164,7 @@ app.post('/profile/email', mid.forceLogin,
 
 });
 
-app.get('/profile/email/delete/:email', mid.forceLogin, function (req, res, next) {
+app.get('/profile/email/delete/:email', mid.forceLogin, (req, res, next) => {
   var user = req.session.user;
   var email = req.params.email;
 
@@ -175,11 +175,11 @@ app.get('/profile/email/delete/:email', mid.forceLogin, function (req, res, next
   }
   // verified
   if (-1 !== _.indexOf(user.emailList, email)) {
-    var findUser = function (callback) {
+    var findUser = callback => {
       User.findByUsername(user.username, callback);
     };
 
-    var updateUser = function (user, callback) {
+    var updateUser = (user, callback) => {
       var index = _.indexOf(user.emailList, email);
       user.emailList.splice(index, 1);
       user.save(callback);
@@ -189,7 +189,7 @@ app.get('/profile/email/delete/:email', mid.forceLogin, function (req, res, next
       findUser,
       updateUser,
     ],
-    function (err, user) {
+    (err, user) => {
       if (err) {
         return next(err);
       }
@@ -203,8 +203,8 @@ app.get('/profile/email/delete/:email', mid.forceLogin, function (req, res, next
   // not verified
   log.debug('deleting verification for new email');
   var MSG = 'Email to delete not found'; // remove verifications
-  var findVerification = function (callback) {
-    verification.search(email, 'new email', function (err, instances) {
+  var findVerification = callback => {
+    verification.search(email, 'new email', (err, instances) => {
       if (err) {
         return callback(err);
       }
@@ -218,7 +218,7 @@ app.get('/profile/email/delete/:email', mid.forceLogin, function (req, res, next
     });
   };
 
-  var deleteVerification = function (instance, callback) {
+  var deleteVerification = (instance, callback) => {
     verification.clear(instance.uuid, callback);
   };
 
@@ -228,7 +228,7 @@ app.get('/profile/email/delete/:email', mid.forceLogin, function (req, res, next
       findVerification,
       deleteVerification,
     ],
-    function (err) {
+    err => {
       if (err) {
         if (err.message === MSG) {
           return ;
@@ -240,7 +240,7 @@ app.get('/profile/email/delete/:email', mid.forceLogin, function (req, res, next
   }
 });
 
-app.get('/profile/email/primary/:email', mid.forceLogin, function (req, res, next) {
+app.get('/profile/email/primary/:email', mid.forceLogin, (req, res, next) => {
   var email = req.params.email;
   var user = req.session.user;
 
@@ -249,11 +249,11 @@ app.get('/profile/email/primary/:email', mid.forceLogin, function (req, res, nex
     return res.redirect('/profile');
   }
 
-  var findUser = function (callback) {
+  var findUser = callback => {
     User.findByUsername(user.username, callback);
   };
 
-  var setEmail = function (user, callback) {
+  var setEmail = (user, callback) => {
     user.primaryEmail = email;
     user.save(callback);
   };
@@ -262,7 +262,7 @@ app.get('/profile/email/primary/:email', mid.forceLogin, function (req, res, nex
     findUser,
     setEmail,
   ],
-  function (err, user) {
+  (err, user) => {
     if (err) {
       return next(err);
     }

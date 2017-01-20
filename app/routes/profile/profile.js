@@ -17,11 +17,11 @@ var mid = require('../../express-middleware');
 var User = require('../../models/user');
 var utils = require('../../utils');
 
-exports = module.exports = function (app) {
+exports = module.exports = app => {
 
 
 app.get('/profile', mid.forceLogin,
-  function(req, res, next) {
+  (req, res, next) => {
 
   // check if any emails being verified
 
@@ -31,7 +31,7 @@ app.get('/profile', mid.forceLogin,
   var allEmails = [];
 
   // verified emails
-  _.forEach(user.emailList, function (email) {
+  _.forEach(user.emailList, email => {
     var item = {email: email};
     if (email === user.primaryEmail) {
       item.primary = true;
@@ -40,13 +40,13 @@ app.get('/profile', mid.forceLogin,
   });
 
   // unverified emails
-  var findNewEmail = function (callback) {
+  var findNewEmail = callback => {
     var category = 'new email';
     verification.search(username, category, callback);
   };
 
-  var addToList = function (insts, callback) {
-    _.forEach(insts, function (inst) {
+  var addToList = (insts, callback) => {
+    _.forEach(insts, inst => {
       var item = {
         email: inst.addr,
         id: utils.urlEncode64(inst.uuid),
@@ -61,7 +61,7 @@ app.get('/profile', mid.forceLogin,
     findNewEmail,
     addToList,
   ],
-  function (err) {
+  err => {
     if (err) {
       return next(err);
     }
@@ -71,15 +71,15 @@ app.get('/profile', mid.forceLogin,
 
 // handle basical profile change, firstName and lastName only currently
 app.post('/profile', mid.forceLogin,
-  function(req, res, next) {
+  (req, res, next) => {
 
   var username = req.session.user.username;
 
-  var validation = function (callback) {
+  var validation = callback => {
     validate.perform({
       firstName: validate.chkEmpty.bind(null, req.body.firstName),
       lastName: validate.chkEmpty.bind(null, req.body.lastName),
-    }, function (err, validateError) {
+    }, (err, validateError) => {
       if (_.isEmpty(validateError)) {
         return callback();
       }
@@ -87,11 +87,11 @@ app.post('/profile', mid.forceLogin,
     });
   };
 
-  var findUser = function (callback) {
+  var findUser = callback => {
     User.findByUsername(username, callback);
   };
 
-  var updateUser = function (user, callback) {
+  var updateUser = (user, callback) => {
     user.firstName = req.body.firstName;
     user.lastName = req.body.lastName;
     user.displayName = req.body.firstName + ' ' + req.body.lastName;
@@ -103,7 +103,7 @@ app.post('/profile', mid.forceLogin,
     findUser,
     updateUser,
   ],
-  function (err, user) {
+  (err, user) => {
     if (err) {
       return next(err);
     }
@@ -115,15 +115,15 @@ app.post('/profile', mid.forceLogin,
 
 // AJAX
 // handle the welcome message
-app.get('/profile/welcome', mid.forceLogin, function (req, res, next) {
+app.get('/profile/welcome', mid.forceLogin, (req, res, next) => {
   if (!req.xhr) {
     return;
   }
   var username = req.session.user.username;
-  var findUser = function (callback) {
+  var findUser = callback => {
     User.findByUsername(username, callback);
   };
-  var updateUser = function (user, callback) {
+  var updateUser = (user, callback) => {
     if (_.isEmpty(user.extra)) {
       user.extra = {};
     }
@@ -133,7 +133,7 @@ app.get('/profile/welcome', mid.forceLogin, function (req, res, next) {
   async.waterfall([
     findUser,
     updateUser,
-  ], function (err, user) {
+  ], (err, user) => {
     if (err) {
       log.error('caught error in /profile/welcome');
       log.error(err);

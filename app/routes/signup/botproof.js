@@ -185,7 +185,7 @@ module.exports = {
     // check the address with each list
     async.waterfall([
       function checkWhitelist(cb) {
-        wlist.findOne({address: ip(req)}, function (err, inst) {
+        wlist.findOne({address: ip(req)}, (err, inst) => {
           if (err) {
             return next(err);
           }
@@ -196,8 +196,8 @@ module.exports = {
         if (isWhite) {
           return next();
         }
-        async.map(Object.keys(spams), function(list, cb) {
-          dns.lookup(rev + '.' + list, function(err, address) {
+        async.map(Object.keys(spams), (list, cb) => {
+          dns.lookup(rev + '.' + list, (err, address) => {
             if (err) {
               if (err.code === 'ENOTFOUND') {
                 return cb(null, false); // address not on list

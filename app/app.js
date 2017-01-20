@@ -68,7 +68,7 @@ var session = expressSession({
 });
 
 var exceptions = conf.sessionExceptions;
-var sessionHandler = function(req, res, next) {
+var sessionHandler = (req, res, next) => {
   function test(reg) {
     return reg.test(req.url);
   }
@@ -128,7 +128,7 @@ require('./render-helpers');
 
 if (process.env.NODE_ENV === 'development') {
 
-  app.get('/debug/view/:viewName', function (req, res) {
+  app.get('/debug/view/:viewName', (req, res) => {
     res.render('views/' + req.params.viewName);
   });
 
@@ -160,7 +160,7 @@ try {
 require('./routes')(app);
 
 /* Load Modules */
-conf.userModules.forEach(function(module) {
+conf.userModules.forEach(module => {
   require('./user-modules/' + module)(app);
 });
 
@@ -172,13 +172,13 @@ app.use(require('./routes/404'));
 app.use(require('./routes/error'));
 
 
-process.on('uncaughtException', function(err) {
+process.on('uncaughtException', err => {
   console.log(err);
 });
 
 // Do something before close the app
-var gracefulExit = function () {
-  mongoose.connection.close(function () {
+var gracefulExit = () => {
+  mongoose.connection.close(() => {
     console.log('Mongoose connection closed');
     process.exit();
   });

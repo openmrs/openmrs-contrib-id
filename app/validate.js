@@ -45,18 +45,18 @@ var validate = {};
 var isUsernameValid = utils.isUsernameValid;
 var isEmailValid = utils.isEmailValid;
 
-validate.chkUsernameInvalid = function (username, callback) {
+validate.chkUsernameInvalid = (username, callback) => {
   if (!isUsernameValid(username)) {
     return callback(null, true);
   }
   return callback(null, false);
 };
 
-validate.chkUsernameInvalidOrDup = function (username, callback) {
+validate.chkUsernameInvalidOrDup = (username, callback) => {
   if (!isUsernameValid(username)) {
     return callback(null, true);
   }
-  User.findByUsername(username, function (err, user) {
+  User.findByUsername(username, (err, user) => {
     if (err) {
       return callback(err);
     }
@@ -68,7 +68,7 @@ validate.chkUsernameInvalidOrDup = function (username, callback) {
   });
 };
 
-validate.chkEmailInvalid = function(email, callback) {
+validate.chkEmailInvalid = (email, callback) => {
   if (!isEmailValid(email)) {
     return callback(null, true);
   }
@@ -80,15 +80,15 @@ validate.chkEmailInvalid = function(email, callback) {
   return callback(null, false);
 };
 
-validate.chkEmailInvalidOrDup = function (email, callback) {
-  validate.chkEmailInvalid(email, function(err, result) {
+validate.chkEmailInvalidOrDup = (email, callback) => {
+  validate.chkEmailInvalid(email, (err, result) => {
     if (err) {
       return callback(err);
     }
     if (result) {
       return callback(null, result);
     }
-    User.findByEmail(email, function (err, user) {
+    User.findByEmail(email, (err, user) => {
       if (err) {
         return callback(err);
       }
@@ -101,14 +101,14 @@ validate.chkEmailInvalidOrDup = function (email, callback) {
   });
 };
 
-validate.chkPassword = function (password, passhash, callback) {
+validate.chkPassword = (password, passhash, callback) => {
   if (!utils.checkSSHA(password, passhash)) {
     return callback(null, WRONG_PASSWORD_MSG);
   }
   return callback(null, false);
 };
 
-validate.chkEmpty = function (str, callback) {
+validate.chkEmpty = (str, callback) => {
   if (_.isEmpty(str)) {
     return callback(null, true);
   }
@@ -116,7 +116,7 @@ validate.chkEmpty = function (str, callback) {
 };
 
 //TODO Add maxlength limitation
-validate.chkLength = function(str, minLen, callback) {
+validate.chkLength = (str, minLen, callback) => {
   if (_.isEmpty(str) || str.length < minLen) {
     // avoid undefined error
     return  callback(null, true);
@@ -124,9 +124,7 @@ validate.chkLength = function(str, minLen, callback) {
   return callback(null, false);
 };
 
-validate.chkDiff = function (strA, strB, callback) {
-  return callback(null, strA !== strB);
-};
+validate.chkDiff = (strA, strB, callback) => callback(null, strA !== strB);
 
 /**
  * captcha has these attributes and may get this way
@@ -135,10 +133,10 @@ validate.chkDiff = function (strA, strB, callback) {
  *   response: req.body['g-recaptcha-response'],
  * }
  */
-validate.chkRecaptcha = function(captchaData, callback) {
+validate.chkRecaptcha = (captchaData, callback) => {
   var recaptcha = new Recaptcha(conf.validation.recaptchaPrivate);
 
-  recaptcha.verify(captchaData, function (err, success) {
+  recaptcha.verify(captchaData, (err, success) => {
     if (err) {
       log.error('recaptcha error code', err);
     }
@@ -149,8 +147,8 @@ validate.chkRecaptcha = function(captchaData, callback) {
   });
 };
 
-validate.perform = function (validators, callback) {
-  async.parallel(validators, function (err, results) {
+validate.perform = (validators, callback) => {
+  async.parallel(validators, (err, results) => {
     var failed = false;
     var failures = {};
 
@@ -159,7 +157,7 @@ validate.perform = function (validators, callback) {
     }
 
     // store the values
-    _.forIn(results, function (value, key) {
+    _.forIn(results, (value, key) => {
       if (!value) {// valid
         return;
       }

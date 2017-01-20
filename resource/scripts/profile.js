@@ -1,6 +1,6 @@
 'use strict';
 
-$(document).ready(function () {
+$(document).ready(() => {
   if ($('#uname').html() !== 'profile') {
     return ;
   }
@@ -10,20 +10,20 @@ $(document).ready(function () {
     $('#welcome-message').hide();
   }
 
-  $('#done').click(function () {
-    $.ajax('/profile/welcome', function() {
+  $('#done').click(() => {
+    $.ajax('/profile/welcome', () => {
       $('#welcome-message').hide();
     });
   });
 
-  $('#later').click(function () {
+  $('#later').click(() => {
     Cookies.set('welcome-later', true, {expires: 1, path: ''});
     $('#welcome-message').hide();
   });
 
   /* toggle Add Email form */
   $('#addEmail').hide();
-  $('#addEmailToggle').on('click',function(e) {
+  $('#addEmailToggle').on('click',e => {
     e.preventDefault();
     $('#addEmail').slideToggle();
     $('input#email').focus();
@@ -31,7 +31,7 @@ $(document).ready(function () {
 
   /* toggle Edit Password form */
   $('#editPassword').hide();
-  $('#editPasswordToggle').on('click',function(e) {
+  $('#editPasswordToggle').on('click',e => {
     e.preventDefault();
     $('#editPassword').slideToggle();
     $('#input#currentpassword').focus();
@@ -62,7 +62,7 @@ $(document).ready(function () {
   $('#editPassword.validate').data({
     vns: function (callback) {
       $.post('/password', $('#editPassword').serialize())
-        .done(function (data) {
+        .done(data => {
           if (data.success) {
             return window.location.reload();
           }
@@ -70,7 +70,7 @@ $(document).ready(function () {
             return callback(data.fail);
           }
         })
-        .fail(function () {
+        .fail(() => {
           //body
         });
     }
@@ -79,7 +79,7 @@ $(document).ready(function () {
   $('#addEmail.validate').data({
     vns: function (callback) {
       $.post('/profile/email', $('#addEmail').serialize())
-        .done(function (data) {
+        .done(data => {
           if (data.success) {
             return window.location.reload();
           }
@@ -87,7 +87,7 @@ $(document).ready(function () {
             return callback(data.fail);
           }
         })
-        .fail(function () {
+        .fail(() => {
           // body...
         });
     }

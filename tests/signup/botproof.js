@@ -11,16 +11,16 @@ var signupConf = require('../../app/conf').signup;
 
 var botproof = require('../../app/routes/signup/botproof');
 
-describe('botproof', function () {
+describe('botproof', () => {
 
-  describe('generateTimestamp', function() {
+  describe('generateTimestamp', () => {
 
-    it('should set an accurate timestamp', function(done) {
+    it('should set an accurate timestamp', done => {
       var app = express();
 
       app.use(botproof.generateTimestamp);
 
-      app.use(function(req, res) {
+      app.use((req, res) => {
         var enc = res.locals.timestamp;
         var decph = crypto.createDecipher('aes192', botproof.SECRET);
 
@@ -40,21 +40,21 @@ describe('botproof', function () {
 
   });
 
-  describe('checkTimestamp', function() {
-    it('should fail without a timestamp', function(done) {
+  describe('checkTimestamp', () => {
+    it('should fail without a timestamp', done => {
       var app = express();
 
       app.use(bodyParser.urlencoded({extended: false}));
       app.use(botproof.checkTimestamp);
 
-      app.use(function(err, req, res, next) {
+      app.use((err, req, res, next) => {
         expect(err.statusCode).to.equal(400);
         done();
       });
 
       request(app)
         .post('/')
-        .end(function() {});
+        .end(() => {});
     });
 
     it.skip('should delay forms submitted under 5s', function(done) {
@@ -64,18 +64,16 @@ describe('botproof', function () {
 
       app.use(bodyParser.urlencoded({extended: false}));
       app.use(botproof.generateTimestamp);
-      app.use(function(req, res, next) {
+      app.use((req, res, next) => {
         req.body.timestamp = res.locals.timestamp;
         next();
       });
       app.use(botproof.checkTimestamp);
-      app.use(function(req, res) {
+      app.use((req, res) => {
         res.end();
       });
 
-      app.use(function(err) {
-        return done(err);
-      });
+      app.use(err => done(err));
 
       var start = Date.now();
 
@@ -84,7 +82,7 @@ describe('botproof', function () {
         .send({
           username: 'bilbo'
         })
-        .end(function(res) {
+        .end(res => {
           var stop = Date.now();
           try {
             expect(stop - start).to.be.least(5000);
@@ -96,7 +94,7 @@ describe('botproof', function () {
     });
   });
 
-  describe('checkHoneypot', function() {
+  describe('checkHoneypot', () => {
     function form(obj) {
       obj = obj || {};
       return _.extend({
@@ -110,28 +108,28 @@ describe('botproof', function () {
       }, obj);
     }
 
-    it('should send a Bad Request when honeypot is filled', function(done) {
+    it('should send a Bad Request when honeypot is filled', done => {
       var app = express();
 
       app.use(bodyParser.urlencoded({extended: false}));
       app.use(bodyParser.json());
       app.use(botproof.checkHoneypot);
-      app.use(function(err, req, res, next) {
+      app.use((err, req, res, next) => {
         expect(err.statusCode).to.equal(400);
         done();
       });
       request(app)
         .post('/')
         .send(form({country: 'Canada'}))
-        .end(function () {});
+        .end(() => {});
     });
 
-    it('should do nothing otherwise', function(done) {
+    it('should do nothing otherwise', done => {
       var app = express();
 
       app.use(bodyParser.urlencoded({extended: false}));
       app.use(botproof.checkHoneypot);
-      app.use(function(req, res) {
+      app.use((req, res) => {
         res.end();
       });
 
@@ -144,16 +142,16 @@ describe('botproof', function () {
 
   describe('spamListLookup', function() {
     this.timeout(10000); // this query may take a while
-    it('should block a known bad address', function(done) {
+    it('should block a known bad address', done => {
       var app = express();
       app.enable('trust proxy'); // so we can fake ip addresses
 
       app.use(botproof.spamListLookup);
-      app.use(function(req, res) {
+      app.use((req, res) => {
         res.end();
       });
 
-      app.use(function(err, req, res, next) {
+      app.use((err, req, res, next) => {
         expect(err.statusCode).to.equal(400);
         done();
       });
@@ -161,7 +159,7 @@ describe('botproof', function () {
       request(app)
       .get('/')
       .set('X-Forwarded-For', '127.0.0.2') // testing address
-      .end(function(res) {
+      .end(res => {
         if (res.status === 200) {
           done(new Error('known bad address passed'));
         }
@@ -169,12 +167,12 @@ describe('botproof', function () {
 
     });
 
-    it('should allow a known good address', function(done) {
+    it('should allow a known good address', done => {
       var app = express();
       app.enable('trust proxy'); // so we can fake ip addresses
 
       app.use(botproof.spamListLookup);
-      app.use(function(req, res) {
+      app.use((req, res) => {
         res.end();
       });
 
@@ -185,15 +183,15 @@ describe('botproof', function () {
     });
   });
 
-  describe('generators', function() {
-    it('should be an array of all generator functions', function() {
+  describe('generators', () => {
+    it('should be an array of all generator functions', () => {
       expect(botproof.generators).contain(botproof.generateTimestamp)
         .and.contain(botproof.generateSpinner);
     });
   });
 
-  describe('parsers', function() {
-    it('should be an array of all parser functions', function() {
+  describe('parsers', () => {
+    it('should be an array of all parser functions', () => {
       if (!signupConf.disableHoneypot) {
         expect(botproof.parsers).contain(botproof.checkHoneypot);
       }

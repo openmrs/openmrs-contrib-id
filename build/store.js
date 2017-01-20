@@ -24,19 +24,19 @@ if (_.isUndefined(userList)) {
 }
 
 
-var store = function (groupInfo) {
+var store = groupInfo => {
   var ret = {};
   ret.name = groupInfo.groupName;
   ret.member = {};
-  _.forEach(groupInfo.member, function(user) {
+  _.forEach(groupInfo.member, user => {
     ret.member[user] = true;
   });
   return ret;
 };
 
-var getGroups = function (username) {
+var getGroups = username => {
   var ret = [];
-  _.forEach(groups, function (group) {
+  _.forEach(groups, group => {
     if (group.member[username]) {
       ret.push(group.name);
     }
@@ -44,9 +44,9 @@ var getGroups = function (username) {
   return ret;
 };
 
-var addGroups = function(next) {
+var addGroups = next => {
   log.info('\n##################################  Starting to sync\n');
-  async.map(groupList, function (item, callback) {
+  async.map(groupList, (item, callback) => {
     var groupInfo = _.cloneDeep(item);
     groups.push(store(groupInfo));
     groupInfo.member = [];
@@ -54,7 +54,7 @@ var addGroups = function(next) {
     var group = new Group(groupInfo);
     group.save(callback);
   },
-  function (err) {
+  err => {
     if (err) {
       log.error('screwed');
       log.error(err);
@@ -66,11 +66,11 @@ var addGroups = function(next) {
 };
 
 var deletedEmails = [];
-var checkUsers = function (next) {
+var checkUsers = next => {
   var count = {};
-  var addToMap = function (mail) {
+  var addToMap = mail => {
     if (_.isArray(mail)) {
-      _.forEach(mail, function (item) {
+      _.forEach(mail, item => {
         addToMap(item);
       });
       return;
@@ -84,12 +84,12 @@ var checkUsers = function (next) {
   };
 
   // preparation
-  _.forEach(userList, function (user) {
+  _.forEach(userList, user => {
     addToMap(user.emailList);
   });
 
   // delete duplicated nonprimary emails
-  _.forEach(userList, function (user) {
+  _.forEach(userList, user => {
     for (var i = user.emailList.length-1; i >= 0; --i) {
       var mail = user.emailList[i];
       var cp = mail.toLowerCase();
@@ -109,10 +109,10 @@ var checkUsers = function (next) {
 
   // recount and mark users with duplicated primaryEmail
   count = {};
-  _.forEach(userList, function (user) {
+  _.forEach(userList, user => {
     addToMap(user.primaryEmail);
   });
-  _.forEach(userList, function (user) {
+  _.forEach(userList, user => {
     var mail = user.primaryEmail;
     if (count[mail] > 1) {
       user.duplicate = true;
@@ -122,8 +122,8 @@ var checkUsers = function (next) {
 };
 
 var skipped = [];
-var addUsers = function (next) {
-  async.mapSeries(userList, function (item, callback) {
+var addUsers = next => {
+  async.mapSeries(userList, (item, callback) => {
     log.info('Adding user ', item.username);
     var user = new User(item);
     if (item.duplicate) {
@@ -143,7 +143,7 @@ var addUsers = function (next) {
     log.debug('before calling save groups');
     user.addGroupsAndSave(groups,callback);
   },
-  function (err) {
+  err => {
     if (err) {
       log.error('screwed');
       log.error(err);
@@ -164,6 +164,6 @@ async.series([
   addGroups,
   checkUsers,
   addUsers,
-], function (err) {
+], err => {
   process.exit();
 });

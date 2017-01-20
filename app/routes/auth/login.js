@@ -19,21 +19,21 @@ var log = require('log4js').addLogger('express');
 
 var User = require('../../models/user');
 
-exports = module.exports = function (app) {
+exports = module.exports = app => {
 
 
 app.get('/login', mid.forceLogout,
-  function(req, res, next) {
+  (req, res, next) => {
     res.render('views/login');
   }
 );
 
-app.post('/login', mid.stripNewlines, function(req, res, next) {
+app.post('/login', mid.stripNewlines, (req, res, next) => {
   var username = req.body.loginusername || '';
   var password = req.body.loginpassword || '';
   var redirect = req.body.destination || '/';
 
-  var checkInput = function (callback) {
+  var checkInput = callback => {
     if (utils.isUsernameValid(username)) {
       return callback(null, {username: username});
     }
@@ -44,8 +44,8 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
     return callback({loginFail: invalid});
   };
 
-  var findUser = function (input, callback) {
-    var commonCallback = function (err, user) {
+  var findUser = (input, callback) => {
+    var commonCallback = (err, user) => {
       if (err) {
         return callback(err);
       }
@@ -64,7 +64,7 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
     return callback(new Error('Weird control flow'));
   };
 
-  var checkLocked = function (user, callback) {
+  var checkLocked = (user, callback) => {
     if (user.locked) {
       return callback({loginFail: 'You must verify your email address before logging in. ' +
         'Check your email for verification instructions.'});
@@ -72,7 +72,7 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
     return callback(null, user);
   };
 
-  var checkPassword = function (user, callback) {
+  var checkPassword = (user, callback) => {
     if (_.isEmpty(user.password)) {
       return callback({loginFail: 'Your password should be reset first'});
     }
@@ -88,7 +88,7 @@ app.post('/login', mid.stripNewlines, function(req, res, next) {
     checkLocked,
     checkPassword,
   ],
-  function (err, user) {
+  (err, user) => {
     if (err) {
       if (_.isEmpty(err.loginFail)) {
         log.debug('login error');

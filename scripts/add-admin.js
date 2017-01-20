@@ -19,8 +19,8 @@ if (_.isUndefined(data) || _.isUndefined(userList) || _.isUndefined(groupName)) 
 }
 
 // data-validation
-var checkGroup = function (callback) {
-  Group.findOne({groupName: groupName}, function (err, group) {
+var checkGroup = callback => {
+  Group.findOne({groupName: groupName}, (err, group) => {
     if (err) {
       console.error('screwed');
       console.error(err);
@@ -35,10 +35,10 @@ var checkGroup = function (callback) {
   });
 };
 
-var work = function (callback) {
-  async.mapSeries(userList, function (username, cb) {
+var work = callback => {
+  async.mapSeries(userList, (username, cb) => {
     console.log('Adding user ', username);
-    User.findOne({username: username}, function (err, user) {
+    User.findOne({username: username}, (err, user) => {
       if (err) {
         console.error('screwed');
         console.error(err);
@@ -56,6 +56,6 @@ var work = function (callback) {
 async.series([
   checkGroup,
   work
-], function (err) {
+], err => {
   process.exit();
 });

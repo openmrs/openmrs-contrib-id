@@ -1,7 +1,7 @@
 'use strict';
 
 
-$(document).ready(function() {
+$(document).ready(() => {
   if ($('#uname').html() !== 'signup') {
     return;
   }
@@ -20,7 +20,7 @@ $(document).ready(function() {
     vns: function (callback) {
       // check recaptcha first
       if (grecaptcha.getResponse() === "") {
-        setTimeout(function () {
+        setTimeout(() => {
           $('form#form-signup').find('input#submit')
             .closest('.form-group').find('label.error')
             .removeClass('show');
@@ -35,7 +35,7 @@ $(document).ready(function() {
           dataType: 'json',
           method: 'POST'
         })
-          .done(function (data) {
+          .done(data => {
             if (data.success) {
               window.location.href = '/signup/verify';
               return;
@@ -48,7 +48,7 @@ $(document).ready(function() {
               return callback(data.fail);
             }
           })
-          .fail(function (error) {
+          .fail(error => {
             var trackId = error.responseJSON.trackId;
             $('#err').modal();
             var html = '<h2>Oops...something went wrong.<br><br>Tracking Code: ' + trackId + '</h2>';

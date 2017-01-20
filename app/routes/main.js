@@ -4,7 +4,7 @@
  */
 
 // LOGIN-LOGOUT
-exports = module.exports = function (req, res, next) {
+exports = module.exports = (req, res, next) => {
   if (!req.session.user) { // only shown to users logged in
     return next();
   }

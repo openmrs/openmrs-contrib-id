@@ -16,14 +16,14 @@ var log = require('log4js').addLogger('express');
 
 var User = require('../../models/user');
 
-exports = module.exports = function (app) {
+exports = module.exports = app => {
 
 
-app.get('/reset', mid.forceLogout, function(req, res, next) {
+app.get('/reset', mid.forceLogout, (req, res, next) => {
   res.render('views/reset-public');
 });
 
-app.post('/reset', mid.forceLogout, function(req, res, next) {
+app.post('/reset', mid.forceLogout, (req, res, next) => {
   // case-insensitive
   var resetCredential = req.body.resetCredential.toLowerCase();
   var USER_NOT_FOUND_MSG = 'User data not found';
@@ -36,7 +36,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
     filter.emailList = resetCredential;
   }
 
-  var checkInput = function(callback) {
+  var checkInput = callback => {
     if(resetCredential === '') {
         req.flash('error',REQUIRED);
         return res.redirect('/reset');
@@ -45,8 +45,8 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
    }
   };
 
-  var findUser = function (callback) {
-    User.findByFilter(filter, function (err, user) {
+  var findUser = callback => {
+    User.findByFilter(filter, (err, user) => {
       if (err) {
         return callback(err);
       }
@@ -59,12 +59,12 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
     });
   };
 
-  var sendEmails = function (user, callback) {
+  var sendEmails = (user, callback) => {
     var username = user.username;
     var emails = user.emailList;
 
     var emailPath = path.join(__dirname, '../../../templates/emails');
-    var sendEmail = function (address, cb) {
+    var sendEmail = (address, cb) => {
       verification.begin({
         addr: address,
         username: username,
@@ -87,7 +87,7 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
     findUser,
     sendEmails,
   ],
-  function (err) {
+  err => {
     if (err && err.message !== USER_NOT_FOUND_MSG) {
       return next(err);
     }
@@ -99,10 +99,10 @@ app.post('/reset', mid.forceLogout, function(req, res, next) {
 });
 
 app.get('/reset/:id', mid.forceLogout,
-  function(req, res, next) {
+  (req, res, next) => {
 
   var id = utils.urlDecode64(req.params.id);
-  verification.check(id, function(err, valid, locals) {
+  verification.check(id, (err, valid, locals) => {
     if (err) {
       return next(err);
     }
@@ -119,7 +119,7 @@ app.get('/reset/:id', mid.forceLogout,
 });
 
 app.post('/reset/:id', mid.forceLogout,
-  function(req, res, next) {
+  (req, res, next) => {
 
 
   var id = utils.urlDecode64(req.params.id);
@@ -127,13 +127,13 @@ app.post('/reset/:id', mid.forceLogout,
   var cpass = req.body.confirmPassword;
 
 
-  var validation = function (callback) {
+  var validation = callback => {
     var validators = {
       newPassword: validate.chkLength.bind(null, npass, 8),
       confirmPassword: validate.chkDiff.bind(null, npass, cpass),
     };
 
-    validate.perform(validators, function (err, failures) {
+    validate.perform(validators, (err, failures) => {
       if (err) {
         return callback(err);
       }
@@ -144,8 +144,8 @@ app.post('/reset/:id', mid.forceLogout,
     });
   };
 
-  var chkVerification = function (callback) {
-    verification.check(id, function(err, valid, locals) {
+  var chkVerification = callback => {
+    verification.check(id, (err, valid, locals) => {
       if (err) {
         return next(err);
       }
@@ -158,14 +158,14 @@ app.post('/reset/:id', mid.forceLogout,
     });
   };
 
-  var update = function (username, callback) {
-    User.findByUsername(username, function (err, user) {
+  var update = (username, callback) => {
+    User.findByUsername(username, (err, user) => {
       if (err) {
         return next(err);
       }
       user.password = npass;
 
-      user.save(function (err) {
+      user.save(err => {
         if (err) {
           log.error('password reset failed');
           return next(err);

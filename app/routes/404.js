@@ -1,6 +1,6 @@
 'use strict';
 // 404's
-exports = module.exports = function(req, res, next) {
+exports = module.exports = (req, res, next) => {
   res.statusCode = 404;
   if (req.accepts('text/html')) {
     // send an HTML error page

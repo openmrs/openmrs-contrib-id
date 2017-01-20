@@ -1,6 +1,6 @@
 'use strict';
 
-$(document).ready(function () {
+$(document).ready(() => {
   if ($('#uname').html() !== 'reset-private') {
     return ;
   }

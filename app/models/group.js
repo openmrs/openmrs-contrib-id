@@ -61,7 +61,7 @@ groupSchema.pre('save', function (next) {
   }
   var that = this;
   var group = {groupName: this.groupName, description: this.description};
-  ldap.addGroup(group, function (err) {
+  ldap.addGroup(group, err => {
     if (err) {
       return next(err);
     }

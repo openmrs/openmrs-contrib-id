@@ -42,7 +42,7 @@ var chkArrayDuplicate = {
 };
 
 function arrToLowerCase(arr) {
-  arr.forEach(function (str, index, array) {
+  arr.forEach((str, index, array) => {
     array[index] = str.toLowerCase();
   });
   return arr;
@@ -140,13 +140,13 @@ userSchema.path('primaryEmail').validate(function (email){
 
 // generate an iterative function over a group with a callback function that
 // takes 1 err argument
-var createIteratorOverGroups = function (groups, operation) {
-  var updateGroup = function (groupName, cb) {
+var createIteratorOverGroups = (groups, operation) => {
+  var updateGroup = (groupName, cb) => {
     //efficiently update groups
     Group.findOneAndUpdate({groupName: groupName}, operation, {
       lean: true,
       select: 'groupName',
-    }, function (err, group) {
+    }, (err, group) => {
       if (err) {
         return cb(err);
       }
@@ -157,7 +157,7 @@ var createIteratorOverGroups = function (groups, operation) {
     });
   };
 
-  return function (callback) {
+  return callback => {
     async.each(groups, updateGroup, callback);
   };
 };
@@ -168,8 +168,8 @@ userSchema.pre('save', function (next) {
   var userRef = {objId: user.id, username: user.username};
 
   // get the added and removed array
-  var prepare = function (callback) {
-    User.findById(user._id, function (err, oldUser) {
+  var prepare = callback => {
+    User.findById(user._id, (err, oldUser) => {
       if (err) {
         return callback(err);
       }
@@ -181,18 +181,18 @@ userSchema.pre('save', function (next) {
 
 
 
-  var addGroups = function (added, removed, callback) {
+  var addGroups = (added, removed, callback) => {
     var worker = createIteratorOverGroups(added, {
       $addToSet: {
         member: userRef,
       }
     });
-    return worker(function (err) {
+    return worker(err => {
       callback(err, removed);
     });
   };
 
-  var delGroups = function (removed, callback) {
+  var delGroups = (removed, callback) => {
     var worker = createIteratorOverGroups(removed, {
       $pop: {
         member: userRef,
@@ -234,7 +234,7 @@ userSchema.pre('save', function (next) {
     return next();
   }
   if (!this.inLDAP) { // not stored in LDAP yet
-    ldap.addUser(that, function (err) {
+    ldap.addUser(that, err => {
       if (err) {
         log.error(uid + ' failed to add record to OpenLDAP');
         return next(err);
@@ -246,8 +246,8 @@ userSchema.pre('save', function (next) {
     return;
   }
   // already stored in LDAP, modify it
-  var getUser = function (callback) {
-    ldap.getUser(uid, function (err, userobj) {
+  var getUser = callback => {
+    ldap.getUser(uid, (err, userobj) => {
       if (err) {
         return callback(err);
       }
@@ -255,12 +255,12 @@ userSchema.pre('save', function (next) {
     });
   };
 
-  var updateUser = function (userobj, callback) {
+  var updateUser = (userobj, callback) => {
     ldap.updateUser(that, callback);
   };
 
   // due to limitation of LDAP, password shall be dealt individually
-  var changePassword = function (userobj, callback) {
+  var changePassword = (userobj, callback) => {
     if (userobj.password === that.password) { // not changed
       return callback();
     }
@@ -272,7 +272,7 @@ userSchema.pre('save', function (next) {
     updateUser,
     changePassword,
   ],
-  function (err) {
+  err => {
     if (err) {
       log.error(uid + ' failed to sync with OpenLDAP');
       return next(err);
@@ -321,10 +321,10 @@ exports = module.exports = User;
  * Dynamically retrieve data from OpenLDAP
  * and sync it in Mongo*
  */
-var findAndSync = function(filter, callback) {
+var findAndSync = (filter, callback) => {
 
-  var findMongo = function (cb) {
-    User.findOne(filter, function (err, user) {
+  var findMongo = cb => {
+    User.findOne(filter, (err, user) => {
       if (err) {
         return cb(err);
       }
@@ -336,7 +336,7 @@ var findAndSync = function(filter, callback) {
   };
 
   // not found in mongo, have a try in OpenLDAP
-  var findLDAP = function (cb) {
+  var findLDAP = cb => {
     var finder;
     var condition;
     if (filter.username) {// choose finder
@@ -346,7 +346,7 @@ var findAndSync = function(filter, callback) {
       return callback(); // ldap.js findByEmail is deprecated, end chain
     }
 
-    finder(condition, function (err, userobj) {// find in OpenLDAP
+    finder(condition, (err, userobj) => {// find in OpenLDAP
       if (err) {
         return cb(err);
       }
@@ -358,7 +358,7 @@ var findAndSync = function(filter, callback) {
   };
 
   // store the data retrieved to Mongo
-  var syncMongo = function (userobj, cb) {
+  var syncMongo = (userobj, cb) => {
     var userInfo = {
       username: userobj.username,
       firstName: userobj.firstName,
@@ -380,7 +380,7 @@ var findAndSync = function(filter, callback) {
     findLDAP,
     syncMongo,
   ],
-  function (err, user) {
+  (err, user) => {
     if (err) {
       return callback(err);
     }
@@ -397,7 +397,7 @@ var findAndSync = function(filter, callback) {
  * case-insensitive.
  * @param  {Function} callback Receive(err,user)
  */
-User.findByUsername = function (username, callback) {
+User.findByUsername = (username, callback) => {
   username = username.toLowerCase();
   findAndSync({username: username}, callback);
 };
@@ -405,7 +405,7 @@ User.findByUsername = function (username, callback) {
 /**
  * Just similar to above
  */
-User.findByEmail = function (email, callback) {
+User.findByEmail = (email, callback) => {
   email = email.toLowerCase();
   findAndSync({emailList: email}, callback); // actually there won't be sync
 };
@@ -413,8 +413,8 @@ User.findByEmail = function (email, callback) {
 /**
  * Just a delegator
  */
-User.findByFilter = function (filter, callback) {
-  _.forIn(filter, function (value, key) {
+User.findByFilter = (filter, callback) => {
+  _.forIn(filter, (value, key) => {
     filter[key] = value.toLowerCase();
   });
   findAndSync(filter, callback);
@@ -443,7 +443,7 @@ User.prototype.addGroupsAndSave = function (groups, callback) {
     },{
       lean: true,
       select: 'groupName',
-    }, function (err, group) {
+    }, (err, group) => {
       if (err) {
         return cb(err);
       }
@@ -453,7 +453,7 @@ User.prototype.addGroupsAndSave = function (groups, callback) {
       return cb();
     });
   },
-  function (err) {
+  err => {
     if (err) {
       return callback(err);
     }

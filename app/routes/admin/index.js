@@ -19,7 +19,7 @@ nav.add({
 });
 
 
-exports = module.exports = function (app) {
+exports = module.exports = app => {
 
 var pages = [];
 var admin = app.admin = {
@@ -35,7 +35,7 @@ app.get(/^\/admin($|\/.*$)/, function prependSidebar (req, res, next) {
   res.locals.reqURL = req.url;
   return next();
 });
-app.get('/admin', function(req, res, next) {
+app.get('/admin', (req, res, next) => {
   res.render('views/admin');
 });
 admin.addPage('Welcome', '/admin');

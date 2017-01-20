@@ -19,7 +19,7 @@ var conf = require('./conf');
 var _ = require('lodash');
 
 
-exports.openmrsHelper = function(req, res, next) {
+exports.openmrsHelper = (req, res, next) => {
   if (req.originalUrl === '/favicon.ico') {
     return next();
   }
@@ -41,29 +41,27 @@ exports.openmrsHelper = function(req, res, next) {
 };
 
 
-exports.restrictTo = function(role) {
-  return function(req, res, next) {
-    var fail = function() {
-      req.flash('error', 'You are not authorized to access this resource.');
-      if (req.session.user) {
-        if (req.originalUrl === '/') {
-          return res.redirect(url.resolve(conf.site.url, '/disconnect'));
-        }
-        return res.redirect('/');
+exports.restrictTo = role => (req, res, next) => {
+  var fail = () => {
+    req.flash('error', 'You are not authorized to access this resource.');
+    if (req.session.user) {
+      if (req.originalUrl === '/') {
+        return res.redirect(url.resolve(conf.site.url, '/disconnect'));
       }
-      return res.redirect(url.resolve(conf.site.url, '/login?destination=' +
-                                      encodeURIComponent(req.originalUrl)));
-
-    };
-
-    if (req.session.user && _.includes(req.session.user.groups, role)) {
-      return next();
+      return res.redirect('/');
     }
-    return fail();
+    return res.redirect(url.resolve(conf.site.url, '/login?destination=' +
+                                    encodeURIComponent(req.originalUrl)));
+
   };
+
+  if (req.session.user && _.includes(req.session.user.groups, role)) {
+    return next();
+  }
+  return fail();
 };
 
-exports.forceLogin = function(req, res, next) {
+exports.forceLogin = (req, res, next) => {
   if (req.session.user) {
     return next();
   }
@@ -73,7 +71,7 @@ exports.forceLogin = function(req, res, next) {
                             encodeURIComponent(req.originalUrl)));
 };
 
-exports.forceLogout = function(req, res, next) {
+exports.forceLogout = (req, res, next) => {
   if (!req.session.user) {
     return next();
   }
@@ -83,7 +81,7 @@ exports.forceLogout = function(req, res, next) {
   return res.redirect('/');
 };
 
-exports.stripNewlines = function(req, res, next) {
+exports.stripNewlines = (req, res, next) => {
   log.trace('before: ' + req.body.loginusername);
   if (req.body) {
     for (var field in req.body) {
@@ -96,7 +94,7 @@ exports.stripNewlines = function(req, res, next) {
 };
 
 // parse paramater tables submitted with "param-table" view. passes an object
-exports.parseParamTable = function(req, res, next) {
+exports.parseParamTable = (req, res, next) => {
   var generatedList = [];
   for (var a in req.body) {
     log.trace("parsing " + a + ": " + req.body[a]);
