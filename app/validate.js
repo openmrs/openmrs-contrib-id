@@ -46,82 +46,82 @@ var isUsernameValid = utils.isUsernameValid;
 var isEmailValid = utils.isEmailValid;
 
 validate.chkUsernameInvalid = (username, callback) => {
-  if (!isUsernameValid(username)) {
-    return callback(null, true);
-  }
-  return callback(null, false);
+	if (!isUsernameValid(username)) {
+		return callback(null, true);
+	}
+	return callback(null, false);
 };
 
 validate.chkUsernameInvalidOrDup = (username, callback) => {
-  if (!isUsernameValid(username)) {
-    return callback(null, true);
-  }
-  User.findByUsername(username, (err, user) => {
-    if (err) {
-      return callback(err);
-    }
-    if (user) {
-      // duplicate
-      return callback(null, ALREADY_USED_MSG);
-    }
-    return callback(null, false);
-  });
+	if (!isUsernameValid(username)) {
+		return callback(null, true);
+	}
+	User.findByUsername(username, (err, user) => {
+		if (err) {
+			return callback(err);
+		}
+		if (user) {
+			// duplicate
+			return callback(null, ALREADY_USED_MSG);
+		}
+		return callback(null, false);
+	});
 };
 
 validate.chkEmailInvalid = (email, callback) => {
-  if (!isEmailValid(email)) {
-    return callback(null, true);
-  }
-  var allowPlus = conf.validation.allowPlusInEmail;
-  if (-1 !== _.indexOf(email, '+') && !allowPlus) {
-    // disobey the allowplus '+' rule
-    return callback(null, EMAIL_PLUS_MSG);
-  }
-  return callback(null, false);
+	if (!isEmailValid(email)) {
+		return callback(null, true);
+	}
+	var allowPlus = conf.validation.allowPlusInEmail;
+	if (-1 !== _.indexOf(email, '+') && !allowPlus) {
+		// disobey the allowplus '+' rule
+		return callback(null, EMAIL_PLUS_MSG);
+	}
+	return callback(null, false);
 };
 
 validate.chkEmailInvalidOrDup = (email, callback) => {
-  validate.chkEmailInvalid(email, (err, result) => {
-    if (err) {
-      return callback(err);
-    }
-    if (result) {
-      return callback(null, result);
-    }
-    User.findByEmail(email, (err, user) => {
-      if (err) {
-        return callback(err);
-      }
-      if (user) {
-        // duplicate
-        return callback(null, ALREADY_USED_MSG);
-      }
-      return callback(null, false);
-    });
-  });
+	validate.chkEmailInvalid(email, (err, result) => {
+		if (err) {
+			return callback(err);
+		}
+		if (result) {
+			return callback(null, result);
+		}
+		User.findByEmail(email, (err, user) => {
+			if (err) {
+				return callback(err);
+			}
+			if (user) {
+				// duplicate
+				return callback(null, ALREADY_USED_MSG);
+			}
+			return callback(null, false);
+		});
+	});
 };
 
 validate.chkPassword = (password, passhash, callback) => {
-  if (!utils.checkSSHA(password, passhash)) {
-    return callback(null, WRONG_PASSWORD_MSG);
-  }
-  return callback(null, false);
+	if (!utils.checkSSHA(password, passhash)) {
+		return callback(null, WRONG_PASSWORD_MSG);
+	}
+	return callback(null, false);
 };
 
 validate.chkEmpty = (str, callback) => {
-  if (_.isEmpty(str)) {
-    return callback(null, true);
-  }
-  return callback(null, false);
+	if (_.isEmpty(str)) {
+		return callback(null, true);
+	}
+	return callback(null, false);
 };
 
 //TODO Add maxlength limitation
 validate.chkLength = (str, minLen, callback) => {
-  if (_.isEmpty(str) || str.length < minLen) {
-    // avoid undefined error
-    return  callback(null, true);
-  }
-  return callback(null, false);
+	if (_.isEmpty(str) || str.length < minLen) {
+		// avoid undefined error
+		return callback(null, true);
+	}
+	return callback(null, false);
 };
 
 validate.chkDiff = (strA, strB, callback) => callback(null, strA !== strB);
@@ -134,44 +134,44 @@ validate.chkDiff = (strA, strB, callback) => callback(null, strA !== strB);
  * }
  */
 validate.chkRecaptcha = (captchaData, callback) => {
-  var recaptcha = new Recaptcha(conf.validation.recaptchaPrivate);
+	var recaptcha = new Recaptcha(conf.validation.recaptchaPrivate);
 
-  recaptcha.verify(captchaData, (err, success) => {
-    if (err) {
-      log.error('recaptcha error code', err);
-    }
-    if (!success) {
-      return callback(null, true);
-    }
-    return callback(null, false);
-  });
+	recaptcha.verify(captchaData, (err, success) => {
+		if (err) {
+			log.error('recaptcha error code', err);
+		}
+		if (!success) {
+			return callback(null, true);
+		}
+		return callback(null, false);
+	});
 };
 
 validate.perform = (validators, callback) => {
-  async.parallel(validators, (err, results) => {
-    var failed = false;
-    var failures = {};
+	async.parallel(validators, (err, results) => {
+		var failed = false;
+		var failures = {};
 
-    if (err) {
-      return callback(err);
-    }
+		if (err) {
+			return callback(err);
+		}
 
-    // store the values
-    _.forIn(results, (value, key) => {
-      if (!value) {// valid
-        return;
-      }
-      failed = true;
-      failures[key] = value;
-    });
+		// store the values
+		_.forIn(results, (value, key) => {
+			if (!value) { // valid
+				return;
+			}
+			failed = true;
+			failures[key] = value;
+		});
 
-    if (!failed) { // if all valid, pass the requests to next handler
-      log.debug('successed for validation');
-      return callback();
-    }
+		if (!failed) { // if all valid, pass the requests to next handler
+			log.debug('successed for validation');
+			return callback();
+		}
 
-    return callback(null, failures);
-  });
+		return callback(null, failures);
+	});
 };
 
 exports = module.exports = validate;

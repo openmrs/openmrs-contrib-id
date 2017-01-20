@@ -14,164 +14,165 @@
 
 // valid JSON, except for RegExp's
 module.exports = {
-  "site": {
-    // use full url, like http://localhost:3000/
-    "url": "http://localhost:3000/",
-    "title": "OpenMRS ID"
-  },
-  "ldap": {
-    // LDAP Settings
+	"site": {
+		// use full url, like http://localhost:3000/
+		"url": "http://localhost:3000/",
+		"title": "OpenMRS ID"
+	},
+	"ldap": {
+		// LDAP Settings
 
-    "server": {
-      "uri": "ldap://localhost",
-      "baseDn": "ou=system,dc=openmrs,dc=org",
-      "rdn": "uid",
-      "loginUser": "omrsid",
-      "password": "secret"
-    },
-    "user": {
-      "baseDn": "ou=users,dc=openmrs,dc=org",
-      "rdn": "uid",
+		"server": {
+			"uri": "ldap://localhost",
+			"baseDn": "ou=system,dc=openmrs,dc=org",
+			"rdn": "uid",
+			"loginUser": "omrsid",
+			"password": "secret"
+		},
+		"user": {
+			"baseDn": "ou=users,dc=openmrs,dc=org",
+			"rdn": "uid",
 
-      // corresponds with form input names
-      "username": "uid",
-      "firstname": "cn",
-      "lastname": "sn",
-      "displayname": "displayName",
-      "email": "mail",
-      "password": "userPassword",
-      "secondaryemail": "otherMailbox",
-      "defaultObjectClass": [
-        "inetOrgPerson",
-        "extensibleObject"
-      ],
-      "usernameRegex": /^[a-zA-Z0-9]+[.]?[a-zA-Z0-9]+$/,
-      "defaultGroups": [
-        "bamboo-user",
-        "confluence-users",
-        "dashboard-users",
-        "jira-chg-requester",
-        "jira-icm-assignee",
-        "jira-icm-reporter",
-        "jira-trunk-developer",
-        "jira-users",
-        "modrepo-users",
-        "osqa-users"
-      ],
-      "passwordResetPolicy": "cn=reset,ou=policy,dc=openmrs,dc=org",
-      "passwordResetTimeout": 7200000
-    },
-    "group": {
-      "baseDn": "ou=groups,dc=openmrs,dc=org",
-      "member": "member",
-      "rdn": "cn",
-      "objectClass": "groupOfNames"
-    }
-  },
-  "mongo": {
-    "uri": "mongodb://localhost/id_dashboard",
-    "username": "mongo_user",
-    "password": "secret",
-    "commonExpireTime": "2d"
-  },
-  "session": {
-    "__comment3": "session storage DB",
+			// corresponds with form input names
+			"username": "uid",
+			"firstname": "cn",
+			"lastname": "sn",
+			"displayname": "displayName",
+			"email": "mail",
+			"password": "userPassword",
+			"secondaryemail": "otherMailbox",
+			"defaultObjectClass": [
+				"inetOrgPerson",
+				"extensibleObject"
+			],
+			"usernameRegex": /^[a-zA-Z0-9]+[.]?[a-zA-Z0-9]+$/,
+			"defaultGroups": [
+				"bamboo-user",
+				"confluence-users",
+				"dashboard-users",
+				"jira-chg-requester",
+				"jira-icm-assignee",
+				"jira-icm-reporter",
+				"jira-trunk-developer",
+				"jira-users",
+				"modrepo-users",
+				"osqa-users"
+			],
+			"passwordResetPolicy": "cn=reset,ou=policy,dc=openmrs,dc=org",
+			"passwordResetTimeout": 7200000
+		},
+		"group": {
+			"baseDn": "ou=groups,dc=openmrs,dc=org",
+			"member": "member",
+			"rdn": "cn",
+			"objectClass": "groupOfNames"
+		}
+	},
+	"mongo": {
+		"uri": "mongodb://localhost/id_dashboard",
+		"username": "mongo_user",
+		"password": "secret",
+		"commonExpireTime": "2d"
+	},
+	"session": {
+		"__comment3": "session storage DB",
 
-    "__comment1": "session secret, used to secure session data",
-    "secret": "secret",
-    "__comment2": "how long until session terminates (24hr)",
-    "duration": 86400000
-  },
-  "groups": {
-    "__comment2": "Google Groups settings",
+		"__comment1": "session secret, used to secure session data",
+		"secret": "secret",
+		"__comment2": "how long until session terminates (24hr)",
+		"duration": 86400000
+	},
+	"groups": {
+		"__comment2": "Google Groups settings",
 
-    // hourly
-    "syncInterval": 3600000
-  },
-  "logger": {
-    // Log settings
+		// hourly
+		"syncInterval": 3600000
+	},
+	"logger": {
+		// Log settings
 
-    "relativePath": "/../logs/openmrsid.log"
-  },
-  "validation": {
-    // validation settings
-    "recaptchaPublic": "6LfA9P8SAAAAAD6k4fE5ByOXZawM7PYJk3z71qMX",
-    "recaptchaPrivate": "6LfA9P8SAAAAAPS81MbDGNf9t_EIOfuYocxOIlHC",
-    "allowPlusInEmail": false,
-  },
-  "email": {
-    // Email settings
+		"relativePath": "/../logs/openmrsid.log"
+	},
+	"validation": {
+		// validation settings
+		"recaptchaPublic": "6LfA9P8SAAAAAD6k4fE5ByOXZawM7PYJk3z71qMX",
+		"recaptchaPrivate": "6LfA9P8SAAAAAPS81MbDGNf9t_EIOfuYocxOIlHC",
+		"allowPlusInEmail": false,
+	},
+	"email": {
+		// Email settings
 
-    "validation": {
-      "emailRegex": /^[A-Za-z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-      "forceUniquePrimaryEmail": true,
-      "forceUniqueSecondaryEmail": true
-    },
-    "smtp": {
-      "host": "localhost",
-      "port": 1025,
-      "auth": {
-        "user": "postfix_user",
-        "pass": "secret",
-      },
-    },
-  },
-  "signup": {
-    "signupFieldNames": [
-      "username",
-      "firstName",
-      "lastName",
-      "primaryEmail",
-      "password",
-      "timestamp"
-    ],
-    "requiredSubmitTimeSec": 5,
-    "signupFormMaxAgeHours": 12,
-    "honeypotFieldName": "country",
-    "disableHoneypot": true,
-    "disableBlacklist": false,
+		"validation": {
+			"emailRegex": /^[A-Za-z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+			"forceUniquePrimaryEmail": true,
+			"forceUniqueSecondaryEmail": true
+		},
+		"smtp": {
+			"host": "localhost",
+			"port": 1025,
+			"auth": {
+				"user": "postfix_user",
+				"pass": "secret",
+			},
+		},
+	},
+	"signup": {
+		"signupFieldNames": [
+			"username",
+			"firstName",
+			"lastName",
+			"primaryEmail",
+			"password",
+			"timestamp"
+		],
+		"requiredSubmitTimeSec": 5,
+		"signupFormMaxAgeHours": 12,
+		"honeypotFieldName": "country",
+		"disableHoneypot": true,
+		"disableBlacklist": false,
 
-    "dnsSpamLists": {
-      "bl.spamcop.net": {
-        "returnCodes": ["127.0.0.2"]
-      },
-      "zen.spamhaus.org": {
-        "returnCodes": ["127.0.0.2", "127.0.0.3", "127.0.0.4", "127.0.0.5",
-        "127.0.0.6", "127.0.0.7"]
-      }
-    }
-  },
+		"dnsSpamLists": {
+			"bl.spamcop.net": {
+				"returnCodes": ["127.0.0.2"]
+			},
+			"zen.spamhaus.org": {
+				"returnCodes": ["127.0.0.2", "127.0.0.3", "127.0.0.4", "127.0.0.5",
+					"127.0.0.6", "127.0.0.7"
+				]
+			}
+		}
+	},
 
-  // EJS Plugs
-  "defaultSidebar": [
-    "needhelp"
-  ],
+	// EJS Plugs
+	"defaultSidebar": [
+		"needhelp"
+	],
 
-  // displays at bottom of sidebar
-  "aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v" + require("../package").version,
+	// displays at bottom of sidebar
+	"aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v" + require("../package").version,
 
-  // system modules
-  "systemModules": [
-    // "admin",
-    // "signup",
-    // "auth",
-    // "profile",
-    // "reset-pwd",
-    // "db-admin",
-  ],
+	// system modules
+	"systemModules": [
+		// "admin",
+		// "signup",
+		// "auth",
+		// "profile",
+		// "reset-pwd",
+		// "db-admin",
+	],
 
-  // user-configured modules
-  "userModules": [
-    // "openmrs-contrib-id-globalnavbar",
-    // "openmrs-contrib-id-oauth",
-  ],
+	// user-configured modules
+	"userModules": [
+		// "openmrs-contrib-id-globalnavbar",
+		// "openmrs-contrib-id-oauth",
+	],
 
-  // a exceptionlists of session middlware, use regular expressions
-  "sessionExceptions": [
-    /^\/globalnav($|\/.*$)/,
-    /^\/resource\/.*$/,
-    /^\/panel($|\/.*$)/,
-  ],
+	// a exceptionlists of session middlware, use regular expressions
+	"sessionExceptions": [
+		/^\/globalnav($|\/.*$)/,
+		/^\/resource\/.*$/,
+		/^\/panel($|\/.*$)/,
+	],
 };
 
 // expose shorthand method used by view renderers
