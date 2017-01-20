@@ -1,18 +1,18 @@
-//- content, is a array contains the names of items you want to displayed
+//- content, is a array includes the names of items you want to displayed
 mixin sidebar(content)
-  if _.contains(content, 'needhelp')
+  if _.includes(content, 'needhelp')
     h2 Need help?
     p If you're having problems accessing or using the OpenMRS Community, please <a href="http://go.openmrs.org/helpdesk">open a support issue in our issue-tracking system</a>. <strong>Make sure to include your contact info</strong> so that we can respond to your request.
 
-  if _.contains(content, 'crowd')
+  if _.includes(content, 'crowd')
     h2 Looking for Crowd?
     p Atlassian Crowd is still available to administrators, although the ID dashboard has replaced it for end user self-service. It can be accessed at <a href="https://id.openmrs.org/crowd" target="_blank">https://id.openmrs.org/crowd</a>.
 
-  if _.contains(content, 'editprofile-avatar')
+  if _.includes(content, 'editprofile-avatar')
     h2 Your profile picture
     p Profile pictures are managed along with your profile on the OpenMRS Wiki. Head over to Confluence to <a href="https://wiki.openmrs.org/users/viewmyprofile.action" target="_blank">edit your Wiki profile</a> or <a href="https://wiki.openmrs.org/users/editmyprofilepicture.action" target="_blank">change your profile picture</a>.
 
-  if _.contains(content, 'id-whatis')
+  if _.includes(content, 'id-whatis')
     h2 What is OpenMRS ID?
     p OpenMRS ID is your key to participating in our open source community. You can use it for most of our tools and services, including those listed in the links at the top of this page. <a href="http://go.openmrs.org/id"><strong>Read more on our wiki.</strong></a>
 

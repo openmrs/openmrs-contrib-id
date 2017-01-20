@@ -105,7 +105,7 @@ var checkUsers = function (next) {
       deletedEmails.push(mail);
     }
   });
-  deletedEmails = _.unique(deletedEmails);
+  deletedEmails = _.uniq(deletedEmails);
 
   // recount and mark users with duplicated primaryEmail
   count = {};

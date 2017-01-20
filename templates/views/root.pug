@@ -4,7 +4,7 @@ block defines
   - title = 'OpenMRS ID - ' + user.displayName;
   - name = 'root';
   - headline = 'Welcome to the OpenMRS Community!';
-  - if (_.contains(user.groups, 'dashboard-administrators')) {
+  - if (_.includes(user.groups, 'dashboard-administrators')) {
   -   sidebar = ['crowd'];
   - }
   - showNavbar = true;
@@ -21,4 +21,3 @@ block content
     li <a href='https://wiki.openmrs.org/users/editmyprofile.action'>Wiki: </a>Create your own personal space, and your profile.
     li <a href='http://talk.openmrs.org'>Talk: </a> This is the primary communication medium for the OpenMRS community.
     li <a href='https://issues.openmrs.org'>Issues: </a> Report bugs, Suggest Improvements, Find a way to contribute!
-

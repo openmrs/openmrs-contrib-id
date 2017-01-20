@@ -56,7 +56,7 @@ exports.restrictTo = function(role) {
 
     };
 
-    if (req.session.user && _.contains(req.session.user.groups, role)) {
+    if (req.session.user && _.includes(req.session.user.groups, role)) {
       return next();
     }
     return fail();

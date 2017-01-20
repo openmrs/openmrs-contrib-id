@@ -244,7 +244,7 @@ app.get('/profile/email/primary/:email', mid.forceLogin, function (req, res, nex
   var email = req.params.email;
   var user = req.session.user;
 
-  if (!_.contains(user.emailList, email)) {
+  if (!_.includes(user.emailList, email)) {
     req.flash('error', 'You can only set your own email primary');
     return res.redirect('/profile');
   }

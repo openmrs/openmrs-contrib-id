@@ -204,7 +204,7 @@ module.exports = {
               }
               return cb(err);
             }
-            if (_.contains(spams[list].returnCodes, address)) {
+            if (_.includes(spams[list].returnCodes, address)) {
               // address IS on list and proper return code specified
               return cb(null, true);
             }
@@ -215,7 +215,7 @@ module.exports = {
           if (err) {
             return next(err);
           }
-          if (_.contains(results, true)) {
+          if (_.includes(results, true)) {
             // if this address was indicated as spam
             log.info('IP address ' + ip(req) + ' flagged as spam');
             return badRequest(next, "Your IP address, " + ip(req) + ", was " +

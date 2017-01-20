@@ -100,7 +100,7 @@ function updatePassword(fu, user) {
  */
 function onSave(user) {
 
-  if (_.contains(user.groups, 'dashboard-administrators')) {
+  if (_.includes(user.groups, 'dashboard-administrators')) {
     syncFormageUser(user);
   }
 
