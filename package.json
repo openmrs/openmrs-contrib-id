@@ -27,7 +27,7 @@
     "request": "^2.51.0"
   },
   "engine": {
-    "node": "~0.10.38"
+    "node": "~4.x.x"
   },
   "devDependencies": {
     "chai": "~3.5.0",
