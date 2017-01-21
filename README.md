@@ -40,6 +40,5 @@ Global navigation bar across [OpenMRS](http://openmrs.org) Community. A module o
 		- change the URL of the parent page (preferably without JS)
 
 ## How to install
-
-- clone into <code>app/user-modules</code> of dashboard
+- clone into `app/user-modules` of dashboard (currently a git submodule in dashboard)
 - cp lib/db.example.json lib/db.json
