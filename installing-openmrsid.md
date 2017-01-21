@@ -1,7 +1,7 @@
 Installing OpenMRS ID
 =====
 
-(The following steps are written for and tested on Ubuntu 13.10 & 14.04 & 12.04)
+(The following steps are written for and tested on Ubuntu (almost all versions))
 
 1. Install and configure OpenLDAP by [following this guide][0]. There currently exists a [vagrant][] box which will set up openldap for you using puppet.
 
@@ -13,7 +13,7 @@ Installing OpenMRS ID
     Authentication details:
 
           | User Name | Password | Purpose                |
-          |-----------+----------+------------------------|
+          |-----------|----------|------------------------|
           | omrsid    | secret   | ID Dashboard Account   |
           | admin     | secret   | Administrative Account |
 
@@ -23,13 +23,12 @@ it listens on port `1389` on on `**127.0.0.1**`.
 
     ``` shell
     $ docker-compose up mongodb -d
-    ```
 
-          | Database  | User Name | Password |
-          |-----------+-----------+----------|
-          | openmrsid | openmrsid | secret   |
+          | Database  |
+          |-----------|
+          | openmrsid |
 
-It listens on port `**27018**` on `**127.0.0.1**`. The current example config should be useable for development purposes, but do not use it for production purposes.
+It listens on port `**27018**` on `**127.0.0.1**`. The current example config should be useable for development purposes, but do not use it for production purposes. There is no password.
 
 3. Install Node. For development environments, I use [nvm][1]. Install the latest from the Node 5.x branch (**It does not work with Node 6**, we test against 0.12.x, 4.x and 5.x on travis-ci):
 
@@ -50,18 +49,16 @@ It listens on port `**27018**` on `**127.0.0.1**`. The current example config sh
 
 
     ```
-    git clone https://github.com/openmrs/openmrs-contrib-id.git
+    git clone --recursive https://github.com/openmrs/openmrs-contrib-id.git
     cd openmrs-contrib-id
     ```
-
-
 
 5.  Install project dependencies.
 
     Run this and wait:
 
     ```
-    npm install
+    npm install ; git submodule foreach npm install
 
     ```
 
@@ -69,11 +66,10 @@ It listens on port `**27018**` on `**127.0.0.1**`. The current example config sh
 
     1. LDAP credentials for the `omrsid` account
     2. LDAP resource uri's (e.g. replace `dc=example` with `dc=openmrs,dc=org`)
-    3. MongoDB database name and credentials
-    4. Postfix mail sending credentials and port
-    5. reCAPTCHA keys (if you have them—they are required for signup)
+    3. reCAPTCHA keys (if you have them—they are required for signup)
+    4. Set up SMTP credentials
 
-    In addition, remove the items in the `user-modules` array. Modules need to be manually downloaded and placed in the `app/user-modules` directory.
+
 
 7. Initialize `Groups` in MongoDB
 
@@ -90,6 +86,15 @@ It listens on port `**27018**` on `**127.0.0.1**`. The current example config sh
     ```
     node app/app
     ```
+### Setting up Modules
+
+1. Global Navigation Bar
+
+`cp -a app/user-modules/openmrs-contrib-id-globalnavbar/lib/db.example.json app/user-modules/openmrs-contrib-id-globalnavbar/lib/db.json`
+
+2. Single Sign On
+`cp -a app/user-modules/openmrs-contrib-id-sso/conf.example.js app/user-modules/openmrs-contrib-id-sso/conf.js`
+
 
 
 ### Addtional Notes
