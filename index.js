@@ -1,4 +1,4 @@
 'use strict';
-exports = module.exports = function (app) {
+exports = module.exports = app => {
   require('./lib/global-nav')(app);
 };
