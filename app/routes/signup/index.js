@@ -95,7 +95,7 @@ exports = module.exports = app => {
 					username: id,
 					firstName: first,
 					lastName: last,
-					displayName: first + ' ' + last,
+					displayName: `${first} ${last}`,
 					primaryEmail: email,
 					emailList: [email],
 					password: pass,
@@ -113,7 +113,7 @@ exports = module.exports = app => {
 					category: 'signup',
 					callback: '/signup',
 					locals: {
-						displayName: first + ' ' + last,
+						displayName: `${first} ${last}`,
 						username: id,
 					},
 					timeout: 0
@@ -183,7 +183,7 @@ exports = module.exports = app => {
 				}
 				// we don't have to wait clear
 				verification.clear(id);
-				log.debug(user.username + ': account enabled');
+				log.debug(`${user.username}: account enabled`);
 				req.flash('success', 'Your account was successfully created. Welcome!');
 
 				req.session.user = user;

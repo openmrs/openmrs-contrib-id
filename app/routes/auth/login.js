@@ -108,8 +108,7 @@ exports = module.exports = app => {
 						log.debug('login error');
 						return next(err);
 					}
-					log.info('authentication failed for "' + username +
-						'" (' + err.loginFail + ')');
+					log.info(`authentication failed for "${username}" (${err.loginFail})`);
 					req.flash('error', err.loginFail);
 
 					_.merge(res.locals, {
@@ -123,8 +122,7 @@ exports = module.exports = app => {
 						}
 					});
 					if (req.body.destination) { // redirect to the destination login page
-						const dest = url.resolve(conf.site.url, '/login?destination=' +
-							encodeURIComponent(req.body.destination));
+						const dest = url.resolve(conf.site.url, `/login?destination=${encodeURIComponent(req.body.destination)}`);
 
 						return res.redirect(dest);
 					}
@@ -133,9 +131,9 @@ exports = module.exports = app => {
 				}
 
 				// no error
-				log.info(username + ': authenticated');
+				log.info(`${username}: authenticated`);
 				req.session.user = user;
-				log.debug('user ' + username + ' stored in session');
+				log.debug(`user ${username} stored in session`);
 
 				res.redirect(url.resolve(conf.site.url, decodeURIComponent(redirect)));
 			});

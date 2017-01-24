@@ -12,5 +12,5 @@ fs.readdirSync(__dirname).forEach(file => {
 		return;
 	}
 
-	module.exports[name] = require('./' + name);
+	module.exports[name] = require(`./${name}`);
 });

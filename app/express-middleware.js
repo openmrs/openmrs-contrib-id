@@ -50,8 +50,7 @@ exports.restrictTo = role => (req, res, next) => {
 			}
 			return res.redirect('/');
 		}
-		return res.redirect(url.resolve(conf.site.url, '/login?destination=' +
-			encodeURIComponent(req.originalUrl)));
+		return res.redirect(url.resolve(conf.site.url, `/login?destination=${encodeURIComponent(req.originalUrl)}`));
 
 	};
 
@@ -65,30 +64,28 @@ exports.forceLogin = (req, res, next) => {
 	if (req.session.user) {
 		return next();
 	}
-	log.info('anonymous user: denied access to login-only ' + req.originalUrl);
-	req.flash('error', 'You must be logged in to access ' + req.originalUrl);
-	res.redirect(url.resolve(conf.site.url, '/login?destination=' +
-		encodeURIComponent(req.originalUrl)));
+	log.info(`anonymous user: denied access to login-only ${req.originalUrl}`);
+	req.flash('error', `You must be logged in to access ${req.originalUrl}`);
+	res.redirect(url.resolve(conf.site.url, `/login?destination=${encodeURIComponent(req.originalUrl)}`));
 };
 
 exports.forceLogout = (req, res, next) => {
 	if (!req.session.user) {
 		return next();
 	}
-	log.info(req.session.user.username + ': denied access to anonymous-only ' +
-		req.originalUrl);
-	req.flash('error', 'You must be logged out to access ' + req.originalUrl);
+	log.info(`${req.session.user.username}: denied access to anonymous-only ${req.originalUrl}`);
+	req.flash('error', `You must be logged out to access ${req.originalUrl}`);
 	return res.redirect('/');
 };
 
 exports.stripNewlines = (req, res, next) => {
-	log.trace('before: ' + req.body.loginusername);
+	log.trace(`before: ${req.body.loginusername}`);
 	if (req.body) {
 		for (const field in req.body) {
 			req.body[field] = req.body[field].replace(/(\r\n|\n|\r)/gm, "");
 		}
 
-		log.trace('after: ' + req.body.loginusername);
+		log.trace(`after: ${req.body.loginusername}`);
 	}
 	next();
 };
@@ -97,7 +94,7 @@ exports.stripNewlines = (req, res, next) => {
 exports.parseParamTable = (req, res, next) => {
 	const generatedList = [];
 	for (const a in req.body) {
-		log.trace("parsing " + a + ": " + req.body[a]);
+		log.trace(`parsing ${a}: ${req.body[a]}`);
 		const // splits to name and number of input
               split = /([0-9]+)-(\D+)/.exec(a),
               ind = parseInt(split[1]),

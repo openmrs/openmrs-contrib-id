@@ -38,7 +38,7 @@ exports = module.exports = app => {
 						return callback(err);
 					}
 					if (_.isEmpty(user)) {
-						return callback(new Error('User not found for ' + updUser.username));
+						return callback(new Error(`User not found for ${updUser.username}`));
 					}
 					return callback(null, user);
 				});
@@ -79,7 +79,7 @@ exports = module.exports = app => {
 				],
 				(err, user) => {
 					log.trace('password change no errors');
-					log.info(updUser.username + ': password updated');
+					log.info(`${updUser.username}: password updated`);
 
 					req.session.user = user;
 					return res.json({

@@ -51,8 +51,7 @@ exports = module.exports = app => {
 					return callback(err);
 				}
 				if (_.isEmpty(user)) {
-					log.info('reset requested for nonexistent user "' +
-						resetCredential + '"');
+					log.info(`reset requested for nonexistent user "${resetCredential}"`);
 					return callback(new Error(USER_NOT_FOUND_MSG));
 				}
 				callback(null, user);
@@ -70,7 +69,7 @@ exports = module.exports = app => {
 					username: username,
 					category: 'new password',
 					callback: '/reset',
-					subject: '[OpenMRS] Password Reset for ' + username,
+					subject: `[OpenMRS] Password Reset for ${username}`,
 					templatePath: path.join(emailPath, 'password-reset.pug'),
 					locals: {
 						username: username,
@@ -172,7 +171,7 @@ exports = module.exports = app => {
 							log.error('password reset failed');
 							return next(err);
 						}
-						log.info('password reset for "' + username + '"');
+						log.info(`password reset for "${username}"`);
 						verification.clear(req.params.id); // remove validation from DB
 						req.flash('success', 'Password has been reset successfully. ' +
 							'You may now log in across the OpenMRS Community.');

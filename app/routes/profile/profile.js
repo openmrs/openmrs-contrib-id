@@ -100,7 +100,7 @@ exports = module.exports = app => {
 			const updateUser = (user, callback) => {
 				user.firstName = req.body.firstName;
 				user.lastName = req.body.lastName;
-				user.displayName = req.body.firstName + ' ' + req.body.lastName;
+				user.displayName = `${req.body.firstName} ${req.body.lastName}`;
 				user.save(callback);
 			};
 
@@ -113,7 +113,7 @@ exports = module.exports = app => {
 					if (err) {
 						return next(err);
 					}
-					log.info(username + ' succesfully updated');
+					log.info(`${username} succesfully updated`);
 					req.session.user = user;
 					return res.redirect(req.url);
 				});

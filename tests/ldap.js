@@ -15,8 +15,7 @@ const groupAttr = conf.ldap.group;
 
 const url = serverAttr.uri;
 
-const systemDN = serverAttr.rdn + '=' + serverAttr.loginUser + ',' +
-	serverAttr.baseDn;
+const systemDN = `${serverAttr.rdn}=${serverAttr.loginUser},${serverAttr.baseDn}`;
 const bindCredentials = serverAttr.password;
 
 const client = ldapjs.createClient({
@@ -45,7 +44,7 @@ const VALID_USER = {
 };
 
 // constants used for directly LDAP operations
-const DN = userAttr.rdn + '=' + USERNAME + ',' + userAttr.baseDn;
+const DN = `${userAttr.rdn}=${USERNAME},${userAttr.baseDn}`;
 const USER_ENTRY = {};
 USER_ENTRY[userAttr.username] = USERNAME;
 USER_ENTRY[userAttr.password] = PASSWORD;
@@ -313,7 +312,7 @@ describe('ldap', () => {
 			const base = userAttr.baseDn;
 			const options = {
 				scope: 'sub',
-				filter: '(' + userAttr.rdn + '=' + VALID_USER.username + ')',
+				filter: `(${userAttr.rdn}=${VALID_USER.username})`,
 				attributes: ['pwdAccountLockedTime', ],
 			};
 			ldap.lockoutUser(VALID_USER.username, err => {
@@ -348,7 +347,7 @@ describe('ldap', () => {
 			const base = userAttr.baseDn;
 			const options = {
 				scope: 'sub',
-				filter: '(' + userAttr.rdn + '=' + VALID_USER.username + ')',
+				filter: `(${userAttr.rdn}=${VALID_USER.username})`,
 				attributes: ['pwdAccountLockedTime', ],
 			};
 			ldap.enableUser(VALID_USER.username, err => {

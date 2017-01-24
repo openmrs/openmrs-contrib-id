@@ -17,7 +17,7 @@ exports.getSSHA = (cleartext, salt) => {
 	sum.update(cleartext);
 	sum.update(salt);
 	const digest = sum.digest('binary');
-	const ret = '{SSHA}' + new Buffer(digest + salt, 'binary').toString('base64');
+	const ret = `{SSHA}${new Buffer(digest + salt, 'binary').toString('base64')}`;
 	return ret;
 };
 
@@ -100,7 +100,7 @@ Recaptcha.prototype.verify = function(data, callback) {
 	}
 	query = qs.stringify(query);
 
-	const verifyUrl = baseUrl + '?' + query;
+	const verifyUrl = `${baseUrl}?${query}`;
 	request.get(verifyUrl, (err, response, body) => {
 		if (err) {
 			return callback(err);

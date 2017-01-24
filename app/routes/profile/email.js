@@ -49,7 +49,7 @@ exports = module.exports = app => {
 				if (err) {
 					return callback(err);
 				}
-				log.info('successfully updated email for ' + user.username);
+				log.info(`successfully updated email for ${user.username}`);
 				return callback();
 			});
 		};
@@ -138,7 +138,7 @@ exports = module.exports = app => {
 			};
 
 			const sendVerification = callback => {
-				log.debug(user.username + ': email address ' + email + ' will be verified');
+				log.debug(`${user.username}: email address ${email} will be verified`);
 				// create verification instance
 				verification.begin({
 					callback: 'profile/email/verify',
@@ -199,7 +199,7 @@ exports = module.exports = app => {
 					if (err) {
 						return next(err);
 					}
-					log.info(user.username + ' successfully updated');
+					log.info(`${user.username} successfully updated`);
 					req.session.user = user;
 					return res.redirect('/profile');
 				});
@@ -272,7 +272,7 @@ exports = module.exports = app => {
 				if (err) {
 					return next(err);
 				}
-				log.info(user.username + 'successfully updated');
+				log.info(`${user.username}successfully updated`);
 				req.session.user = user;
 				return res.redirect('/profile');
 			});

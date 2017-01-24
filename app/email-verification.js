@@ -93,7 +93,7 @@ exports.begin = (settings, callback) => {
 				if (e) {
 					return cb(e);
 				}
-				log.info('[' + category + ']: email verification sent to ' + addr);
+				log.info(`[${category}]: email verification sent to ${addr}`);
 				return cb();
 			});
 		} catch (ex) {

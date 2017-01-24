@@ -107,7 +107,7 @@ module.exports = {
 	],
 
 	// displays at bottom of sidebar
-	"aboutHTML": "<a href=\"/\">OpenMRS ID Dashboard</a>, v" + require("../package").version,
+	"aboutHTML": `<a href="/">OpenMRS ID Dashboard</a>, v${require("../package").version}`,
 
 	// user-configured modules
 	"userModules": [

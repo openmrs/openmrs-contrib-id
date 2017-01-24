@@ -131,7 +131,7 @@ require('./render-helpers');
 if (process.env.NODE_ENV === 'development') {
 
 	app.get('/debug/view/:viewName', (req, res) => {
-		res.render('views/' + req.params.viewName);
+		res.render(`views/${req.params.viewName}`);
 	});
 
 
@@ -145,10 +145,9 @@ if (process.env.NODE_ENV === 'development') {
 
 // fail if no configuration file found
 try {
-	fs.readFileSync(__dirname + '/conf.js');
+	fs.readFileSync(`${__dirname}/conf.js`);
 } catch (e) {
-	console.log('ERROR: while openning configuration file at (' + __dirname +
-		'/conf.js)! Exiting…');
+	console.log(`ERROR: while openning configuration file at (${__dirname}/conf.js)! Exiting…`);
 	console.error(e);
 }
 
@@ -163,7 +162,7 @@ require('./routes')(app);
 
 /* Load Modules */
 conf.userModules.forEach(module => {
-	require('./user-modules/' + module)(app);
+	require(`./user-modules/${module}`)(app);
 });
 
 
@@ -191,4 +190,4 @@ process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
 /* App startup: */
 app.listen(app.get('port'));
 
-console.log('Express started on port ' + app.get('port'));
+console.log(`Express started on port ${app.get('port')}`);

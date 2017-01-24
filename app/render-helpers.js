@@ -33,8 +33,7 @@ const navLinks = (req, res, next) => {
 
 	log.trace('userNavLinks: entering for loop');
 	if (req.session.user) {
-		log.trace('userNavLinks: current groups: ' +
-			req.session.user.groups.toString());
+		log.trace(`userNavLinks: current groups: ${req.session.user.groups.toString()}`);
 	}
 
 	// Build list of links to display

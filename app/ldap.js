@@ -27,8 +27,7 @@ const groupAttr = conf.ldap.group;
 // ldap connection url
 const url = serverAttr.uri;
 
-const systemDN = serverAttr.rdn + '=' + serverAttr.loginUser + ',' +
-	serverAttr.baseDn;
+const systemDN = `${serverAttr.rdn}=${serverAttr.loginUser},${serverAttr.baseDn}`;
 const bindCredentials = serverAttr.password;
 
 // LDAP client used for general operation
@@ -52,7 +51,7 @@ const checkAndConvert = user => {
 		!_.isString(user.displayName || !_.isString(user.primaryEmail)));
 
 	if (invalid) {
-		throw new Error('The user object is invalid with ' + user);
+		throw new Error(`The user object is invalid with ${user}`);
 	}
 	const ret = {};
 	ret[userAttr.username] = user.username;
@@ -71,7 +70,7 @@ const searchRaw = (username, attributes, cb) => {
 		attributes = [attributes];
 	}
 	const getAll = username === '*';
-	const base = getAll ? userAttr.baseDn : 'uid=' + username + ',' + userAttr.baseDn;
+	const base = getAll ? userAttr.baseDn : `uid=${username},${userAttr.baseDn}`;
 	const options = {
 		scope: getAll ? 'sub' : 'base',
 		attributes: attributes,
@@ -89,11 +88,11 @@ const searchRaw = (username, attributes, cb) => {
 			if (err.code === 32) { // not found, no such dn
 				return cb(null, null);
 			}
-			log.error('error: ' + err.message);
+			log.error(`error: ${err.message}`);
 			return cb(err);
 		});
 		res.on('end', result => {
-			log.debug('ldap search ended with status: ' + result.status);
+			log.debug(`ldap search ended with status: ${result.status}`);
 			if (!ret.length) {
 				return cb(null, null);
 			} else if (ret.length === 1) {
@@ -148,8 +147,7 @@ const searchUser = (username, cb) => {
 const searchGroups = (username, cb) => {
 	const base = groupAttr.baseDn;
 	const options = {
-		filter: '(' + groupAttr.member + '=' + userAttr.rdn + '=' + username +
-			',' + userAttr.baseDn + ')',
+		filter: `(${groupAttr.member}=${userAttr.rdn}=${username},${userAttr.baseDn})`,
 		scope: 'sub',
 		attributes: [groupAttr.rdn],
 	};
@@ -167,7 +165,7 @@ const searchGroups = (username, cb) => {
 			return cb(err);
 		});
 		res.on('end', result => {
-			log.debug('ldap search ended with status: ' + result.status);
+			log.debug(`ldap search ended with status: ${result.status}`);
 			return cb(null, groups);
 		});
 	});
@@ -182,12 +180,12 @@ const searchGroups = (username, cb) => {
  * @param  {Function} cb        cb(err)
  */
 exports.authenticate = (username, pass, cb) => {
-	log.debug(username + ': will authenticate');
+	log.debug(`${username}: will authenticate`);
 	// client used for authenticating users specially
 	const userClient = ldap.createClient({
 		url: url,
 	});
-	const userdn = userAttr.rdn + '=' + username + ',' + userAttr.baseDn;
+	const userdn = `${userAttr.rdn}=${username},${userAttr.baseDn}`;
 	userClient.bind(userdn, pass, err => {
 		userClient.unbind();
 		return cb(err);
@@ -201,7 +199,7 @@ exports.authenticate = (username, pass, cb) => {
  * @param  {Function} cb        cb(err, user)
  */
 exports.getUser = (username, cb) => {
-	log.debug('check validity of username ' + username);
+	log.debug(`check validity of username ${username}`);
 	if (!userAttr.usernameRegex.test(username)) {
 		return cb(new Error('Illegal username specified'));
 	}
@@ -216,7 +214,7 @@ exports.getUser = (username, cb) => {
 		const user = results[0];
 		const groups = results[1];
 		if (_.isEmpty(user)) {
-			log.debug('user: ' + username + ' not found');
+			log.debug(`user: ${username} not found`);
 			return cb(null, null);
 		}
 		user.groups = groups;
@@ -284,7 +282,7 @@ const getChanges = (newUser, oldUser) => {
 exports.updateUser = (user, cb) => {
 	// first check the validity
 	checkAndConvert(user);
-	const userDn = userAttr.rdn + '=' + user.username + ',' + userAttr.baseDn;
+	const userDn = `${userAttr.rdn}=${user.username},${userAttr.baseDn}`;
 
 	// get the differences
 	const diff = (oldUser, next) => {
@@ -310,7 +308,7 @@ exports.updateUser = (user, cb) => {
 	// update the groups
 	const operateOnGroups = (groups, change, callback) => {
 		async.each(groups, (group, next) => {
-			const groupDn = groupAttr.rdn + '=' + group + ',' + groupAttr.baseDn;
+			const groupDn = `${groupAttr.rdn}=${group},${groupAttr.baseDn}`;
 			client.modify(groupDn, change, next);
 		}, callback);
 	};
@@ -365,7 +363,7 @@ exports.addUser = (user, cb) => {
 		return cb(new Error('Illegal email specified'));
 	}
 
-	const dn = userAttr.rdn + '=' + user.username + ',' + userAttr.baseDn;
+	const dn = `${userAttr.rdn}=${user.username},${userAttr.baseDn}`;
 
 	async.waterfall([
 		next => {
@@ -397,7 +395,7 @@ exports.deleteUser = (username, cb) => {
 			exports.updateUser(user, next);
 		},
 		function delUser(user, next) {
-			const dn = userAttr.rdn + '=' + user.username + ',' + userAttr.baseDn;
+			const dn = `${userAttr.rdn}=${user.username},${userAttr.baseDn}`;
 			client.del(dn, next);
 		},
 	], cb);
@@ -430,8 +428,7 @@ exports.resetPassword = (username, newPass, cb) => {
 			},
 		};
 		if (entry.pwdPolicySubentry) {
-			log.warn('"' + username + '" already has a pwdPolicySubentry attribute,' +
-				' which is not supposed to appear on users (!)');
+			log.warn(`"${username}" already has a pwdPolicySubentry attribute, which is not supposed to appear on users (!)`);
 			change.operation = 'replace';
 		} else {
 			change.operation = 'add';
@@ -486,10 +483,10 @@ exports.lockoutUser = (username, cb) => {
 
 	const modify = (userobj, next) => {
 		if (userobj.pwdAccountLockedTime) {
-			log.debug(username + ' is already locked');
+			log.debug(`${username} is already locked`);
 			return cb();
 		}
-		const userdn = userAttr.rdn + '=' + username + ',' + userAttr.baseDn;
+		const userdn = `${userAttr.rdn}=${username},${userAttr.baseDn}`;
 		const change = {
 			operation: 'add',
 			modification: {
@@ -523,10 +520,10 @@ exports.enableUser = (username, cb) => {
 
 	const modify = (userobj, next) => {
 		if (_.isEmpty(userobj.pwdAccountLockedTime)) {
-			log.debug(username + ' is not locked');
+			log.debug(`${username} is not locked`);
 			return cb();
 		}
-		const userdn = userAttr.rdn + '=' + username + ',' + userAttr.baseDn;
+		const userdn = `${userAttr.rdn}=${username},${userAttr.baseDn}`;
 		const change = {
 			operation: 'delete',
 			modification: {
@@ -552,7 +549,7 @@ exports.addGroup = (options, callback) => {
 	if (_.isEmpty(options.groupName)) {
 		throw new Error('missing groupName');
 	}
-	log.info('adding group ' + options.groupName + ' to LDAP');
+	log.info(`adding group ${options.groupName} to LDAP`);
 	const entry = {
 		cn: options.groupName,
 		objectClass: groupAttr.objectClass,
@@ -562,6 +559,6 @@ exports.addGroup = (options, callback) => {
 		entry.description = options.description;
 	}
 
-	const dn = groupAttr.rdn + '=' + options.groupName + ',' + groupAttr.baseDn;
+	const dn = `${groupAttr.rdn}=${options.groupName},${groupAttr.baseDn}`;
 	client.add(dn, entry, callback);
 };

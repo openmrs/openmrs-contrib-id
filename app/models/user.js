@@ -153,7 +153,7 @@ const createIteratorOverGroups = (groups, operation) => {
 				return cb(err);
 			}
 			if (_.isEmpty(group)) {
-				return cb(new Error('No such group ' + groupName));
+				return cb(new Error(`No such group ${groupName}`));
 			}
 			return cb();
 		});
@@ -241,10 +241,10 @@ userSchema.pre('save', function(next) {
 	if (!this.inLDAP) { // not stored in LDAP yet
 		ldap.addUser(that, err => {
 			if (err) {
-				log.error(uid + ' failed to add record to OpenLDAP');
+				log.error(`${uid} failed to add record to OpenLDAP`);
 				return next(err);
 			}
-			log.info(uid + ' stored in OpenLDAP');
+			log.info(`${uid} stored in OpenLDAP`);
 			that.inLDAP = true;
 			return next();
 		});
@@ -279,7 +279,7 @@ userSchema.pre('save', function(next) {
 		],
 		err => {
 			if (err) {
-				log.error(uid + ' failed to sync with OpenLDAP');
+				log.error(`${uid} failed to sync with OpenLDAP`);
 				return next(err);
 			}
 			return next();
@@ -392,7 +392,7 @@ const findAndSync = (filter, callback) => {
 			if (err) {
 				return callback(err);
 			}
-			log.info(user.username + ' retrieved from OpenLDAP and stored');
+			log.info(`${user.username} retrieved from OpenLDAP and stored`);
 			return callback(null, user);
 		});
 };

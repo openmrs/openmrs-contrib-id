@@ -48,7 +48,7 @@ function syncFormageUser(user, callback) {
 		})
 		.then(formageUser => {
 
-			log.debug('formage user ' + formageUser.username + ' saved');
+			log.debug(`formage user ${formageUser.username} saved`);
 
 			return (callback) ? callback(null, formageUser) : formageUser;
 
@@ -136,7 +136,7 @@ module.exports = function init(_FormageUser_, _User_) {
 		}).exec()
 		.then(users => {
 
-			log.debug('found ' + users.length + ' dashboard administrator(s)');
+			log.debug(`found ${users.length} dashboard administrator(s)`);
 
 			async.each(users, syncFormageUser, err => {
 

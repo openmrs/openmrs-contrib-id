@@ -42,7 +42,7 @@ function hashField(name, spin) {
 
 	const hash = crypto.createHash('md5');
 	hash.update(name).update(spin).update(SECRET);
-	log.trace('diguised field with name "' + name + '", spinner "' + spin + '"');
+	log.trace(`diguised field with name "${name}", spinner "${spin}"`);
 	return hash.digest('hex');
 }
 
@@ -81,7 +81,7 @@ module.exports = {
 
 		const diff = now - then;
 		const minimumTime = signupConf.requiredSubmitTimeSec * 1000;
-		log.trace('submission time difference: ' + diff);
+		log.trace(`submission time difference: ${diff}`);
 
 		// Throw out a time in the future or too far in the past.
 		if (diff < 0) {
@@ -93,8 +93,7 @@ module.exports = {
 
 		// Delay the submission if it was completed too soon
 		if (diff < minimumTime) {
-			log.info('deferring submission received in ' + diff + ' ms from ' +
-				ip(req));
+			log.info(`deferring submission received in ${diff} ms from ${ip(req)}`);
 			return setTimeout(next, minimumTime - diff);
 		}
 
@@ -108,8 +107,7 @@ module.exports = {
 		// Generate the spinner and attach it to the request.
 		const timestamp = res.locals.timestamp, hash = crypto.createHash('md5');
 
-		log.trace('generating spinner with timestamp "' + timestamp + '" for ' +
-			'ip address "' + ip(req) + '"');
+		log.trace(`generating spinner with timestamp "${timestamp}" for ip address "${ip(req)}"`);
 
 		hash.update(timestamp.toString())
 			.update(ip(req).toString())
@@ -143,7 +141,7 @@ module.exports = {
 
 			if (req.body[hashed]) {
 				result[f] = req.body[hashed] || '';
-				log.trace('unscrambled field "' + f + '"=' + req.body[hashed]);
+				log.trace(`unscrambled field "${f}"=${req.body[hashed]}`);
 			}
 		}
 
@@ -196,7 +194,7 @@ module.exports = {
 					return next();
 				}
 				async.map(Object.keys(spams), (list, cb) => {
-					dns.lookup(rev + '.' + list, (err, address) => {
+					dns.lookup(`${rev}.${list}`, (err, address) => {
 						if (err) {
 							if (err.code === 'ENOTFOUND') {
 								return cb(null, false); // address not on list
@@ -216,10 +214,8 @@ module.exports = {
 					}
 					if (_.includes(results, true)) {
 						// if this address was indicated as spam
-						log.info('IP address ' + ip(req) + ' flagged as spam');
-						return badRequest(next, "Your IP address, " + ip(req) + ", was " +
-							"flagged as a spam address by our spam-blocking lists. " +
-							"Please open an issue if you believe this is in error.");
+						log.info(`IP address ${ip(req)} flagged as spam`);
+						return badRequest(next, `Your IP address, ${ip(req)}, was flagged as a spam address by our spam-blocking lists. Please open an issue if you believe this is in error.`);
 					}
 					next(); // not spam!
 				});

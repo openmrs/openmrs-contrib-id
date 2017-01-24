@@ -100,8 +100,7 @@ const checkUsers = next => {
 				continue;
 			}
 			user.emailList.splice(i, 1);
-			log.warn('Deleteing duplicated nonprimary email ' + mail +
-				' for user ' + user.username);
+			log.warn(`Deleteing duplicated nonprimary email ${mail} for user ${user.username}`);
 			deletedEmails.push(mail);
 		}
 	});
@@ -127,7 +126,7 @@ const addUsers = next => {
 			log.info('Adding user ', item.username);
 			const user = new User(item);
 			if (item.duplicate) {
-				log.warn('Skipping user ' + item.username + ' for duplicated primaryEmail.');
+				log.warn(`Skipping user ${item.username} for duplicated primaryEmail.`);
 				const copy = _.cloneDeep(item);
 				delete copy.duplicate;
 				copy.groups = getGroups(user.username);
