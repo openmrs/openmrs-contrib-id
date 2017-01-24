@@ -12,38 +12,38 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-var fs = require('fs');
-var url = require('url');
-var path = require('path');
-var express = require('express');
-var expressSession = require('express-session');
-var mongoose = require('mongoose');
-var engine = require('pug').__express;
-var lessMiddleware = require('less-middleware');
-var flash = require('connect-flash');
-var MongoStore = require('connect-mongo')(expressSession);
-var _ = require('lodash');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
-var errorHandler = require('errorhandler');
+const fs = require('fs');
+const url = require('url');
+const path = require('path');
+const express = require('express');
+const expressSession = require('express-session');
+const mongoose = require('mongoose');
+const engine = require('pug').__express;
+const lessMiddleware = require('less-middleware');
+const flash = require('connect-flash');
+const MongoStore = require('connect-mongo')(expressSession);
+const _ = require('lodash');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const errorHandler = require('errorhandler');
 
 global.__apppath = __dirname;
-var app = express();
+const app = express();
 exports = module.exports = app;
 
 // patch log4js
 require('./logger');
-var log4js = require('log4js');
+const log4js = require('log4js');
 
 // connect to mongo
 require('./new-db');
 
 
-var mid = require('./express-middleware');
-var conf = require('./conf');
-var log = log4js.addLogger('express');
+const mid = require('./express-middleware');
+const conf = require('./conf');
+const log = log4js.addLogger('express');
 
-var siteURLParsed = url.parse(conf.site.url, false, true);
+const siteURLParsed = url.parse(conf.site.url, false, true);
 app.engine('pug', engine);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, '/../templates'));
@@ -59,18 +59,18 @@ app.use(cookieParser());
 
 
 // store express session in MongoDB
-var sessionStore = new MongoStore({
+const sessionStore = new MongoStore({
 	url: conf.mongo.uri,
 });
-var session = expressSession({
+const session = expressSession({
 	store: sessionStore,
 	secret: conf.session.secret,
 	resave: false,
 	saveUninitialized: false,
 });
 
-var exceptions = conf.sessionExceptions;
-var sessionHandler = (req, res, next) => {
+const exceptions = conf.sessionExceptions;
+const sessionHandler = (req, res, next) => {
 	function test(reg) {
 		return reg.test(req.url);
 	}
@@ -90,7 +90,7 @@ if ('development' === app.get('env')) {
 	app.use(errorHandler());
 
 	_.EDT_hidden = true;
-	var edt = require('express-debug');
+	const edt = require('express-debug');
 	edt(app, {});
 
 	app.use(log4js.connectLogger(log, {
@@ -179,7 +179,7 @@ process.on('uncaughtException', err => {
 });
 
 // Do something before close the app
-var gracefulExit = () => {
+const gracefulExit = () => {
 	mongoose.connection.close(() => {
 		console.log('Mongoose connection closed');
 		process.exit();

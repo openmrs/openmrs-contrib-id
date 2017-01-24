@@ -1,7 +1,7 @@
 'use strict';
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var conf = require('./conf');
-var uri = conf.mongo.uri;
+const conf = require('./conf');
+const uri = conf.mongo.uri;
 
 mongoose.connect(uri);

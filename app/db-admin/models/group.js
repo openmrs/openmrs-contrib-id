@@ -1,6 +1,6 @@
 'use strict';
-var path = require('path');
-var Group = require('../../models/group');
+const path = require('path');
+const Group = require('../../models/group');
 
 Group.formage = {
 	label: 'Groups',

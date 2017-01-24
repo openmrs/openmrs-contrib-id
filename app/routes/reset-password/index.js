@@ -3,18 +3,18 @@
  * This file handles the password-reset functionalities
  */
 
-var path = require('path');
-var async = require('async');
-var _ = require('lodash');
+const path = require('path');
+const async = require('async');
+const _ = require('lodash');
 
-var conf = require('../../conf');
-var mid = require('../../express-middleware');
-var validate = require('../../validate');
-var verification = require('../../email-verification');
-var utils = require('../../utils');
-var log = require('log4js').addLogger('express');
+const conf = require('../../conf');
+const mid = require('../../express-middleware');
+const validate = require('../../validate');
+const verification = require('../../email-verification');
+const utils = require('../../utils');
+const log = require('log4js').addLogger('express');
 
-var User = require('../../models/user');
+const User = require('../../models/user');
 
 exports = module.exports = app => {
 
@@ -25,18 +25,18 @@ exports = module.exports = app => {
 
 	app.post('/reset', mid.forceLogout, (req, res, next) => {
 		// case-insensitive
-		var resetCredential = req.body.resetCredential.toLowerCase();
-		var USER_NOT_FOUND_MSG = 'User data not found';
-		var REQUIRED = 'Username or e-mail address is required to continue.';
+		const resetCredential = req.body.resetCredential.toLowerCase();
+		const USER_NOT_FOUND_MSG = 'User data not found';
+		const REQUIRED = 'Username or e-mail address is required to continue.';
 
-		var filter = {};
+		const filter = {};
 		if (resetCredential.indexOf('@') < 0) {
 			filter.username = resetCredential;
 		} else {
 			filter.emailList = resetCredential;
 		}
 
-		var checkInput = callback => {
+		const checkInput = callback => {
 			if (resetCredential === '') {
 				req.flash('error', REQUIRED);
 				return res.redirect('/reset');
@@ -45,7 +45,7 @@ exports = module.exports = app => {
 			}
 		};
 
-		var findUser = callback => {
+		const findUser = callback => {
 			User.findByFilter(filter, (err, user) => {
 				if (err) {
 					return callback(err);
@@ -59,12 +59,12 @@ exports = module.exports = app => {
 			});
 		};
 
-		var sendEmails = (user, callback) => {
-			var username = user.username;
-			var emails = user.emailList;
+		const sendEmails = (user, callback) => {
+			const username = user.username;
+			const emails = user.emailList;
 
-			var emailPath = path.join(__dirname, '../../../templates/emails');
-			var sendEmail = (address, cb) => {
+			const emailPath = path.join(__dirname, '../../../templates/emails');
+			const sendEmail = (address, cb) => {
 				verification.begin({
 					addr: address,
 					username: username,
@@ -101,7 +101,7 @@ exports = module.exports = app => {
 	app.get('/reset/:id', mid.forceLogout,
 		(req, res, next) => {
 
-			var id = utils.urlDecode64(req.params.id);
+			const id = utils.urlDecode64(req.params.id);
 			verification.check(id, (err, valid, locals) => {
 				if (err) {
 					return next(err);
@@ -122,13 +122,13 @@ exports = module.exports = app => {
 		(req, res, next) => {
 
 
-			var id = utils.urlDecode64(req.params.id);
-			var npass = req.body.newPassword;
-			var cpass = req.body.confirmPassword;
+			const id = utils.urlDecode64(req.params.id);
+			const npass = req.body.newPassword;
+			const cpass = req.body.confirmPassword;
 
 
-			var validation = callback => {
-				var validators = {
+			const validation = callback => {
+				const validators = {
 					newPassword: validate.chkLength.bind(null, npass, 8),
 					confirmPassword: validate.chkDiff.bind(null, npass, cpass),
 				};
@@ -146,7 +146,7 @@ exports = module.exports = app => {
 				});
 			};
 
-			var chkVerification = callback => {
+			const chkVerification = callback => {
 				verification.check(id, (err, valid, locals) => {
 					if (err) {
 						return next(err);
@@ -160,7 +160,7 @@ exports = module.exports = app => {
 				});
 			};
 
-			var update = (username, callback) => {
+			const update = (username, callback) => {
 				User.findByUsername(username, (err, user) => {
 					if (err) {
 						return next(err);

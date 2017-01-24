@@ -1,11 +1,11 @@
 'use strict';
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var _ = require('lodash');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const _ = require('lodash');
 
-var conf = require('../conf');
+const conf = require('../conf');
 
-var emailSchema = new Schema({
+const emailSchema = new Schema({
 	uuid: {
 		type: String,
 		required: true,
@@ -47,6 +47,6 @@ if ('production' === process.env.NODE_ENV) {
 	emailSchema.set('autoIndex', false);
 }
 
-var EmailVertification = mongoose.model('EmailVerification', emailSchema);
+const EmailVertification = mongoose.model('EmailVerification', emailSchema);
 
 exports = module.exports = EmailVertification;

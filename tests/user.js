@@ -1,37 +1,37 @@
 'use strict';
 /*jshint expr: true*/
-var _ = require('lodash');
-var expect = require('chai').expect;
-var async = require('async');
+const _ = require('lodash');
+const expect = require('chai').expect;
+const async = require('async');
 
-var User = require('../app/models/user');
-var Group = require('../app/models/group');
-var ldap = require('../app/ldap');
-var utils = require('../app/utils');
-var conf = require('../app/conf');
+const User = require('../app/models/user');
+const Group = require('../app/models/group');
+const ldap = require('../app/ldap');
+const utils = require('../app/utils');
+const conf = require('../app/conf');
 
 // data for testing purposes
-var VALID_EMAIL1 = 'foo@bar.com';
-var VALID_EMAIL2 = 'no@mistake.com';
-var VALID_EMAIL3 = 'hello@world.com';
-var VALID_EMAIL4 = 'foo@baz.com'
-var ORPHAN_EMAIL = 'im@lonely.com';
+const VALID_EMAIL1 = 'foo@bar.com';
+const VALID_EMAIL2 = 'no@mistake.com';
+const VALID_EMAIL3 = 'hello@world.com';
+const VALID_EMAIL4 = 'foo@baz.com';
+const ORPHAN_EMAIL = 'im@lonely.com';
 
-var INVALID_EMAIL = 'badatgoogle.com';
+const INVALID_EMAIL = 'badatgoogle.com';
 
 
-var VALID_USERNAME1 = 'Plypy';
-var VALID_USERNAME2 = 'plypx';
-var VALID_USERNAME3 = ' usernamewithspaces '
+const VALID_USERNAME1 = 'Plypy';
+const VALID_USERNAME2 = 'plypx';
+const VALID_USERNAME3 = ' usernamewithspaces ';
 
-var INVALID_USERNAME = 'Ply_py'; // contain one underscore
+const INVALID_USERNAME = 'Ply_py'; // contain one underscore
 
-var SIMPLE_STRING = 'string';
-var DOUBLE_STRING = SIMPLE_STRING + SIMPLE_STRING;
+const SIMPLE_STRING = 'string';
+const DOUBLE_STRING = SIMPLE_STRING + SIMPLE_STRING;
 
-var VALID_PASSWORD = 'long_password';
+const VALID_PASSWORD = 'long_password';
 
-var VALID_INFO1 = {
+const VALID_INFO1 = {
 	username: VALID_USERNAME1,
 	firstName: SIMPLE_STRING,
 	lastName: SIMPLE_STRING,
@@ -45,7 +45,7 @@ var VALID_INFO1 = {
 	skipLDAP: true,
 };
 
-var VALID_INFO2 = {
+const VALID_INFO2 = {
 	username: VALID_USERNAME2,
 	primaryEmail: VALID_EMAIL2,
 	firstName: DOUBLE_STRING,
@@ -58,7 +58,7 @@ var VALID_INFO2 = {
 };
 
 
-var VALID_INFO3 = {
+const VALID_INFO3 = {
 	username: VALID_USERNAME3,
 	firstName: SIMPLE_STRING,
 	lastName: SIMPLE_STRING,
@@ -72,21 +72,21 @@ var VALID_INFO3 = {
 	skipLDAP: true,
 };
 
-var GROUP_NAME1 = 'Mafia';
+const GROUP_NAME1 = 'Mafia';
 
-var ORPHAN_GROUP_NAME = 'Brotherhood';
+const ORPHAN_GROUP_NAME = 'Brotherhood';
 
-var GROUP1 = {
+const GROUP1 = {
 	groupName: GROUP_NAME1,
 	skipLDAP: true,
 };
 
-var DUP_ERROR_CODE = 11000;
+const DUP_ERROR_CODE = 11000;
 
 
 describe('User', () => {
 	before(done => {
-		var flag = false;
+		let flag = false;
 		async.series([
 				callback => {
 					User.ensureIndexes();
@@ -121,9 +121,9 @@ describe('User', () => {
 	});
 
 	it('should store the valid users well', done => {
-		var user1 = new User(VALID_INFO1);
-		var user2 = new User(VALID_INFO2);
-		var user3 = new User(VALID_INFO3);
+		const user1 = new User(VALID_INFO1);
+		const user2 = new User(VALID_INFO2);
+		const user3 = new User(VALID_INFO3);
 		async.parallel([
 				callback => {
 					user1.save(callback);
@@ -148,11 +148,11 @@ describe('User', () => {
 	});
 
 	it('should fail when two user have same username', done => {
-		var dupUsernameInfo = _.cloneDeep(VALID_INFO2);
+		const dupUsernameInfo = _.cloneDeep(VALID_INFO2);
 		dupUsernameInfo.username = VALID_INFO1.username.toUpperCase();
 
-		var user1 = new User(VALID_INFO1);
-		var user2 = new User(dupUsernameInfo);
+		const user1 = new User(VALID_INFO1);
+		const user2 = new User(dupUsernameInfo);
 		async.parallel([
 				callback => {
 					user1.save(callback);
@@ -184,10 +184,10 @@ describe('User', () => {
 	// });
 
 	it('should fail when the username is missing', done => {
-		var noUsernameInfo = _.cloneDeep(VALID_INFO1);
+		const noUsernameInfo = _.cloneDeep(VALID_INFO1);
 		delete noUsernameInfo.username;
 
-		var user = new User(noUsernameInfo);
+		const user = new User(noUsernameInfo);
 		user.save(err => {
 			expect(err).to.exist;
 			expect(err).to.have.property('name', 'ValidationError');
@@ -212,10 +212,10 @@ describe('User', () => {
 	// });
 
 	it('should fail when the primaryEmail is missing', done => {
-		var noPrimaryEmailInfo = _.cloneDeep(VALID_INFO1);
+		const noPrimaryEmailInfo = _.cloneDeep(VALID_INFO1);
 		delete noPrimaryEmailInfo.primaryEmail;
 
-		var user = new User(noPrimaryEmailInfo);
+		const user = new User(noPrimaryEmailInfo);
 		user.save(err => {
 			expect(err).to.exist;
 			expect(err).to.have.property('name', 'ValidationError');
@@ -226,10 +226,10 @@ describe('User', () => {
 	});
 
 	it('should fail when the primaryEmail is not in List', done => {
-		var orphanPrimaryEmailInfo = _.cloneDeep(VALID_INFO1);
+		const orphanPrimaryEmailInfo = _.cloneDeep(VALID_INFO1);
 		orphanPrimaryEmailInfo.primaryEmail = ORPHAN_EMAIL;
 
-		var user = new User(orphanPrimaryEmailInfo);
+		const user = new User(orphanPrimaryEmailInfo);
 		user.save(err => {
 			expect(err).to.exist;
 			expect(err).to.have.property('name', 'ValidationError');
@@ -240,10 +240,10 @@ describe('User', () => {
 	});
 
 	it('should fail when the emailList is empty', done => {
-		var emptyEmailListInfo = _.cloneDeep(VALID_INFO1);
+		const emptyEmailListInfo = _.cloneDeep(VALID_INFO1);
 		emptyEmailListInfo.emailList = [];
 
-		var user = new User(emptyEmailListInfo);
+		const user = new User(emptyEmailListInfo);
 		user.save(err => {
 			expect(err).to.exist;
 			expect(err).to.have.property('name', 'ValidationError');
@@ -268,11 +268,11 @@ describe('User', () => {
 	// });
 
 	it('should fail when the emailList have duplicate emails', done => {
-		var dupEmailListInfo = _.cloneDeep(VALID_INFO1);
+		const dupEmailListInfo = _.cloneDeep(VALID_INFO1);
 		dupEmailListInfo.emailList.push(ORPHAN_EMAIL);
 		dupEmailListInfo.emailList.push(ORPHAN_EMAIL.toUpperCase());
 
-		var user = new User(dupEmailListInfo);
+		const user = new User(dupEmailListInfo);
 		user.save(err => {
 			expect(err).to.exist;
 			expect(err).to.have.property('name', 'ValidationError');
@@ -283,10 +283,10 @@ describe('User', () => {
 	});
 
 	it('should fail when the groups have duplicate members', done => {
-		var dupGroupsInfo = _.cloneDeep(VALID_INFO1);
+		const dupGroupsInfo = _.cloneDeep(VALID_INFO1);
 		dupGroupsInfo.groups = [GROUP_NAME1, GROUP_NAME1];
 
-		var user = new User(dupGroupsInfo);
+		const user = new User(dupGroupsInfo);
 		user.save(err => {
 			expect(err).to.exist;
 			expect(err).to.have.property('name', 'ValidationError');
@@ -311,10 +311,10 @@ describe('User', () => {
 	// });
 
 	it('should fail when the locked status is missing', done => {
-		var noLocked = _.cloneDeep(VALID_INFO1);
+		const noLocked = _.cloneDeep(VALID_INFO1);
 		delete noLocked.locked;
 
-		var user = new User(noLocked);
+		const user = new User(noLocked);
 		user.save(err => {
 			expect(err).to.exist;
 			expect(err).to.have.property('name', 'ValidationError');
@@ -325,9 +325,9 @@ describe('User', () => {
 	});
 
 	it('should omit sensitive and internal attributes when transformed to JSON', done => {
-		var user = new User(VALID_INFO1);
+		const user = new User(VALID_INFO1);
 		user.save(err => {
-			var json = user.toJSON();
+			const json = user.toJSON();
 			expect(json).to.not.have.property('password');
 			expect(json).to.not.have.property('locked');
 			expect(json).to.not.have.property('inLDAP');
@@ -340,7 +340,7 @@ describe('User', () => {
 
 	/// Some API tests
 	describe('finders', () => {
-		var userx;
+		let userx;
 		beforeEach(done => {
 			userx = new User(VALID_INFO1);
 			userx.save(done);
@@ -348,7 +348,7 @@ describe('User', () => {
 
 		describe('User.findByUsername', () => {
 			it('should find the record case-insensitively', done => {
-				var name = userx.username;
+				const name = userx.username;
 				async.each([
 						name,
 						name.toLowerCase(),
@@ -368,7 +368,7 @@ describe('User', () => {
 
 		describe('User.findByEmail', () => {
 			it('should find the record case-insensitively', done => {
-				var email = userx.primaryEmail;
+				const email = userx.primaryEmail;
 				async.each([
 						email,
 						email.toLowerCase(),
@@ -389,7 +389,7 @@ describe('User', () => {
 	});
 
 	describe('hook with groups', () => {
-		var groupx;
+		let groupx;
 		before(done => {
 			groupx = new Group(GROUP1);
 			groupx.save(done);
@@ -408,8 +408,8 @@ describe('User', () => {
 		});
 
 		it('should save the user reference as well in groups', done => {
-			var userInfo = _.cloneDeep(VALID_INFO1);
-			var user = new User(userInfo);
+			const userInfo = _.cloneDeep(VALID_INFO1);
+			const user = new User(userInfo);
 			user.groups.push(groupx.groupName);
 
 			user.save(err => {
@@ -426,8 +426,8 @@ describe('User', () => {
 		});
 
 		it('should fail when the group does not exist', done => {
-			var userInfo = _.cloneDeep(VALID_INFO1);
-			var user = new User(userInfo);
+			const userInfo = _.cloneDeep(VALID_INFO1);
+			const user = new User(userInfo);
 			user.groups.push(ORPHAN_GROUP_NAME);
 
 			user.save(err => {
@@ -437,8 +437,8 @@ describe('User', () => {
 		});
 
 		it('should update groups relation on both side', done => {
-			var userInfo = _.cloneDeep(VALID_INFO1);
-			var user = new User(userInfo);
+			const userInfo = _.cloneDeep(VALID_INFO1);
+			const user = new User(userInfo);
 			user.groups.push(groupx.groupName);
 
 			async.series([
@@ -501,7 +501,7 @@ describe('User', () => {
 });
 
 describe('sync with LDAP', () => {
-	var userx;
+	let userx;
 	before(done => {
 		userx = new User(VALID_INFO1);
 		userx.username = 'uniqueuniquelonglong';

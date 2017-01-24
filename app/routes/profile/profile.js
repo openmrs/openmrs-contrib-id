@@ -3,19 +3,19 @@
  * This is the router for /profile. It displays a users profile,
  * and hanldes its editing.
  */
-var path = require('path');
-var async = require('async');
-var _ = require('lodash');
-var log = require('log4js').addLogger('express');
+const path = require('path');
+const async = require('async');
+const _ = require('lodash');
+const log = require('log4js').addLogger('express');
 
 
-var common = require('../../common');
-var conf = require('../../conf');
-var verification = require('../../email-verification');
-var validate = require('../../validate');
-var mid = require('../../express-middleware');
-var User = require('../../models/user');
-var utils = require('../../utils');
+const common = require('../../common');
+const conf = require('../../conf');
+const verification = require('../../email-verification');
+const validate = require('../../validate');
+const mid = require('../../express-middleware');
+const User = require('../../models/user');
+const utils = require('../../utils');
 
 exports = module.exports = app => {
 
@@ -25,14 +25,14 @@ exports = module.exports = app => {
 
 			// check if any emails being verified
 
-			var user = req.session.user;
-			var username = user.username;
+			const user = req.session.user;
+			const username = user.username;
 
-			var allEmails = [];
+			const allEmails = [];
 
 			// verified emails
 			_.forEach(user.emailList, email => {
-				var item = {
+				const item = {
 					email: email
 				};
 				if (email === user.primaryEmail) {
@@ -42,14 +42,14 @@ exports = module.exports = app => {
 			});
 
 			// unverified emails
-			var findNewEmail = callback => {
-				var category = 'new email';
+			const findNewEmail = callback => {
+				const category = 'new email';
 				verification.search(username, category, callback);
 			};
 
-			var addToList = (insts, callback) => {
+			const addToList = (insts, callback) => {
 				_.forEach(insts, inst => {
-					var item = {
+					const item = {
 						email: inst.addr,
 						id: utils.urlEncode64(inst.uuid),
 						notVerified: true,
@@ -77,9 +77,9 @@ exports = module.exports = app => {
 	app.post('/profile', mid.forceLogin,
 		(req, res, next) => {
 
-			var username = req.session.user.username;
+			const username = req.session.user.username;
 
-			var validation = callback => {
+			const validation = callback => {
 				validate.perform({
 					firstName: validate.chkEmpty.bind(null, req.body.firstName),
 					lastName: validate.chkEmpty.bind(null, req.body.lastName),
@@ -93,11 +93,11 @@ exports = module.exports = app => {
 				});
 			};
 
-			var findUser = callback => {
+			const findUser = callback => {
 				User.findByUsername(username, callback);
 			};
 
-			var updateUser = (user, callback) => {
+			const updateUser = (user, callback) => {
 				user.firstName = req.body.firstName;
 				user.lastName = req.body.lastName;
 				user.displayName = req.body.firstName + ' ' + req.body.lastName;
@@ -125,11 +125,11 @@ exports = module.exports = app => {
 		if (!req.xhr) {
 			return;
 		}
-		var username = req.session.user.username;
-		var findUser = callback => {
+		const username = req.session.user.username;
+		const findUser = callback => {
 			User.findByUsername(username, callback);
 		};
-		var updateUser = (user, callback) => {
+		const updateUser = (user, callback) => {
 			if (_.isEmpty(user.extra)) {
 				user.extra = {};
 			}

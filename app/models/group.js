@@ -2,14 +2,14 @@
 /**
  * This file defines the model of user group
  */
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var Schema = mongoose.Schema;
-var ObjectId = Schema.Types.ObjectId;
-var ldap = require('../ldap');
+const Schema = mongoose.Schema;
+const ObjectId = Schema.Types.ObjectId;
+const ldap = require('../ldap');
 
 // reference to a specifc user object, and store the username for easy access
-var userRefSchema = new Schema({
+const userRefSchema = new Schema({
 	objId: {
 		type: ObjectId,
 	},
@@ -20,7 +20,7 @@ var userRefSchema = new Schema({
 	_id: false,
 });
 
-var groupSchema = new Schema({
+const groupSchema = new Schema({
 	groupName: {
 		type: String,
 		unique: true,
@@ -59,8 +59,8 @@ groupSchema.pre('save', function(next) {
 	if (this.inLDAP) {
 		return next();
 	}
-	var that = this;
-	var group = {
+	const that = this;
+	const group = {
 		groupName: this.groupName,
 		description: this.description
 	};
@@ -73,13 +73,13 @@ groupSchema.pre('save', function(next) {
 	});
 });
 
-var Group = mongoose.model('Group', groupSchema);
+const Group = mongoose.model('Group', groupSchema);
 
 exports = module.exports = Group;
 
 Group.prototype.indexOfUser = function(username) {
 	username = username.toLowerCase();
-	for (var i = 0, len = this.member.length; i < len; ++i) {
+	for (let i = 0, len = this.member.length; i < len; ++i) {
 		if (this.member[i].username === username) {
 			return i;
 		}

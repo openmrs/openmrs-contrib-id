@@ -1,36 +1,36 @@
 'use strict';
-var crypto = require('crypto');
-var async = require('async');
-var _ = require('lodash');
-var dns = require('dns');
-var mongoose = require('mongoose');
-var log = require('log4js').addLogger('signup');
-var Schema = mongoose.Schema;
+const crypto = require('crypto');
+const async = require('async');
+const _ = require('lodash');
+const dns = require('dns');
+const mongoose = require('mongoose');
+const log = require('log4js').addLogger('signup');
+const Schema = mongoose.Schema;
 
-var conf = require('../../conf');
-var signupConf = conf.signup;
+const conf = require('../../conf');
+const signupConf = conf.signup;
 
-var wlistSchema = new Schema({
+const wlistSchema = new Schema({
 	address: String,
 });
-var wlist = mongoose.model('IPWhitelist', wlistSchema);
+const wlist = mongoose.model('IPWhitelist', wlistSchema);
 
-var SECRET = crypto.createHash('sha1').update(Math.random().toString())
+const SECRET = crypto.createHash('sha1').update(Math.random().toString())
 	.digest('hex');
 
 function ip(req) {
-	var xf = req.header('X-Forwarded-For') || '';
+	const xf = req.header('X-Forwarded-For') || '';
 	return xf ? xf.split(/ *, */)[0] : req.connection.remoteAddress;
 }
 
 function reverseIp(req) {
-	var a = ip(req).split('.');
+	const a = ip(req).split('.');
 	a.reverse();
 	return a.join('.');
 }
 
 function badRequest(next, optionalMessage) {
-	var err = new Error(optionalMessage || 'Submitted form failed ' +
+	const err = new Error(optionalMessage || 'Submitted form failed ' +
 		'anti-bot checking.');
 	err.statusCode = 400;
 	next(err);
@@ -40,7 +40,7 @@ function hashField(name, spin) {
 	// Disguise a legitimate field name (like "firstName") with an
 	// obfuscated hash name based on this request's spinner.
 
-	var hash = crypto.createHash('md5');
+	const hash = crypto.createHash('md5');
 	hash.update(name).update(spin).update(SECRET);
 	log.trace('diguised field with name "' + name + '", spinner "' + spin + '"');
 	return hash.digest('hex');
@@ -52,8 +52,7 @@ module.exports = {
 	// be used to invoke all methods, as defined below.
 
 	generateTimestamp: function generateTimestamp(req, res, next) {
-		var timestamp = Date.now(),
-			cipher = crypto.createCipher('aes192', SECRET);
+		const timestamp = Date.now(), cipher = crypto.createCipher('aes192', SECRET);
 
 		cipher.update(timestamp.toString());
 
@@ -67,22 +66,21 @@ module.exports = {
 		}
 
 		// Decipher
-		var decipher = crypto.createDecipher('aes192', SECRET);
+		const decipher = crypto.createDecipher('aes192', SECRET);
 
 		decipher.update(req.body.timestamp, 'hex');
-		var timestamp = decipher.final('utf8');
+		const timestamp = decipher.final('utf8');
 
 
-		var then = new Date(parseInt(timestamp, 10)),
-			now = new Date(Date.now());
+		const then = new Date(parseInt(timestamp, 10)), now = new Date(Date.now());
 
 		// Throw out malformed timestamps
 		if (isNaN(then.valueOf())) {
 			return badRequest(next);
 		}
 
-		var diff = now - then;
-		var minimumTime = signupConf.requiredSubmitTimeSec * 1000;
+		const diff = now - then;
+		const minimumTime = signupConf.requiredSubmitTimeSec * 1000;
 		log.trace('submission time difference: ' + diff);
 
 		// Throw out a time in the future or too far in the past.
@@ -108,8 +106,7 @@ module.exports = {
 		// secret. It's a hidden field within the page.
 
 		// Generate the spinner and attach it to the request.
-		var timestamp = res.locals.timestamp,
-			hash = crypto.createHash('md5');
+		const timestamp = res.locals.timestamp, hash = crypto.createHash('md5');
 
 		log.trace('generating spinner with timestamp "' + timestamp + '" for ' +
 			'ip address "' + ip(req) + '"');
@@ -117,7 +114,7 @@ module.exports = {
 		hash.update(timestamp.toString())
 			.update(ip(req).toString())
 			.update(SECRET);
-		var spin = hash.digest('hex');
+		const spin = hash.digest('hex');
 
 		res.locals.spinner = spin;
 		res.locals.disguise = hashField;
@@ -132,17 +129,17 @@ module.exports = {
 			return badRequest(next);
 		}
 
-		var expected = signupConf.signupFieldNames;
+		const expected = signupConf.signupFieldNames;
 		expected.push(signupConf.honeypotFieldName); // also look for honeypot
 
-		var spin = req.body.spinner;
-		var result = {};
+		const spin = req.body.spinner;
+		const result = {};
 
-		for (var i in expected) {
+		for (const i in expected) {
 			// Determine the field's hash, and set its value on the unscrambled
 			// side.
-			var f = expected[i];
-			var hashed = hashField(f, spin);
+			const f = expected[i];
+			const hashed = hashField(f, spin);
 
 			if (req.body[hashed]) {
 				result[f] = req.body[hashed] || '';
@@ -154,7 +151,7 @@ module.exports = {
 		// "g-recaptcha-response" is inserted by JavaScript as Recaptcha
 		// is loaded, so we are unable to hash it. Since this field is inserted
 		// dynamically, it is still relatively bot-proof.
-		var rcf = 'g-recaptcha-response';
+		const rcf = 'g-recaptcha-response';
 		if (req.body[rcf]) {
 			result[rcf] = req.body[rcf];
 		}
@@ -179,8 +176,8 @@ module.exports = {
 	},
 
 	spamListLookup: function spamListLookup(req, res, next) {
-		var rev = reverseIp(req);
-		var spams = signupConf.dnsSpamLists;
+		const rev = reverseIp(req);
+		const spams = signupConf.dnsSpamLists;
 
 		// check the address with each list
 		async.waterfall([
@@ -238,7 +235,7 @@ module.exports.generators = [
 	module.exports.generateSpinner
 ];
 
-var parsers = module.exports.parsers = [];
+const parsers = module.exports.parsers = [];
 parsers.push(module.exports.unscrambleFields);
 parsers.push(module.exports.checkTimestamp);
 if (!signupConf.disableHoneypot) {

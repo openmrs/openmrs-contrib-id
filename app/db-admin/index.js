@@ -1,16 +1,16 @@
 'use strict';
-var syncAdminUsers = require('./syncAdminUsers');
-var formage = require('formage');
+const syncAdminUsers = require('./syncAdminUsers');
+const formage = require('formage');
 // var admin = Common.module.admin;
-var models = require('./models');
-var conf = require('../conf');
-var mid = require('../express-middleware');
+const models = require('./models');
+const conf = require('../conf');
+const mid = require('../express-middleware');
 
 
 exports = module.exports = (app, express) => {
 
 
-	var registry = formage.init(app, express, models, {
+	const registry = formage.init(app, express, models, {
 		title: 'OpenMRS ID Management',
 		root: '/panel',
 		default_section: 'OpenMRS ID',

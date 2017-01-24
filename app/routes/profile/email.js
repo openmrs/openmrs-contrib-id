@@ -2,18 +2,18 @@
 /**
  * This file handles all user-email request
  */
-var path = require('path');
-var async = require('async');
-var _ = require('lodash');
+const path = require('path');
+const async = require('async');
+const _ = require('lodash');
 
-var common = require('../../common');
-var conf = require('../../conf');
-var verification = require('../../email-verification');
-var log = require('log4js').addLogger('express');
-var mid = require('../../express-middleware');
-var User = require('../../models/user');
-var utils = require('../../utils');
-var validate = require('../../validate');
+const common = require('../../common');
+const conf = require('../../conf');
+const verification = require('../../email-verification');
+const log = require('log4js').addLogger('express');
+const mid = require('../../express-middleware');
+const User = require('../../models/user');
+const utils = require('../../utils');
+const validate = require('../../validate');
 
 
 exports = module.exports = app => {
@@ -22,11 +22,11 @@ exports = module.exports = app => {
 	app.get('/profile/email/verify/:id', (req, res, next) => {
 		// check for valid email verification ID
 
-		var newEmail = '';
-		var newUser = {};
-		var id = utils.urlDecode64(req.params.id);
+		let newEmail = '';
+		let newUser = {};
+		const id = utils.urlDecode64(req.params.id);
 
-		var checkVerification = callback => {
+		const checkVerification = callback => {
 			verification.check(id, (err, valid, locals) => {
 				if (!valid) {
 					req.flash('error', 'Profile email address verification not found.');
@@ -38,11 +38,11 @@ exports = module.exports = app => {
 		};
 
 		// could use findOneAndUpdate
-		var findUser = (username, callback) => {
+		const findUser = (username, callback) => {
 			User.findByUsername(username, callback);
 		};
 
-		var updateUser = (user, callback) => {
+		const updateUser = (user, callback) => {
 			user.emailList.push(newEmail);
 			newUser = user;
 			user.save((err, user) => {
@@ -54,7 +54,7 @@ exports = module.exports = app => {
 			});
 		};
 
-		var clearRecord = callback => {
+		const clearRecord = callback => {
 			verification.clear(id, callback);
 		};
 
@@ -81,7 +81,7 @@ exports = module.exports = app => {
 	app.get('/profile/email/resend/:id', mid.forceLogin,
 		(req, res, next) => {
 
-			var id = utils.urlDecode64(req.params.id);
+			const id = utils.urlDecode64(req.params.id);
 			// check for valid id
 			verification.resend(id, err => {
 				if (err) {
@@ -99,10 +99,10 @@ exports = module.exports = app => {
 		(req, res, next) => {
 
 
-			var user = req.session.user;
-			var email = req.body.newEmail;
+			const user = req.session.user;
+			const email = req.body.newEmail;
 
-			var findDuplicateInVerification = (validateError, callback) => {
+			const findDuplicateInVerification = (validateError, callback) => {
 				if (validateError) {
 					return callback(null, validateError);
 				}
@@ -118,7 +118,7 @@ exports = module.exports = app => {
 			};
 
 
-			var validation = callback => {
+			const validation = callback => {
 				async.waterfall([
 					validate.chkEmailInvalidOrDup.bind(null, email),
 					findDuplicateInVerification,
@@ -137,7 +137,7 @@ exports = module.exports = app => {
 				});
 			};
 
-			var sendVerification = callback => {
+			const sendVerification = callback => {
 				log.debug(user.username + ': email address ' + email + ' will be verified');
 				// create verification instance
 				verification.begin({
@@ -171,8 +171,8 @@ exports = module.exports = app => {
 		});
 
 	app.get('/profile/email/delete/:email', mid.forceLogin, (req, res, next) => {
-		var user = req.session.user;
-		var email = req.params.email;
+		const user = req.session.user;
+		const email = req.params.email;
 
 		// primaryEmail can't be deleted
 		if (email === user.primaryEmail) {
@@ -181,12 +181,12 @@ exports = module.exports = app => {
 		}
 		// verified
 		if (-1 !== _.indexOf(user.emailList, email)) {
-			var findUser = callback => {
+			const findUser = callback => {
 				User.findByUsername(user.username, callback);
 			};
 
-			var updateUser = (user, callback) => {
-				var index = _.indexOf(user.emailList, email);
+			const updateUser = (user, callback) => {
+				const index = _.indexOf(user.emailList, email);
 				user.emailList.splice(index, 1);
 				user.save(callback);
 			};
@@ -208,8 +208,8 @@ exports = module.exports = app => {
 
 		// not verified
 		log.debug('deleting verification for new email');
-		var MSG = 'Email to delete not found'; // remove verifications
-		var findVerification = callback => {
+		const MSG = 'Email to delete not found'; // remove verifications
+		const findVerification = callback => {
 			verification.search(email, 'new email', (err, instances) => {
 				if (err) {
 					return callback(err);
@@ -224,7 +224,7 @@ exports = module.exports = app => {
 			});
 		};
 
-		var deleteVerification = (instance, callback) => {
+		const deleteVerification = (instance, callback) => {
 			verification.clear(instance.uuid, callback);
 		};
 
@@ -247,19 +247,19 @@ exports = module.exports = app => {
 	});
 
 	app.get('/profile/email/primary/:email', mid.forceLogin, (req, res, next) => {
-		var email = req.params.email;
-		var user = req.session.user;
+		const email = req.params.email;
+		const user = req.session.user;
 
 		if (!_.includes(user.emailList, email)) {
 			req.flash('error', 'You can only set your own email primary');
 			return res.redirect('/profile');
 		}
 
-		var findUser = callback => {
+		const findUser = callback => {
 			User.findByUsername(user.username, callback);
 		};
 
-		var setEmail = (user, callback) => {
+		const setEmail = (user, callback) => {
 			user.primaryEmail = email;
 			user.save(callback);
 		};

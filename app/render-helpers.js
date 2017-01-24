@@ -1,8 +1,8 @@
 'use strict';
-var log = require('log4js').addLogger('render-helpers');
-var app = require('./app');
-var conf = require('./conf');
-var userNav = require('./user-nav');
+const log = require('log4js').addLogger('render-helpers');
+const app = require('./app');
+const conf = require('./conf');
+const userNav = require('./user-nav');
 
 // insert our own GLOBAL variables to be used in rendering
 app.locals.defaultSidebar = conf.defaultSidebar;
@@ -18,7 +18,7 @@ app.use(function flash(req, res, next) {
 });
 
 //navLinks
-var navLinks = (req, res, next) => {
+const navLinks = (req, res, next) => {
 	// Uses login state and privileges to generate the links to
 	// include in the user navigation bar
 
@@ -27,8 +27,8 @@ var navLinks = (req, res, next) => {
 		return next();
 	}
 
-	var list = userNav.list;
-	var links = [];
+	const list = userNav.list;
+	const links = [];
 	res.locals.navLinks = links;
 
 	log.trace('userNavLinks: entering for loop');
@@ -51,7 +51,7 @@ var navLinks = (req, res, next) => {
 
 		// logged in
 		if (link.requiredGroup) { // testing groups
-			var inGroup = req.session.user.groups.indexOf(link.requiredGroup) > -1;
+			const inGroup = req.session.user.groups.indexOf(link.requiredGroup) > -1;
 			if (inGroup) {
 				links.push(link);
 				return;

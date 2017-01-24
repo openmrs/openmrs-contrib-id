@@ -1,17 +1,17 @@
 'use strict';
-var gulp = require('gulp');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
+const gulp = require('gulp');
+const concat = require('gulp-concat');
+const uglify = require('gulp-uglify');
 
-var path = require('path');
-var fs = require('fs');
-var conf = require('./app/conf');
+const path = require('path');
+const fs = require('fs');
+const conf = require('./app/conf');
 
 gulp.task('default', ['scripts']);
 
 gulp.task('scripts', () => {
 	// generate consts.js
-	var fd = fs.openSync(path.join(__dirname, 'resource/scripts/consts.js'), 'w');
+	const fd = fs.openSync(path.join(__dirname, 'resource/scripts/consts.js'), 'w');
 	fs.writeSync(fd, 'usernameRegex = ' + conf.user.usernameRegex + ';\n');
 	fs.writeSync(fd, 'emailRegex = ' + conf.email.validation.emailRegex + ';\n');
 	fs.closeSync(fd);

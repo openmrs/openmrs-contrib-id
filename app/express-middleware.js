@@ -12,11 +12,11 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-var crypto = require('crypto');
-var url = require('url');
-var log = require('log4js').addLogger('express-middleware');
-var conf = require('./conf');
-var _ = require('lodash');
+const crypto = require('crypto');
+const url = require('url');
+const log = require('log4js').addLogger('express-middleware');
+const conf = require('./conf');
+const _ = require('lodash');
 
 
 exports.openmrsHelper = (req, res, next) => {
@@ -25,8 +25,8 @@ exports.openmrsHelper = (req, res, next) => {
 	}
 
 	if (req.session && req.session.user) {
-		var user = req.session.user;
-		var mailHash = crypto.createHash('md5')
+		const user = req.session.user;
+		const mailHash = crypto.createHash('md5')
 			.update(user.primaryEmail).digest('hex');
 
 		_.merge(res.locals, {
@@ -42,7 +42,7 @@ exports.openmrsHelper = (req, res, next) => {
 
 
 exports.restrictTo = role => (req, res, next) => {
-	var fail = () => {
+	const fail = () => {
 		req.flash('error', 'You are not authorized to access this resource.');
 		if (req.session.user) {
 			if (req.originalUrl === '/') {
@@ -84,7 +84,7 @@ exports.forceLogout = (req, res, next) => {
 exports.stripNewlines = (req, res, next) => {
 	log.trace('before: ' + req.body.loginusername);
 	if (req.body) {
-		for (var field in req.body) {
+		for (const field in req.body) {
 			req.body[field] = req.body[field].replace(/(\r\n|\n|\r)/gm, "");
 		}
 
@@ -95,12 +95,13 @@ exports.stripNewlines = (req, res, next) => {
 
 // parse paramater tables submitted with "param-table" view. passes an object
 exports.parseParamTable = (req, res, next) => {
-	var generatedList = [];
-	for (var a in req.body) {
+	const generatedList = [];
+	for (const a in req.body) {
 		log.trace("parsing " + a + ": " + req.body[a]);
-		var split = /([0-9]+)-(\D+)/.exec(a), // splits to name and number of input
-			ind = parseInt(split[1]),
-			type = split[2];
+		const // splits to name and number of input
+              split = /([0-9]+)-(\D+)/.exec(a),
+              ind = parseInt(split[1]),
+              type = split[2];
 
 		if (!req.body[a]) {
 			continue; // skip if this link is blank

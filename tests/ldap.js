@@ -1,40 +1,40 @@
 'use strict';
 /*jshint expr: true*/
-var _ = require('lodash');
-var expect = require('chai').expect;
-var async = require('async');
-var ldapjs = require('ldapjs');
+const _ = require('lodash');
+const expect = require('chai').expect;
+const async = require('async');
+const ldapjs = require('ldapjs');
 
-var ldap = require('../app/ldap');
-var conf = require('../app/conf');
-var utils = require('../app/utils');
+const ldap = require('../app/ldap');
+const conf = require('../app/conf');
+const utils = require('../app/utils');
 
-var serverAttr = conf.ldap.server;
-var userAttr = conf.ldap.user;
-var groupAttr = conf.ldap.group;
+const serverAttr = conf.ldap.server;
+const userAttr = conf.ldap.user;
+const groupAttr = conf.ldap.group;
 
-var url = serverAttr.uri;
+const url = serverAttr.uri;
 
-var systemDN = serverAttr.rdn + '=' + serverAttr.loginUser + ',' +
+const systemDN = serverAttr.rdn + '=' + serverAttr.loginUser + ',' +
 	serverAttr.baseDn;
-var bindCredentials = serverAttr.password;
+const bindCredentials = serverAttr.password;
 
-var client = ldapjs.createClient({
+const client = ldapjs.createClient({
 	url: url,
 	maxConnections: 10,
 	bindDN: systemDN,
 	bindCredentials: bindCredentials,
 });
 
-var USERNAME = 'uniqueuniquelonglong';
-var PASSWORD = 'longlongpassword';
-var EMAIL = 'foo@bar.com';
-var NAME = 'name';
+const USERNAME = 'uniqueuniquelonglong';
+const PASSWORD = 'longlongpassword';
+const EMAIL = 'foo@bar.com';
+const NAME = 'name';
 
-var INVALID_USERNAME = 'Ply_py'; // contain one underscore
-var INVALID_EMAIL = "bad@bad";
+const INVALID_USERNAME = 'Ply_py'; // contain one underscore
+const INVALID_EMAIL = "bad@bad";
 
-var VALID_USER = {
+const VALID_USER = {
 	username: USERNAME,
 	password: PASSWORD,
 	firstName: NAME,
@@ -45,8 +45,8 @@ var VALID_USER = {
 };
 
 // constants used for directly LDAP operations
-var DN = userAttr.rdn + '=' + USERNAME + ',' + userAttr.baseDn;
-var USER_ENTRY = {};
+const DN = userAttr.rdn + '=' + USERNAME + ',' + userAttr.baseDn;
+const USER_ENTRY = {};
 USER_ENTRY[userAttr.username] = USERNAME;
 USER_ENTRY[userAttr.password] = PASSWORD;
 USER_ENTRY[userAttr.firstname] = NAME;
@@ -101,8 +101,8 @@ describe('ldap', () => {
 	});
 
 	describe('#authenticate()', () => {
-		var username = USER_ENTRY[userAttr.username];
-		var pass = USER_ENTRY[userAttr.password];
+		const username = USER_ENTRY[userAttr.username];
+		const pass = USER_ENTRY[userAttr.password];
 
 		before(done => {
 			client.add(DN, USER_ENTRY, done);
@@ -140,7 +140,7 @@ describe('ldap', () => {
 		});
 
 		it('should remove the user from LDAP', done => {
-			var username = USER_ENTRY[userAttr.username];
+			const username = USER_ENTRY[userAttr.username];
 			async.series([
 				next => {
 					ldap.deleteUser(username, next);
@@ -180,7 +180,7 @@ describe('ldap', () => {
 						expect(userb.groups).to.exist;
 
 						// check groups
-						var dif = _.difference(userb.groups, VALID_USER.groups);
+						let dif = _.difference(userb.groups, VALID_USER.groups);
 						expect(dif).to.be.empty;
 						dif = _.difference(VALID_USER.groups, userb.groups);
 						expect(dif).to.be.empty;
@@ -191,7 +191,7 @@ describe('ldap', () => {
 		});
 
 		it('should report an error when the username is invalid', done => {
-			var tmp = _.cloneDeep(VALID_USER);
+			const tmp = _.cloneDeep(VALID_USER);
 			tmp.username = INVALID_USERNAME;
 			ldap.addUser(tmp, (err, user) => {
 				expect(err).to.exist;
@@ -201,7 +201,7 @@ describe('ldap', () => {
 		});
 
 		it('should report an error when the email is invalid', done => {
-			var tmp = _.cloneDeep(VALID_USER);
+			const tmp = _.cloneDeep(VALID_USER);
 			tmp.primaryEmail = INVALID_EMAIL;
 			ldap.addUser(tmp, (err, user) => {
 				expect(err).to.exist;
@@ -220,7 +220,7 @@ describe('ldap', () => {
 		});
 
 		it('should correctly update the normal user attributes', done => {
-			var tmp = _.cloneDeep(VALID_USER);
+			const tmp = _.cloneDeep(VALID_USER);
 			tmp.firstName = 'Legolas';
 			tmp.lastName = 'Greenleaf';
 			tmp.displayName = 'Elf';
@@ -246,7 +246,7 @@ describe('ldap', () => {
 		});
 
 		it('should correctly update the membership', done => {
-			var tmp = _.cloneDeep(VALID_USER);
+			const tmp = _.cloneDeep(VALID_USER);
 			tmp.groups = [];
 			async.series([
 				ldap.updateUser.bind(null, tmp), // delete all
@@ -265,7 +265,7 @@ describe('ldap', () => {
 					ldap.getUser(tmp.username, (err, user) => {
 						expect(err).to.not.exist;
 						expect(user).to.exist;
-						var dif = _.difference(user.groups, userAttr.defaultGroups);
+						let dif = _.difference(user.groups, userAttr.defaultGroups);
 						expect(dif).to.be.empty;
 						dif = _.difference(userAttr.defaultGroups, user.groups);
 						expect(dif).to.be.empty;
@@ -277,7 +277,7 @@ describe('ldap', () => {
 	});
 
 	describe('#resetPassword', () => {
-		var newPass = 'new-password';
+		const newPass = 'new-password';
 		before(done => {
 			ldap.addUser(VALID_USER, done);
 		});
@@ -310,8 +310,8 @@ describe('ldap', () => {
 		});
 
 		it('should lock the user', done => {
-			var base = userAttr.baseDn;
-			var options = {
+			const base = userAttr.baseDn;
+			const options = {
 				scope: 'sub',
 				filter: '(' + userAttr.rdn + '=' + VALID_USER.username + ')',
 				attributes: ['pwdAccountLockedTime', ],
@@ -319,7 +319,7 @@ describe('ldap', () => {
 			ldap.lockoutUser(VALID_USER.username, err => {
 				client.search(base, options, (err, res) => {
 					expect(err).to.not.exist;
-					var obj = {};
+					let obj = {};
 					res.on('searchEntry', entry => {
 						obj = entry.object;
 					});
@@ -345,8 +345,8 @@ describe('ldap', () => {
 			ldap.deleteUser(VALID_USER.username, done);
 		});
 		it('should unlock the user', done => {
-			var base = userAttr.baseDn;
-			var options = {
+			const base = userAttr.baseDn;
+			const options = {
 				scope: 'sub',
 				filter: '(' + userAttr.rdn + '=' + VALID_USER.username + ')',
 				attributes: ['pwdAccountLockedTime', ],
@@ -355,7 +355,7 @@ describe('ldap', () => {
 				expect(err).to.not.exist;
 				client.search(base, options, (err, res) => {
 					expect(err).to.not.exist;
-					var obj = {};
+					let obj = {};
 					res.on('searchEntry', entry => {
 						obj = entry.object;
 					});

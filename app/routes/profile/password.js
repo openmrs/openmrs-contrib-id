@@ -2,17 +2,17 @@
 /**
  * This file handles users' password related request.
  */
-var path = require('path');
-var async = require('async');
-var _ = require('lodash');
+const path = require('path');
+const async = require('async');
+const _ = require('lodash');
 
-var common = require('../../common');
-var conf = require('../../conf');
-var verification = require('../../email-verification');
-var validate = require('../../validate');
-var log = require('log4js').addLogger('express');
-var mid = require('../../express-middleware');
-var User = require('../../models/user');
+const common = require('../../common');
+const conf = require('../../conf');
+const verification = require('../../email-verification');
+const validate = require('../../validate');
+const log = require('log4js').addLogger('express');
+const mid = require('../../express-middleware');
+const User = require('../../models/user');
 
 
 
@@ -28,11 +28,11 @@ exports = module.exports = app => {
 			}
 
 
-			var updUser = req.session.user;
+			const updUser = req.session.user;
 
 			// Look up the user's canonical record to read the password. (it's not stored
 			// on req.session.user for security purposes.)
-			var findUser = callback => {
+			const findUser = callback => {
 				User.findByUsername(updUser.username, (err, user) => {
 					if (err) {
 						return callback(err);
@@ -44,12 +44,12 @@ exports = module.exports = app => {
 				});
 			};
 
-			var validation = (user, callback) => {
-				var passhash = user.password;
-				var currentpassword = req.body.currentpassword;
-				var newpassword = req.body.newpassword;
-				var confirmpassword = req.body.confirmpassword;
-				var validators = {
+			const validation = (user, callback) => {
+				const passhash = user.password;
+				const currentpassword = req.body.currentpassword;
+				const newpassword = req.body.newpassword;
+				const confirmpassword = req.body.confirmpassword;
+				const validators = {
 					currentpassword: validate.chkPassword.bind(null, currentpassword, passhash),
 					newpassword: validate.chkLength.bind(null, newpassword, 8),
 					confirmpassword: validate.chkDiff.bind(null, newpassword, confirmpassword),
@@ -67,7 +67,7 @@ exports = module.exports = app => {
 			};
 
 
-			var changePassword = (user, callback) => {
+			const changePassword = (user, callback) => {
 				user.password = req.body.newpassword;
 				user.save(callback);
 			};

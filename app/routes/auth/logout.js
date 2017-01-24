@@ -2,7 +2,7 @@
 /**
  * This is the logout logic for Dashboard
  */
-var log = require('log4js').addLogger('express');
+const log = require('log4js').addLogger('express');
 
 exports = module.exports = app => {
 
@@ -15,7 +15,7 @@ exports = module.exports = app => {
 			req.session.destroy();
 		}
 		// redirect to a predefined destination or to home
-		var destination = req.query.destination;
+		const destination = req.query.destination;
 		if (destination) {
 			res.redirect(decodeURIComponent(destination));
 		} else {

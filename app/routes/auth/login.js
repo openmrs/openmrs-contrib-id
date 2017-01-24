@@ -2,22 +2,22 @@
 /**
  * This is the login logic for Dashboard
  */
-var url = require('url');
-var path = require('path');
-var async = require('async');
-var _ = require('lodash');
+const url = require('url');
+const path = require('path');
+const async = require('async');
+const _ = require('lodash');
 
 
-var common = require('../../common');
-var conf = require('../../conf');
-var verification = require('../../email-verification');
-var validate = require('../../validate');
-var mid = require('../../express-middleware');
-var utils = require('../../utils');
+const common = require('../../common');
+const conf = require('../../conf');
+const verification = require('../../email-verification');
+const validate = require('../../validate');
+const mid = require('../../express-middleware');
+const utils = require('../../utils');
 
-var log = require('log4js').addLogger('express');
+const log = require('log4js').addLogger('express');
 
-var User = require('../../models/user');
+const User = require('../../models/user');
 
 exports = module.exports = app => {
 
@@ -29,11 +29,11 @@ exports = module.exports = app => {
 	);
 
 	app.post('/login', mid.stripNewlines, (req, res, next) => {
-		var username = req.body.loginusername || '';
-		var password = req.body.loginpassword || '';
-		var redirect = req.body.destination || '/';
+		const username = req.body.loginusername || '';
+		const password = req.body.loginpassword || '';
+		const redirect = req.body.destination || '/';
 
-		var checkInput = callback => {
+		const checkInput = callback => {
 			if (utils.isUsernameValid(username)) {
 				return callback(null, {
 					username: username
@@ -44,14 +44,14 @@ exports = module.exports = app => {
 					email: username
 				});
 			}
-			var invalid = 'Please use a valid username or email to sign in';
+			const invalid = 'Please use a valid username or email to sign in';
 			return callback({
 				loginFail: invalid
 			});
 		};
 
-		var findUser = (input, callback) => {
-			var commonCallback = (err, user) => {
+		const findUser = (input, callback) => {
+			const commonCallback = (err, user) => {
 				if (err) {
 					return callback(err);
 				}
@@ -72,7 +72,7 @@ exports = module.exports = app => {
 			return callback(new Error('Weird control flow'));
 		};
 
-		var checkLocked = (user, callback) => {
+		const checkLocked = (user, callback) => {
 			if (user.locked) {
 				return callback({
 					loginFail: 'You must verify your email address before logging in. ' +
@@ -82,7 +82,7 @@ exports = module.exports = app => {
 			return callback(null, user);
 		};
 
-		var checkPassword = (user, callback) => {
+		const checkPassword = (user, callback) => {
 			if (_.isEmpty(user.password)) {
 				return callback({
 					loginFail: 'Your password should be reset first'
@@ -123,7 +123,7 @@ exports = module.exports = app => {
 						}
 					});
 					if (req.body.destination) { // redirect to the destination login page
-						var dest = url.resolve(conf.site.url, '/login?destination=' +
+						const dest = url.resolve(conf.site.url, '/login?destination=' +
 							encodeURIComponent(req.body.destination));
 
 						return res.redirect(dest);

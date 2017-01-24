@@ -1,16 +1,16 @@
 'use strict';
-var async = require('async');
-var _ = require('lodash');
+const async = require('async');
+const _ = require('lodash');
 
 require('../app/new-db');
 require('../app/logger');
 
-var Group = require('../app/models/group');
-var User = require('../app/models/user');
-var data = require('./add-admin.json');
+const Group = require('../app/models/group');
+const User = require('../app/models/user');
+const data = require('./add-admin.json');
 
-var userList = data.userList;
-var groupName = data.groupName;
+const userList = data.userList;
+const groupName = data.groupName;
 
 // plain-validation
 if (_.isUndefined(data) || _.isUndefined(userList) || _.isUndefined(groupName)) {
@@ -19,7 +19,7 @@ if (_.isUndefined(data) || _.isUndefined(userList) || _.isUndefined(groupName)) 
 }
 
 // data-validation
-var checkGroup = callback => {
+const checkGroup = callback => {
 	Group.findOne({
 		groupName: groupName
 	}, (err, group) => {
@@ -37,7 +37,7 @@ var checkGroup = callback => {
 	});
 };
 
-var work = callback => {
+const work = callback => {
 	async.mapSeries(userList, (username, cb) => {
 		console.log('Adding user ', username);
 		User.findOne({

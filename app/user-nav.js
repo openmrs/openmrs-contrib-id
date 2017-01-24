@@ -4,7 +4,7 @@ These links appear on the navigation bar in the order defined.
 Modules can add to this list by calling add()
 */
 
-var userNavLinks = [ // built-in links
+const userNavLinks = [ // built-in links
 	{
 		'name': 'Welcome',
 		'url': '/',

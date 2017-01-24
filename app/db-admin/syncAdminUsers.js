@@ -1,16 +1,16 @@
 'use strict';
-var async = require('async');
-var q = require('q');
-var log = require('log4js').addLogger('db-admin');
-var formage = require('formage');
-var utils = require('../utils');
-var _ = require('lodash');
+const async = require('async');
+const q = require('q');
+const log = require('log4js').addLogger('db-admin');
+const formage = require('formage');
+const utils = require('../utils');
+const _ = require('lodash');
 
 /**
  * Mongoose models. Will be assigned when init() is called.
  */
-var FormageUser;
-var User;
+let FormageUser;
+let User;
 
 /**
  * Create or update a Formage user that corresponds to this Dashboard admin.
@@ -28,7 +28,7 @@ function syncFormageUser(user, callback) {
 			createFormageUser(user))
 		.then(formageUser => {
 
-			var deferred = q.defer();
+			const deferred = q.defer();
 
 			if (formageUser.isModified()) {
 				return formageUser.save((err, fu) => {
@@ -67,7 +67,7 @@ function syncFormageUser(user, callback) {
  */
 function createFormageUser(user) {
 
-	var fu = new FormageUser({
+	const fu = new FormageUser({
 		username: user.username,
 		passwordHash: user.password,
 		is_superuser: true
@@ -129,7 +129,7 @@ module.exports = function init(_FormageUser_, _User_) {
 
 	User.schema.post('save', onSave);
 
-	var deferred = q.defer();
+	const deferred = q.defer();
 
 	User.find({
 			groups: 'dashboard-administrators'
@@ -162,6 +162,6 @@ module.exports = function init(_FormageUser_, _User_) {
  * with Formage users, we need to replace their hashing functions with our
  * own.
  */
-var salt = 'wherestheninja'; // same salt formage uses internally
+const salt = 'wherestheninja'; // same salt formage uses internally
 formage.UserForm.encryptSync = _.partialRight(utils.getSSHA, salt);
 formage.UserForm.compareSync = utils.checkSSHA;

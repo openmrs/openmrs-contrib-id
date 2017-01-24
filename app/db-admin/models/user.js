@@ -1,5 +1,5 @@
 'use strict';
-var User = require('../../models/user');
+const User = require('../../models/user');
 
 User.formage = {
 	label: 'Users',

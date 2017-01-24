@@ -3,34 +3,34 @@
  * This file defines the Schema of OpenMRS-ID
  */
 
-var mongoose = require('mongoose');
-var async = require('async');
-var _ = require('lodash');
+const mongoose = require('mongoose');
+const async = require('async');
+const _ = require('lodash');
 
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var log = require('log4js').addLogger('user model');
-var ldap = require('../ldap');
-var utils = require('../utils');
+const log = require('log4js').addLogger('user model');
+const ldap = require('../ldap');
+const utils = require('../utils');
 
-var conf = require('../conf');
-var Group = require('./group');
+const conf = require('../conf');
+const Group = require('./group');
 
 // Ensure the email list is not empty and no duplicate
 // Because mongo won't ensure all the members to be unique in one array
-var nonEmpty = {
+const nonEmpty = {
 	validator: function(ar) {
 		return ar.length > 0;
 	},
 	msg: 'The array can\'t be empty'
 };
 
-var chkArrayDuplicate = {
+const chkArrayDuplicate = {
 	validator: function(arr) {
-		var sorted = arr.slice();
+		const sorted = arr.slice();
 		sorted.sort();
 
-		var i;
+		let i;
 		for (i = 1; i < sorted.length; ++i) {
 			if (sorted[i] === sorted[i - 1]) {
 				return false;
@@ -48,7 +48,7 @@ function arrToLowerCase(arr) {
 	return arr;
 }
 
-var userSchema = new Schema({
+const userSchema = new Schema({
 	username: {
 		type: String,
 		unique: true,
@@ -140,8 +140,8 @@ userSchema.path('primaryEmail').validate(function(email) {
 
 // generate an iterative function over a group with a callback function that
 // takes 1 err argument
-var createIteratorOverGroups = (groups, operation) => {
-	var updateGroup = (groupName, cb) => {
+const createIteratorOverGroups = (groups, operation) => {
+	const updateGroup = (groupName, cb) => {
 		//efficiently update groups
 		Group.findOneAndUpdate({
 			groupName: groupName
@@ -166,28 +166,28 @@ var createIteratorOverGroups = (groups, operation) => {
 
 // maintain the groups relations
 userSchema.pre('save', function(next) {
-	var user = this;
-	var userRef = {
+	const user = this;
+	const userRef = {
 		objId: user.id,
 		username: user.username
 	};
 
 	// get the added and removed array
-	var prepare = callback => {
+	const prepare = callback => {
 		User.findById(user._id, (err, oldUser) => {
 			if (err) {
 				return callback(err);
 			}
-			var added = _.difference(user.groups, oldUser.groups);
-			var removed = _.difference(oldUser.groups, user.groups);
+			const added = _.difference(user.groups, oldUser.groups);
+			const removed = _.difference(oldUser.groups, user.groups);
 			return callback(null, added, removed);
 		});
 	};
 
 
 
-	var addGroups = (added, removed, callback) => {
-		var worker = createIteratorOverGroups(added, {
+	let addGroups = (added, removed, callback) => {
+		const worker = createIteratorOverGroups(added, {
 			$addToSet: {
 				member: userRef,
 			}
@@ -197,8 +197,8 @@ userSchema.pre('save', function(next) {
 		});
 	};
 
-	var delGroups = (removed, callback) => {
-		var worker = createIteratorOverGroups(removed, {
+	const delGroups = (removed, callback) => {
+		const worker = createIteratorOverGroups(removed, {
 			$pop: {
 				member: userRef,
 			}
@@ -208,7 +208,7 @@ userSchema.pre('save', function(next) {
 
 	// real logic starts
 	if (this.isNew) { // Mongoose new document boolean flag
-		var added = this.groups;
+		const added = this.groups;
 		addGroups = createIteratorOverGroups(added, {
 			$addToSet: {
 				member: userRef,
@@ -227,8 +227,8 @@ userSchema.pre('save', function(next) {
 // sync with LDAP
 userSchema.pre('save', function(next) {
 	// aliases
-	var uid = this.username;
-	var that = this;
+	const uid = this.username;
+	const that = this;
 	if (!_.isEmpty(this.password) && 0 !== this.password.indexOf('{SSHA}')) {
 		this.password = utils.getSSHA(this.password);
 	}
@@ -251,7 +251,7 @@ userSchema.pre('save', function(next) {
 		return;
 	}
 	// already stored in LDAP, modify it
-	var getUser = callback => {
+	const getUser = callback => {
 		ldap.getUser(uid, (err, userobj) => {
 			if (err) {
 				return callback(err);
@@ -260,12 +260,12 @@ userSchema.pre('save', function(next) {
 		});
 	};
 
-	var updateUser = (userobj, callback) => {
+	const updateUser = (userobj, callback) => {
 		ldap.updateUser(that, callback);
 	};
 
 	// due to limitation of LDAP, password shall be dealt individually
-	var changePassword = (userobj, callback) => {
+	const changePassword = (userobj, callback) => {
 		if (userobj.password === that.password) { // not changed
 			return callback();
 		}
@@ -296,12 +296,12 @@ userSchema.pre('remove', function(next) {
 
 // Hook used to remove user from groups
 userSchema.pre('remove', function(next) {
-	var user = this;
-	var userRef = {
+	const user = this;
+	const userRef = {
 		objId: user.id,
 		username: user.username
 	};
-	var delGroups = createIteratorOverGroups(user.groups, {
+	const delGroups = createIteratorOverGroups(user.groups, {
 		$pop: {
 			member: userRef,
 		}
@@ -329,9 +329,9 @@ exports = module.exports = User;
  * Dynamically retrieve data from OpenLDAP
  * and sync it in Mongo*
  */
-var findAndSync = (filter, callback) => {
+const findAndSync = (filter, callback) => {
 
-	var findMongo = cb => {
+	const findMongo = cb => {
 		User.findOne(filter, (err, user) => {
 			if (err) {
 				return cb(err);
@@ -344,9 +344,9 @@ var findAndSync = (filter, callback) => {
 	};
 
 	// not found in mongo, have a try in OpenLDAP
-	var findLDAP = cb => {
-		var finder;
-		var condition;
+	const findLDAP = cb => {
+		let finder;
+		let condition;
 		if (filter.username) { // choose finder
 			finder = ldap.getUser;
 			condition = filter.username;
@@ -366,8 +366,8 @@ var findAndSync = (filter, callback) => {
 	};
 
 	// store the data retrieved to Mongo
-	var syncMongo = (userobj, cb) => {
-		var userInfo = {
+	const syncMongo = (userobj, cb) => {
+		const userInfo = {
 			username: userobj.username,
 			firstName: userobj.firstName,
 			lastName: userobj.lastName,
@@ -379,7 +379,7 @@ var findAndSync = (filter, callback) => {
 			createdAt: undefined,
 			inLDAP: true,
 		};
-		var user = new User(userInfo);
+		const user = new User(userInfo);
 		user.addGroupsAndSave(userobj.groups, cb);
 	};
 
@@ -444,8 +444,8 @@ User.prototype.addGroupsAndSave = function(groups, callback) {
 	if (!Array.isArray(groups)) {
 		groups = [groups];
 	}
-	var user = this;
-	var userRef = {
+	const user = this;
+	const userRef = {
 		objId: user.id,
 		username: user.username
 	};

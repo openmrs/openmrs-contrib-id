@@ -1,24 +1,24 @@
 'use strict';
-var crypto = require('crypto');
-var nodemailer = require('nodemailer');
-var fs = require('fs');
-var path = require('path');
-var pug = require('pug');
-var url = require('url');
-var async = require('async');
-var _ = require('lodash');
-var uuid = require('node-uuid');
-var utils = require('./utils');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
+const fs = require('fs');
+const path = require('path');
+const pug = require('pug');
+const url = require('url');
+const async = require('async');
+const _ = require('lodash');
+const uuid = require('node-uuid');
+const utils = require('./utils');
 
-var conf = require('./conf');
-var log = require('log4js').addLogger('email-verification');
+const conf = require('./conf');
+const log = require('log4js').addLogger('email-verification');
 
-var EmailVerification = require('./models/email-verification');
+const EmailVerification = require('./models/email-verification');
 
 // update nodemailer
-var transporter = nodemailer.createTransport(conf.email.smtp);
+const transporter = nodemailer.createTransport(conf.email.smtp);
 
-var simpleCallback = err => {
+const simpleCallback = err => {
 	if (err) {
 		log.error(err);
 	}
@@ -37,14 +37,14 @@ var simpleCallback = err => {
  */
 exports.begin = (settings, callback) => {
 	// parse arguments
-	var addr = settings.addr;
-	var subject = settings.subject;
-	var templatePath = settings.templatePath;
-	var category = settings.category || '';
-	var username = settings.username || '';
-	var description = settings.description || '';
-	var callbackPath = settings.callback || null;
-	var locals = settings.locals || {};
+	const addr = settings.addr;
+	const subject = settings.subject;
+	const templatePath = settings.templatePath;
+	const category = settings.category || '';
+	const username = settings.username || '';
+	const description = settings.description || '';
+	const callbackPath = settings.callback || null;
+	const locals = settings.locals || {};
 
 	if (!callback) { // if callback is not provided
 		callback = simpleCallback;
@@ -52,7 +52,7 @@ exports.begin = (settings, callback) => {
 
 	// create verification instance and store in DB
 	function storeInfo(cb) {
-		var veriInfo = {
+		const veriInfo = {
 			uuid: uuid.v4(),
 			addr: addr,
 			category: category,
@@ -61,7 +61,7 @@ exports.begin = (settings, callback) => {
 			settings: settings,
 			locals: locals,
 		};
-		var verification = new EmailVerification(veriInfo);
+		const verification = new EmailVerification(veriInfo);
 		log.trace('verification prepared for DB entry');
 
 		verification.save(err => {
@@ -81,7 +81,7 @@ exports.begin = (settings, callback) => {
 			imgURL: url.resolve(conf.site.url, '/resource/images/logo.png'),
 			verifyURL: url.resolve(conf.site.url, path.join(callbackPath, uuid)),
 		});
-		var rendered = pug.renderFile(templatePath, locals);
+		const rendered = pug.renderFile(templatePath, locals);
 
 		try {
 			transporter.sendMail({
@@ -118,7 +118,7 @@ exports.resend = (uuid, callback) => {
 			return callback(err);
 		}
 		if (_.isEmpty(verification)) {
-			var msg = 'Email verification record is not found, maybe expired';
+			const msg = 'Email verification record is not found, maybe expired';
 			log.error(msg);
 			return callback(new Error(msg));
 		}
@@ -147,7 +147,7 @@ exports.check = (uuid, callback) => {
 			return callback(null, false);
 		}
 
-		var locals = verification.locals || {};
+		const locals = verification.locals || {};
 		callback(null, true, locals);
 	});
 };
@@ -166,7 +166,7 @@ exports.clear = (uuid, callback) => {
 // based on username or email address
 exports.search = (credential, category, callback) => {
 	// determine whether credential is email, username, or verifyId
-	var terms;
+	let terms;
 	if (conf.user.usernameRegex.test(credential)) {
 		terms = {
 			username: credential

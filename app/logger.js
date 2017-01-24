@@ -12,10 +12,10 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-var path = require('path');
+const path = require('path');
 
-var log4js = require('log4js');
-var conf = require('./conf');
+const log4js = require('log4js');
+const conf = require('./conf');
 
 if (process.env.NODE_ENV === 'development') {
 	log4js.setGlobalLogLevel('debug');
@@ -27,8 +27,8 @@ log4js.replaceConsole();
 log4js.loadAppender('console');
 log4js.loadAppender('file');
 
-var set = new Set();
-var logFile = log4js.appenders.file(
+const set = new Set();
+const logFile = log4js.appenders.file(
 	path.join(__dirname, conf.logger.relativePath)
 );
 
@@ -40,7 +40,7 @@ log4js.addLogger = name => {
 	return log4js.getLogger(name);
 };
 
-var signupFile = log4js.appenders.file(
+const signupFile = log4js.appenders.file(
 	path.join(__dirname, '/../logs/signuplog.log')
 );
 log4js.addAppender(signupFile, 'signup');

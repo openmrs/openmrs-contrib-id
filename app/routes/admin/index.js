@@ -1,7 +1,7 @@
 'use strict';
-var path = require('path');
-var mid = require('../../express-middleware');
-var nav = require('../../user-nav');
+const path = require('path');
+const mid = require('../../express-middleware');
+const nav = require('../../user-nav');
 
 
 
@@ -21,8 +21,8 @@ nav.add({
 
 exports = module.exports = app => {
 
-	var pages = [];
-	var admin = app.admin = {
+	const pages = [];
+	const admin = app.admin = {
 		addPage: function(name, url) {
 			pages.push({
 				name: name,

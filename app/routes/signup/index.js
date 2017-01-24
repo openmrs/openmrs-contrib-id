@@ -2,22 +2,22 @@
 /**
  * This file handles requests related with signup operations
  */
-var url = require('url');
-var path = require('path');
-var async = require('async');
-var _ = require('lodash');
-var log = require('log4js').addLogger('signup');
+const url = require('url');
+const path = require('path');
+const async = require('async');
+const _ = require('lodash');
+const log = require('log4js').addLogger('signup');
 
-var conf = require('../../conf');
-var mid = require('../../express-middleware');
-var verification = require('../../email-verification');
-var validate = require('../../validate');
-var nav = require('../../user-nav');
-var utils = require('../../utils');
-var User = require('../../models/user');
+const conf = require('../../conf');
+const mid = require('../../express-middleware');
+const verification = require('../../email-verification');
+const validate = require('../../validate');
+const nav = require('../../user-nav');
+const utils = require('../../utils');
+const User = require('../../models/user');
 
-var botproof = require('./botproof');
-var emailPath = path.resolve(__dirname, '../../../templates/emails');
+const botproof = require('./botproof');
+const emailPath = path.resolve(__dirname, '../../../templates/emails');
 
 /*
 ROUTES
@@ -55,12 +55,12 @@ exports = module.exports = app => {
 			if (!req.xhr) {
 				return res.redirect('/');
 			}
-			var id = req.body.username;
-			var first = req.body.firstName;
-			var last = req.body.lastName;
-			var email = req.body.primaryEmail;
-			var pass = req.body.password;
-			var captchaData = {
+			let id = req.body.username;
+			const first = req.body.firstName;
+			const last = req.body.lastName;
+			const email = req.body.primaryEmail;
+			const pass = req.body.password;
+			const captchaData = {
 				response: req.body['g-recaptcha-response'],
 			};
 
@@ -68,8 +68,8 @@ exports = module.exports = app => {
 			id = id.toLowerCase();
 
 			// perform validation
-			var validation = callback => {
-				var validators = {
+			const validation = callback => {
+				const validators = {
 					username: validate.chkUsernameInvalidOrDup.bind(null, id),
 					primaryEmail: validate.chkEmailInvalidOrDup.bind(null, email),
 					firstName: validate.chkEmpty.bind(null, first),
@@ -90,8 +90,8 @@ exports = module.exports = app => {
 				});
 			};
 
-			var saveUser = callback => {
-				var newUser = new User({
+			const saveUser = callback => {
+				const newUser = new User({
 					username: id,
 					firstName: first,
 					lastName: last,
@@ -104,8 +104,8 @@ exports = module.exports = app => {
 				newUser.save(callback);
 			};
 
-			var sendVerificationEmail = callback => {
-				var verificationOptions = {
+			const sendVerificationEmail = callback => {
+				const verificationOptions = {
 					addr: email,
 					subject: '[OpenMRS] Welcome to the OpenMRS Community',
 					templatePath: path.join(emailPath, 'welcome-verify.pug'),
@@ -143,11 +143,11 @@ exports = module.exports = app => {
 
 	// verification
 	app.get('/signup/:id', (req, res, next) => {
-		var id = utils.urlDecode64(req.params.id);
-		var INVALID_MSG = 'The requested signup verification does not exist, ' +
+		const id = utils.urlDecode64(req.params.id);
+		const INVALID_MSG = 'The requested signup verification does not exist, ' +
 			'it might be expired.';
 
-		var findUsernameByVerifyID = callback => {
+		const findUsernameByVerifyID = callback => {
 			verification.check(id, (err, valid, locals) => {
 				if (err) {
 					return callback(err);
@@ -162,7 +162,7 @@ exports = module.exports = app => {
 		};
 
 		// clear locked and expiration flag
-		var updateUser = (user, callback) => {
+		const updateUser = (user, callback) => {
 			user.locked = false;
 			user.createdAt = undefined;
 			user.addGroupsAndSave(conf.user.defaultGroups, callback);
@@ -196,8 +196,8 @@ exports = module.exports = app => {
 		if (!req.xhr) {
 			return res.redirect('/');
 		}
-		var username = req.params.id;
-		var isValid = conf.ldap.user.usernameRegex.test(username);
+		const username = req.params.id;
+		const isValid = conf.ldap.user.usernameRegex.test(username);
 
 		if (!isValid) {
 			return res.json({

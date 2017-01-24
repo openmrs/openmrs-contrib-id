@@ -1,13 +1,13 @@
 'use strict';
-var fs = require('fs');
+const fs = require('fs');
 
 fs.readdirSync(__dirname).forEach(file => {
-	var regex = /^(.*).js$/.exec(file);
+	const regex = /^(.*).js$/.exec(file);
 	if (!regex[1]) {
 		return;
 	}
 
-	var name = regex[1];
+	const name = regex[1];
 	if (name === 'index') {
 		return;
 	}

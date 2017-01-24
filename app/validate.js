@@ -16,23 +16,23 @@
  * This source file contains the validation functions for all kinds of form.
  */
 
-var path = require('path');
+const path = require('path');
 
-var _ = require('lodash');
-var async = require('async');
+const _ = require('lodash');
+const async = require('async');
 
-var conf = require('./conf');
-var log = require('log4js').addLogger('validation');
-var utils = require('./utils');
-var Recaptcha = utils.Recaptcha;
+const conf = require('./conf');
+const log = require('log4js').addLogger('validation');
+const utils = require('./utils');
+const Recaptcha = utils.Recaptcha;
 
-var User = require('./models/user');
+const User = require('./models/user');
 
-var EMAIL_PLUS_MSG = 'No \'+\' allowed';
-var WRONG_PASSWORD_MSG = 'Wrong password';
-var ALREADY_USED_MSG = 'Already Used.';
+const EMAIL_PLUS_MSG = 'No \'+\' allowed';
+const WRONG_PASSWORD_MSG = 'Wrong password';
+const ALREADY_USED_MSG = 'Already Used.';
 
-var validate = {};
+const validate = {};
 
 /**
  * These functions all follow this pattern.
@@ -42,8 +42,8 @@ var validate = {};
  * true means this field is wrong.
  */
 
-var isUsernameValid = utils.isUsernameValid;
-var isEmailValid = utils.isEmailValid;
+const isUsernameValid = utils.isUsernameValid;
+const isEmailValid = utils.isEmailValid;
 
 validate.chkUsernameInvalid = (username, callback) => {
 	if (!isUsernameValid(username)) {
@@ -72,7 +72,7 @@ validate.chkEmailInvalid = (email, callback) => {
 	if (!isEmailValid(email)) {
 		return callback(null, true);
 	}
-	var allowPlus = conf.validation.allowPlusInEmail;
+	const allowPlus = conf.validation.allowPlusInEmail;
 	if (-1 !== _.indexOf(email, '+') && !allowPlus) {
 		// disobey the allowplus '+' rule
 		return callback(null, EMAIL_PLUS_MSG);
@@ -134,7 +134,7 @@ validate.chkDiff = (strA, strB, callback) => callback(null, strA !== strB);
  * }
  */
 validate.chkRecaptcha = (captchaData, callback) => {
-	var recaptcha = new Recaptcha(conf.validation.recaptchaPrivate);
+	const recaptcha = new Recaptcha(conf.validation.recaptchaPrivate);
 
 	recaptcha.verify(captchaData, (err, success) => {
 		if (err) {
@@ -149,8 +149,8 @@ validate.chkRecaptcha = (captchaData, callback) => {
 
 validate.perform = (validators, callback) => {
 	async.parallel(validators, (err, results) => {
-		var failed = false;
-		var failures = {};
+		let failed = false;
+		const failures = {};
 
 		if (err) {
 			return callback(err);

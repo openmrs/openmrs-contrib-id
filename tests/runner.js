@@ -2,28 +2,28 @@
 /**
  * Programmtically execute mocha tests
  */
-var fs = require('fs');
-var path = require('path');
-var async = require('async');
-var Mocha = require('mocha');
-var mongoose = require('mongoose');
-var _ = require('lodash');
+const fs = require('fs');
+const path = require('path');
+const async = require('async');
+const Mocha = require('mocha');
+const mongoose = require('mongoose');
+const _ = require('lodash');
 
-var conf = require('./conf');
+const conf = require('./conf');
 
 // patch log4js
 require('../app/logger');
 
 
-var mocha = new Mocha({
+const mocha = new Mocha({
 	ui: 'bdd',
 	reporter: 'list',
 });
 
 // recursivly add a folder for testing
-var addFolder = folder => {
+const addFolder = folder => {
 	fs.readdirSync(folder).forEach(file => {
-		var p = path.join(folder, file);
+		const p = path.join(folder, file);
 		if (fs.statSync(p).isDirectory()) {
 			return addFolder(p);
 		}
