@@ -52,7 +52,8 @@ module.exports = {
 	// be used to invoke all methods, as defined below.
 
 	generateTimestamp: function generateTimestamp(req, res, next) {
-		const timestamp = Date.now(), cipher = crypto.createCipher('aes192', SECRET);
+		const timestamp = Date.now(),
+			cipher = crypto.createCipher('aes192', SECRET);
 
 		cipher.update(timestamp.toString());
 
@@ -72,7 +73,8 @@ module.exports = {
 		const timestamp = decipher.final('utf8');
 
 
-		const then = new Date(parseInt(timestamp, 10)), now = new Date(Date.now());
+		const then = new Date(parseInt(timestamp, 10)),
+			now = new Date(Date.now());
 
 		// Throw out malformed timestamps
 		if (isNaN(then.valueOf())) {
@@ -105,7 +107,8 @@ module.exports = {
 		// secret. It's a hidden field within the page.
 
 		// Generate the spinner and attach it to the request.
-		const timestamp = res.locals.timestamp, hash = crypto.createHash('md5');
+		const timestamp = res.locals.timestamp,
+			hash = crypto.createHash('md5');
 
 		log.trace(`generating spinner with timestamp "${timestamp}" for ip address "${ip(req)}"`);
 

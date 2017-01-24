@@ -96,9 +96,9 @@ exports.parseParamTable = (req, res, next) => {
 	for (const a in req.body) {
 		log.trace(`parsing ${a}: ${req.body[a]}`);
 		const // splits to name and number of input
-              split = /([0-9]+)-(\D+)/.exec(a),
-              ind = parseInt(split[1]),
-              type = split[2];
+			split = /([0-9]+)-(\D+)/.exec(a),
+			ind = parseInt(split[1]),
+			type = split[2];
 
 		if (!req.body[a]) {
 			continue; // skip if this link is blank
