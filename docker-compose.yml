@@ -8,6 +8,7 @@ services:
     image: jeanberu/mailcatcher
     container_name: "id_dashboard_mailcatcher"
   web:
+    user: dashboard
     build:
       context: .
     depends_on:

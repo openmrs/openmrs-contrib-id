@@ -1,6 +1,7 @@
 version: "2"
 services:
   web:
+    user: dashboard
     build:
       context: .
     container_name: "id_dashboard"
