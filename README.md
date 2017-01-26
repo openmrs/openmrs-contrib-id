@@ -1,5 +1,6 @@
 SSO for OpenMRS ID
 ========
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/22f56f5bcb834fd7a1e8daaa8911bef5)](https://www.codacy.com/app/robby-oconnor/openmrs-contrib-id-sso?utm_source=github.com&utm_medium=referral&utm_content=openmrs/openmrs-contrib-id-sso&utm_campaign=badger)
 [![Code Climate](https://codeclimate.com/github/openmrs/openmrs-contrib-id-sso/badges/gpa.svg)](https://codeclimate.com/github/openmrs/openmrs-contrib-id-sso)
 [![Dependencies Status](https://david-dm.org/openmrs/openmrs-contrib-id-sso/status.svg)](https://david-dm.org/openmrs/openmrs-contrib-id-sso)
 [![devDependencies Status](https://david-dm.org/openmrs/openmrs-contrib-id-sso/dev-status.svg)](https://david-dm.org/openmrs/openmrs-contrib-id-sso?type=dev)
