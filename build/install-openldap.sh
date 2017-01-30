@@ -1,8 +1,7 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # install openldap
-set -e
-set -x
+set -ex
 
 cd `dirname $0`
 
