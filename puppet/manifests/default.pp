@@ -1,7 +1,8 @@
 exec { 'apt-update':
   command => '/usr/bin/sudo /usr/bin/apt-get update',
   before  => [Package['slapd'],
-              Package['ldap-utils']]
+              Package['ldap-utils'],
+              Package['ldapvi']]
 }
 
 package {'slapd':
@@ -10,6 +11,11 @@ package {'slapd':
 }
 
 package { 'ldap-utils':
+  ensure  => present,
+  require => Exec['apt-update']
+}
+
+package { 'ldapvi':
   ensure  => present,
   require => Exec['apt-update']
 }
