@@ -4,14 +4,24 @@ language: node_js
 cache: yarn
 
 services:
-  - mongodb
+  - docker
 
 node_js:
   - "4"
   - "5"
+env:
+  DOCKER_COMPOSE_VERSION: 1.10.1
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
 
 install:
-  - ./build/install-openldap.sh
+  - tar xvjf build/var_lib_ldap.tbz2 -C build/
+  - tar xvjf build/etc_ldap_slapd.d.tbz2 -C build/
+  - docker-compose -f build/docker-compose.yml up -d
   - cp -v build/conf.app.js app/conf.js
   - cp -v build/conf.test.js tests/conf.js
   - npm install
