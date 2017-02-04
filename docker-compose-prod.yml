@@ -9,7 +9,7 @@ services:
     restart: always
     ports:
       - "127.0.0.1:3000:3000"
-    links:
+    depends_on:
       - mongodb
   mongodb:
     image: mongo:3.2
@@ -21,3 +21,13 @@ services:
     volumes:
       - ./data/runtime/db:/data/db
       - ./data/dump:/dump
+  openldap:
+    image: osixia/openldap:1.1.7
+    environment:
+      - LDAP_TLS=false
+    volumes:
+      - ./data/etc/ldap/slapd.d:/etc/ldap/slapd.d
+      - ./data/var/lib/ldap:/var/lib/ldap
+    ports:
+      - 127.0.0.1:389:389
+    container_name: "id_dashboard_openldap"
