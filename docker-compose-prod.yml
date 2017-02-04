@@ -5,11 +5,19 @@ services:
     build:
       context: .
     container_name: "id_dashboard"
+    env_file: .env
     restart: always
+    ports:
+      - "127.0.0.1:3000:3000"
     links:
       - mongodb
   mongodb:
-    image: mongo:2.6
+    image: mongo:3.2
     container_name: "id_dashboard_mongo"
     command: mongod --smallfiles
     restart: always
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - ./data/runtime/db:/data/db
+      - ./data/dump:/dump

@@ -3,14 +3,27 @@ services:
   mongodb:
     image: mongo:2.6
     container_name: "id_dashboard_mongo"
-    command: mongod --smallfiles
+    ports:
+      - "0.0.0.0:27018:27017"
+    volumes:
+      - ./data/runtime/db:/data/db
+      - ./data/dump:/dump
+    restart: unless-stopped
+    command: "mongod --nojournal --smallfiles"
   mailcatcher:
     image: jeanberu/mailcatcher
+    ports:
+      - "0.0.0.0:1080:1080"
+      - "0.0.0.0:1025:1025"
     container_name: "id_dashboard_mailcatcher"
   web:
     user: dashboard
+    env_file: .env
     build:
       context: .
+    ports:
+      - 0.0.0.0:3000:3000
+    restart: unless-stopped
     depends_on:
       - mongodb
       - mailcatcher

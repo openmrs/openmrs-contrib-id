@@ -50,7 +50,6 @@ resource/stylesheets/*
 *.sqlite
 
 # Production secrets
-docker-compose-prod.override.yml
 .env
 
 ### Vagrant ###
