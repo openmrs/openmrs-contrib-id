@@ -1,6 +1,6 @@
 'use strict';
 const log = require('log4js').addLogger('express');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 
 // Errors
 exports = module.exports = (err, req, res, next) => {

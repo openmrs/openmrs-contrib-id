@@ -7,7 +7,7 @@ const pug = require('pug');
 const url = require('url');
 const async = require('async');
 const _ = require('lodash');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const utils = require('./utils');
 
 const conf = require('./conf');
