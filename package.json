@@ -42,8 +42,7 @@
   "scripts": {
     "postinstall": "bower install --config.interactive=false; gulp",
     "test": "node tests/runner",
-    "start": "node app/app",
-    "bootstrap": "vagrant up --provision ;  docker-compose up -d"
+    "start": "node app/app"
   },
   "repository": {
     "type": "git",
