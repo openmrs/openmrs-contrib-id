@@ -11,9 +11,11 @@ services:
     depends_on:
       - mongodb
       - mailcatcher
+    volumes:
+      - .:/home/dashboard/id
     container_name: "id_dashboard"
   mongodb:
-    image: mongo:2.6
+    image: mongo:3.2
     ports:
       - "0.0.0.0:27018:27017"
     container_name: "id_dashboard_mongo"
