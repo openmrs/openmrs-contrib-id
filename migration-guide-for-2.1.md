@@ -10,7 +10,7 @@ Frontend dependencies are now managed using [bower](http://bower.io/)
 Before doing anything, from the root directory of the codebase, run
 
 ```sh
-npm install bower -g
+npm install bower gulp -g
 ```
 
 # Configuration file migration for 2.0.1
