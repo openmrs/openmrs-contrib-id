@@ -20,11 +20,11 @@
     "lodash": "^4.17.4",
     "log4js": "^1.1.0",
     "mongoose": "^4.8.1",
-    "node-uuid": "^1.4.7",
     "nodemailer": "^2.7.0",
     "pug": "^2.0.0-beta6",
     "q": "^1.0.1",
-    "request": "^2.51.0"
+    "request": "^2.51.0",
+    "uuid": "^3.0.1"
   },
   "engine": {
     "node": "~4.x.x"
