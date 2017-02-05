@@ -18,7 +18,7 @@
     "openid"
   ],
   "author": "Elliott Williams <elliott@openmrs.org>",
-  "license": "MPLv2",
+  "license": "MPL-2.0",
   "bugs": {
     "url": "https://github.com/elliottwilliams/openmrs-contrib-id-sso/issues"
   },
