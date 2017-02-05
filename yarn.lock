@@ -698,7 +698,7 @@ expand-tilde@^1.2.1, expand-tilde@^1.2.2:
   dependencies:
     os-homedir "^1.0.1"
 
-express-debug@~1.1.0:
+express-debug@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/express-debug/-/express-debug-1.1.1.tgz#8eabe378b3d96b74172c8f2df817d342161057b6"
   dependencies:
@@ -1932,10 +1932,6 @@ negotiator@0.6.1:
 node-ckeditor@^4.3.2:
   version "4.5.9"
   resolved "https://registry.yarnpkg.com/node-ckeditor/-/node-ckeditor-4.5.9.tgz#a23818c8d9d2e213cd24502773295263298226aa"
-
-node-uuid@^1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.7.tgz#6da5a17668c4b3dd59623bda11cf7fa4c1f60a6f"
 
 node.extend@~1.1.5:
   version "1.1.6"

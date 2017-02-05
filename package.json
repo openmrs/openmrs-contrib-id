@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "chai": "~3.5.0",
-    "express-debug": "~1.1.0",
+    "express-debug": "^1.1.1",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-uglify": "^2.0.0",
