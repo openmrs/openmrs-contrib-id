@@ -2,7 +2,7 @@ FROM mhart/alpine-node:5
 
 RUN apk add --no-cache bash openssl git perl python build-base \
 && apk add dockerize --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ \
-&& addgroup dashboard \
+&& addgroup dashboard -g 99999 \
 && adduser -s /bin/bash -D -G dashboard -u 99999 dashboard
 
 RUN npm install bower gulp -g
