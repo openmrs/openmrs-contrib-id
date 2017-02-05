@@ -24,6 +24,7 @@ install:
   - docker-compose -f build/docker-compose.yml up -d
   - cp -v build/conf.app.js app/conf.js
   - cp -v build/conf.test.js tests/conf.js
+  - npm install -g bower gulp
   - npm install
   - node build/store.js
 
