@@ -22,13 +22,13 @@ You will need to make the following changes.
 
 * **Delete** Line 71-75 which should be the following:
 
-    ```javascript
+```javascript
         "db": {
             "dbname": "id_dashboard",
             "username": "openmrsid",
             "password": "omrsid"
             },
-    ```
+```
 
 * **Delete** Lines 90-95 , which should be the following:
 
@@ -69,9 +69,9 @@ You will need to make the following changes.
     "systemModules": [
         "admin",
         "signup",
-      "auth",
-      "profile",
-      "reset-pwd",
+        "auth",
+        "profile",
+        "reset-pwd",
         "db-admin"
     ],
 
@@ -92,8 +92,7 @@ Find the following at 152-155, add a line at the end of that list so it reads li
 
 * Finally **add** the following which will correspond be line 157-181:
 
-````javascript
-
+```javascript
 "signup": {
     "signupFieldNames": [
         "username",
@@ -125,7 +124,7 @@ Find the following at 152-155, add a line at the end of that list so it reads li
 
 Due to the fact that the IP blacklist was reporting false positives all the time and did little to prevent spammers, we are disabling it by default. See this [talk post](https://talk.openmrs.org/t/proposing-to-remove-ip-blacklist-in-dashboard/2264) for details. The final configuration file change does this.
 
-Given to the reason above, we added a field, `conf.signup.disableBlacklist` ,in the `app/conf.js` file, and all you need is to turn that on. The old database can be safely trashed.
+Given to the reason above, we added a field, `conf.signup.disableBlacklist` in the `app/conf.js` file, and all you need is to turn that on. The old database can be safely trashed.
 
 # Update Dashboard dependencies
 
@@ -150,7 +149,7 @@ The remainder of `conf.json` is be the same.
 
 Below line 5 in add the following:
 
-``` json
+```json
 "nonceURL": "http://talk.openmrs.org/session/sso",
 ```
 
