@@ -17,7 +17,7 @@ services:
   mongodb:
     image: mongo:3.2
     ports:
-      - "0.0.0.0:27018:27017"
+      - "0.0.0.0:27017:27017"
     container_name: "id_dashboard_mongo"
     volumes:
       - ./data/runtime/db:/data/db
@@ -35,8 +35,8 @@ services:
     environment:
       - LDAP_TLS=false
     volumes:
-      - ./data/etc/ldap/slapd.d:/etc/ldap/slapd.d
-      - ./data/var/lib/ldap:/var/lib/ldap
+      - ./data/ldap/etc/ldap/slapd.d:/etc/ldap/slapd.d
+      - ./data/ldap/var/lib/ldap:/var/lib/ldap
     ports:
       - 127.0.0.1:389:389
     container_name: "id_dashboard_openldap"

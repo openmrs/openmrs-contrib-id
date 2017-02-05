@@ -6,11 +6,14 @@ services:
       context: .
     container_name: "id_dashboard"
     env_file: .env
+    environment:
+      - NODE_ENV=production
     restart: always
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
       - mongodb
+      - openldap
   mongodb:
     image: mongo:3.2
     container_name: "id_dashboard_mongo"
@@ -26,8 +29,8 @@ services:
     environment:
       - LDAP_TLS=false
     volumes:
-      - ./data/etc/ldap/slapd.d:/etc/ldap/slapd.d
-      - ./data/var/lib/ldap:/var/lib/ldap
+      - ./data/ldap//etc/ldap/slapd.d:/etc/ldap/slapd.d
+      - ./data/ldap/var/lib/ldap:/var/lib/ldap
     ports:
       - 127.0.0.1:389:389
     container_name: "id_dashboard_openldap"
