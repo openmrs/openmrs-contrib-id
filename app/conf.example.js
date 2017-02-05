@@ -17,11 +17,10 @@ module.exports = {
 	"site": {
 		// use full url, like http://localhost:3000/
 		"url": process.env.SITE_URL || "http://localhost:3000",
-		"title": "OpenMRS ID"
+		"title": process.env.SITE_TITLE || "OpenMRS ID"
 	},
 	"ldap": {
 		// LDAP Settings
-
 		"server": {
 			"uri": process.env.LDAP_URI || "ldap://localhost:1389",
 			"baseDn": "ou=system,dc=openmrs,dc=org",
