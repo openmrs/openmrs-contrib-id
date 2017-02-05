@@ -11,7 +11,7 @@
     "url": "https://github.com/openmrs/openmrs-contrib-id-globalnavbar"
   },
   "author": "Elliott Williams <elliott@openmrs.org>",
-  "license": "MPLv2",
+  "license": "MPL-2.0",
   "readmeFilename": "README.md",
   "gitHead": "364cec872096f0e69e4d757b72c37b8d1f9990d2",
   "bugs": {
