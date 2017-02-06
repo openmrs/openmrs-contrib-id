@@ -29,7 +29,7 @@ services:
     environment:
       - LDAP_TLS=false
     volumes:
-      - ./data/ldap//etc/ldap/slapd.d:/etc/ldap/slapd.d
+      - ./data/ldap/etc/ldap/slapd.d:/etc/ldap/slapd.d
       - ./data/ldap/var/lib/ldap:/var/lib/ldap
     ports:
       - 127.0.0.1:389:389
