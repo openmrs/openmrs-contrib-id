@@ -6,13 +6,13 @@ RUN apk add --no-cache bash openssl git perl python build-base \
 && adduser -s /bin/bash -D -G dashboard -u 99999 dashboard
 
 RUN npm install bower gulp -g
-ENV HOME=/home/dashboard
-WORKDIR $HOME/id
+ENV WORKDIR=/opt/id
+WORKDIR $WORKDIR
 EXPOSE 3000
 CMD ["dockerize", "-wait", "tcp://mongodb:27017", "npm", "start"]
-COPY . $HOME/id
+COPY . $WORKDIR
 COPY app/conf.example.js app/conf.js
-RUN chown -R dashboard:dashboard $HOME/id
+RUN chown -R dashboard:dashboard $WORKDIR
 
 USER dashboard
 RUN git submodule update --init \
