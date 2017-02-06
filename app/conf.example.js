@@ -62,7 +62,7 @@ module.exports = {
 		}
 	},
 	"mongo": {
-		"uri": process.env.MONGO_URI || "mongodb://localhost:27018/openmrsid",
+		"uri": process.env.MONGO_URI || "mongodb://localhost:27017/openmrsid",
 		"commonExpireTime": "2d"
 	},
 	"session": {
