@@ -1,7 +1,8 @@
-version: "2"
+version: "2.1"
+
 services:
   web:
-    user: dashboard
+    user: "${UID}:${GID}"
     env_file: .env
     build:
       context: .
