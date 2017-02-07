@@ -85,7 +85,7 @@ app.use(mid.openmrsHelper);
 
 //development
 if ('development' === app.get('env')) {
-	console.log('Running in development mode');
+	log.info('Running in development mode');
 
 	app.use(errorHandler());
 
@@ -107,7 +107,7 @@ if ('development' === app.get('env')) {
 }
 
 if ('production' === app.get('env')) {
-	console.log('Running in production mode');
+	log.info('Running in production mode');
 	app.use(errorHandler());
 
 	app.use('/resource', lessMiddleware('/less', {
@@ -174,13 +174,13 @@ app.use(require('./routes/error'));
 
 
 process.on('uncaughtException', err => {
-	console.log(err);
+	log.error(err);
 });
 
 // Do something before close the app
 const gracefulExit = () => {
 	mongoose.connection.close(() => {
-		console.log('Mongoose connection closed');
+		log.info('Mongoose connection closed');
 		process.exit();
 	});
 };
@@ -190,4 +190,4 @@ process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
 /* App startup: */
 app.listen(app.get('port'));
 
-console.log(`Express started on port ${app.get('port')}`);
+log.info(`Express started on port ${app.get('port')}`);
