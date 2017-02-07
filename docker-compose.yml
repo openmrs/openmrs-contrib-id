@@ -2,8 +2,8 @@ version: "2.1"
 
 services:
   web:
-    user: "${UID}:${GID}"
-    env_file: .env
+    user: "${UID-1000}:${GID-1000}"
+    env_file: .env.development
     build:
       context: .
     ports:
