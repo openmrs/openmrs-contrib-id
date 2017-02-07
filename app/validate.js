@@ -166,7 +166,7 @@ validate.perform = (validators, callback) => {
 		});
 
 		if (!failed) { // if all valid, pass the requests to next handler
-			log.debug('successed for validation');
+			log.debug('validation successful');
 			return callback();
 		}
 

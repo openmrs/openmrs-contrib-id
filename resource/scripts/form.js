@@ -108,7 +108,7 @@ $(document).ready(function() {
 			if (pass.length < 8) {
 				return 'Too short';
 			}
-			if (pass.length > 32) {
+			if (pass.length > 100) {
 				return 'Too long';
 			}
 		}
