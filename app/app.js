@@ -61,6 +61,7 @@ app.use(cookieParser());
 // store express session in MongoDB
 const sessionStore = new MongoStore({
 	url: conf.mongo.uri,
+  "auto_reconnect": true,
 });
 const session = expressSession({
 	store: sessionStore,
