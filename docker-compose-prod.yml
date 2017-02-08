@@ -22,8 +22,7 @@ services:
     ports:
       - "127.0.0.1:27017:27017"
     volumes:
-      - ./data/runtime/db:/data/db
-      - ./data/dump:/dump
+      - ./data/mongo/db:/data/db
   openldap:
     image: osixia/openldap:1.1.7
     environment:

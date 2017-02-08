@@ -22,8 +22,7 @@ services:
       - "0.0.0.0:27017:27017"
     container_name: "id_dashboard_mongo"
     volumes:
-      - ./data/runtime/db:/data/db
-      - ./data/dump:/dump
+      - ./data/mongo/db:/data/db
     restart: unless-stopped
     command: "mongod --nojournal --smallfiles"
   mailcatcher:
