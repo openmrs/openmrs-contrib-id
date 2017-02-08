@@ -26,7 +26,7 @@ const client = ldapjs.createClient({
 });
 
 const USERNAME = 'uniqueuniquelonglong';
-const PASSWORD = 'longlongpassword';
+const PASSWORD = 'UCvvmJuqCbDyejN2+Hz3MwDnO8baGPbiHOckfsBU2Yfw22Xc609UhG8nke/h2+HFd0f8qJBTnltbtyM7r50SmYRE3qAMvu1pqpkqbANbaQ3OV54zldpzZi2bOaJyq87CnnGLBMY';
 const EMAIL = 'foo@bar.com';
 const NAME = 'name';
 
@@ -91,7 +91,7 @@ describe('ldap', () => {
 		});
 
 		it('should return nothing when the user doesn\'t exist', done => {
-			ldap.getUser('HowShouldSomeoneNameNuchaLongName', (err, user) => {
+			ldap.getUser('fourohfour', (err, user) => {
 				expect(err).to.not.exist;
 				expect(user).to.not.exist;
 				return done();

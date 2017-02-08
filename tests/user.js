@@ -29,7 +29,7 @@ const INVALID_USERNAME = 'Ply_py'; // contain one underscore
 const SIMPLE_STRING = 'string';
 const DOUBLE_STRING = SIMPLE_STRING + SIMPLE_STRING;
 
-const VALID_PASSWORD = 'long_password';
+const VALID_PASSWORD = 'UCvvmJuqCbDyejN2+Hz3MwDnO8baGPbiHOckfsBU2Yfw22Xc609UhG8nke/h2+HFd0f8qJBTnltbtyM7r50SmYRE3qAMvu1pqpkqbANbaQ3OV54zldpzZi2bOaJyq87CnnGLBM';
 
 const VALID_INFO1 = {
 	username: VALID_USERNAME1,
