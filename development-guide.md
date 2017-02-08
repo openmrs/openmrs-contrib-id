@@ -11,25 +11,26 @@ Dashboard is a typical [Node.js][1] web application that utilizes [Express.js][0
 $ npm install
 ```
 
-#### Start the services (OpenLDAP (Vagrant), MongoDB and mailcatcher(Docker))
+#### Start the services (OpenLDAP, MongoDB and mailcatcher)
 
 ``` shell
-$ npm run bootstrap
+$ docker-compose up -d
 ```
 
 #### Add groups to MongoDB
 If this is the first time you are running this, you need to add the groups to mongo. Simply run the following helper script:
 
 ``` shell
-$ node build/store.js
+$ docker-compose exec web node build/store.js
 ```
 
 #### Run the development server
 
-``` shell
-$ npm start
-```
+So long as `web` container is running, no need to do anything. You might need to restart it periodically, do so by:
 
+``` shell
+$ docker-compose up --force-recreate web
+```
 
 ### Key Packages
 As you may know, a Node.js application depends heavily on the modules it uses, you may take a took in `package.json`.
@@ -56,7 +57,7 @@ Currently, we organize the code this way.
 --/templates                view templates
 --/logs                     the log files
 --/resource                 static resources
---/test                     tests should reside here.
+--/tests                     tests should reside here.
 ```
 **Note**
 + You'd better use corresponding structure between `app/routes` and `templates/views`.

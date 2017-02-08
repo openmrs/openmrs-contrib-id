@@ -1,103 +1,207 @@
 Installing OpenMRS ID
 =====
 
-(The following steps are written for and tested on Ubuntu (almost all versions))
+This guide is written and tested on Linux and should be compatible with any Unix-based system.
 
-1. Install and configure OpenLDAP by [following this guide][0]. There currently exists a [vagrant][] box which will set up openldap for you using puppet.
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-generate-toc again -->
+**Table of Contents**
 
-    ``` shell
-    $ vagrant up
-    ```
+- [Installing OpenMRS ID](#installing-openmrs-id)
+    - [Install Node.](#install-node)
+    - [Install Docker and Docker Compose](#install-docker-and-docker-compose)
+    - [Clone OpenMRS ID Dashboard](#clone-openmrs-id-dashboard)
+        - [Setting up Modules](#setting-up-modules)
+            - [Global Navigation Bar](#global-navigation-bar)
+            - [Single Sign On](#single-sign-on)
+    - [Running ID Dashboard](#running-id-dashboard)
+        - [Development](#development)
+            - [Using Docker](#using-docker)
+            - [Running Locally](#running-locally)
+        - [Production](#production)
+            - [Copy OpenLDAP database and config directories to be read by the docker container.](#copy-openldap-database-and-config-directories-to-be-read-by-the-docker-container)
+            - [Load Production data into the new MongoDB container](#load-production-data-into-the-new-mongodb-container)
+    - [Services](#services)
+        - [Setting up OpenLDAP](#setting-up-openldap)
+            - [Authentication details:](#authentication-details)
+        - [Setting up MongoDB](#setting-up-mongodb)
+        - [Setting up Mailcatcher](#setting-up-mailcatcher)
+    - [Additional Notes](#additional-notes)
 
-    It by  default listens on port `1389`.
-    Authentication details:
-
-          | User Name | Password | Purpose                |
-          |-----------|----------|------------------------|
-          | omrsid    | secret   | ID Dashboard Account   |
-          | admin     | secret   | Administrative Account |
-
-it listens on port `1389` on on `**127.0.0.1**`.
-
-2. Run our mongodb [docker][] container by using [docker-compose][], which will create the database for you – as well as the user and handle everything for you. Simply type: type:
-
-    ``` shell
-    $ docker-compose up mongodb -d
-
-          | Database  |
-          |-----------|
-          | openmrsid |
-
-It listens on port `**27018**` on `**127.0.0.1**`. The current example config should be useable for development purposes, but do not use it for production purposes. There is no password.
-
-3. Install Node. For development environments, I use [nvm][1]. Install the latest from the Node 5.x branch (**It does not work with Node 6**, we test against 0.12.x, 4.x and 5.x on travis-ci):
-
-     ```
-     curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.26.0/install.sh | bash
-
-     # Restart your terminal session
-     nvm install 5
-     ```
-
-     You may experience problems that reports "No command 'nvm' nvm found...", there might be some problem happened to your bash configuration files. Usually it's easy to solve this by just adding this line to your '.bashrc'.
-
-     ```
-     [[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh
-     ```
-
-4. Clone [openmrs-contrib-id][2] and enter the project directory.
+<!-- markdown-toc end -->
 
 
-    ```
-    git clone --recursive https://github.com/openmrs/openmrs-contrib-id.git
-    cd openmrs-contrib-id
-    ```
+## Install Node.
 
-5.  Install project dependencies.
+We suggest you use [nvm][1].
 
-    Run this and wait:
+Install the latest from the Node 5.x branch (**It does not work with Node 6**, we test against 4.x and 5.x on travis-ci):
 
-    ```
-    npm install ; git submodule foreach npm install
+``` shell
+$ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.26.0/install.sh | bash
 
-    ```
+# Restart your terminal session
+$ nvm install 5
+```
 
-6. Copy `app/conf.example.js` to `app/conf.js`. Edit `conf.js` and modify configuration with:
+You may experience problems that reports "No command 'nvm' nvm found...", there might be some problem happened to your bash configuration files. Usually it's easy to solve this by just adding this line to your '.bashrc'.
 
-    1. LDAP credentials for the `omrsid` account
-    2. LDAP resource uri's (e.g. replace `dc=example` with `dc=openmrs,dc=org`)
-    3. reCAPTCHA keys (if you have them—they are required for signup)
-    4. Set up SMTP credentials
+``` shell
+[[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh
+```
 
+## Install Docker and Docker Compose
 
+We use Docker and Docker Compose for everything. First step is to install it. Follow the instructions
+for your operating system.
 
-7. Initialize `Groups` in MongoDB
+1. Install [docker][]
+2. Install [docker-compose][]
 
-    There is a helper script borrowed from [here][6] for this.
-    Simply run
-    ```
-    node build/store.js
-    ```
+## Clone OpenMRS ID Dashboard
 
-    See details in Addtional Notes 2.
+Clone [openmrs-contrib-id][2] and enter the project directory.
+1.
 
-8. Start OpenMRS ID in development mode from the base project directory:
+``` shell
+$ git clone --recursive https://github.com/openmrs/openmrs-contrib-id.git
+$ cd openmrs-contrib-id
+```
+2. If setting up a development environment, stop here -- you're done. Otherwise copy `.env.example` to `.env`.
 
-    ```
-    node app/app
-    ```
+3. Copy `app/conf.example.js` to `app/conf.js`. The example is set up for quickly getting started.
+
+``` shell
+cp -v app/conf.example.js app/conf.js
+```
+
 ### Setting up Modules
 
-1. Global Navigation Bar
+These are the modules which requires manual setup. If running within [docker][], it is not necessary to do this.
 
-`cp -a app/user-modules/openmrs-contrib-id-globalnavbar/lib/db.example.json app/user-modules/openmrs-contrib-id-globalnavbar/lib/db.json`
+#### Global Navigation Bar
 
-2. Single Sign On
-`cp -a app/user-modules/openmrs-contrib-id-sso/conf.example.js app/user-modules/openmrs-contrib-id-sso/conf.js`
+``` shell
+$ cp -a app/user-modules/openmrs-contrib-id-globalnavbar/lib/db.example.json app/user-modules/openmrs-contrib-id-globalnavbar/lib/db.json
+```
+
+#### Single Sign On
+
+``` shell
+$ cp -a app/user-modules/openmrs-contrib-id-sso/conf.example.js app/user-modules/openmrs-contrib-id-sso/conf.js
+```
+
+## Running ID Dashboard
+
+The example configuration has been set up to run either inside of [docker][], or locally on the host with the services running in docker.
+
+### Development
+
+#### Using Docker
+
+If you are using this method, the command that follows will start all [services](#services) for you.
+
+``` shell
+$ docker-compose up -d
+```
+
+Initialize `Groups` in MongoDB, see section on [setting it up](#setting-up-mongodb):
+
+There is a helper script borrowed from [here][6] for this. See details in [Additional Notes](#additional-notes) item 2.
+
+We will execute this from within the [docker][] container:
+
+``` shell
+$ docker-compose exec web node build/store.js
+```
+This only needs to be executed once, subsequent runs will error out.
 
 
+#### Running Locally
 
-### Addtional Notes
+``` shell
+$ docker-compose up -d openldap mongodb mailcatcher
+$ npm i ; git submodule foreach npm i
+$ node build/store.js
+$ node app/app
+```
+
+
+### Production
+
+Ensure all production secrets are in `.env`. All services are set up to listen on `127.0.0.1`.
+
+If moving from 2.0.x, bring down OpenLDAP and copy the data directories:
+
+#### Copy OpenLDAP database and config directories to be read by the docker container.
+``` shell
+$ cp /var/lib/ldap -R data/ldap/database
+$ cp /etc/ldap/slapd.d -R data/ldap/config
+```
+
+#### Load Production data into the new MongoDB container
+
+This can be done while mongo is running, but you should bring down ID dashboard.
+
+1. Run mongodump:
+
+``` shell
+$ mongodump -u username -p password -d openmrsid
+```
+2. Then do the following:
+
+``` shell
+$ docker-compose -f docker-compose-prod.yml up -d
+$ docker cp dump/openmrsid id_dashboard_mongo:/openmrsid
+$ docker-compose exec mongodb mongorestore --db openmrsid --drop openmrsid
+```
+
+## Services
+### Setting up OpenLDAP
+
+1. You will need to extract `build/var_lib_ldap.tbz` and `build/etc_ldap_slapd.d.tbz2` to `data/ldap`. This contains the basic
+   OpenLDAP configuration and database to get started. If you ever need to restart, simply repeat the commands listed below.
+The following is for **DEVELOPMENT ONLY**:
+
+``` shell
+$ tar xvjf build/etc_ldap_slapd.d.tbz2 -C data/ldap
+$ tar xvjf build/var_lib_ldap.tbz2 -C data/ldap
+```
+It by  default listens on port `389`.
+
+#### Authentication details:
+
+| User Name | Password | Purpose                |
+|-----------|----------|------------------------|
+| omrsid    | secret   | ID Dashboard Account   |
+| admin     | secret   | Administrative Account |
+
+
+It listens on port `389` on on `127.0.0.1`.
+
+Starting it is the same for both production and development:
+
+``` shell
+docker-compose up -d openldap
+```
+### Setting up MongoDB
+
+Run our mongodb [docker][] container by using [docker-compose][], which will create the database for you – as well as the user and handle everything for you. Simplytype:
+
+``` shell
+$ docker-compose up mongodb -d
+```
+### Setting up Mailcatcher
+
+For development purpose, it's not necessary to install and play the Postfix mailer. You may take a look of the [Mailcatcher][5], which is a ruby application that catches all the emails sent from local server. The current [docker][] container handles spinning this up for you.
+
+``` shell
+docker-compose up -d mailcatcher
+```
+The web interface is available on port **1080** on all interfaces and the SMTP server listens on port **1025** on all interfaces.
+
+No special configuration is necessary.
+
+## Additional Notes
 
 1. For development purpose, it's not necessary to install and play the Postfix mailer. You may take a look of the [Mailcatcher][5], which is a ruby application that catches all the emails sent from local server. The current [docker][] container handles spinning this up for you.
 
@@ -107,13 +211,9 @@ It listens on port `**27018**` on `**127.0.0.1**`. The current example config sh
 
     The `add-admin.js` helper is now copied into `scripts/add-admin.js`, check `scripts/ADDING-ADMIN.md` for its usage.
 
-
-
-[0]: https://gist.github.com/elliottwilliams/9548288
 [1]: https://github.com/creationix/nvm
 [2]: https://github.com/openmrs/openmrs-contrib-id
 [5]: http://mailcatcher.me/
 [6]: https://github.com/Plypy/OpenMRS-ID-Migrator
 [docker]:https://docs.docker.com/engine/installation/
 [docker-compose]: https://docs.docker.com/compose/install/
-[vagrant]: https://www.vagrantup.com/downloads.html
