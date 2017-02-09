@@ -15,7 +15,7 @@ services:
       - mongodb
       - openldap
   mongodb:
-    image: mongo:3.2
+    image: mongo:3.4
     container_name: "id_dashboard_mongo"
     command: mongod --smallfiles
     restart: always

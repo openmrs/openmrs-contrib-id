@@ -11,7 +11,7 @@ services:
     ports:
       - 127.0.0.1:389:389
   mongodb:
-    image: mongo:3.2
+    image: mongo:3.4
     container_name: "id_dashboard_mongo"
     command: mongod --smallfiles
     ports:

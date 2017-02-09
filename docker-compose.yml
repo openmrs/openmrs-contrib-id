@@ -17,7 +17,7 @@ services:
       - .:/opt/id
     container_name: "id_dashboard"
   mongodb:
-    image: mongo:3.2
+    image: mongo:3.4
     ports:
       - "0.0.0.0:27017:27017"
     container_name: "id_dashboard_mongo"
