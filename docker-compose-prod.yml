@@ -30,6 +30,7 @@ services:
     volumes:
       - ./data/ldap/etc/ldap/slapd.d:/etc/ldap/slapd.d
       - ./data/ldap/var/lib/ldap:/var/lib/ldap
+    restart: always
     ports:
       - 127.0.0.1:389:389
     container_name: "id_dashboard_openldap"

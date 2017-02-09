@@ -8,13 +8,13 @@ services:
       context: .
     ports:
       - 0.0.0.0:3000:3000
-    restart: unless-stopped
     depends_on:
       - mailcatcher
       - mongodb
       - openldap
     volumes:
       - .:/opt/id
+    restart: unless-stopped
     container_name: "id_dashboard"
   mongodb:
     image: mongo:3.4
@@ -30,6 +30,7 @@ services:
     ports:
       - "0.0.0.0:1080:1080"
       - "0.0.0.0:1025:1025"
+    restart: unless-stopped
     container_name: "id_dashboard_mailcatcher"
   openldap:
     image: osixia/openldap:1.1.7
@@ -38,6 +39,7 @@ services:
     volumes:
       - ./data/ldap/etc/ldap/slapd.d:/etc/ldap/slapd.d
       - ./data/ldap/var/lib/ldap:/var/lib/ldap
+    restart: unless-stopped
     ports:
       - 127.0.0.1:389:389
     container_name: "id_dashboard_openldap"
