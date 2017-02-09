@@ -93,7 +93,7 @@ module.exports = {
 		"smtp": {
 			"host": process.env.MAIL_HOST || "localhost",
 			"port": process.env.MAIL_PORT || 1025,
-			"use_authentication": process.env.AUTH || false,
+			"use_authentication": Boolean(process.env.MAIL_AUTH),
 			"user": process.env.MAIL_USER || "postfix_user",
 			"pass": process.env.MAIL_PASS || "secret"
 		}

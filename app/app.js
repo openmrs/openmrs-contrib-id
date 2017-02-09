@@ -110,7 +110,7 @@ if ('development' === app.get('env')) {
 if ('production' === app.get('env')) {
 	log.info('Running in production mode');
 	app.use(errorHandler());
-
+  log.info(`Email settings ${conf.email.smtp}`);
 	app.use('/resource', lessMiddleware('/less', {
 		dest: '/stylesheets',
 		pathRoot: path.join(__dirname, '/../resource/'),
