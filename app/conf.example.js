@@ -94,11 +94,14 @@ module.exports = {
 			"host": process.env.MAIL_HOST || "localhost",
 			"port": process.env.MAIL_PORT || 1025,
 			"use_authentication": Boolean(process.env.MAIL_AUTH),
-			"user": process.env.MAIL_USER || "postfix_user",
-			"pass": process.env.MAIL_PASS || "secret"
-		}
+			"auth": {
+				"user": process.env.MAIL_USER || "postfix_user",
+				"pass": process.env.MAIL_PASS || "secret",
+			},
+			logger: Boolean(process.env.MAIL_LOGGING), // log to console
+			debug: Boolean(process.env.LOG_SMTP_TRAFFIC) // include SMTP traffic in the logs
+		},
 	},
-
 	"defaultSidebar": [
 		"needhelp"
 	],
