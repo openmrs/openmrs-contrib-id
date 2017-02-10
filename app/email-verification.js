@@ -121,8 +121,14 @@ exports.resend = (uuid, callback) => {
 			const msg = 'Email verification record is not found, maybe expired';
 			log.error(msg);
 			return callback(new Error(msg));
-		}
-		log.debug('got instance to resend');
+    }
+    log.debug('found verification instance.');
+    verification.remove(err => {
+      if (err) {
+        return callback(err);
+      }
+      log.debug('verification cleared, now resending');
+    });
 
 		// begin new verification with settings of the first one
 		exports.begin(verification.settings, callback);
