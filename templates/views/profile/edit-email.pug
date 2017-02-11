@@ -1,9 +1,9 @@
 mixin email-item(m)
   h3.email-address= m.email
     if (m.primary)
-      small Primary Email Address
+      small <strong>Primary</strong>
     if (m.notVerified)
-      small Needs Verification
+      small <i>Needs Verification</i>
 
   if (!m.primary)
     a(href='/profile/email/delete/' + encodeURIComponent(m.email))
@@ -19,7 +19,7 @@ mixin email-item(m)
 
 .panel
   h1 My Email Address(es)
-  p Your email address is used for OpenMRS Community Applications and password resetting. Only the primary one would be used ac across all the apps and to show your avatar(via Gravatar).
+  p Your email address is used for OpenMRS Community Applications and password resetting. Only the primary one would be used across all the apps and to show your avatar(via Gravatar).
 
   ul.email-selector.list-group.col-md-12
     each m in emails
