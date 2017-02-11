@@ -26,6 +26,5 @@ prepend sidebar
     h2 Administration
       ul
         each page in pages
-          - console.log(reqURL, page.url);
           a(class={active: page.url === reqURL}, href=page.url)
             li= page.name
