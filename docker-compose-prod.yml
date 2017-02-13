@@ -1,7 +1,6 @@
 version: "2.1"
 services:
   web:
-    user: dashboard
     build:
       context: .
     container_name: "id_dashboard"
@@ -14,6 +13,9 @@ services:
     depends_on:
       - mongodb
       - openldap
+    volumes:
+      - ./data/globalnavbar:/opt/id/app/user-modules/openmrs-contrib-id-globalnavbar/data
+
   mongodb:
     image: mongo:3.4
     container_name: "id_dashboard_mongo"

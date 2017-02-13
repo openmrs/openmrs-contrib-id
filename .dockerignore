@@ -1,9 +1,8 @@
-**/node_modules/
+node_modules/
 bower_components/
-data/**
+data/
 docker-compose*
-puppet/
-.vagrant
-Vagrantfile
+Dockerfile
 app/user-modules/openmrs*
 logs/*.log
+*.md
