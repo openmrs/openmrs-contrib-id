@@ -97,7 +97,7 @@ $(document).ready(function() {
 				return 'Must Start with letter';
 			}
 			if (!usernameRegex.test(user)) {
-				return 'Only (a-z, 0-9) are allowed';
+				return 'must start lowercase letters and/or numbers. (a-z, 0-9 only)';
 			}
 		}
 	});
