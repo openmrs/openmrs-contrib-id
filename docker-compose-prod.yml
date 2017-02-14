@@ -11,8 +11,10 @@ services:
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
-      - mongodb
-      - openldap
+      mongodb:
+          condition: service_healthy
+      openldap:
+          condition: service_started
     volumes:
       - ./data/globalnavbar:/opt/id/app/user-modules/openmrs-contrib-id-globalnavbar/data
   mongodb:
@@ -22,6 +24,11 @@ services:
     restart: always
     volumes:
       - ./data/mongo/db:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "localhost/test", "--eval", "'quit(db.runCommand({ ping: 1 }).ok ? 0 : 1)';"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
   openldap:
     image: osixia/openldap:1.1.7
     environment:
