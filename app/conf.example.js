@@ -110,11 +110,7 @@ module.exports = {
 	"aboutHTML": `<a href="/">OpenMRS ID Dashboard</a>, v${require("../package").version}`,
 
 	// user-configured modules
-	"userModules": [
-		"openmrs-contrib-id-globalnavbar",
-		"openmrs-contrib-id-oauth",
-		"openmrs-contrib-id-sso",
-	],
+	"userModules": process.env.USER_MODULES.split(","),
 
 	// a exceptionlists of session middlware, use regular expressions
 	"sessionExceptions": [
