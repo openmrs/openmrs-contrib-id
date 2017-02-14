@@ -21,6 +21,10 @@ block content
   br
   ol(type='disc')
     li <a href='http://modules.openmrs.org'>Modules: </a> Extend OpenMRS in limitless ways, share your contributions.
-    li <a href='https://wiki.openmrs.org/users/editmyprofile.action'>Wiki: </a>Create your own personal space, and your profile.
-    li <a href='http://talk.openmrs.org'>Talk: </a> This is the primary communication medium for the OpenMRS community.
-    li <a href='https://issues.openmrs.org'>Issues: </a> Report bugs, Suggest Improvements, Find a way to contribute!
+    - if(_.includes(user.groups,'confluence-users')) {
+      li <a href='https://wiki.openmrs.org/users/editmyprofile.action'>Wiki: </a>Create your profile and contribute to the community documentation.
+    - }
+      li <a href='http://talk.openmrs.org'>Talk: </a> This is the primary communication medium for the OpenMRS community.
+    - if(_.includes(user.groups,'jira-users')) {
+      li <a href='https://issues.openmrs.org'>Issues: </a> Report bugs, Suggest Improvements, Find a way to contribute!
+    - }
