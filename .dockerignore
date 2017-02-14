@@ -6,3 +6,4 @@ Dockerfile
 app/user-modules/openmrs*
 logs/*.log
 *.md
+app/conf.js
