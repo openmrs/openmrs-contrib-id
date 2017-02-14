@@ -15,14 +15,11 @@ services:
       - openldap
     volumes:
       - ./data/globalnavbar:/opt/id/app/user-modules/openmrs-contrib-id-globalnavbar/data
-
   mongodb:
     image: mongo:3.4
     container_name: "id_dashboard_mongo"
     command: mongod --smallfiles
     restart: always
-    ports:
-      - "127.0.0.1:27017:27017"
     volumes:
       - ./data/mongo/db:/data/db
   openldap:
