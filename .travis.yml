@@ -1,7 +1,10 @@
 sudo: required
 dist: trusty
 language: node_js
-cache: yarn
+cache:
+  yarn: true
+  directories:
+    - node_modules
 
 services:
   - docker
@@ -24,8 +27,8 @@ install:
   - docker-compose -f build/docker-compose.yml up -d
   - cp -v app/conf.example.js app/conf.js
   - cp -v tests/conf.example.js tests/conf.js
-  - npm install -g bower gulp
-  - npm install
+  - yarn global add bower gulp
+  - yarn
   - node build/store.js
 
 branches:
