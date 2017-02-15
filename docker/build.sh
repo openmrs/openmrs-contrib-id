@@ -11,12 +11,6 @@ chown -R dashboard:dashboard "$WORKDIR"
 echo "Initializing and updating submodules for user modules..."
 gosu dashboard git submodule update --init
 
-
-echo "Copying example db.json for the globalnavbar..."
-if [ ! -f app/user-modules/openmrs-contrib-id-globalnavbar/data/db.json ]; then
-    gosu dashboard cp -v app/user-modules/openmrs-contrib-id-globalnavbar/data/db.example.json app/user-modules/openmrs-contrib-id-globalnavbar/data/db.json
-fi
-
 echo "Setting file permissions for globalnavbar data directory..."
 chown -R dashboard:dashboard app/user-modules/openmrs-contrib-id-globalnavbar/data/
 
