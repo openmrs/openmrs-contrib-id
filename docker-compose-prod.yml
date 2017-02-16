@@ -17,6 +17,7 @@ services:
           condition: service_started
     volumes:
       - ./data/globalnavbar:/opt/id/app/user-modules/openmrs-contrib-id-globalnavbar/data
+      - ./data/logs:/opt/id/logs
   mongodb:
     image: mongo:3.4
     container_name: "id_dashboard_mongo"
