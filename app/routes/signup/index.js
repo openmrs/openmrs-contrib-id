@@ -44,8 +44,6 @@ exports = module.exports = app => {
 	app.get('/signup', mid.forceLogout);
 
 	app.post('/signup', (req, res, next) => {
-		console.log(JSON.stringify(req.session));
-		console.log(JSON.stringify(req.body));
 		return next();
 	});
 
