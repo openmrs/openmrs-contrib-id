@@ -9,12 +9,11 @@ extends ../layouts/email.pug
 
 block content
   h2 This email address requires verification.
-
-  p= diplayName
+  p= displayName
 
   p Thanks for updating your OpenMRS ID!
 
-  p Since you have provided a new email address, <strong>#{email}</strong>, we need to verify it before it can be used to subscribe to mailing lists, receive communication from community tools, and appear on your profile.
+  p Since you have provided a new email address, <strong>#{email}</strong>, we need to verify it before it can be used to receive communication from community tools, and appear on your profile.
 
   p To verify your address, go to the following page:
 
@@ -22,7 +21,7 @@ block content
 
   p In case of problems managing your account or logging in, please open a help desk ticket at <a href="http://om.rs/helpdesk">http://om.rs/helpdesk</a> &mdash; remember to include your contact information so we can assist you.
 
-  p If you received this message in error, don't worry. #{diplayName} will not be able to utilize this address without going through the verification process above.
+  p If you received this message in error, don't worry, #{displayName} will not be able to utilize this address without going through the verification process above.
 
   p Thanks!
   p OpenMRS Community Infrastructure Team
