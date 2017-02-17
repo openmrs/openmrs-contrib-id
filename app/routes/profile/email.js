@@ -272,7 +272,7 @@ exports = module.exports = app => {
 				if (err) {
 					return next(err);
 				}
-				log.info(`${user.username}successfully updated`);
+				log.info(`${user.username} successfully updated`);
 				req.session.user = user;
 				return res.redirect('/profile');
 			});

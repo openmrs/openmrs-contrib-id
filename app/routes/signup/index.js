@@ -143,7 +143,7 @@ exports = module.exports = app => {
 	app.get('/signup/:id', (req, res, next) => {
 		const id = utils.urlDecode64(req.params.id);
 		const INVALID_MSG = 'The requested signup verification does not exist, ' +
-			'it might be expired.';
+			'it might have expired.';
 
 		const findUsernameByVerifyID = callback => {
 			verification.check(id, (err, valid, locals) => {
