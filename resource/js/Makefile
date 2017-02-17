@@ -1,7 +1,7 @@
 default: build compile
 
 build:
-	ender build ./reqwest ./ender-hoover ./lazyload ./openmrs-navbar-frontend/ --sandbox OpenMRSNavbar 
+	ender build ./reqwest ./ender-hoover ./lazyload ./openmrs-navbar-frontend/ --sandbox OpenMRSNavbar
 
 build-no-sandbox:
 	ender build ./reqwest ./ender-hoover ./lazyload ./openmrs-navbar-frontend/

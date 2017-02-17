@@ -930,33 +930,33 @@
 			LazyLoad makes it easy and painless to lazily load one or more external
 			JavaScript or CSS files on demand either during or after the rendering of a web
 			page.
-      
+
 			Supported browsers include Firefox 2+, IE6+, Safari 3+ (including Mobile
 			Safari), Google Chrome, and Opera 9+. Other browsers may or may not work and
 			are not officially supported.
-      
+
 			Visit https://github.com/rgrove/lazyload/ for more info.
-      
+
 			Copyright (c) 2011 Ryan Grove <ryan@wonko.com>
 			All rights reserved.
-      
+
 			Permission is hereby granted, free of charge, to any person obtaining a copy of
 			this software and associated documentation files (the 'Software'), to deal in
 			the Software without restriction, including without limitation the rights to
 			use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
 			the Software, and to permit persons to whom the Software is furnished to do so,
 			subject to the following conditions:
-      
+
 			The above copyright notice and this permission notice shall be included in all
 			copies or substantial portions of the Software.
-      
+
 			THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 			IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
 			FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
 			COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 			IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 			CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-      
+
 			@module lazyload
 			@class LazyLoad
 			@static
@@ -998,7 +998,7 @@
 
 					/**
           Creates and returns an HTML element with the specified name and attributes.
-      
+
           @method createNode
           @param {String} name element name
           @param {Object} attrs name/value mapping of element attributes
@@ -1022,7 +1022,7 @@
           Called when the current pending resource of the specified type has finished
           loading. Executes the associated callback (if any) and loads the next
           resource in the queue.
-      
+
           @method finish
           @param {String} type resource type ('css' or 'js')
           @private
@@ -1052,7 +1052,7 @@
 					/**
           Populates the <code>env</code> variable with user agent and feature test
           information.
-      
+
           @method getEnv
           @private
           */
@@ -1078,13 +1078,13 @@
           in the queue if no resources are specified. If a resource of the specified
           type is already being loaded, the new request will be queued until the
           first request has been finished.
-      
+
           When an array of resource URLs is specified, those URLs will be loaded in
           parallel if it is possible to do so while preserving execution order. All
           browsers support parallel loading of CSS, but only Firefox and Opera
           support parallel loading of scripts. In other browsers, scripts will be
           queued and loaded one at a time to ensure correct execution order.
-      
+
           @method load
           @param {String} type resource type ('css' or 'js')
           @param {String|Array} urls (optional) URL or array of URLs to load
@@ -1206,12 +1206,12 @@
           Begins polling to determine when the specified stylesheet has finished loading
           in Gecko. Polling stops when all pending stylesheets have loaded or after 10
           seconds (to prevent stalls).
-      
+
           Thanks to Zach Leatherman for calling my attention to the @import-based
           cross-domain technique used here, and to Oleg Slobodskoi for an earlier
           same-domain implementation. See Zach's blog for more details:
           http://www.zachleat.com/web/2010/07/29/load-css-dynamically/
-      
+
           @method pollGecko
           @param {HTMLElement} node Style node to poll.
           @private
@@ -1250,7 +1250,7 @@
           Begins polling to determine when pending stylesheets have finished loading
           in WebKit. Polling stops when all pending stylesheets have loaded or after 10
           seconds (to prevent stalls).
-      
+
           @method pollWebKit
           @private
           */
@@ -1292,7 +1292,7 @@
             callback (if any) when they have finished loading. If an array of URLs is
             specified, the stylesheets will be loaded in parallel and the callback
             will be executed after all stylesheets have finished loading.
-      
+
             @method css
             @param {String|Array} urls CSS URL or array of CSS URLs to load
             @param {Function} callback (optional) callback function to execute when
@@ -1312,11 +1312,11 @@
             specified and the browser supports it, the scripts will be loaded in
             parallel and the callback will be executed after all scripts have
             finished loading.
-      
+
             Currently, only Firefox and Opera support parallel loading of scripts while
             preserving execution order. In other browsers, scripts will be
             queued and loaded one at a time to ensure correct execution order.
-      
+
             @method js
             @param {String|Array} urls JS URL or array of JS URLs to load
             @param {Function} callback (optional) callback function to execute when
