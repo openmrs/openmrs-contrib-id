@@ -11,7 +11,7 @@ $(document).ready(function() {
 	}
 
 	$('#done').click(function() {
-		$.ajax('/profile/welcome', function() {
+		$.ajax('/profile/welcome').done(function() {
 			$('#welcome-message').hide();
 		});
 	});
