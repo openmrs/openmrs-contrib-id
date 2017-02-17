@@ -30,7 +30,7 @@ function reverseIp(req) {
 }
 
 function badRequest(next, optionalMessage) {
-	const err = new Error(optionalMessage || 'Submitted form failed ' +
+	const err = new Error(optionalMessage || 'Form submission failed.' +
 		'anti-bot checking.');
 	err.statusCode = 400;
 	next(err);
