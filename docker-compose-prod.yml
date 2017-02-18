@@ -7,7 +7,7 @@ services:
     env_file: .env
     environment:
       - NODE_ENV=production
-    restart: always
+    restart: unless-stopped
     ports:
       - "127.0.0.1:3000:3000"
     depends_on:
@@ -22,7 +22,7 @@ services:
     image: mongo:3.4
     container_name: "id_dashboard_mongo"
     command: mongod --smallfiles
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./data/mongo/db:/data/db
     healthcheck:
@@ -37,7 +37,7 @@ services:
     volumes:
       - ./data/ldap/config:/etc/ldap/slapd.d
       - ./data/ldap/database:/var/lib/ldap
-    restart: always
+    restart: unless-stopped
     ports:
       - 127.0.0.1:389:389
     container_name: "id_dashboard_openldap"
