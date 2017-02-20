@@ -38,6 +38,7 @@ services:
       - 127.0.0.1:636:636
     environment:
       - LDAP_BACKUP_CONFIG_CRON_EXP="0 0 * * *"
+      - LDAP_BACKUP_DATA_CRON_EXP="0 0 * * *"
     volumes:
       - ./data/backup/ldap:/data/backup
       - ./data/ldap/config:/etc/ldap/slapd.d
