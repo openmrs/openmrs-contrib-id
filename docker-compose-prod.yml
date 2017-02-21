@@ -39,6 +39,7 @@ services:
     environment:
       - LDAP_BACKUP_CONFIG_CRON_EXP="0 0 * * *"
       - LDAP_BACKUP_DATA_CRON_EXP="0 0 * * *"
+      - LDAP_LOG_LEVEL=0
     volumes:
       - ./data/backup/ldap:/data/backup
       - ./data/ldap/config:/etc/ldap/slapd.d
