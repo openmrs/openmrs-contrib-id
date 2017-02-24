@@ -38,11 +38,12 @@ A few modules (providing additional functionality) have been created. They can b
 * [openmrs-contrib-id-sso](https://github.com/openmrs/openmrs-contrib-id-sso) provides single sign on authentication strategies
 
 ##Why We Built It:
+
 OpenMRS's developer community was in need of unification between the tools hosted at openmrs.org and elsewhere. With contributors needing separate accounts to submit code, edit the wiki, and join mailing lists (for example), the amount of user fragmentation between tools kept growing. People new to the OpenMRS community tended to be a little confused, having to manually manage profiles across very visually-disconnected sites. Ultimately, we wanted one ID, everywhere.
 
 ##Server Requirements:
 
-* Node.js versions 4<=5
+* Node.js versions 6, it does not work with Node 7.
 * LDAP directory (tested with OpenLDAP), additionally supporting extensible objects and password policies
 * MongoDB database
 * SMTP access
