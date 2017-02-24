@@ -14,15 +14,16 @@ exports.getSSHA = (cleartext, salt) => {
 		salt = new Buffer(crypto.randomBytes(20)).toString('base64');
 	}
 	const sum = crypto.createHash('sha1');
-	sum.update(cleartext);
-	sum.update(salt);
+	sum.update(cleartext, 'utf-8');
+	sum.update(salt, 'binary');
 	const digest = sum.digest('binary');
 	const ret = `{SSHA}${new Buffer(digest + salt, 'binary').toString('base64')}`;
 	return ret;
+
 };
 
 exports.checkSSHA = (cleartext, hashed) => {
-	if (0 !== hashed.indexOf('{SSHA}')) {
+	if (hashed.substr(0, 6) !== '{SSHA}') {
 		return false;
 	}
 	const hash = new Buffer(hashed.substr(6), 'base64');
