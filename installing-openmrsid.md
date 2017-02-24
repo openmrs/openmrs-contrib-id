@@ -34,13 +34,13 @@ This guide is written and tested on Linux and should be compatible with any Unix
 
 We suggest you use [nvm][1].
 
-Install the latest from the Node 5.x branch (**It does not work with Node 6**, we test against 4.x and 5.x on travis-ci):
+Install the latest from the Node 6.x branch (**It does not work with Node 7**
 
 ``` shell
 $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.26.0/install.sh | bash
 
 # Restart your terminal session
-$ nvm install 5
+$ nvm install 6
 ```
 
 You may experience problems that reports "No command 'nvm' nvm found...", there might be some problem happened to your bash configuration files. Usually it's easy to solve this by just adding this line to your '.bashrc'.
