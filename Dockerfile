@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:5
+FROM node:6-alpine
 RUN apk add --no-cache bash curl openssl git perl python build-base \
 && apk add gosu --no-cache --repository http://dl-3.alpinelinux.org/alpine/edge/testing/
 
