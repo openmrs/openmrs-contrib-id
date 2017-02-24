@@ -18,9 +18,9 @@ echo "Copying example SSO module configuration..."
 gosu dashboard cp -a app/user-modules/openmrs-contrib-id-sso/conf.example.js app/user-modules/openmrs-contrib-id-sso/conf.js
 
 echo "Installing all dependencies for all user-modules"
-gosu dashboard git submodule foreach npm install
+gosu dashboard git submodule foreach yarn
 
 echo "Installing dashboard dependencies..."
-gosu dashboard bash -c "npm install"
+gosu dashboard bash -c "yarn"
 
 echo "Done building."
