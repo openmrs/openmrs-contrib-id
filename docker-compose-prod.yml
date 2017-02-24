@@ -31,17 +31,14 @@ services:
       timeout: 10s
       retries: 3
   openldap:
-    image: osixia/openldap-backup:1.1.8
+    image: osixia/openldap:1.1.8
     container_name: "id_dashboard_openldap"
     ports:
       - 127.0.0.1:389:389
       - 127.0.0.1:636:636
     environment:
-      - LDAP_BACKUP_CONFIG_CRON_EXP="0 0 * * *"
-      - LDAP_BACKUP_DATA_CRON_EXP="0 0 * * *"
       - LDAP_LOG_LEVEL=0
     volumes:
-      - ./data/backup/ldap:/data/backup
       - ./data/ldap/config:/etc/ldap/slapd.d
       - ./data/ldap/database:/var/lib/ldap
       - ./data/ldap/certs/:/container/service/slapd/assets/certs/
