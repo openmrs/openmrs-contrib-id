@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
     container_name: "id_dashboard_mailcatcher"
   openldap:
-    image: osixia/openldap:1.1.7
+    image: osixia/openldap:1.1.8
     environment:
       - LDAP_TLS=false
     volumes:
