@@ -1,5 +1,5 @@
 .DS_Store
 lib/sso-mockup.js
 conf.js
-conf.json
 node_modules
+npm_debug*.log
