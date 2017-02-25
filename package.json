@@ -24,5 +24,8 @@
   },
   "dependencies": {
     "discourse-sso": "~1.0.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0"
   }
 }
