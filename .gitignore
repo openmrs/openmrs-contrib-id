@@ -69,3 +69,5 @@ cscope.po.out
 
 #docker volumes
 data/
+
+.yarn-cache
