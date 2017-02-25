@@ -12,8 +12,8 @@ gulp.task('default', ['scripts']);
 gulp.task('scripts', () => {
 	// generate consts.js
 	const fd = fs.openSync(path.join(__dirname, 'resource/scripts/consts.js'), 'w');
-	fs.writeSync(fd, 'usernameRegex = ' + conf.user.usernameRegex + ';\n');
-	fs.writeSync(fd, 'emailRegex = ' + conf.email.validation.emailRegex + ';\n');
+	fs.writeSync(fd, `usernameRegex = ${conf.user.usernameRegex};\n`);
+	fs.writeSync(fd, `emailRegex = ${conf.email.validation.emailRegex};\n`);
 	fs.closeSync(fd);
 
 	return gulp.src([
