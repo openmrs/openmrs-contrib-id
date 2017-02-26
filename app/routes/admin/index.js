@@ -14,7 +14,7 @@ nav.add({
 	url: "/admin",
 	viewName: "admin",
 	requiredGroup: "dashboard-administrators",
-	icon: "icon-wrench",
+	icon: "fa-wrench",
 	order: 100
 });
 

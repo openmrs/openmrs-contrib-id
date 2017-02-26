@@ -11,7 +11,7 @@ const userNavLinks = [ // built-in links
 		'viewName': 'root',
 		'visibleLoggedOut': false,
 		'visibleLoggedIn': true,
-		'icon': 'icon-home', // corresponds with font awesome
+		'icon': 'fa-home', // corresponds with font awesome
 		'order': 10,
 	},
 
@@ -22,7 +22,7 @@ const userNavLinks = [ // built-in links
 		'visibleLoggedOut': false,
 		'visibleLoggedIn': true,
 		'requiredGroup': 'dashboard-users',
-		'icon': 'icon-user',
+		'icon': 'fa-user',
 		'order': 40,
 	},
 

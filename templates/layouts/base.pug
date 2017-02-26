@@ -77,8 +77,10 @@ html
               each link in navLinks
                 - var same = (name === link.viewName ? true : false);
                 a.btn(class=(same ? 'btn-success' : 'btn-default'),
-                      href=(same ? '#' : link.url), type='button')= link.name
-
+                      href=(same ? '#' : link.url), type='button')
+                      span(class=link.icon)
+                      | &nbsp;
+                      =  link.name
     +flashes(flash)
 
     //-headline
