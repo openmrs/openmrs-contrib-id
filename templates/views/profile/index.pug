@@ -20,10 +20,10 @@ block content
       .col-md-7
         ol
           - if(!_.includes(user.groups,'jira-users') && !_.includes(user.groups,'confluence-users')) {
-           li If you would like access to Our <a href="https://wiki.openmrs.org">Wiki</a> or <a href="https://issues.openmrs.org">Issue Tracker</a>, please contact our <a href="http://om.rs/helpdesk">Help Desk</a> with your OpenMRS ID.
+           li If you would like access to Our <a href="//wiki.openmrs.org">Wiki</a> or <a href="//issues.openmrs.org">Issue Tracker</a>, please contact our <a href="http://om.rs/helpdesk">Help Desk</a> with your OpenMRS ID.
           - }
-           li <a href="https://talk.openmrs.org/#{user.username}/preferences">Edit your profile</a> on <a href="https://talk.openmrs.org">OpenMRS Talk</a> to tell us about yourself and add an photo.
-           li <a href="https://talk.openmrs.org/t/welcome-please-introduce-yourself/32/">Introduce yourself</a> to the community.
+           li <a href="//talk.openmrs.org/#{user.username}/preferences">Edit your profile</a> on <a href="//talk.openmrs.org">OpenMRS Talk</a> to tell us about yourself and add an photo.
+           li <a href="//talk.openmrs.org/t/welcome-please-introduce-yourself/32/">Introduce yourself</a> to the community.
         .row-item
           input#done.btn.btn-success(type='submit', value="Thanks, I've done these")
         .row-item
