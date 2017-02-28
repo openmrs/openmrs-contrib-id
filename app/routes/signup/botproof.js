@@ -30,8 +30,7 @@ function reverseIp(req) {
 }
 
 function badRequest(next, optionalMessage) {
-	const err = new Error(optionalMessage || 'Form submission failed.' +
-		'anti-bot checking.');
+	const err = new Error(`Form submission failed. anti-bot check: ${optionalMessage}`)
 	err.statusCode = 400;
 	next(err);
 }
@@ -170,9 +169,8 @@ module.exports = {
 		log.debug("checking honeypot");
 
 		if (req.body[signupConf.honeypotFieldName]) {
-			return badRequest(next);
-		}
-
+			return badRequest(next, `Spam bot: Honeypot field ${signupConf.honeypotFieldName} in request body`);
+    }
 		next();
 	},
 
