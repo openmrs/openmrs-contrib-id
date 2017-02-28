@@ -15,7 +15,7 @@ const wlistSchema = new Schema({
 });
 const wlist = mongoose.model('IPWhitelist', wlistSchema);
 
-const SECRET = crypto.createHash('sha1').update(Math.random().toString())
+const SECRET = crypto.createHash('sha512').update(Math.random().toString())
 	.digest('hex');
 
 function ip(req) {
@@ -30,7 +30,7 @@ function reverseIp(req) {
 }
 
 function badRequest(next, optionalMessage) {
-	const err = new Error(`Form submission failed. anti-bot check: ${optionalMessage}`)
+	const err = new Error(`Form submission failed. anti-bot check: ${optionalMessage || ''}`)
 	err.statusCode = 400;
 	next(err);
 }
@@ -39,7 +39,7 @@ function hashField(name, spin) {
 	// Disguise a legitimate field name (like "firstName") with an
 	// obfuscated hash name based on this request's spinner.
 
-	const hash = crypto.createHash('md5');
+	const hash = crypto.createHash('sha512');
 	hash.update(name).update(spin).update(SECRET);
 	log.trace(`diguised field with name "${name}", spinner "${spin}"`);
 	return hash.digest('hex');
@@ -62,7 +62,7 @@ module.exports = {
 
 	checkTimestamp: function checkTimestamp(req, res, next) {
 		if (!req.body.timestamp) {
-			return badRequest(next);
+			return badRequest(next, "No timestamp found.");
 		}
 
 		// Decipher
@@ -77,7 +77,7 @@ module.exports = {
 
 		// Throw out malformed timestamps
 		if (isNaN(then.valueOf())) {
-			return badRequest(next);
+			return badRequest(next, "Malformed timestamp");
 		}
 
 		const diff = now - then;
@@ -87,7 +87,7 @@ module.exports = {
 		// Throw out a time in the future or too far in the past.
 		if (diff < 0) {
 			return badRequest(next, 'Submitted form received from a time in the' +
-				' future');
+				' future from ${ip(req)}');
 		} else if (diff > signupConf.signupFormMaxAgeHours * 60 * 60 * 1000) {
 			return badRequest(next, '');
 		}
@@ -107,7 +107,7 @@ module.exports = {
 
 		// Generate the spinner and attach it to the request.
 		const timestamp = res.locals.timestamp,
-			hash = crypto.createHash('md5');
+			hash = crypto.createHash('sha512');
 
 		log.trace(`generating spinner with timestamp "${timestamp}" for ip address "${ip(req)}"`);
 
@@ -126,7 +126,7 @@ module.exports = {
 
 		// Fail the request if no spinner was passed
 		if (!req.body.spinner) {
-			return badRequest(next);
+			return badRequest(next, 'No spinner found -- unable to unscramble fields');
 		}
 
 		const expected = signupConf.signupFieldNames;
