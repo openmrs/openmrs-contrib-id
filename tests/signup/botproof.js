@@ -59,7 +59,7 @@ describe('botproof', () => {
 				.end(() => {});
 		});
 
-		it.skip('should delay forms submitted under 5s', function(done) {
+		it('should delay forms submitted under 5s', function(done) {
 			this.timeout(6000);
 
 			const app = express();
