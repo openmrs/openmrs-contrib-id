@@ -27,7 +27,7 @@
     "uuid": "^3.0.1"
   },
   "engine": {
-    "node": "~4.x.x"
+    "node": "~6.10.x"
   },
   "devDependencies": {
     "chai": "~3.5.0",
