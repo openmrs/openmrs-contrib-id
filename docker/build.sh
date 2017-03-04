@@ -8,6 +8,9 @@ adduser -s /bin/bash -D -G dashboard -u "$USER_ID" dashboard
 echo "Changing ownership to dashboard user for $WORKDIR..."
 chown -R dashboard:dashboard "$WORKDIR"
 
+echo "Creating Dashboard configuration file from example file.."
+cp -p app/conf.example.js app/conf.js
+
 echo "Initializing and updating submodules for user modules..."
 gosu dashboard git submodule update --init
 
