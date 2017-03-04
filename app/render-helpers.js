@@ -31,7 +31,6 @@ const navLinks = (req, res, next) => {
 	const links = [];
 	res.locals.navLinks = links;
 
-	log.trace('userNavLinks: entering for loop');
 	if (req.session.user) {
 		log.trace(`userNavLinks: current groups: ${req.session.user.groups.toString()}`);
 	}
