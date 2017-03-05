@@ -20,7 +20,7 @@ const conf = require('./conf');
 if (process.env.NODE_ENV === 'development') {
 	log4js.setGlobalLogLevel('debug');
 } else if (process.env.NODE_ENV === 'production') {
-	log4js.setGlobalLogLevel('info');
+	log4js.setGlobalLogLevel(process.env.LOG_LEVEL || 'info');
 }
 
 log4js.replaceConsole();
