@@ -71,3 +71,4 @@ cscope.po.out
 data/
 
 .yarn-cache
+.bootstrapped

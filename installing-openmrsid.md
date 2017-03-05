@@ -66,29 +66,12 @@ Clone [openmrs-contrib-id][2] and enter the project directory.
 $ git clone --recursive https://github.com/openmrs/openmrs-contrib-id.git
 $ cd openmrs-contrib-id
 ```
-2. If setting up a development environment, stop here -- you're done. Otherwise copy `.env.example` to `.env`.
+2. If setting up a development environment, stop here -- you're done with this section. Otherwise copy `.env.example` to `.env`.
 
-3. Copy `app/conf.example.js` to `app/conf.js`. The example is set up for quickly getting started.
-
-``` shell
-cp -v app/conf.example.js app/conf.js
-```
 
 ### Setting up Modules
 
-These are the modules which requires manual setup. If running within [docker][], it is not necessary to do this.
-
-#### Global Navigation Bar
-
-``` shell
-$ cp -a app/user-modules/openmrs-contrib-id-globalnavbar/lib/db.example.json app/user-modules/openmrs-contrib-id-globalnavbar/lib/db.json
-```
-
-#### Single Sign On
-
-``` shell
-$ cp -a app/user-modules/openmrs-contrib-id-sso/conf.example.js app/user-modules/openmrs-contrib-id-sso/conf.js
-```
+Nothing to be done.
 
 ## Running ID Dashboard
 
@@ -98,30 +81,20 @@ The example configuration has been set up to run either inside of [docker][], or
 
 #### Using Docker
 
-If you are using this method, the command that follows will start all [services](#services) for you.
+If you are using this method, the command that follows will bootstrap a basic LDAP configuration, initialize `Groups` in MongoDB(see section on [setting it up](#setting-up-mongodb).  There is a helper script borrowed from [here][6] for this. See details in [Additional Notes](#additional-notes) item 2), and copy over example configurations.
+
+Subsequent runs will simply not run. It places a file named `.bootstrapped` in the project's root, which is ignored by git.
 
 ``` shell
-$ docker-compose up -d
+$ bash ./build/bootstrap.sh
+$ docker-compose up -d web
 ```
-
-Initialize `Groups` in MongoDB, see section on [setting it up](#setting-up-mongodb):
-
-There is a helper script borrowed from [here][6] for this. See details in [Additional Notes](#additional-notes) item 2.
-
-We will execute this from within the [docker][] container:
-
-``` shell
-$ docker-compose exec web node build/store.js
-```
-This only needs to be executed once, subsequent runs will error out.
-
 
 #### Running Locally
 
 ``` shell
-$ docker-compose up -d openldap mongodb mailcatcher
+$ bash ./build/bootstrap.sh
 $ npm i ; git submodule foreach npm i
-$ node build/store.js
 $ node app/app
 ```
 
