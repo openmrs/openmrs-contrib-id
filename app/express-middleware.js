@@ -26,7 +26,7 @@ exports.openmrsHelper = (req, res, next) => {
 
 	if (req.session && req.session.user) {
 		const user = req.session.user;
-		const mailHash = crypto.createHash('md5')
+		const mailHash = crypto.createHash('sha512')
 			.update(user.primaryEmail).digest('hex');
 
 		_.merge(res.locals, {
