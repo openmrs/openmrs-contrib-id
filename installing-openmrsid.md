@@ -34,7 +34,7 @@ This guide is written and tested on Linux and should be compatible with any Unix
 
 We suggest you use [nvm][1].
 
-Install the latest from the Node 6.x branch (**It does not work with Node 7**
+Install the latest from the Node 6.x branch (**It does not work with Node 7**)
 
 ``` shell
 $ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.26.0/install.sh | bash
