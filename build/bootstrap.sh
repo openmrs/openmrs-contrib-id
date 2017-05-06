@@ -6,6 +6,7 @@ if [ ! -e app/user-modules/openmrs-contrib-id-sso/conf.js ]; then
     cp -a app/user-modules/openmrs-contrib-id-sso/conf.example.js app/user-modules/openmrs-contrib-id-sso/conf.js
 fi
 echo "Setting up base OpenLDAP config and database for development." && \
+if [ ! -e ./data/ldap ]; then mkdir ./data/ldap; fi && \
 sudo tar xvjf build/etc_ldap_slapd.d.tbz2 -C ./data/ldap/ \
 && sudo tar xvjf build/var_lib_ldap.tbz2 -C ./data/ldap/ \
 && echo "Done." \
