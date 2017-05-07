@@ -41,7 +41,7 @@ const client = ldap.createClient({
             initialDelay: 100,
             maxDelay: 500,
             failAfter: 10
-        }
+        },
 	// timeout: ,
 	// connectTimeout: ,
 });
