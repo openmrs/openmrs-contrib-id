@@ -36,6 +36,12 @@ const client = ldap.createClient({
 	maxConnections: 10,
 	bindDN: systemDN,
 	bindCredentials: bindCredentials,
+        queueDisable: true, //fail fast when connections times out. https://github.com/mcavage/node-ldapjs/issues/328
+        reconnect: { // tries to reconnect if LDAP server is down. https://github.com/mcavage/node-ldapjs/issues/403
+            initialDelay: 100,
+            maxDelay: 500,
+            failAfter: 10
+        }
 	// timeout: ,
 	// connectTimeout: ,
 });
