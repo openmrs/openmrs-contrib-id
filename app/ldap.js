@@ -42,8 +42,6 @@ const client = ldap.createClient({
 		maxDelay: 500,
 		failAfter: 10,
 	},
-	// timeout: ,
-	// connectTimeout: ,
 });
 
 /* Private helper functions */
@@ -130,8 +128,6 @@ const searchUser = (username, cb) => {
 		userAttr.displayname,
 		userAttr.email,
 		userAttr.password,
-		// userAttr.secondaryemail,     // we don't use this in LDAP
-		// 'objectClass',               // it's useless outside LDAP
 	];
 	searchRaw(username, attributes, (err, old) => {
 		if (err) {
