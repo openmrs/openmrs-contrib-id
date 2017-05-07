@@ -49,4 +49,4 @@ notifications:
     skip_join: true
 
 script:
-  - npm test
+  - yarn test
