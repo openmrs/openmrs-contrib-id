@@ -1,6 +1,6 @@
 OpenMRS ID
 =========
-[[![Build Status](https://travis-ci.org/openmrs/openmrs-contrib-id.svg)](https://travis-ci.org/openmrs/openmrs-contrib-id) ![Code Climate](https://codeclimate.com/github/openmrs/openmrs-contrib-id/badges/gpa.svg)](https://codeclimate.com/github/openmrs/openmrs-contrib-id)
+[![Build Status](https://travis-ci.org/openmrs/openmrs-contrib-id.svg)](https://travis-ci.org/openmrs/openmrs-contrib-id) [![Code Climate](https://codeclimate.com/github/openmrs/openmrs-contrib-id/badges/gpa.svg)](https://codeclimate.com/github/openmrs/openmrs-contrib-id)
 [![Dependencies Status](https://david-dm.org/openmrs/openmrs-contrib-id/status.svg)](https://david-dm.org/openmrs/openmrs-contrib-id)
 [![devDependencies Status](https://david-dm.org/openmrs/openmrs-contrib-id/dev-status.svg)](https://david-dm.org/openmrs/openmrs-contrib-id?type=dev)
  [![OpenMRS Talk](https://omrs-shields.psbrandt.io/custom/openmrs/talk/F26522?logo=openmrs)](http://talk.openmrs.org/c/projects/id-dashboard)
