@@ -9,15 +9,15 @@ OpenMRS ID
 
 User signup and self-service web application, built for [OpenMRS](http://openmrs.org), now running at [id.openmrs.org](http://id.openmrs.org). Integrates with an LDAP server and MongoDB to store user data. Built on [Node](https://github.com/joyent/node) and [Express](https://github.com/strongloop/express/).
 
-##Development:
+## Development:
 
 Want to dig your hands in and lend a hand? Please read our [development guide](https://github.com/openmrs/openmrs-contrib-id/blob/master/development-guide.md).
 
-##Installation:
+## Installation:
 
 See [`installing-openmrsid.md`](https://github.com/openmrs/openmrs-contrib-id/blob/master/installing-openmrsid.md)
 
-##Features:
+## Features:
 
 * Simple user self-service for an OpenLDAP user directory, including:
 	* Signup - supporting email address verification, reCAPTCHA anti-spam forms, and welcome mail
@@ -28,7 +28,7 @@ See [`installing-openmrsid.md`](https://github.com/openmrs/openmrs-contrib-id/bl
 * Form validation and control
 * Designed with the visual style of [openmrs.org](http://openmrs.org) in mind :)
 
-##Modules:
+## Modules:
 
 A few modules (providing additional functionality) have been created. They can be placed in `app/user-modules` and loaded from `conf.js`.
 
@@ -37,16 +37,16 @@ A few modules (providing additional functionality) have been created. They can b
 * [openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth) provides OAuth2.0-based authorization module for OpenMRS ID
 * [openmrs-contrib-id-sso](https://github.com/openmrs/openmrs-contrib-id-sso) provides single sign on authentication strategies
 
-##Why We Built It:
+## Why We Built It:
 
 OpenMRS's developer community was in need of unification between the tools hosted at openmrs.org and elsewhere. With contributors needing separate accounts to submit code, edit the wiki, and join mailing lists (for example), the amount of user fragmentation between tools kept growing. People new to the OpenMRS community tended to be a little confused, having to manually manage profiles across very visually-disconnected sites. Ultimately, we wanted one ID, everywhere.
 
-##Server Requirements:
+## Server Requirements:
 
 * Node.js versions 6, it does not work with Node 7.
 * LDAP directory (tested with OpenLDAP), additionally supporting extensible objects and password policies
 * MongoDB database
 * SMTP access
 
-##License:
+## License:
 Licensed under [MPL 2.0 HD](http://license.openmrs.org)
