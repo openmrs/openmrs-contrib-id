@@ -1,6 +1,6 @@
 #!/bin/bash
 
-USER_ID=${LOCAL_USER_ID:-99999}
+USER_ID=${LOCAL_USER_ID:-65533}
 echo "Adding dashboard user with uid/gid $USER_ID..."
 addgroup dashboard -g "$USER_ID"
 adduser -s /bin/bash -D -G dashboard -u "$USER_ID" dashboard
