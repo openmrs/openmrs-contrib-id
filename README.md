@@ -37,7 +37,7 @@ A few modules (providing additional functionality) have been created. They can b
 * [openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth) provides OAuth2.0-based authorization module for OpenMRS ID
 * [openmrs-contrib-id-sso](https://github.com/openmrs/openmrs-contrib-id-sso) provides single sign on authentication strategies
 
-This modules will be included by default using the development environment described earlier in this document.  
+These modules will be included by default using the development environment described earlier in this document.
 
 ## Why We Built It:
 
