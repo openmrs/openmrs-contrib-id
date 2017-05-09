@@ -10,9 +10,6 @@ This guide is written and tested on Linux and should be compatible with any Unix
     - [Install Node.](#install-node)
     - [Install Docker and Docker Compose](#install-docker-and-docker-compose)
     - [Clone OpenMRS ID Dashboard](#clone-openmrs-id-dashboard)
-        - [Setting up Modules](#setting-up-modules)
-            - [Global Navigation Bar](#global-navigation-bar)
-            - [Single Sign On](#single-sign-on)
     - [Running ID Dashboard](#running-id-dashboard)
         - [Development](#development)
             - [Using Docker](#using-docker)
@@ -60,47 +57,40 @@ for your operating system.
 ## Clone OpenMRS ID Dashboard
 
 Clone [openmrs-contrib-id][2] and enter the project directory.
-1.
-
 ``` shell
-$ git clone --recursive https://github.com/openmrs/openmrs-contrib-id.git
-$ cd openmrs-contrib-id
+$ git clone --recursive https://github.com/openmrs/openmrs-contrib-id.git && cd openmrs-contrib-id
 ```
-2. If setting up a development environment, stop here -- you're done with this section. Otherwise copy `.env.example` to `.env`.
-
-
-### Setting up Modules
-
-Nothing to be done.
 
 ## Running ID Dashboard
 
-The example configuration has been set up to run either inside of [docker][], or locally on the host with the services running in docker.
+The example configuration has been set up to run either inside of docker, or locally on the host with the services running in docker.
 
 ### Development
 
-#### Using Docker
-
-If you are using this method, the command that follows will bootstrap a basic LDAP configuration, initialize `Groups` in MongoDB(see section on [setting it up](#setting-up-mongodb).  There is a helper script borrowed from [here][6] for this. See details in [Additional Notes](#additional-notes) item 2), and copy over example configurations.
+In order to setup the development environment, we have a bootstrap script. It will bootstrap a basic LDAP configuration, initialize `Groups` in MongoDB(see section on [setting it up](#setting-up-mongodb).  See details in [Additional Notes](#additional-notes) item 2), and copy over example configurations.
 
 Subsequent runs will simply not run. It places a file named `.bootstrapped` in the project's root, which is ignored by git.
 
+#### Using Docker
+
 ``` shell
-$ bash ./build/bootstrap.sh
+$ ./build/bootstrap.sh
 $ docker-compose up -d web
 ```
 
 #### Running Locally
 
 ``` shell
-$ bash ./build/bootstrap.sh
-$ npm i ; git submodule foreach npm i
+$ ./build/bootstrap.sh
 $ node app/app
 ```
+
+You should be able to see the app running on `localhost:3000`
 
 
 ### Production
 
+Copy `.env.example` to `.env`.
 Ensure all production secrets are in `.env`. All services are set up to listen on `127.0.0.1`.
 
 If moving from 2.0.x, bring down OpenLDAP and copy the data directories:
@@ -158,7 +148,7 @@ docker-compose up -d openldap
 ```
 ### Setting up MongoDB
 
-Run our mongodb [docker][] container by using [docker-compose][], which will create the database for you – as well as the user and handle everything for you. Simplytype:
+Run our mongodb [docker][] container by using [docker-compose][], which will create the database for you – as well as the user and handle everything for you. Simply type:
 
 ``` shell
 $ docker-compose up mongodb -d
