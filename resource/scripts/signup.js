@@ -45,6 +45,7 @@ $(document).ready(function() {
 						return;
 					}
 					if (data.fail) {
+						grecaptcha.reset();
 						if (data.fail.primaryEmail) {
 							data.fail.email = data.fail.primaryEmail;
 							delete data.fail.primaryEmail;
@@ -53,6 +54,7 @@ $(document).ready(function() {
 					}
 				})
 				.fail(function(error) {
+					grecaptcha.reset();
 					var trackId = error.responseJSON.trackId;
 					$('#err').modal();
 					var html = '<h2>Oops...something went wrong.<br><br>Tracking Code: ' + trackId + '</h2>';
