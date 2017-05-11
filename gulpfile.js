@@ -24,7 +24,7 @@ gulp.task('scripts', () => {
 			'resource/scripts/profile.js',
 			'resource/scripts/reset-public.js',
 			'resource/scripts/reset-private.js',
-			'bower_components/cryptojslib/rollups/md5.js'
+			'bower_components/cryptojslib/rollups/sha512.js'
 		])
 		.pipe(concat('min.js'))
 		.pipe(uglify())

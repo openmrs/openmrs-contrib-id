@@ -9,7 +9,7 @@ $(document).ready(function() {
 	var SPINNER = $('input[name=spinner]').val();
 	var disguise = function scrambleFields(name, spin) {
 		var text = name + SPINNER;
-		var hash = CryptoJS.MD5(text);
+		var hash = CryptoJS.SHA512(text);
 		return hash.toString(CryptoJS.enc.hex);
 	};
 
