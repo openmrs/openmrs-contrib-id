@@ -106,10 +106,10 @@ $(document).ready(function() {
 		validate: function() {
 			var pass = $('form.validate input#password').val();
 			if (pass.length < 8) {
-				return 'Too short';
+				return 'Too short (length must be between 8 to 100 characters)';
 			}
 			if (pass.length > 100) {
-				return 'Too long';
+				return 'Too long (length must be between 8 to 100 characters)';
 			}
 		}
 	});
