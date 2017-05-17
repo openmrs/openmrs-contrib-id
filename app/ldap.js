@@ -40,7 +40,7 @@ const client = ldap.createClient({
 	reconnect: { // tries to reconnect if LDAP server is down. https://github.com/mcavage/node-ldapjs/issues/403
 		initialDelay: 100,
 		maxDelay: 500,
-		failAfter: 10,
+		failAfter: Infinity,
 	},
 });
 
