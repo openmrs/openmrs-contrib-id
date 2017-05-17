@@ -80,8 +80,8 @@ module.exports = {
 	},
 	"validation": {
 		// validation settings
-		"recaptchaPublic": process.env.RECAPTCHA_PUBLIC || "6LcuIxgUAAAAAAH-iwhJfh_2hEWAqjjKqrs9SUGC",
-		"recaptchaPrivate": process.env.RECAPTCHA_PRIVATE || "6LcuIxgUAAAAAEHTe5UM2FjWt6KPFISeuthj23Hp",
+		"recaptchaPublic": process.env.RECAPTCHA_PUBLIC || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
+		"recaptchaPrivate": process.env.RECAPTCHA_PRIVATE || "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
 		"allowPlusInEmail": false,
 	},
 	"email": {
