@@ -127,13 +127,6 @@ $(document).ready(function() {
 	});
 
 
-	$('form#form-login').data({
-		vns: function(callback) {
-			//TODO
-		}
-	});
-
-
 	// perform validations
 	$('form.validate')
 		.submit(function(event) {
