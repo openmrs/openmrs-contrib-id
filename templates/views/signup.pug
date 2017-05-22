@@ -56,12 +56,19 @@ block content
 
       div.row-item.form-group
         div.input-wrapper.col-md-5
-
           input.required#password(type='password', name=disguise('password', spinner),
                 placeholder='Password')
           label.error Required
         span.description
           | Password must be between 8 and 100 characters.
+
+      div.form-group.row-item
+        div.input-wrapper.col-md-5
+          input#confirmpassword.required(type='password', name=disguise('confirmpassword',spinner),
+              placeholder='Confirm Password')
+          label.error
+        span.description
+          | Retype your password to confirm
       div.row-item.form-group
         div.g-recaptcha#recaptcha(data-sitekey=recaptchaPublic)
 

@@ -113,6 +113,16 @@ $(document).ready(function() {
 			}
 		}
 	});
+  $('form.validate input#confirmpassword').data({
+		validate: function() {
+			var pass = $('form.validate input#password').val();
+      var confirmpass = $('form.validate input#confirmpassword').val();
+      if(pass !== confirmpass) {
+        return 'Passwords do not match.'
+      }
+		}
+	});
+
 
 	$('form.validate input#email').data({
 		validate: function() {

@@ -58,6 +58,7 @@ exports = module.exports = app => {
 			const last = req.body.lastName;
 			const email = req.body.primaryEmail;
 			const pass = req.body.password;
+      const confirmpass = req.body.confirmpassword;
 			const captchaData = {
 				response: req.body['g-recaptcha-response'],
 			};
@@ -73,6 +74,7 @@ exports = module.exports = app => {
 					firstName: validate.chkEmpty.bind(null, first),
 					lastName: validate.chkEmpty.bind(null, last),
 					password: validate.chkLength.bind(null, pass, 8),
+					confirmpass: validate.chkDiff.bind(null, pass, confirmpass),
 					recaptcha_response_field: validate.chkRecaptcha.bind(null, captchaData),
 				};
 				validate.perform(validators, (err, failures) => {

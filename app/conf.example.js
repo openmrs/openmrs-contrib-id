@@ -130,6 +130,7 @@ module.exports = {
 			"lastName",
 			"primaryEmail",
 			"password",
+      "confirmpassword",
 			"timestamp"
 		],
 		"requiredSubmitTimeSec": 5,

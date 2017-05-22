@@ -145,6 +145,8 @@ module.exports = {
 				result[f] = req.body[hashed] || '';
         if(f === "password")
           log.trace(`unscrambled password field successfully.`);
+        else if(f === "confirmpassword")
+          log.trace(`unscrambled confirmpassword field successfully.`);
         else
           log.trace(`unscrambled field "${f}"=${req.body[hashed]}`);
 			}
