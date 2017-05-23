@@ -57,7 +57,7 @@ $(document).ready(function() {
 			var pass = $('#editPassword input#newpassword').val();
 			var cpass = $('#editPassword input#confirmpassword').val();
 			if (pass !== cpass) {
-				return 'Mismatched';
+				return 'Passwords do not match.';
 			}
 		}
 	});
