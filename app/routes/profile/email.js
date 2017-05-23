@@ -201,6 +201,7 @@ exports = module.exports = app => {
 						return next(err);
 					}
 					log.info(`${user.username} successfully updated`);
+          req.flash('success',`Successfully deleted ${email}.`);
 					req.session.user = user;
 					return res.redirect('/profile');
 				});
