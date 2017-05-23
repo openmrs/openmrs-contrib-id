@@ -85,6 +85,7 @@ exports = module.exports = app => {
 					lastName: validate.chkEmpty.bind(null, req.body.lastName),
 				}, (err, validateError) => {
 					if (_.isEmpty(validateError)) {
+            req.flash('success','Successfully updated profile.');
 						return callback();
 					}
 					return res.json({

@@ -161,7 +161,8 @@ exports = module.exports = app => {
 			], err => {
 				if (err) {
 					return next(err);
-				}
+        }
+        req.flash('success',`Successfully added ${email} pending verification. Please check your e-mail.`);
 				return res.json({
 					success: true
 				});
@@ -273,6 +274,7 @@ exports = module.exports = app => {
 					return next(err);
 				}
 				log.info(`${user.username} successfully updated`);
+        req.flash('success',`Successfully set primary email to ${email}.`);
 				req.session.user = user;
 				return res.redirect('/profile');
 			});
