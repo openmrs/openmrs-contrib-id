@@ -80,7 +80,7 @@ exports = module.exports = app => {
 				(err, user) => {
 					log.trace('password change no errors');
 					log.info(`${updUser.username}: password updated`);
-
+				  req.flash('success', 'Password updated successfully');
 					req.session.user = user;
 					return res.json({
 						success: true
