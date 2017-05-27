@@ -1,6 +1,8 @@
 OpenMRS ID
 =========
-[![Build Status](https://travis-ci.org/openmrs/openmrs-contrib-id.svg)](https://travis-ci.org/openmrs/openmrs-contrib-id) [![Code Climate](https://codeclimate.com/github/openmrs/openmrs-contrib-id/badges/gpa.svg)](https://codeclimate.com/github/openmrs/openmrs-contrib-id)
+[![Build Status](https://travis-ci.org/openmrs/openmrs-contrib-id.svg)](https://travis-ci.org/openmrs/openmrs-contrib-id)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f35ec1a08bd44f128f70d11e602d1fe3)](https://www.codacy.com/app/robby-oconnor/openmrs-contrib-id?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=openmrs/openmrs-contrib-id&amp;utm_campaign=Badge_Grade)
+[![Code Climate](https://codeclimate.com/github/openmrs/openmrs-contrib-id/badges/gpa.svg)](https://codeclimate.com/github/openmrs/openmrs-contrib-id)
 [![Dependencies Status](https://david-dm.org/openmrs/openmrs-contrib-id/status.svg)](https://david-dm.org/openmrs/openmrs-contrib-id)
 [![devDependencies Status](https://david-dm.org/openmrs/openmrs-contrib-id/dev-status.svg)](https://david-dm.org/openmrs/openmrs-contrib-id?type=dev)
  [![OpenMRS Talk](https://omrs-shields.psbrandt.io/custom/openmrs/talk/F26522?logo=openmrs)](http://talk.openmrs.org/c/projects/id-dashboard)
