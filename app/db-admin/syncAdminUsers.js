@@ -21,42 +21,42 @@ let User;
  */
 function syncFormageUser(user, callback) {
 
-	return FormageUser.findOne({
-			username: user.username
-		}).exec()
-		.then(formageUser => (formageUser) ? updatePassword(formageUser, user) :
-			createFormageUser(user))
-		.then(formageUser => {
+  return FormageUser.findOne({
+      username: user.username
+    }).exec()
+    .then(formageUser => (formageUser) ? updatePassword(formageUser, user) :
+      createFormageUser(user))
+    .then(formageUser => {
 
-			const deferred = q.defer();
+      const deferred = q.defer();
 
-			if (formageUser.isModified()) {
-				return formageUser.save((err, fu) => {
-					if (err) {
-						deferred.reject(err);
-					} else {
-						deferred.resolve(fu);
-					}
-				});
+      if (formageUser.isModified()) {
+        return formageUser.save((err, fu) => {
+          if (err) {
+            deferred.reject(err);
+          } else {
+            deferred.resolve(fu);
+          }
+        });
 
-			} else {
-				deferred.resolve(formageUser);
-			}
+      } else {
+        deferred.resolve(formageUser);
+      }
 
-			return deferred.promise;
+      return deferred.promise;
 
-		})
-		.then(formageUser => {
+    })
+    .then(formageUser => {
 
-			log.debug(`formage user ${formageUser.username} saved`);
+      log.debug(`formage user ${formageUser.username} saved`);
 
-			return (callback) ? callback(null, formageUser) : formageUser;
+      return (callback) ? callback(null, formageUser) : formageUser;
 
-		}, err => {
+    }, err => {
 
-			callback(err);
+      callback(err);
 
-		});
+    });
 }
 
 
@@ -67,15 +67,15 @@ function syncFormageUser(user, callback) {
  */
 function createFormageUser(user) {
 
-	const fu = new FormageUser({
-		username: user.username,
-		passwordHash: user.password,
-		is_superuser: true
-	});
+  const fu = new FormageUser({
+    username: user.username,
+    passwordHash: user.password,
+    is_superuser: true
+  });
 
-	updatePassword(fu, user);
+  updatePassword(fu, user);
 
-	return fu;
+  return fu;
 
 }
 
@@ -86,8 +86,8 @@ function createFormageUser(user) {
  * @return {FormageUser}  the updated Formage user
  */
 function updatePassword(fu, user) {
-	fu.passwordHash = user.password;
-	return fu;
+  fu.passwordHash = user.password;
+  return fu;
 }
 
 /**
@@ -97,9 +97,9 @@ function updatePassword(fu, user) {
  */
 function onSave(user) {
 
-	if (_.includes(user.groups, 'dashboard-administrators')) {
-		syncFormageUser(user);
-	}
+  if (_.includes(user.groups, 'dashboard-administrators')) {
+    syncFormageUser(user);
+  }
 
 }
 
@@ -109,8 +109,8 @@ function onSave(user) {
  * @return {Error}     the (same) error that occured
  */
 function onError(err) {
-	log.error(err);
-	return err;
+  log.error(err);
+  return err;
 }
 
 /**
@@ -124,34 +124,34 @@ function onError(err) {
  */
 module.exports = function init(_FormageUser_, _User_) {
 
-	FormageUser = _FormageUser_;
-	User = _User_;
+  FormageUser = _FormageUser_;
+  User = _User_;
 
-	User.schema.post('save', onSave);
+  User.schema.post('save', onSave);
 
-	const deferred = q.defer();
+  const deferred = q.defer();
 
-	User.find({
-			groups: 'dashboard-administrators'
-		}).exec()
-		.then(users => {
+  User.find({
+      groups: 'dashboard-administrators'
+    }).exec()
+    .then(users => {
 
-			log.debug(`found ${users.length} dashboard administrator(s)`);
+      log.debug(`found ${users.length} dashboard administrator(s)`);
 
-			async.each(users, syncFormageUser, err => {
+      async.each(users, syncFormageUser, err => {
 
-				if (err) {
-					onError(err);
-					return deferred.reject(err);
-				}
+        if (err) {
+          onError(err);
+          return deferred.reject(err);
+        }
 
-				log.info('Synced all dashboard admin users to Formage user models.');
-				deferred.resolve();
-			});
+        log.info('Synced all dashboard admin users to Formage user models.');
+        deferred.resolve();
+      });
 
-		}, onError);
+    }, onError);
 
-	return deferred.promise;
+  return deferred.promise;
 
 };
 

@@ -52,7 +52,7 @@ app.set('basepath', siteURLParsed.pathname);
 app.set('port', 3000);
 app.use(flash());
 app.use(bodyParser.urlencoded({
-	extended: false
+  extended: false
 }));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -60,25 +60,25 @@ app.use(cookieParser());
 
 // store express session in MongoDB
 const sessionStore = new MongoStore({
-	url: conf.mongo.uri,
+  url: conf.mongo.uri,
   "auto_reconnect": true,
 });
 const session = expressSession({
-	store: sessionStore,
-	secret: conf.session.secret,
-	resave: false,
-	saveUninitialized: false,
+  store: sessionStore,
+  secret: conf.session.secret,
+  resave: false,
+  saveUninitialized: false,
 });
 
 const exceptions = conf.sessionExceptions;
 const sessionHandler = (req, res, next) => {
-	function test(reg) {
-		return reg.test(req.url);
-	}
-	if (exceptions.some(test)) { // we don't provide session for some exceptions
-		return next();
-	}
-	return session(req, res, next);
+  function test(reg) {
+    return reg.test(req.url);
+  }
+  if (exceptions.some(test)) { // we don't provide session for some exceptions
+    return next();
+  }
+  return session(req, res, next);
 };
 
 app.use(sessionHandler);
@@ -86,42 +86,42 @@ app.use(mid.openmrsHelper);
 
 //development
 if ('development' === app.get('env')) {
-	log.info('Running in development mode');
+  log.info('Running in development mode');
 
-	app.use(errorHandler());
+  app.use(errorHandler());
 
-	_.EDT_hidden = true;
-	const edt = require('express-debug');
-	edt(app, {});
+  _.EDT_hidden = true;
+  const edt = require('express-debug');
+  edt(app, {});
 
-	app.use(log4js.connectLogger(log, {
-		level: 'debug',
-		format: ':method :status :url - :response-time ms',
-	}));
+  app.use(log4js.connectLogger(log, {
+    level: 'debug',
+    format: ':method :status :url - :response-time ms',
+  }));
 
-	app.use('/resource', lessMiddleware('/less', {
-		dest: '/stylesheets',
-		pathRoot: path.join(__dirname, '/../resource/')
-	}));
+  app.use('/resource', lessMiddleware('/less', {
+    dest: '/stylesheets',
+    pathRoot: path.join(__dirname, '/../resource/')
+  }));
 
 
 }
 
 if ('production' === app.get('env')) {
-	log.info('Running in production mode');
-	app.use(errorHandler());
-	app.use('/resource', lessMiddleware('/less', {
-		dest: '/stylesheets',
-		pathRoot: path.join(__dirname, '/../resource/'),
-		once: true
-	}));
+  log.info('Running in production mode');
+  app.use(errorHandler());
+  app.use('/resource', lessMiddleware('/less', {
+    dest: '/stylesheets',
+    pathRoot: path.join(__dirname, '/../resource/'),
+    once: true
+  }));
 
 
 }
 
 app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
 app.use('/bower_components', express.static(path.join(__dirname,
-	'/../bower_components/')));
+  '/../bower_components/')));
 
 
 require('./render-helpers');
@@ -130,25 +130,25 @@ require('./render-helpers');
 
 if (process.env.NODE_ENV === 'development') {
 
-	app.get('/debug/view/:viewName', (req, res) => {
-		res.render(`views/${req.params.viewName}`);
-	});
+  app.get('/debug/view/:viewName', (req, res) => {
+    res.render(`views/${req.params.viewName}`);
+  });
 
 
-	// app.get('/flash/:msg', function (req, res) {
-	//   req.flash('info', req.params.msg);
-	//   res.redirect('/sample');
-	// });
+  // app.get('/flash/:msg', function (req, res) {
+  //   req.flash('info', req.params.msg);
+  //   res.redirect('/sample');
+  // });
 }
 
 /// DEBUG
 
 // fail if no configuration file found
 try {
-	fs.readFileSync(`${__dirname}/conf.js`);
+  fs.readFileSync(`${__dirname}/conf.js`);
 } catch (e) {
-	console.log(`ERROR: while openning configuration file at (${__dirname}/conf.js)! Exiting…`);
-	console.error(e);
+  console.log(`ERROR: while openning configuration file at (${__dirname}/conf.js)! Exiting…`);
+  console.error(e);
 }
 
 
@@ -162,7 +162,7 @@ require('./routes')(app);
 
 /* Load Modules */
 conf.userModules.forEach(module => {
-	require(`./user-modules/${module}`)(app);
+  require(`./user-modules/${module}`)(app);
 });
 
 
@@ -174,15 +174,15 @@ app.use(require('./routes/error'));
 
 
 process.on('uncaughtException', err => {
-	log.error(err);
+  log.error(err);
 });
 
 // Do something before close the app
 const gracefulExit = () => {
-	mongoose.connection.close(() => {
-		log.info('Mongoose connection closed');
-		process.exit();
-	});
+  mongoose.connection.close(() => {
+    log.info('Mongoose connection closed');
+    process.exit();
+  });
 };
 process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
 

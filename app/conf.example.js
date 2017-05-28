@@ -14,142 +14,142 @@
 
 // valid JSON, except for RegExp's
 module.exports = {
-	"site": {
-		// use full url, like http://localhost:3000/
-		"url": process.env.SITE_URL || "http://localhost:3000",
-		"title": process.env.SITE_TITLE || "OpenMRS ID"
-	},
-	"ldap": {
-		// LDAP Settings
-		"server": {
-			"uri": process.env.LDAP_URI || "ldap://localhost:389",
-			"baseDn": "ou=system,dc=openmrs,dc=org",
-			"rdn": "uid",
-			"loginUser": process.env.LDAP_USER || "omrsid",
-			"password": process.env.LDAP_PASSWORD || "secret"
-		},
-		"user": {
-			"baseDn": "ou=users,dc=openmrs,dc=org",
-			"rdn": "uid",
+  "site": {
+    // use full url, like http://localhost:3000/
+    "url": process.env.SITE_URL || "http://localhost:3000",
+    "title": process.env.SITE_TITLE || "OpenMRS ID"
+  },
+  "ldap": {
+    // LDAP Settings
+    "server": {
+      "uri": process.env.LDAP_URI || "ldap://localhost:389",
+      "baseDn": "ou=system,dc=openmrs,dc=org",
+      "rdn": "uid",
+      "loginUser": process.env.LDAP_USER || "omrsid",
+      "password": process.env.LDAP_PASSWORD || "secret"
+    },
+    "user": {
+      "baseDn": "ou=users,dc=openmrs,dc=org",
+      "rdn": "uid",
 
-			// corresponds with form input names
-			"username": "uid",
-			"firstname": "cn",
-			"lastname": "sn",
-			"displayname": "displayName",
-			"email": "mail",
-			"password": "userPassword",
-			"secondaryemail": "otherMailbox",
-			"defaultObjectClass": [
-				"inetOrgPerson",
-				"extensibleObject"
-			],
-			"usernameRegex": /^\s*[a-zA-Z][.]?[a-zA-Z0-9]{2,20}\s*$/,
-			"defaultGroups": [
-				"bamboo-user",
-				"dashboard-users",
-				"modrepo-users",
-				"talk-users"
-			],
-			"passwordResetPolicy": "cn=reset,ou=policy,dc=openmrs,dc=org",
-			"passwordResetTimeout": 7200000
-		},
-		"group": {
-			"baseDn": "ou=groups,dc=openmrs,dc=org",
-			"member": "member",
-			"rdn": "cn",
-			"objectClass": "groupOfNames"
-		}
-	},
-	"mongo": {
-		"uri": process.env.MONGO_URI || "mongodb://localhost:27017/openmrsid",
-		"commonExpireTime": "2d"
-	},
-	"session": {
-		"__comment3": "session storage DB",
+      // corresponds with form input names
+      "username": "uid",
+      "firstname": "cn",
+      "lastname": "sn",
+      "displayname": "displayName",
+      "email": "mail",
+      "password": "userPassword",
+      "secondaryemail": "otherMailbox",
+      "defaultObjectClass": [
+        "inetOrgPerson",
+        "extensibleObject"
+      ],
+      "usernameRegex": /^\s*[a-zA-Z][.]?[a-zA-Z0-9]{2,20}\s*$/,
+      "defaultGroups": [
+        "bamboo-user",
+        "dashboard-users",
+        "modrepo-users",
+        "talk-users"
+      ],
+      "passwordResetPolicy": "cn=reset,ou=policy,dc=openmrs,dc=org",
+      "passwordResetTimeout": 7200000
+    },
+    "group": {
+      "baseDn": "ou=groups,dc=openmrs,dc=org",
+      "member": "member",
+      "rdn": "cn",
+      "objectClass": "groupOfNames"
+    }
+  },
+  "mongo": {
+    "uri": process.env.MONGO_URI || "mongodb://localhost:27017/openmrsid",
+    "commonExpireTime": "2d"
+  },
+  "session": {
+    "__comment3": "session storage DB",
 
-		"__comment1": "session secret, used to secure session data",
-		"secret": process.env.SESSION_SECRET || "secret",
-		"__comment2": "how long until session terminates (24hr)",
-		"duration": 86400000
-	},
-	"logger": {
-		// Log settings
+    "__comment1": "session secret, used to secure session data",
+    "secret": process.env.SESSION_SECRET || "secret",
+    "__comment2": "how long until session terminates (24hr)",
+    "duration": 86400000
+  },
+  "logger": {
+    // Log settings
 
-		"relativePath": "../logs/openmrsid.log"
-	},
-	"validation": {
-		// validation settings
-		"recaptchaPublic": process.env.RECAPTCHA_PUBLIC || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
-		"recaptchaPrivate": process.env.RECAPTCHA_PRIVATE || "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
-		"allowPlusInEmail": false,
-	},
-	"email": {
-		// Email settings
+    "relativePath": "../logs/openmrsid.log"
+  },
+  "validation": {
+    // validation settings
+    "recaptchaPublic": process.env.RECAPTCHA_PUBLIC || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
+    "recaptchaPrivate": process.env.RECAPTCHA_PRIVATE || "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
+    "allowPlusInEmail": false,
+  },
+  "email": {
+    // Email settings
 
-		"validation": {
-			"emailRegex": /^[A-Za-z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$/i,
-		},
-		"smtp": {
-			"host": process.env.MAIL_HOST || "localhost",
-			"port": process.env.MAIL_PORT || 1025,
-			"use_authentication": Boolean(process.env.MAIL_AUTH),
-			"auth": {
-				"user": process.env.MAIL_USER || "postfix_user",
-				"pass": process.env.MAIL_PASS || "secret",
-			},
-			logger: Boolean(process.env.MAIL_LOGGING), // log to console
-			debug: Boolean(process.env.LOG_SMTP_TRAFFIC) // include SMTP traffic in the logs
-		},
-	},
-	"defaultSidebar": [
-		"needhelp"
-	],
+    "validation": {
+      "emailRegex": /^[A-Za-z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,10}$/i,
+    },
+    "smtp": {
+      "host": process.env.MAIL_HOST || "localhost",
+      "port": process.env.MAIL_PORT || 1025,
+      "use_authentication": Boolean(process.env.MAIL_AUTH),
+      "auth": {
+        "user": process.env.MAIL_USER || "postfix_user",
+        "pass": process.env.MAIL_PASS || "secret",
+      },
+      logger: Boolean(process.env.MAIL_LOGGING), // log to console
+      debug: Boolean(process.env.LOG_SMTP_TRAFFIC) // include SMTP traffic in the logs
+    },
+  },
+  "defaultSidebar": [
+    "needhelp"
+  ],
 
-	// displays at bottom of sidebar
-	"aboutHTML": `<a href="/">OpenMRS ID Dashboard</a>, v${require("../package").version}`,
+  // displays at bottom of sidebar
+  "aboutHTML": `<a href="/">OpenMRS ID Dashboard</a>, v${require("../package").version}`,
 
-	// user-configured modules
-	"userModules": [
-		"openmrs-contrib-id-globalnavbar",
-		"openmrs-contrib-id-oauth",
-		"openmrs-contrib-id-sso",
-	],
+  // user-configured modules
+  "userModules": [
+    "openmrs-contrib-id-globalnavbar",
+    "openmrs-contrib-id-oauth",
+    "openmrs-contrib-id-sso",
+  ],
 
-	// a exceptionlists of session middlware, use regular expressions
-	"sessionExceptions": [
-		/^\/globalnav($|\/.*$)/,
-		/^\/resource\/.*$/,
-		/^\/panel($|\/.*$)/, // session will contradict with formage's
-	],
+  // a exceptionlists of session middlware, use regular expressions
+  "sessionExceptions": [
+    /^\/globalnav($|\/.*$)/,
+    /^\/resource\/.*$/,
+    /^\/panel($|\/.*$)/, // session will contradict with formage's
+  ],
 
-	"signup": {
-		"signupFieldNames": [
-			"username",
-			"firstName",
-			"lastName",
-			"primaryEmail",
-			"password",
+  "signup": {
+    "signupFieldNames": [
+      "username",
+      "firstName",
+      "lastName",
+      "primaryEmail",
+      "password",
       "confirmpassword",
-			"timestamp"
-		],
-		"requiredSubmitTimeSec": 5,
-		"signupFormMaxAgeHours": 12,
-		"honeypotFieldName": "country",
-		"disableHoneypot": false,
-		"disableBlacklist": true, // disable blacklist by default.
+      "timestamp"
+    ],
+    "requiredSubmitTimeSec": 5,
+    "signupFormMaxAgeHours": 12,
+    "honeypotFieldName": "country",
+    "disableHoneypot": false,
+    "disableBlacklist": true, // disable blacklist by default.
 
-		"dnsSpamLists": {
-			"bl.spamcop.net": {
-				"returnCodes": ["127.0.0.2"]
-			},
-			"zen.spamhaus.org": {
-				"returnCodes": ["127.0.0.2", "127.0.0.3", "127.0.0.4", "127.0.0.5",
-					"127.0.0.6", "127.0.0.7"
-				]
-			}
-		}
-	}
+    "dnsSpamLists": {
+      "bl.spamcop.net": {
+        "returnCodes": ["127.0.0.2"]
+      },
+      "zen.spamhaus.org": {
+        "returnCodes": ["127.0.0.2", "127.0.0.3", "127.0.0.4", "127.0.0.5",
+          "127.0.0.6", "127.0.0.7"
+        ]
+      }
+    }
+  }
 };
 
 // expose shorthand method used by view renderers

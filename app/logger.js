@@ -18,9 +18,9 @@ const log4js = require('log4js');
 const conf = require('./conf');
 
 if (process.env.NODE_ENV === 'development') {
-	log4js.setGlobalLogLevel('debug');
+  log4js.setGlobalLogLevel('debug');
 } else if (process.env.NODE_ENV === 'production') {
-	log4js.setGlobalLogLevel(process.env.LOG_LEVEL || 'info');
+  log4js.setGlobalLogLevel(process.env.LOG_LEVEL || 'info');
 }
 
 log4js.replaceConsole();
@@ -29,18 +29,18 @@ log4js.loadAppender('file');
 
 const set = new Set();
 const logFile = log4js.appenders.file(
-	path.join(__dirname, conf.logger.relativePath)
+  path.join(__dirname, conf.logger.relativePath)
 );
 
 log4js.addLogger = name => {
-	if (!set.has(name)) {
-		set.add(name);
-		log4js.addAppender(logFile, name);
-	}
-	return log4js.getLogger(name);
+  if (!set.has(name)) {
+    set.add(name);
+    log4js.addAppender(logFile, name);
+  }
+  return log4js.getLogger(name);
 };
 
 const signupFile = log4js.appenders.file(
-	path.join(__dirname, '/../logs/signuplog.log')
+  path.join(__dirname, '/../logs/signuplog.log')
 );
 log4js.addAppender(signupFile, 'signup');

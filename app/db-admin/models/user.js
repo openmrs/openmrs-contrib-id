@@ -2,33 +2,33 @@
 const User = require('../../models/user');
 
 User.formage = {
-	label: 'Users',
+  label: 'Users',
 
-	// filters: [
-	//   'username',
-	//   'primaryEmail',
-	// ],
+  // filters: [
+  //   'username',
+  //   'primaryEmail',
+  // ],
 
-	list: [
-		'username',
-		'firstName',
-		'lastName',
-		'primaryEmail',
-		'locked',
-	],
+  list: [
+    'username',
+    'firstName',
+    'lastName',
+    'primaryEmail',
+    'locked',
+  ],
 
-	search: [
-		'username',
-		'primaryEmail',
-		'emailList',
-	],
+  search: [
+    'username',
+    'primaryEmail',
+    'emailList',
+  ],
 
-	exclude: [
-		'createdAt',
-		'inLDAP',
-		'skipLDAP',
-		'extra',
-	],
+  exclude: [
+    'createdAt',
+    'inLDAP',
+    'skipLDAP',
+    'extra',
+  ],
 };
 
 exports = module.exports = User;
