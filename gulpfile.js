@@ -21,6 +21,7 @@ gulp.task('scripts', () => {
       'resource/scripts/jquery-addon.js',
       'resource/scripts/form.js',
       'resource/scripts/signup.js',
+      'resource/scripts/login.js',
       'resource/scripts/profile.js',
       'resource/scripts/reset-public.js',
       'resource/scripts/reset-private.js',
