@@ -1,5 +1,6 @@
 sudo: required
 dist: trusty
+group: edge
 language: node_js
 cache:
   yarn: true
