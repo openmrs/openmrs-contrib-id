@@ -8,7 +8,6 @@ npm-debug.log
 # Dependencies #
 ###################
 node_modules
-bower_components
 
 # User-install modules #
 ########################

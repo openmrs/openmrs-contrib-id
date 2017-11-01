@@ -24,7 +24,12 @@
     "pug": "^2.0.0-beta6",
     "q": "^1.0.1",
     "request": "^2.51.0",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "@bower_components/bootstrap": "twbs/bootstrap#~3.3.4",
+    "@bower_components/cryptojslib": "sytelus/CryptoJS#~3.1.2",
+    "@bower_components/font-awesome": "FortAwesome/Font-Awesome#~4.3.0",
+    "@bower_components/jquery": "jquery/jquery-dist#~2.1.4",
+    "@bower_components/js-cookie": "js-cookie/js-cookie#~2.0.3"
   },
   "engine": {
     "node": "~6.10.x"
@@ -41,7 +46,7 @@
     "supertest": "^3.0.0"
   },
   "scripts": {
-    "postinstall": "./node_modules/bower/bin/bower install --config.interactive=false; gulp",
+    "postinstall": "gulp",
     "test": "node tests/runner",
     "start": "node app/app"
   },
@@ -54,5 +59,8 @@
   "bugs": {
     "url": "https://issues.openmrs.org/browse/ID"
   },
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "engines": {
+    "yarn": ">= 1.0.0"
+  }
 }

@@ -1,7 +1,6 @@
 #!/bin/bash
 
-set -e
-set -u
+set -eux
 
 if [ -f .bootstrapped ]; then
     echo "Bootstrapped...not doing anything.";
@@ -15,9 +14,9 @@ if [ ! -e app/user-modules/openmrs-contrib-id-sso/conf.js ]; then
     echo "Copying SSO module config"
     cp -a app/user-modules/openmrs-contrib-id-sso/conf.example.js app/user-modules/openmrs-contrib-id-sso/conf.js
 fi
-echo "Running npm"
-npm install
-npm i ; git submodule foreach npm i
+
+echo "Running yarn"
+yarn ; git submodule foreach yarn
 echo "Setting up base OpenLDAP config and database for development." && \
 if [ ! -e ./data/ldap ]; then mkdir ./data/ldap; fi
 

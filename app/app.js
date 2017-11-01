@@ -121,7 +121,7 @@ if ('production' === app.get('env')) {
 
 app.use('/resource', express.static(path.join(__dirname, '/../resource/')));
 app.use('/bower_components', express.static(path.join(__dirname,
-  '/../bower_components/')));
+  '/../node_modules/@bower_components')));
 
 
 require('./render-helpers');
