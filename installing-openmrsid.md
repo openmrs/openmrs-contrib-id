@@ -69,6 +69,7 @@ The example configuration has been set up to run either inside of docker, or loc
 
 In order to setup the development environment, we have a bootstrap script. It will bootstrap a basic LDAP configuration, initialize `Groups` in MongoDB(see section on [setting it up](#setting-up-mongodb).  See details in [Additional Notes](#additional-notes) item 2), and copy over example configurations.
 
+
 Subsequent runs will simply not run. It places a file named `.bootstrapped` in the project's root, which is ignored by git.
 
 #### Using Docker
@@ -79,6 +80,8 @@ $ docker-compose up -d web
 ```
 
 #### Running Locally
+
+**You must [install yarn][], since [bower][] has been pushing people to [migrate away from bower][]. We now use [yarn][] to manage [bower][] dependencies.**
 
 ``` shell
 $ ./build/bootstrap.sh
@@ -180,3 +183,7 @@ No special configuration is necessary.
 [6]: https://github.com/Plypy/OpenMRS-ID-Migrator
 [docker]:https://docs.docker.com/engine/installation/
 [docker-compose]: https://docs.docker.com/compose/install/
+[install yarn]: https://yarnpkg.com/lang/en/docs/install/
+[yarn]: https://yarnpkg.com/
+[migrate away from bower]: https://bower.io/blog/2017/how-to-migrate-away-from-bower/
+[bower]: https://bower.io
