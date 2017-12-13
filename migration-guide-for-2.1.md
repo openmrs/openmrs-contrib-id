@@ -4,15 +4,6 @@ Migration from 2.0.x is easy. This guide will walk you through the process.
 
 2.1 removes any dependencies on MySQL, currently only used for the IPWhiteList, which has been moved to mongodb.
 
-# Frontend dependencies
-Frontend dependencies are now managed using [bower](http://bower.io/)
-
-Before doing anything, from the root directory of the codebase, run
-
-```sh
-npm install bower gulp -g
-```
-
 # Configuration file migration for 2.0.1
 **Line numbers are relative to the currently deployed configuration file with all sensitive data removed.**
 
