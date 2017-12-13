@@ -5,49 +5,49 @@ language: node_js
 cache:
   yarn: true
   directories:
-    - node_modules
-    - bower_components
-
+  - node_modules
 services:
-  - docker
-
+- docker
 node_js:
-  - "6"
+- '6'
 env:
-  DOCKER_COMPOSE_VERSION: 1.13.0
+  global:
+  - secure: j3F3itQ5t+pfG4lI7JAUlcAB42rkF7sHygJIxEddcvIiam2Td2KSBUWwdULV+01ViS9D2+7r35wl8kZLbTy4L7OC6/IFkGN+1xugphpQXS1JdsT1pCLpDUYIiETfRlBPyXy3q+8T2kgfCs5Dw15RgpxYY7D8Iss02XetEn+yvCk=
+  - secure: V2l7kuh2gocQgMnoc/fPt1595amhFKPAVR/Gl0CnEdaPy5c4TdgzhMjOD5STs347FC74OblB0rCgXyKIo/DRENNbQ1dYe5woZcKfb8bpfO519OIsQ4vcVy8GYno6AnzY6or+ty6CLCoW81rvYpMooUV5DZBuCiUod3mPTMO5+VY=
 
 before_install:
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-  - docker-compose -v
-
+- sudo rm /usr/local/bin/docker-compose
+- sudo pip install docker-compose
+- docker-compose -v
 install:
-  - tar xvjf build/var_lib_ldap.tbz2 -C build/
-  - tar xvjf build/etc_ldap_slapd.d.tbz2 -C build/
-  - docker-compose -f build/docker-compose.yml up -d
-  - cp -v app/conf.example.js app/conf.js
-  - cp -v tests/conf.example.js tests/conf.js
-  - yarn global add bower gulp
-  - yarn
-  - node build/store.js
-
+- tar xvjf build/var_lib_ldap.tbz2 -C build/
+- tar xvjf build/etc_ldap_slapd.d.tbz2 -C build/
+- docker-compose -f build/docker-compose.yml up -d
+- cp -v app/conf.example.js app/conf.js
+- cp -v tests/conf.example.js tests/conf.js
+- yarn global add gulp
+- yarn
+- node build/store.js
 branches:
   only:
-    - master
-
+  - master
+after_success:
+- docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+- export REPO="openmrs/id"
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+- docker build . -t $REPO:$TAG
+- docker tag $REPO:$TAG $REPO:"staging"
+- docker push $REPO
 notifications:
   email: false
   irc:
     channels:
-      - "irc.freenode.org#openmrs"
+    - irc.freenode.org#openmrs
     template:
-      - "%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}"
-      - "Change view : %{compare_url}"
-      - "Build details : %{build_url}"
+    - "%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}"
+    - 'Change view : %{compare_url}'
+    - 'Build details : %{build_url}'
     use_notice: true
     skip_join: true
-
 script:
-  - yarn test
+- yarn test

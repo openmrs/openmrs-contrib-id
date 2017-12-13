@@ -1,8 +1,7 @@
 version: "2.1"
 services:
   web:
-    build:
-      context: .
+    image: openmrs/id:latest
     container_name: "id_dashboard"
     env_file: .env
     environment:
