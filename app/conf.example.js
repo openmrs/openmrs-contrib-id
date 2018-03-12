@@ -112,7 +112,6 @@ module.exports = {
   // user-configured modules
   "userModules": [
     "openmrs-contrib-id-globalnavbar",
-    "openmrs-contrib-id-oauth",
     "openmrs-contrib-id-sso",
   ],
 
