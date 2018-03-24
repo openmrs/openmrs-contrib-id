@@ -1,9 +1,6 @@
 [submodule "app/user-modules/openmrs-contrib-id-globalnavbar"]
 	path = app/user-modules/openmrs-contrib-id-globalnavbar
 	url = https://github.com/openmrs/openmrs-contrib-id-globalnavbar.git
-[submodule "app/user-modules/openmrs-contrib-id-oauth"]
-	path = app/user-modules/openmrs-contrib-id-oauth
-	url = https://github.com/openmrs/openmrs-contrib-id-oauth.git
 [submodule "app/user-modules/openmrs-contrib-id-sso"]
 	path = app/user-modules/openmrs-contrib-id-sso
 	url = https://github.com/openmrs/openmrs-contrib-id-sso.git
