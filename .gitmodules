@@ -4,3 +4,6 @@
 [submodule "app/user-modules/openmrs-contrib-id-sso"]
 	path = app/user-modules/openmrs-contrib-id-sso
 	url = https://github.com/openmrs/openmrs-contrib-id-sso.git
+[submodule "app/user-modules/openmrs-contrib-id-user-management-dashboard"]
+	path = app/user-modules/openmrs-contrib-id-user-management-dashboard
+	url = https://github.com/openmrs/openmrs-contrib-id-user-management-dashboard.git
