@@ -154,7 +154,7 @@ docker-compose up -d openldap
 Run our mongodb [docker][] container by using [docker-compose][], which will create the database for you – as well as the user and handle everything for you. Simply type:
 
 ``` shell
-$ docker-compose up mongodb -d
+$ docker-compose up -d mongodb
 ```
 ### Setting up Mailcatcher
 
