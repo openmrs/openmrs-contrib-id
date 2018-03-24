@@ -36,7 +36,7 @@ A few modules (providing additional functionality) have been created. They can b
 
 * [openmrs-contrib-globalnavbar](https://github.com/openmrs/openmrs-contrib-id-globalnavbar)
 * ~~[openmrs-contrib-id-groups](https://github.com/openmrs/openmrs-contrib-id-groups)~~ *(***We no longer use Google Groups and now use [OpenMRS Talk](http://talk.openmrs.org) in its place -- it is provided solely for historic purposes***)*
-* [openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth) provides OAuth2.0-based authorization module for OpenMRS ID
+* ~~[openmrs-contrib-id-oauth](https://github.com/openmrs/openmrs-contrib-id-oauth) provides OAuth2.0-based authorization module for OpenMRS ID~~ (**We no longer have any services which require OAuth2 for authentication -- this is provided solely for historical purposes**)
 * [openmrs-contrib-id-sso](https://github.com/openmrs/openmrs-contrib-id-sso) provides single sign on authentication strategies
 
 These modules will be included by default using the development environment described earlier in this document.
