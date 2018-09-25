@@ -280,6 +280,7 @@ userSchema.pre('save', function(next) {
     err => {
       if (err) {
         log.error(`${uid} failed to sync with OpenLDAP`);
+        log.error(err);
         return next(err);
       }
       return next();
