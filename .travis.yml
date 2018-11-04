@@ -19,6 +19,8 @@ before_install:
 - sudo rm /usr/local/bin/docker-compose
 - sudo pip install docker-compose
 - docker-compose -v
+- curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.5.1
+- export PATH=$HOME/.yarn/bin:$PATH
 install:
 - tar xvjf build/var_lib_ldap.tbz2 -C build/
 - tar xvjf build/etc_ldap_slapd.d.tbz2 -C build/
@@ -50,5 +52,3 @@ notifications:
     - 'Build details : %{build_url}'
     use_notice: true
     skip_join: true
-script:
-- yarn test
