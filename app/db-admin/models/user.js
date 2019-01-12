@@ -24,7 +24,6 @@ User.formage = {
   ],
 
   exclude: [
-    'createdAt',
     'inLDAP',
     'skipLDAP',
     'extra',
