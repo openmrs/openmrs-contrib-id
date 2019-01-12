@@ -95,6 +95,7 @@ exports = module.exports = app => {
           username: id,
           firstName: first,
           lastName: last,
+          createdAt: Date.now(),
           displayName: `${first} ${last}`,
           primaryEmail: email,
           emailList: [email],
