@@ -82,7 +82,7 @@ module.exports = {
     // validation settings
     "recaptchaPublic": process.env.RECAPTCHA_PUBLIC || "6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI",
     "recaptchaPrivate": process.env.RECAPTCHA_PRIVATE || "6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe",
-    "allowPlusInEmail": false,
+    "allowPlusInEmail": true,
   },
   "email": {
     // Email settings
