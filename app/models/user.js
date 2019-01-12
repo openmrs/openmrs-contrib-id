@@ -108,7 +108,6 @@ const userSchema = new Schema({
   createdAt: { // TTL index, let mongodb automatically delete this doc
     type: Date,
     expires: conf.mongo.commonExpireTime,
-    default: Date.now,
   },
 
   extra: {
