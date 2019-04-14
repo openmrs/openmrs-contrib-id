@@ -16,7 +16,10 @@ if [ ! -e app/user-modules/openmrs-contrib-id-sso/conf.js ]; then
 fi
 
 echo "Running yarn"
-yarn ; git submodule foreach yarn
+yarn
+(cd app/user-modules/openmrs-contrib-id-globalnavbar && yarn)
+(cd app/user-modules/openmrs-contrib-id-sso && yarn)
+
 echo "Setting up base OpenLDAP config and database for development." && \
 if [ ! -e ./data/ldap ]; then mkdir ./data/ldap; fi
 
