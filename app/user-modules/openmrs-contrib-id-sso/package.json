@@ -1,0 +1,31 @@
+{
+  "name": "openmrs-contrib-id-sso",
+  "version": "0.0.1",
+  "description": "sso authentication strategies for openmrs id",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elliottwilliams/openmrs-contrib-id-sso"
+  },
+  "keywords": [
+    "sso",
+    "openmrs",
+    "openmrsid",
+    "oauth",
+    "openid"
+  ],
+  "author": "Elliott Williams <elliott@openmrs.org>",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/elliottwilliams/openmrs-contrib-id-sso/issues"
+  },
+  "dependencies": {
+    "discourse-sso": "~1.0.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0"
+  }
+}

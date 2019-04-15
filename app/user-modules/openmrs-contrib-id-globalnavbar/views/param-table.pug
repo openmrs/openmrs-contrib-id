@@ -1,0 +1,79 @@
+mixin param-table(settings)
+  -
+    if (typeof settings.canAddRows === undefined) {
+      settings.canAddRows = true;
+    }
+    //- if only I could use jade.render in templates
+    var rowAdded = '<tr>';
+    for (var j = 0; j < settings.columns.length; ++j) {
+      var col = settings.columns[j];
+      rowAdded += '<td>';
+      rowAdded += '<input type="text" class="'+ col.type + '" ' +
+        'placeholder="' + col.value + '" ' +
+        'name="{{index}}-' + col.name + '">';
+      rowAdded += '</td>';
+    }
+    rowAdded += '</tr>';
+  //- script start
+  script(type='text/javascript').
+    $(function() {
+      var paramRow = function(){
+        var index = $('#params tr').length-1;
+        //- unescaped
+        return  '!{rowAdded}'.replace(/{{index}}/g, index);
+      };
+
+      var checkEmptyRows = function() {
+        var theRow = $(this).parents('tbody').children('tr:last-child'),
+          theTable = theRow.parents('table'),
+          hasVal = false;
+
+        if ($(theTable).hasClass('addrow-disabled')) {
+          return;
+        }
+
+        theRow.find('input, textarea').each(function(){ // loop through each field in last row
+          if ($(this).val()) hasVal = true; // if a field has a value, set to true
+        });
+        if (hasVal) { // insert another row!
+          $(paramRow()).insertAfter('table#params tr:last-child');
+        }
+      }
+
+      // handle adding new rows
+      $('#params').delegate('input, textarea', 'keyup', checkEmptyRows);
+
+      // add a blank row
+      if ($('table#params input:first').length > 0) {
+        checkEmptyRows.call($('table#params input:first')); // if some links already exist
+      } else {
+        $(paramRow()).appendTo('table#params'); // if no links exist yet
+      }
+
+    });
+  //- script end
+
+  #params-container
+    table#params(class= 'addrow-' + settings.canAddRows ? 'enabled' : 'disabled')
+      tr
+        each col in settings.columns
+          // first, set default values
+          - if (typeof col.editable === 'undefined') {
+          -   col.editable = true;
+          - }
+          th(class= col.type)= col.value
+
+      each row, i in settings.data
+        tr
+          each col in settings.columns
+            td
+              if (col.editable)
+                input(type='text', class= col.type, placeholder= col.value,
+                  name= i+'-'+col.name, value= row[col.name])
+              else
+                input(type='hidden', class= col.type,placeholder= col.value,
+                name= i+'-'+col.name, value= row[col.name])
+                = row[col.name]
+    if (settings.canAddRows)
+      span.labeltext.hint(style= {float: right})
+        | Rows will be added automatically.

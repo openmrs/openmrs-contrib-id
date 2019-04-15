@@ -9,9 +9,6 @@ npm-debug.log
 ###################
 node_modules
 
-# User-install modules #
-########################
-app/user-modules
 
 # Conf Files #
 ##############

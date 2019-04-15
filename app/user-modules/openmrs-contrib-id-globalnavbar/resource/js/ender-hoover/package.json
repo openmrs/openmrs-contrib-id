@@ -1,0 +1,11 @@
+{
+  "name": "ender-hoover",
+  "description": "simple delayed hover events (modified for ender)",
+  "author": "blup (https://github.com/blup)",
+  "keywords": ["hover", "hoover", "ender", "mouse", "event", "events", "mouseover", "onmouseover"],
+  "version": "0.1.0",
+  "homepage": "https://github.com/blup/hoover",
+
+  "main": "main.js",
+  "ender": "ender.js"
+}

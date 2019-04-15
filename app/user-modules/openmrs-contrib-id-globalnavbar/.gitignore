@@ -1,0 +1,14 @@
+# OS generated files #
+######################
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+data/db.json
+
+# Others #
+resource/omrs-navbar.psd
+*.sublime-*
+.sass-cache
+node_modules
+.yarn-cache
