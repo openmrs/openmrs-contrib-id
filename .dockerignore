@@ -4,7 +4,6 @@ node_modules/
 data/
 docker-compose*
 Dockerfile
-app/user-modules/openmrs*
 logs/*.log
 *.md
 app/conf.js
