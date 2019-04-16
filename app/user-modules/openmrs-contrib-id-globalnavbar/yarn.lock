@@ -26,19 +26,9 @@ json-parse-helpfulerror@^1.0.3:
   dependencies:
     jju "^1.1.0"
 
-lodash@4, lodash@^4.0.0:
+lodash@^4.0.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
-
-lowdb@^0.15.4:
-  version "0.15.4"
-  resolved "https://registry.yarnpkg.com/lowdb/-/lowdb-0.15.4.tgz#659095d6ab704a9d27a0d0a7aaf02c28687c4ca4"
-  dependencies:
-    graceful-fs "^4.1.3"
-    is-promise "^2.1.0"
-    json-parse-helpfulerror "^1.0.3"
-    lodash "4"
-    steno "^0.4.1"
 
 lz-string@^1.4.4:
   version "1.4.4"
