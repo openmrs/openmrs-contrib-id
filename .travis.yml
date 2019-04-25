@@ -24,7 +24,7 @@ before_install:
 install:
 - tar xvjf build/var_lib_ldap.tbz2 -C build/
 - tar xvjf build/etc_ldap_slapd.d.tbz2 -C build/
-- docker-compose -f docker-compose.yml up -d
+- docker-compose -f build/docker-compose.yml up -d
 - cp -v app/conf.example.js app/conf.js
 - cp -v tests/conf.example.js tests/conf.js
 - yarn global add gulp
