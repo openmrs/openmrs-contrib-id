@@ -35,6 +35,7 @@ branches:
   - master
   - production
 after_success:
+- echo $DOCKER_USERNAME
 - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 - export REPO="openmrs/id"
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
