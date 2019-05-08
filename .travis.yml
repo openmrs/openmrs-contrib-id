@@ -10,10 +10,6 @@ services:
 - docker
 node_js:
 - '6'
-env:
-  global:
-  - secure: j3F3itQ5t+pfG4lI7JAUlcAB42rkF7sHygJIxEddcvIiam2Td2KSBUWwdULV+01ViS9D2+7r35wl8kZLbTy4L7OC6/IFkGN+1xugphpQXS1JdsT1pCLpDUYIiETfRlBPyXy3q+8T2kgfCs5Dw15RgpxYY7D8Iss02XetEn+yvCk=
-  - secure: V2l7kuh2gocQgMnoc/fPt1595amhFKPAVR/Gl0CnEdaPy5c4TdgzhMjOD5STs347FC74OblB0rCgXyKIo/DRENNbQ1dYe5woZcKfb8bpfO519OIsQ4vcVy8GYno6AnzY6or+ty6CLCoW81rvYpMooUV5DZBuCiUod3mPTMO5+VY=
 
 before_install:
 - sudo rm /usr/local/bin/docker-compose
