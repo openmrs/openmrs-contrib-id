@@ -18,12 +18,10 @@ services:
     volumes:
       - .:/opt/id
     restart: unless-stopped
-    container_name: "id_dashboard"
   mongodb:
     image: mongo:3.4
     ports:
       - "0.0.0.0:27017:27017"
-    container_name: "id_dashboard_mongo"
     volumes:
       - ./data/mongo/db:/data/db
     healthcheck:
@@ -31,8 +29,6 @@ services:
       interval: 1m30s
       timeout: 10s
       retries: 3
-  openldap:
-
     restart: unless-stopped
     command: "mongod --nojournal --smallfiles"
   mailcatcher:
@@ -41,7 +37,6 @@ services:
       - "0.0.0.0:1080:1080"
       - "0.0.0.0:1025:1025"
     restart: unless-stopped
-    container_name: "id_dashboard_mailcatcher"
   openldap:
     image: osixia/openldap:1.1.8
     environment:
@@ -52,4 +47,3 @@ services:
     restart: unless-stopped
     ports:
       - 127.0.0.1:389:389
-    container_name: "id_dashboard_openldap"

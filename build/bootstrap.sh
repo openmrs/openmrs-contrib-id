@@ -23,13 +23,14 @@ yarn
 echo "Setting up base OpenLDAP config and database for development." && \
 if [ ! -e ./data/ldap ]; then mkdir ./data/ldap; fi
 
-echo "Adding groups to MongoDB..." \
+echo "Adding data to OpenLDAP..." \
 && tar xvjpf build/etc_ldap_slapd.d.tbz2 -C ./data/ldap/ \
 && tar xvpjf build/var_lib_ldap.tbz2 -C ./data/ldap/ \
 && echo "Done." \
 && echo "Starting openldap, mongodb and mailcatcher docker containers" \
 && docker-compose up -d --force-recreate openldap mongodb mailcatcher \
-&& echo "Waiting for openldap to start" && sleep 30 \
+&& echo "Waiting for openldap and mongo to start" && sleep 30 \
+&& echo "Loading data to mongo, ignore DTraceProviderBindings errors" \
 && node build/store.js \
 && echo "Done." \
 && touch .bootstrapped
