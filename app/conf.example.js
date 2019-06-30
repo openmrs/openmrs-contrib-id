@@ -46,10 +46,9 @@ module.exports = {
       ],
       "usernameRegex": /^(?!.*(?:openmrs|adm))[a-zA-Z][a-zA-Z0-9.]{2,20}$/,
       "defaultGroups": [
-        "bamboo-user",
         "dashboard-users",
-        "modrepo-users",
-        "talk-users"
+        "talk-users",
+        "atlas-users"
       ],
       "passwordResetPolicy": "cn=reset,ou=policy,dc=openmrs,dc=org",
       "passwordResetTimeout": 7200000
