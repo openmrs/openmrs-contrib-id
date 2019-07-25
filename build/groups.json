@@ -1,6 +1,11 @@
 {
     "objList": [
         {
+            "description": "Atlas Users",
+            "groupName": "atlas-users",
+            "member": []
+        },
+        {
             "description": "Bamboo system administrators",
             "groupName": "bamboo-admin",
             "member": []
