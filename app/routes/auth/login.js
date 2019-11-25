@@ -41,10 +41,10 @@ exports = module.exports = app => {
       }
       if (utils.isEmailValid(username)) {
         return callback(null, {
-          email: username
+          loginFail: 'Please use a valid username to sign in. Emails are not acceptable'
         });
       }
-      const invalid = 'Please use a valid username or email to sign in';
+      const invalid = 'Please use a valid username to sign in';
       return callback({
         loginFail: invalid
       });
@@ -64,9 +64,6 @@ exports = module.exports = app => {
       };
       if (input.username) {
         return User.findByUsername(input.username, commonCallback);
-      }
-      if (input.email) {
-        return User.findByEmail(input.email, commonCallback);
       }
       // should never got here
       return callback(new Error('Weird control flow'));
