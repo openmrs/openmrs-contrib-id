@@ -40,13 +40,12 @@ exports = module.exports = app => {
         });
       }
       if (utils.isEmailValid(username)) {
-        return callback(null, {
+        return callback({
           loginFail: 'Please use a valid username to sign in. Emails are not acceptable'
         });
       }
-      const invalid = 'Please use a valid username to sign in';
       return callback({
-        loginFail: invalid
+        loginFail: 'Please use a valid username to sign in'
       });
     };
 
