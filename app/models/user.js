@@ -350,8 +350,11 @@ const findAndSync = (filter, callback) => {
     if (filter.username) { // choose finder
       finder = ldap.getUser;
       condition = filter.username;
+    } else if (filter.email) { // choose finder
+      finder = ldap.getUserByEmail;
+      condition = filter.username;
     } else {
-      return callback(); // ldap.js findByEmail is deprecated, end chain
+      return callback();
     }
 
     finder(condition, (err, userobj) => { // find in OpenLDAP

@@ -225,6 +225,35 @@ exports.getUser = (username, cb) => {
 };
 
 /**
+ * Get a user's info from LDAP server based on the email
+ * @param  {string}   email  User's email
+ * @param  {Function} cb        cb(err, user)
+ */
+exports.getUserByEmail = (email, cb) => {
+  log.debug(`check validity of username ${username}`);
+  if (!userAttr.usernameRegex.test(username)) {
+    return cb(new Error('Illegal username specified'));
+  }
+
+  async.parallel([
+    searchUser.bind(null, username),
+    searchGroups.bind(null, username),
+  ], (err, results) => {
+    if (err) {
+      return cb(err);
+    }
+    const user = results[0];
+    const groups = results[1];
+    if (_.isEmpty(user)) {
+      log.debug(`user: ${username} not found`);
+      return cb(null, null);
+    }
+    user.groups = groups;
+    return cb(null, user);
+  });
+};
+
+/**
  * Get users list from LDAP
  * @param {Function} cb cb(err, users)
  */
