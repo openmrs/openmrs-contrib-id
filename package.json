@@ -35,7 +35,7 @@
     "node": "~6.10.x"
   },
   "devDependencies": {
-    "bower": "^1.8.0",
+    "bower": "^1.8.8",
     "chai": "~3.5.0",
     "express-debug": "^1.1.1",
     "gulp": "^3.9.1",
