@@ -13,6 +13,7 @@ node_js:
 
 before_install:
 - sudo rm /usr/local/bin/docker-compose
+- sudo pip install -U pyopenssl
 - sudo pip install docker-compose
 - docker-compose -v
 - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.5.1
