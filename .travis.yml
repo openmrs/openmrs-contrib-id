@@ -29,7 +29,7 @@ install:
 - node build/store.js
 after_success:
   # require the branch name to be master or production (excluding PRs)
-  if: branch IN (master, production) AND type = push
+  - if: branch IN (master, production) AND type = push
   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
   - export REPO="openmrsinfra/id"
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
