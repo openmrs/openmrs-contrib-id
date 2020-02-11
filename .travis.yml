@@ -32,7 +32,7 @@ branches:
   - master
   - production
 after_success:
-- echo $DOCKER_USERNAME
+- test $TRAVIS_PULL_REQUEST != 'false'
 - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 - export REPO="openmrsinfra/id"
 - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
